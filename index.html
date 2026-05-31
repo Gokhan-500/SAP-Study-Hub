@@ -1,29 +1,269 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="tr">
 <head>
-  <title>SAP Study Hub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<meta name="description" content="SAP IEE2E ve S4500 çalışma merkezi — çözüm ağaçları">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SAP Study Hub">
+<title>SAP Study Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #263447;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --accent: #38bdf8;
+  --ok: #34d399;
+  --ok-bg: rgba(52,211,153,0.08);
+  --ok-border: rgba(52,211,153,0.25);
+  --warn: #fbbf24;
+  --warn-bg: rgba(251,191,36,0.08);
+  --warn-border: rgba(251,191,36,0.25);
+  --info: #818cf8;
+  --info-bg: rgba(129,140,248,0.08);
+  --info-border: rgba(129,140,248,0.25);
+  --purple: #a855f7;
+  --purple-bg: rgba(168,85,247,0.08);
+  --purple-border: rgba(168,85,247,0.25);
+  --radius: 8px;
+  --radius-sm: 5px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  font-size:14px;
+  line-height:1.6;
+}
+.app-header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,23,42,0.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+}
+.header-top{
+  display:flex;align-items:center;gap:10px;margin-bottom:8px;
+}
+.app-logo{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;font-weight:500;
+  color:var(--accent);
+  letter-spacing:0.05em;
+  white-space:nowrap;
+}
+.app-subtitle{
+  font-size:11px;color:var(--text3);
+  flex:1;
+}
+.hub-badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;color:var(--text3);
+  background:var(--surface);
+  padding:3px 8px;border-radius:20px;
+  border:1px solid var(--border);
+  white-space:nowrap;
+}
+.meta-row{display:flex;gap:6px;flex-wrap:wrap}
+.meta-pill{
+  font-size:11px;padding:3px 8px;border-radius:12px;
+  background:rgba(56,189,248,0.1);color:var(--accent);
+  border:1px solid rgba(56,189,248,0.2);white-space:nowrap;
+}
+.main{
+  max-width:720px;
+  margin:0 auto;
+  padding:20px 16px 48px;
+}
+.intro-box{
+  background:var(--info-bg);
+  border-left:3px solid var(--info-border);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:12px 14px;
+  margin-bottom:20px;
+}
+.intro-box h4{
+  font-size:12px;font-weight:600;color:var(--info);
+  margin-bottom:5px;
+}
+.intro-box p{
+  font-size:12px;color:var(--text2);line-height:1.65;
+}
+.section-lbl{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:10px;
+}
+.hub-grid{display:flex;flex-direction:column;gap:10px}
+.hub-card{
+  display:block;
+  text-decoration:none;
+  color:inherit;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:var(--surface);
+  overflow:hidden;
+  transition:border-color .18s, transform .15s, box-shadow .15s;
+}
+.hub-card:hover{
+  border-color:var(--accent);
+  transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.25);
+}
+.hub-card-hdr{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;
+}
+.hub-icon{
+  width:42px;height:42px;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.hub-card--iee2e .hub-icon{background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.25)}
+.hub-card--exam .hub-icon{background:var(--warn-bg);border:1px solid var(--warn-border)}
+.hub-card--s4500 .hub-icon{background:var(--purple-bg);border:1px solid var(--purple-border)}
+.hub-title-block{flex:1;min-width:0}
+.hub-title{
+  font-size:14px;font-weight:600;color:var(--text);
+  margin-bottom:2px;
+}
+.hub-desc{
+  font-size:12px;color:var(--text3);
+  line-height:1.5;
+}
+.hub-chev{
+  font-size:16px;color:var(--text3);
+  flex-shrink:0;
+  transition:transform .15s, color .15s;
+}
+.hub-card:hover .hub-chev{
+  transform:translateX(3px);
+  color:var(--accent);
+}
+.hub-card--exam:hover .hub-chev{color:var(--warn)}
+.hub-card--s4500:hover .hub-chev{color:var(--purple)}
+.hub-card-meta{
+  display:flex;gap:6px;flex-wrap:wrap;
+  padding:0 16px 14px;
+}
+.stat-chip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  padding:2px 8px;border-radius:12px;
+  background:var(--surface2);
+  color:var(--text3);
+  border:1px solid var(--border);
+  white-space:nowrap;
+}
+.hub-card--iee2e .stat-chip.accent{color:var(--accent);border-color:rgba(56,189,248,0.25);background:rgba(56,189,248,0.08)}
+.hub-card--exam .stat-chip.accent{color:var(--warn);border-color:var(--warn-border);background:var(--warn-bg)}
+.hub-card--s4500 .stat-chip.accent{color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg)}
+.app-footer{
+  margin-top:28px;
+  padding-top:16px;
+  border-top:1px solid var(--border);
+  text-align:center;
+  font-size:11px;color:var(--text3);
+  font-family:'IBM Plex Mono',monospace;
+}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+@media(max-width:480px){
+  .hub-card-hdr{padding:12px 14px}
+  .hub-icon{width:36px;height:36px;font-size:16px}
+}
+</style>
 </head>
+<body>
 
-<body style="font-family:Arial;padding:40px;">
+<header class="app-header">
+  <div class="header-top">
+    <span class="app-logo">SAP STUDY HUB</span>
+    <span class="app-subtitle">IEE2E &amp; S4500 Çözüm Ağaçları</span>
+    <span class="hub-badge">3 modül</span>
+  </div>
+  <div class="meta-row">
+    <span class="meta-pill">Türkçe adım adım</span>
+    <span class="meta-pill">Mobil uyumlu</span>
+    <span class="meta-pill">Offline HTML</span>
+  </div>
+</header>
 
-<h1>SAP IEE2E Study Hub</h1>
+<main class="main">
+  <div class="intro-box">
+    <h4>Çalışma merkezi</h4>
+    <p>SAP sertifikasyon ve eğitim egzersizleri için interaktif çözüm ağaçları. Modül seçin; egzersizleri, adımları ve alan değerlerini kart kart açın.</p>
+  </div>
 
-<div style="display:flex;gap:15px;flex-wrap:wrap;margin-top:30px;">
+  <p class="section-lbl">Modüller</p>
+  <nav class="hub-grid" aria-label="Çalışma modülleri">
 
-  <button onclick="location.href='IEE2E solution.html'">
-    Full IEE2E
-  </button>
-  
- <button onclick="location.href='exam.html'">
-    IEE2E Exam 
-  </button>
-  
-  <button onclick="location.href='1-S4500.html'">
-    1-S4500
-  </button>
+    <a class="hub-card hub-card--iee2e" href="IEE2E solution.html">
+      <div class="hub-card-hdr">
+        <div class="hub-icon" aria-hidden="true">📘</div>
+        <div class="hub-title-block">
+          <div class="hub-title">Full IEE2E</div>
+          <div class="hub-desc">SAP IEE2E Solution Tree — FI/CO, MM, PP, SD, CS egzersizleri</div>
+        </div>
+        <span class="hub-chev" aria-hidden="true">›</span>
+      </div>
+      <div class="hub-card-meta">
+        <span class="stat-chip accent">56 egzersiz</span>
+        <span class="stat-chip">5 unit</span>
+        <span class="stat-chip">Arama &amp; filtre</span>
+      </div>
+    </a>
 
-</div>
+    <a class="hub-card hub-card--exam" href="exam.html">
+      <div class="hub-card-hdr">
+        <div class="hub-icon" aria-hidden="true">🎯</div>
+        <div class="hub-title-block">
+          <div class="hub-title">IEE2E Exam</div>
+          <div class="hub-desc">C_IEE2E sertifikasyon sınavı çözüm ağacı</div>
+        </div>
+        <span class="hub-chev" aria-hidden="true">›</span>
+      </div>
+      <div class="hub-card-meta">
+        <span class="stat-chip accent">6 task</span>
+        <span class="stat-chip">Lexontive GmbH</span>
+        <span class="stat-chip">~20–25 dk / task</span>
+      </div>
+    </a>
+
+    <a class="hub-card hub-card--s4500" href="1-S4500.html">
+      <div class="hub-card-hdr">
+        <div class="hub-icon" aria-hidden="true">📦</div>
+        <div class="hub-title-block">
+          <div class="hub-title">1-S4500</div>
+          <div class="hub-desc">S/4HANA Sourcing &amp; Procurement — egzersiz ve çözümler</div>
+        </div>
+        <span class="hub-chev" aria-hidden="true">›</span>
+      </div>
+      <div class="hub-card-meta">
+        <span class="stat-chip accent">37 egzersiz</span>
+        <span class="stat-chip">9 ünite</span>
+        <span class="stat-chip">S4500 · VER 26</span>
+      </div>
+    </a>
+
+  </nav>
+
+  <footer class="app-footer">
+    SAP Study Hub · GitHub Pages
+  </footer>
+</main>
 
 </body>
 </html>
