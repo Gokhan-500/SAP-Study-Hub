@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP S4500 – S/4HANA Sourcing &amp; Procurement Çözüm Ağacı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;}
+header .meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+header h1{font-size:19px;font-weight:600;letter-spacing:-.3px;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.st .n{color:var(--bl);font-weight:600;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.u1 .ubadge{background:rgba(6,182,212,.15);color:#06b6d4;border:1px solid rgba(6,182,212,.3);}
+.u2 .ubadge{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);}
+.u3 .ubadge{background:rgba(59,130,246,.15);color:var(--bl);border:1px solid var(--bbd);}
+.u4 .ubadge{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid var(--ybd);}
+.u5 .ubadge{background:rgba(34,197,94,.15);color:var(--green);border:1px solid var(--gbd);}
+.u6 .ubadge{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.u7 .ubadge{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+.u8 .ubadge{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);}
+.u9 .ubadge{background:rgba(129,140,248,.15);color:#818cf8;border:1px solid rgba(129,140,248,.3);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:20px;}
+.thdiv{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;gap:9px;}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+.sl2{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--td);margin:11px 0 5px;}
+.dv{height:1px;background:var(--border);margin:13px 0;}
+b{color:var(--text);font-weight:500;}
+
+/* ── TOOLBAR ── */
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--td);pointer-events:none;width:13px;height:13px;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;text-align:right;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+/* filter row */
+#frow{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="3"].on{background:rgba(59,130,246,.15);color:var(--bl);border-color:var(--bbd);}
+.fb[data-u="4"].on{background:rgba(245,158,11,.15);color:var(--yellow);border-color:var(--ybd);}
+.fb[data-u="5"].on{background:rgba(34,197,94,.15);color:var(--green);border-color:var(--gbd);}
+.fb[data-u="6"].on{background:rgba(239,68,68,.15);color:var(--red);border-color:rgba(239,68,68,.4);}
+.fb[data-u="7"].on{background:rgba(251,191,36,.15);color:#fbbf24;border-color:rgba(251,191,36,.4);}
+.fb[data-u="8"].on{background:rgba(52,211,153,.15);color:#34d399;border-color:rgba(52,211,153,.4);}
+.fb[data-u="9"].on{background:rgba(129,140,248,.15);color:#818cf8;border-color:rgba(129,140,248,.4);}
+/* highlight */
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+/* no result */
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+#nores .ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+#nores .hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+/* hidden */
+.card.hid,.ug.hid{display:none;}
+/* mobile */
+@media(max-width:600px){
+  #toolbar{padding:8px 14px 9px;}
+  #search-row{grid-template-columns:1fr auto;gap:6px;}
+  #sctr{display:none;}
+  main{padding:18px 12px 60px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="meta">
+    <span class="cid">S4500 · VER 26</span>
+    <h1>SAP S/4HANA Sourcing &amp; Procurement</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Egzersiz: <span class="n">37</span></div>
+    <div class="st">Ünite: <span class="n">9</span></div>
+    <div class="st">Süre: <span class="n">10s 55dk</span></div>
+    <div class="st">Sistem: <span class="n">T41 · Client 400</span></div>
+  </div>
+</header>
+
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Egzersiz, app, adım veya field ara…" autocomplete="off" spellcheck="false">
+      <button id="clr" title="Temizle (ESC)">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">37</b> / 37 egzersiz</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+
+<main id="app"></main>
+<div id="nores"><span class="ico">🔍</span>Aramanızla eşleşen egzersiz bulunamadı.<span class="hint">ESC ile aramayı temizleyebilirsiniz</span></div>
+<script>
+const D=[
+{unit:1,title:"Navigation in SAP S/4HANA",ex:[
+{id:1,title:"Log on to SAP S/4HANA Using the SAP Fiori Launchpad",app:"SAP Fiori Launchpad",sc:"SAP Fiori Launchpad'e aşina olmak ve sık kullandığınız uygulamalar için yeni bir özel tile grubu oluşturmak istiyorsunuz.",tasks:[
+{num:"1",title:"Fiori Launchpad'e Giriş",app:"SAP Fiori Launchpad",path:["Windows Apps Menu","S4HANA T41 Fiori Launchpad"],fields:[],steps:["Windows Start menüsünden <b>S4HANA T41 Fiori Launchpad</b> uygulamasını başlatın.","Varsayılan tarayıcı sorulursa <b>Chrome</b>'u seçin.","Giriş ekranında kullanıcı adı, şifre ve tercih ettiğiniz dili girin.","<b>Log On</b> düğmesine tıklayın.","Quick Tour penceresi açılırsa <b>Close</b>'u seçin."],info:"Eğitmen tarafından atanan kullanıcı adı ve şifreyi kullanın.",warn:null,result:null},
+{num:"2",title:"Favorites Tile Grubu Oluşturma",app:"SAP Fiori Launchpad",path:["Fiori Launchpad","User Action Menu","Edit Home Page"],fields:[["Tile Group Adı","Favorites"],["App 1","Manage Purchase Orders"],["App 2","Post Goods Receipt for Purchasing Document"],["App 3","Create Supplier Invoice"]],steps:["Sağ üst köşedeki <b>(Profile of Employee)</b> ikonuna tıklayın.","<b>Edit Home Page</b>'i seçin.","<b>News and Links</b> grubundan sonra <b>+ Add Group</b>'a tıklayın.","Grup adını <b>Favorites</b> olarak girin.","<b>(App Finder)</b> ikonuna tıklayın.","<b>Purchasing – Purchase Order Processing</b> kataloğundan <b>Manage Purchase Orders</b>'ı raptiyeleyin.","<b>Materials Management – Warehouse Processing</b> kataloğundan <b>Post Goods Receipt for Purchasing Document</b>'ı raptiyeleyin.","<b>Accounts Payable – Supplier Invoice Processing</b> kataloğundan <b>Create Supplier Invoice</b>'ı raptiyeleyin.","SAP logosuna tıklayıp sağ alttaki <b>Close</b> ile kişiselleştirme modundan çıkın."],info:null,warn:null,result:null}
+]},
+{id:2,title:"Work with SAP GUI",app:"SAP GUI",sc:"SAP GUI'ya giriş yapmayı ve işlem kodunu favorilere eklemeyi öğrenmek istiyorsunuz.",tasks:[
+{num:"1",title:"SAP GUI'ya Giriş",app:"SAP GUI",path:["SAP Logon","T41 System"],fields:[["Client","400"],["User","<Eğitmen verecek>"],["Password","<Eğitmen verecek>"]],steps:["<b>SAP Logon</b>'u açın.","<b>T41</b> sistemini çift tıklayın.","Client <b>400</b>, kullanıcı adı ve şifreyi girin.","<b>Enter</b>'a basın."],info:null,warn:null,result:null},
+{num:"2",title:"Favorilere İşlem Kodu Ekleme",app:"SAP GUI",path:["Menu Bar","Favorites","Add Transaction"],fields:[["Transaction Code","MM60"]],steps:["Menü çubuğunda <b>Favorites → Add Transaction</b>'ı seçin.","İşlem kodu girin ve <b>Enter</b>'a basın.","Favori listenizdeki girişi kontrol edin."],info:null,warn:null,result:null}
+]}
+]},
+{unit:2,title:"Processes and Enterprise Structure in Procurement",ex:[
+{id:3,title:"Describe the Organizational Structures for Procurement and Inventory Management",app:"SAP Fiori Launchpad",sc:"SAP S/4HANA'daki organizasyonel yapıları inceleyecek ve aralarındaki ilişkileri anlayacaksınız.",tasks:[
+{num:"1",title:"Organizasyon Yapısını İncele",app:"SAP Fiori Launchpad",path:["SAP Fiori Launchpad","Organizational Structure"],fields:[["Company Code","1010"],["Purchasing Organization","101C (Purch. Org. 101)"],["Plant 1","1010 (Hamburg)"],["Plant 2","1020 (Berlin)"]],steps:["SAP Fiori Launchpad'de oturum açın.","Şirket kodu <b>1010</b>, satın alma organizasyonu <b>101C</b> ve fabrika <b>1010/1020</b> yapılarını inceleyin.","Organizasyonel yapılar arasındaki atama ilişkilerini gözlemleyin."],info:"SAP S/4HANA'da hiyerarşi: Company Code > Plant > Storage Location. Purchasing Organization birden fazla Company Code'u kapsayabilir.",warn:null,result:null}
+]}
+]},
+{unit:3,title:"Plain Procurement Process",ex:[
+{id:4,title:"Create and Display a Purchase Order",app:"Manage Purchase Orders",sc:"A500-## malzemesinin depo stoğu yenilenmesi gerekiyor. Bir satın alma siparişi oluşturun ve mesajın doğruluğunu kontrol edin.",tasks:[
+{num:"1",title:"Satın Alma Siparişi Oluşturma",app:"Manage Purchase Orders",path:["Purchase Order Processing","Manage Purchase Orders","Create"],fields:[["Supplier","T-S50A## (Motormarkt Heidelberg)"],["Material","A500-## (Oil pump 500/##)"],["Quantity","100 PC"],["Plant","1010 (Hamburg)"],["Purchasing Doc. Type","Info Record (referans)"],["Purchasing Group (önerilen)","Z##"],["Purch. Organization (önerilen)","101C"],["Net Order Price (önerilen)","52 EUR"]],steps:["<b>Manage Purchase Orders</b> uygulamasını başlatın.","<b>Create</b>'e tıklayın.","<b>Items → Add from Document</b>'i seçin.","Supplier <b>T-S50A##</b>, Material <b>A500-##</b>, Doc. Type <b>Info Record</b> → <b>Go</b>.","Info record'u seçin ve <b>Add Items</b>'a tıklayın.","Fabrika <b>1010</b> ve miktar <b>100 PC</b> girin.","Item detayında <b>Process Control</b> sekmesinde GR ve IR göstergelerini kontrol edin.","<b>Apply</b>'a tıklayın.","Basic Data'da Purchasing Group, Purch. Org. ve Net Price'ı not edin.","<b>Order</b>'a tıklayarak PO'yu kaydedin; numarayı not edin."],info:null,warn:"## karakterlerini eğitmenin atadığı numarayla değiştirin.",result:"Satın alma siparişi oluşturulur. PO numarasını not edin."},
+{num:"2",title:"PO Listesi ve Mesaj Kontrolü",app:"Manage Purchase Orders",path:["Manage Purchase Orders","Filter","Output Management"],fields:[["Supplier","T-S50A##"],["Purchasing Group","Z##"]],steps:["<b>Manage Purchase Orders</b> uygulamasını başlatın.","Tedarikçi <b>T-S50A##</b> ve satın alma grubu <b>Z##</b> ile filtreleyin, <b>Go</b>.","PO numaranıza tıklayın.","<b>Output Management</b> alanında <b>(Display Document)</b> ile mesaj önizlemesini açın."],info:null,warn:null,result:"Tedarikçiye gönderilen satın alma mesajı doğrulanır."}
+]},
+{id:5,title:"Post a Goods Receipt for Purchase Order",app:"Post GR for Purchasing Document / Stock – Single Material / Material Documents Overview",sc:"Depo çalışanı olarak, satın alma siparişine referansla mal girişi girişi yapacaksınız.",tasks:[
+{num:"1",title:"Stok Analizi (Öncesi)",app:"Stock – Single Material",path:["Goods Receipt Processing","Stock – Single Material"],fields:[["Material","A500-##"],["Plant","1010"],["Storage Location","0001"]],steps:["<b>Stock – Single Material</b> uygulamasını başlatın.","Malzeme <b>A500-##</b> girin.","Stok miktarlarını not edin."],info:"Mal girişi öncesi: 10 PC unrestricted-use stok (fabrika 1010, depo 0001).",warn:null,result:null},
+{num:"2",title:"Mal Girişi Kayıt",app:"Post Goods Receipt for Purchasing Document",path:["Goods Receipt Processing","Post Goods Receipt for Purchasing Document"],fields:[["Purchase Order","<Ex.4'teki PO numarası>"],["Delivery Note","DN##01"],["Document Date","<Bugünün tarihi>"],["Material","A500-##"],["Quantity","100 PC"],["Storage Location","0001"]],steps:["<b>Post Goods Receipt for Purchasing Document</b> uygulamasını başlatın.","PO numarasını girin.","Delivery Note <b>DN##01</b> girin.","Storage location <b>0001</b>'i seçin.","<b>Post</b>'a tıklayın; materyal belge numarasını not edin."],info:null,warn:"Mal girişi öncesindeki egzersizden PO numarasını not almanız gerekir.",result:"Materyal belgesi oluşturulur."},
+{num:"3",title:"Materyal Belgesi İnceleme",app:"Material Documents Overview",path:["Goods Receipt Processing","Material Documents Overview"],fields:[["Plant","1010"],["Storage Location","0001"],["Posting Date","<Bugün>"]],steps:["<b>Material Documents Overview</b> uygulamasını başlatın.","Fabrika <b>1010</b>, depo <b>0001</b>, bugünün tarihini girin → <b>Go</b>.","Belge numaranıza tıklayın.","<b>Process Flow</b>'u açın; muhasebe belgesi ve PO numarasını kontrol edin.","<b>Back</b> ile listeye dönün."],info:null,warn:null,result:null},
+{num:"4",title:"Stok Analizi (Sonrası)",app:"Stock – Single Material",path:["Material Documents Overview","Material Link","Stock – Single Material"],fields:[],steps:["Materyal belgeler listesinde malzeme <b>A500-##</b>'ye tıklayın.","Açılan popover'da <b>More Links</b>'e tıklayın.","<b>Stock – Single Material</b> bağlantısını seçin.","Stok verilerini not edin."],info:null,warn:null,result:"Mal girişi sonrası: 110 PC unrestricted-use (fabrika 1010, depo 0001)."}
+]},
+{id:6,title:"Enter an Invoice",app:"Create Supplier Invoice / Supplier Invoices List",sc:"Tedarikçiden gelen faturayı sisteme girecek ve sipariş verileriyle karşılaştıracaksınız.",tasks:[
+{num:"1",title:"Tedarikçi Faturası Girişi",app:"Create Supplier Invoice",path:["Supplier Invoice Processing","Create Supplier Invoice"],fields:[["Company Code","1010"],["Gross Invoice Amount","5,720.00"],["Invoice Date","<Bugünün tarihi>"],["Reference","IV##01"],["Reference Doc. Category","Delivery Note"],["Delivery Note","DN##01"]],steps:["<b>Create Supplier Invoice</b> uygulamasını başlatın.","Fatura verilerini girin.","<b>Purchasing Document References</b> → Delivery Note → <b>DN##01</b> → <b>Enter</b>.","Sistem önerisi ile fatura verisini karşılaştırın.","<b>Post</b>'a tıklayın; fatura belge numarasını not edin."],info:null,warn:"Fatura tutarı ve miktarını sistem önerisiyle mutlaka karşılaştırın.",result:"Fatura başarıyla kaydedilir."},
+{num:"2",title:"Fatura Listesi Ayarları ve Varyant",app:"Supplier Invoices List",path:["Supplier Invoice Processing","Supplier Invoices List"],fields:[["Company Code","1010"],["Kolonlar (sırayla)","Invoicing Party / Blocked (Logistics) / Reference / Invoice Number / Status / Gross Invoice Amount / Entry Type / Posting Date"],["Sıralama","Reference — Descending"],["Varyant Adı","Sorted by Reference ##"],["Set as Default","Evet"]],steps:["<b>Supplier Invoices List</b> uygulamasını başlatın.","Company code <b>1010</b> → <b>Go</b>.","<b>(Settings)</b> ile kolon sıralamasını yapın.","Sort sekmesinde <b>Reference / Descending</b>.","<b>OK</b> → <b>(Select View) → Save As</b>; varyant adını girin, Set as Default işaretle."],info:null,warn:null,result:null},
+{num:"3",title:"Faturada PO Bağlantısı",app:"Supplier Invoices List",path:["Supplier Invoices List","Invoice Detail","Purchasing Document References"],fields:[],steps:["Listeden fatura numaranıza tıklayın.","<b>Purchasing Document References</b> sekmesini açın.","PO numarasının görüntülendiğini doğrulayın."],info:null,warn:null,result:"PO numarası fatura belgesinde görünür — 3'lü eşleşme (PO–GR–IR) tamamdır."}
+]}
+]},
+{unit:4,title:"Master Data in Procurement",ex:[
+{id:7,title:"Display Business Partner Data",app:"Maintain Business Partner",sc:"Tedarikçi T-S50A## hakkında bilgi alın ve iş ortağı rollerini inceleyin.",tasks:[
+{num:"1",title:"İş Ortağı Ana Verisi Görüntüleme",app:"Maintain Business Partner",path:["Supplier and BP","Maintain Business Partner"],fields:[["Business Partner","T-S50A##"]],steps:["<b>Maintain Business Partner</b> uygulamasını başlatın.","<b>T-S50A##</b> girin ve <b>Start</b>'a tıklayın.","Tedarikçi numarasını çift tıklayın.","<b>Display in BP role</b> alanında tüm rolleri görün."],info:"T-S50A## hem tedarikçi hem müşteridir (BP rolü bu bilgiyi gösterir).",warn:null,result:null},
+{num:"2",title:"Supplier centrally FI/MM Rolü",app:"Maintain Business Partner",path:["Maintain Business Partner","Role: Supplier centrally FI/MM","Company Code / Purchasing"],fields:[["Rol","Supplier centrally FI/MM"],["Adres","Mannheimer Str. 14 / 69115 Heidelberg"],["Company Code","1010"],["Purchasing Organization","101C"]],steps:["<b>Supplier centrally FI/MM</b> rolünü seçin.","Address sekmesinde adresi kontrol edin.","<b>Company Code</b> menüsünden şirket kodlarını listeleyin.","<b>Purchasing</b> menüsünden satın alma organizasyonlarını listeleyin."],info:null,warn:null,result:null}
+]},
+{id:8,title:"Create New Supplier Master Data",app:"Manage Supplier Master Data",sc:"Şirketiniz yeni bir tedarikçiyle iş ilişkisi kurdu. Bu iş ortağı için ana kayıt oluşturun.",tasks:[
+{num:"1",title:"Yeni Tedarikçi Ana Kaydı",app:"Manage Supplier Master Data",path:["Supplier and BP","Manage Supplier Master Data","Create","Organization"],fields:[["Business Partner","T-S50C##"],["Grouping","BPAB"],["Name 1","Martin Vehicle-Parts ##"],["Street / House No","Heidelberger Str. / ##"],["Postal Code / City","68161 / Mannheim"],["Country / Region","DE / BW"],["Language","EN"],["Search Term 1","SUPP##"],["Roles","FLVN00 + FLVN01"],["Purchasing Organization","101C"],["Purchasing Group","Z##"],["Planned Delivery Time","7 gün"],["Order Currency","EUR"],["Payment Terms","0002"],["Auto PO / GR-Based IV","X / X"],["Company Code","1010"],["Reconciliation Acct","21100000 (Trade Payables Domestic)"]],steps:["<b>Manage Supplier Master Data</b> uygulamasını başlatın.","<b>Create → Organization</b>'ı seçin.","Temel ve adres verilerini girin → <b>OK</b>.","Basic Data'da Search Term 1'i girin.","<b>Roles</b> bölümüne geçin; <b>FLVN00</b> ve <b>FLVN01</b> rollerini ekleyin.","<b>Purchasing Organizations</b> bölümünde 101C satırının sağındaki oka tıklayın; satın alma verilerini girin → <b>Apply</b>.","<b>Company Codes</b> bölümünde kalan bilgileri girin.","Sağ alttaki <b>Create</b>'e tıklayın."],info:null,warn:"Hem FI (FLVN00) hem MM (FLVN01) rolleri mutlaka girilmelidir.",result:"Yeni tedarikçi ana kaydı T-S50C## oluşturulur."}
+]},
+{id:9,title:"Display the Material Master Record",app:"Display Material",sc:"A500-## malzemesi için ana kaydı görüntüleyin; temel, satın alma ve stok verilerini kontrol edin.",tasks:[
+{num:"1–4",title:"Malzeme Ana Kaydı Görüntüleme",app:"Display Material",path:["Material Master","Display Material"],fields:[["Material","A500-##"],["Basic Data 1: Type / Sector","ROH / M (Mechanical Eng.)"],["Material Group","L003"],["Base Unit","PC"],["Purchasing: Plant","1010 → Purch. Group: Z##"],["Storage Location Stock","0001"]],steps:["<b>Display Material</b> uygulamasını başlatın.","Malzeme <b>A500-##</b> girin.","<b>Select View(s) → Basic Data 1 → Data</b>.","<b>(Information on material)</b> ikonu ile malzeme tipi ve sektörü görün.","<b>Purchasing</b> sekmesine geç; plant <b>1010</b> girin; Purchasing Group'u not et.","<b>Storage Location Stock</b> sekmesinde depo <b>0001</b> stok miktarını not et."],info:"Material Type: ROH | Industry Sector: M | Material Group: L003 | Base Unit: PC",warn:null,result:"Malzeme ana kaydı başarıyla görüntülendi."}
+]},
+{id:10,title:"Create New Material Master Data",app:"Create Material",sc:"Ürün yelpazenize yeni bir malzeme eklediniz. Malzeme ana kaydını oluşturmanız gerekiyor.",tasks:[
+{num:"1",title:"Yeni Malzeme Ana Kaydı",app:"Create Material",path:["Material Master","Create Material"],fields:[["Material Number","E500-##"],["Industry Sector","Mechanical Engineering"],["Material Type","Trading Goods"],["Views","Basic Data 1 / Purchasing / General Plant Data/Storage 1"],["Plant / Storage Location","1010 / 0001"],["Description (EN)","Fire Extinguisher ## for Forklift"],["Description (DE)","Feuerlöscher ## für Gabelstapler"],["Base Unit / Material Group","PC / L001 (Trading Materials)"],["Purchasing Group","Z##"],["Purchasing Value Key","1"],["GR Processing Time","1"],["Storage Bin","BI-##"]],steps:["<b>Create Material</b> uygulamasını başlatın.","Malzeme numarası <b>E500-##</b>, Industry Sector ve Material Type girin → <b>Continue</b>.","View seçiminde gerekli 3 görünümü işaretleyin.","Org. Levels: Plant <b>1010</b>, Storage Location <b>0001</b>.","Basic Data 1: açıklama, birim, malzeme grubunu girin.","Purchasing: tablo değerlerini girin.","Plant data/stor. 1: Storage Bin <b>BI-##</b> girin.","<b>Additional Data</b> ile Almanca açıklamayı ekleyin.","<b>Save</b>'e tıklayın."],info:null,warn:"'Check the data for the purchasing value key' mesajını Enter ile onaylayın.",result:"Malzeme ana kaydı E500-## oluşturulur."}
+]},
+{id:11,title:"Extend a Material Master Record",app:"Create Material / Change Material / Display Change Documents",sc:"Muhasebe verilerini ve ek fabrika için verileri malzeme ana kaydına ekleyerek genişletin.",tasks:[
+{num:"1",title:"Muhasebe Verisi Ekleme (Plant 1010)",app:"Create Material",path:["Material Master","Create Material"],fields:[["Material","E500-##"],["View","Accounting 1"],["Plant","1010"],["Valuation Class","3100 (Trading goods)"],["Price Control","S (Standard price)"],["Standard Price","180"]],steps:["<b>Create Material</b> uygulamasını başlatın.","E500-## girin → Continue.","<b>Accounting 1</b> görünümünü seçin; Plant <b>1010</b>.","Muhasebe verilerini girin → <b>Save</b>."],info:null,warn:"'Local currency converted…' mesajı gelirse Save ile onaylayın.",result:null},
+{num:"2",title:"Plant 1020 için Genişletme",app:"Create Material",path:["Material Master","Create Material","Copy from Material"],fields:[["Material / Copy from","E500-## / E500-##"],["Views","Purchasing + General Plant Data/Storage 1 + Accounting 1"],["Create views selected","X"],["New Plant / Copy from","1020 / 1010"],["New Storage / Copy from","101A / 0001"]],steps:["<b>Create Material</b> uygulamasını başlatın.","Material ve Copy from material alanlarına <b>E500-##</b> girin.","Seçilen view'ları işaretleyin; <b>Create views selected</b>'i aktifleştirin.","Org. Levels: New Plant <b>1020</b> / Copy <b>1010</b>; New Storage <b>101A</b> / Copy <b>0001</b>.","<b>Continue → Save</b>."],info:null,warn:"'Create views selected' checkbox'ını işaretlemeyi UNUTMAYIN.",result:null},
+{num:"3",title:"Plant 1020 Muhasebe Değişikliği",app:"Change Material",path:["Material Master","Change Material"],fields:[["Material","E500-##"],["View","Accounting 1"],["Plant","1020"],["Price Control","V (Moving Average Price)"]],steps:["<b>Change Material</b> uygulamasını başlatın.","E500-##, Accounting 1, Plant 1020.","Price Control'ü <b>V</b> olarak değiştirin → <b>Save</b>."],info:null,warn:null,result:null},
+{num:"4",title:"Değişiklik Belgelerini Görüntüle",app:"Display Change Documents",path:["Material Master","Display Change Documents"],fields:[["Material","E500-##"]],steps:["<b>Display Change Documents</b> uygulamasını başlatın.","E500-## girin → <b>Execute</b>.","<b>MM02</b> işlem koduyla satırı çift tıklayın."],info:null,warn:null,result:"4 değişiklik belgesi listelenir. MM02 belgesi: Moving Avg Price 0→180 EUR, Price Control S→V."}
+]},
+{id:12,title:"Create a New Info Record",app:"Create Purchasing Info Record",sc:"Martin Vehicle-Parts ## iş ortağı, Fire Extinguisher ## için tedarikçidir. Satın alma bilgi kaydı oluşturun.",tasks:[
+{num:"1",title:"Satın Alma Bilgi Kaydı Oluşturma",app:"Create Purchasing Info Record",path:["Sources of Supply Management","Create Purchasing Info Record"],fields:[["Supplier","T-S50C##"],["Material","E500-##"],["Purchasing Organization","101C"],["Purchasing Group","Z##"],["Standard Quantity","10"],["Tax Code","1I (10% Input Tax Training)"],["Validity Period","Bugün – Gelecek yıl sonu"],["Gross Price 1–4 PC","EUR 180/PC"],["Gross Price 5–9 PC","EUR 170/PC"],["Gross Price 10+ PC","EUR 150/PC"],["Discount RA01","10%"]],steps:["<b>Create Purchasing Info Record</b> uygulamasını başlatın.","Supplier, Material, Purchasing Org. girin → <b>Enter</b>.","<b>Purch. Org. Data 1</b>'de Purchasing Group ve net price <b>180 EUR</b>'yu girin.","<b>Conditions</b>'a tıklayın; geçerlilik süresini ve <b>RA01</b> koşulunu (%10) ekleyin.","<b>PB00</b> koşulunu seçin → <b>Scales</b>; kademeli fiyatları girin.","<b>Save</b>'e tıklayın."],info:null,warn:null,result:"Info record oluşturulur; kademeli fiyatlandırma tanımlanır."}
+]},
+{id:13,title:"Create a Purchase Order for Stock Material",app:"Manage Purchase Orders",sc:"Yeni ana verilerin tam olduğunu test etmek için Fire Extinguisher ## için PO oluşturun.",tasks:[
+{num:"1",title:"İki Fabrika İçin PO",app:"Manage Purchase Orders",path:["Purchase Order Processing","Manage Purchase Orders","Create"],fields:[["Supplier","T-S50C##"],["Company Code","1010"],["Purchasing Group","Z##"],["Purchasing Organization","101C"],["Item 1 – Material / Qty / Plant / Storage","E500-## / 10 PC / 1010 / 0001"],["Item 2 – Material / Qty / Plant / Storage","E500-## / 10 PC / 1020 / 101A"]],steps:["<b>Manage Purchase Orders</b> uygulamasını başlatın → <b>Create</b>.","Tedarikçi <b>T-S50C##</b> girin → <b>Enter</b>.","Items → <b>Create</b>; Item 1 verilerini girin (Storage Location: item detayına gir → Apply).","Tekrar <b>Create</b>; Item 2 verilerini girin.","<b>Order</b>'a tıklayın; PO numarasını not edin."],info:null,warn:null,result:"Her iki kalem için net sipariş fiyatı: EUR 135/PC (kademeli fiyat: 10 PC için)."}
+]},
+{id:14,title:"Post GR and IR – Material with Standard Price",app:"Display Material / Post GR / Material Docs Overview / Create Supplier Invoice",sc:"Plant 1010 için 10 adet yangın söndürücü teslim edildi ve faturalandı. Standart fiyat kontrolü etkisini analiz edin.",tasks:[
+{num:"1",title:"Muhasebe Verisi Görüntüleme (Öncesi)",app:"Display Material",path:["Material Master","Display Material"],fields:[["Material","E500-##"],["View","Accounting 1"],["Plant","1010"],["Beklenen Değerler","Price Control: S | Total Stock: 0 | Standard Price: 180 | Inventory Value: 0"]],steps:["<b>Display Material</b>'ı başlatın; E500-##, Accounting 1, Plant 1010.","Price Control, Total Stock, Standard Price, Inventory Value'yu not edin."],info:null,warn:null,result:null},
+{num:"2",title:"Plant 1010 için Mal Girişi",app:"Post Goods Receipt for Purchasing Document",path:["Goods Receipt Processing","Post Goods Receipt for Purchasing Document"],fields:[["Purchase Order","<Ex.13'teki PO>"],["Delivery Note","DN##02"],["Plant/Storage","Hamburg/Material (1010/0001)"],["Stock Type","Unrestricted-Use"]],steps:["<b>Post Goods Receipt for Purchasing Document</b>'ı başlatın.","PO numarasını girin.","<b>Plant 1010</b> için olan satırı seçin.","Delivery note <b>DN##02</b> girin → <b>Post</b>.","Materyal belge numarasını not edin."],info:null,warn:"Plant 1020 için 2. PO kaleminin mal girişini YAPMAYIN.",result:"Materyal belgesi oluşturulur."},
+{num:"3",title:"Muhasebe Belgesi İnceleme",app:"Material Documents Overview",path:["Goods Receipt Processing","Material Documents Overview","Process Flow","Accounting Document"],fields:[["Plant","1010"],["Storage Location","0001"],["Material","E500-##"]],steps:["<b>Material Documents Overview</b>'ı başlatın; filtrelerle belgeni bulun.","Belge numaranıza tıklayın → <b>Process Flow → Accounting Document</b>."],info:null,warn:null,result:"G/L 13600000 (Inventory): 1,800 DR | G/L 21120000 (GR/IR): 1,350 CR | G/L 52541000 (Price Diff.): 450 CR"},
+{num:"5",title:"Fatura Girişi (Unplanned Delivery Costs)",app:"Create Supplier Invoice",path:["Supplier Invoice Processing","Create Supplier Invoice"],fields:[["Company Code","1010"],["Gross Invoice Amount","1,540.00"],["Invoice Date","<Bugün>"],["Reference","IV##02"],["Ref. Doc. Category","Delivery Note → DN##02"],["Unplanned Delivery Costs","EUR 50 (Freight)"]],steps:["<b>Create Supplier Invoice</b>'ı başlatın.","Fatura verilerini girin.","Delivery note <b>DN##02</b> referansını ekleyin; tax code <b>1I</b>'yi doğrulayın.","<b>Unplanned Delivery Costs</b>: freight <b>50 EUR</b> girin.","<b>Simulate</b> → sonuçları not edin → <b>Post</b>."],info:null,warn:null,result:"Standart fiyatta malzeme ana kaydı DEĞİŞMEZ. Fark, fiyat farkı hesabına (52041000) gider yazılır."}
+]},
+{id:15,title:"Post GR and IR – Material with Moving Average Price",app:"Display Material / Post GR / Create Supplier Invoice",sc:"Plant 1020 için 10 adet yangın söndürücü teslim edildi. Hareketli ortalama fiyat etkisini analiz edin.",tasks:[
+{num:"2",title:"Plant 1020 için Mal Girişi",app:"Post Goods Receipt for Purchasing Document",path:["Goods Receipt Processing","Post Goods Receipt for Purchasing Document"],fields:[["Purchase Order","<Ex.13'teki PO>"],["Delivery Note","DN##03"],["Plant/Storage","Berlin/Std. storage 1 (1020/101A)"],["Stock Type","Unrestricted-Use"]],steps:["<b>Post Goods Receipt for Purchasing Document</b>'ı başlatın.","PO numarasını girin; delivery note <b>DN##03</b>.","<b>Plant 1020 (Berlin)</b> kalemini seçin → <b>Post</b>."],info:null,warn:null,result:"G/L 13600000: 1,350 DR | G/L 21120000: 1,350 CR (MAP üzerinden işlenir)"},
+{num:"5–6",title:"Fatura Girişi ve MAP Güncelleme",app:"Create Supplier Invoice",path:["Supplier Invoice Processing","Create Supplier Invoice"],fields:[["Company Code","1010"],["Gross Invoice Amount","1,540.00"],["Reference","IV##03"],["Delivery Note","DN##03"],["Unplanned Delivery Costs","EUR 50"]],steps:["<b>Create Supplier Invoice</b>'ı başlatın.","Delivery note <b>DN##03</b> referansı ekleyin; unplanned freight <b>50 EUR</b>.","<b>Simulate</b> → <b>Post</b>."],info:null,warn:null,result:"MAP GÜNCELLENIR: Yeni MAP 140 EUR/PC | Stok: 10 PC | Inventory Value: 1,400 EUR"}
+]}
+]},
+{unit:5,title:"Stock Material Compared with Consumable Material",ex:[
+{id:16,title:"Create a Purchase Requisition with Account Assignment",app:"Default Settings for Users / Manage Purchase Requisitions – Professional",sc:"Departmanlar malzeme gereksinimlerini satın alma talebiyle bildiriyor. Onarım departmanı için malzeme talebi oluşturun.",tasks:[
+{num:"2",title:"Kullanıcı Varsayılan Değerleri",app:"Default Settings for Users",path:["Purchase Requisition Processing","Default Settings for Users"],fields:[["Plant","1010 (Hamburg)"],["Company Code","1010"],["Purchasing Group","Z##"],["Purchasing Organization","101C"],["Account Assignment Category","K (Cost center)"],["Cost Center","113## (Repair Group ##)"]],steps:["<b>Default Settings for Users</b> uygulamasını başlatın.","Kullanıcı ID'nizi girin → <b>Edit</b>.","Değerleri girin → Kaydet."],info:null,warn:"Purchasing Group varsayılanı yalnızca malzeme ana kaydı olmayan kalemler için geçerlidir.",result:null},
+{num:"3",title:"Satın Alma Talebi Oluşturma",app:"Manage Purchase Requisitions – Professional",path:["Purchase Requisition Processing","Manage Purchase Requisitions – Professional","Create"],fields:[["Material 1","A500-## / 50 PC / Cost Center 113##"],["Material 2","B500-## / 50 PC / Cost Center 113##"],["Delivery Date","<Bugün + 2 hafta>"]],steps:["<b>Manage Purchase Requisitions – Professional</b>'ı başlatın → <b>Create</b>.","Items → <b>Create → Material</b>; A500-##, 50 PC, delivery date → <b>Apply</b>.","B500-## için tekrar edin → <b>Apply</b>.","<b>Create</b>'e tıklayarak kaydedin; belge numarasını not edin."],info:null,warn:"Limit Items alanına ekleme YAPMAYIN.",result:"Talep oluşurulur. Değerleme fiyatı malzeme ana kaydından önerilir."}
+]},
+{id:17,title:"Create a Purchase Requisition for Consumable Material",app:"Manage Purchase Requisitions – Professional",sc:"IT departmanı kablosuz fare ve harici disk ihtiyacı için talep oluşturacak. Malzeme ana kaydı olmayan kalem manuel girilecek.",tasks:[
+{num:"2",title:"IT Malzemeleri için Talep",app:"Manage Purchase Requisitions – Professional",path:["Purchase Requisition Processing","Manage Purchase Requisitions – Professional","Create"],fields:[["Item 1 Material","T-ITH100## (Wireless Mobile Mouse) / 10 PC / Cost Center 4110"],["Item 2 Description","External Hard Disk, 2 TB"],["Item 2 Material Group","Z901 (IT Hardware)"],["Item 2 Qty / Price / UoM","1 PC / EUR 77 / PC"],["Item 2 Cost Center","4110 (Technical Assets)"]],steps:["<b>Manage Purchase Requisitions – Professional</b>'ı başlatın → Create.","Item 1: T-ITH100##, 10 PC; Cost Center'ı <b>4110</b> olarak değiştir → Apply.","Item 2: Create → Material; malzeme grubu, fiyat ve birim manuel gir → Apply.","<b>Create</b>'e tıklayarak kaydet; belge numarasını not et."],info:null,warn:"Limit Items alanına ekleme YAPMAYIN.",result:null},
+{num:"3",title:"GR Kontrolünü Değiştirme",app:"Manage Purchase Requisitions – Professional",path:["Purchase Requisition – Professional","Edit","Process Control"],fields:[["Item 1 (T-ITH100##): GR Expected","Deselected"],["Item 1: Invoice Receipt","Selected"],["Item 2 (Ext.HD): GR Expected","Selected"],["Item 2: Non-Valuated GR Expected","Selected"]],steps:["Object page'de <b>Edit</b>'e tıklayın.","Her kalem için Process Control değerlerini değiştirin.","Kaydedin."],info:null,warn:null,result:null}
+]},
+{id:18,title:"Create a PO with Reference to a Purchase Requisition",app:"Process Purchase Requisitions (V2) / Display Purchasing Docs by Supplier",sc:"Kullanıcı departmanlarından gelen satın alma talepleri satın alma siparişine dönüştürülmeli.",tasks:[
+{num:"1",title:"L003 Malzemeleri için PO Oluşturma",app:"Process Purchase Requisitions (V2)",path:["Purchase Requisition Processing","Process Purchase Requisitions (V2)"],fields:[["Purchasing Group","Z##"],["Material Group","L003"]],steps:["<b>Process Purchase Requisitions (V2)</b>'yi başlatın.","Filtre: <b>Z##</b> ve <b>L003</b> → <b>Go</b>.","<b>Show More per Row</b>'a tıklayın.","Her kalem için <b>Assign Source of Supply</b>; tedarikçiyi seçin → <b>Assign</b>.","Her iki kalemi seçin → <b>Create Purchase Order</b> → <b>Order</b>; PO numarasını not edin."],info:"A500-##: Info Record (T-S50A##) | B500-##: Info Record (T-S50A##)",warn:null,result:null},
+{num:"2",title:"Z901 Malzemeleri için PO Oluşturma",app:"Process Purchase Requisitions (V2)",path:["Purchase Requisition Processing","Process Purchase Requisitions (V2)"],fields:[["Purchasing Group","Z##"],["Material Group","Z901"],["Ext. HD Manuel Tedarikçi","T-S50A##"]],steps:["Filtre: <b>Z##</b> ve <b>Z901</b> → <b>Go</b>.","T-ITH100## için otomatik kaynak ataması yapın.","External Hard Disk: Supplier sekmesinden <b>T-S50A##</b>'yi seç → <b>Assign</b>.","Her iki kalemi seçin → PO oluşturun."],info:"T-ITH100##: Info Record (T-S50A##) | External Hard Disk: kaynak yok, manuel tedarikçi atanır.",warn:null,result:"Muhasebe atama bilgisi (cost center) talepten PO'ya aktarılır."}
+]},
+{id:19,title:"Post a Valuated GR and Dependent Invoice – Analyze FI Postings",app:"Post GR / Material Documents Overview / Create Supplier Invoice",sc:"T-S50A## tedarikçisi A500-## ve B500-## malzemelerini teslim ediyor. Mal girişini ve faturayı girin; muhasebe etkilerini kontrol edin.",tasks:[
+{num:"3",title:"İki Malzeme için Mal Girişi",app:"Post Goods Receipt for Purchasing Document",path:["Goods Receipt Processing","Post Goods Receipt for Purchasing Document"],fields:[["Purchase Order","<Z## grubunun PO'su>"],["Delivery Note","DN##04"],["A500-## Quantity","50 PC"],["B500-## Quantity","50 PC"]],steps:["<b>Post Goods Receipt for Purchasing Document</b>'ı başlatın.","PO numarasını girin; delivery note <b>DN##04</b>.","Her iki kalemi seçin → <b>Post</b>; belge numarasını not edin."],info:null,warn:null,result:"51100000 (Tüketim) DR | 21120000 (GR/IR) CR. Tüketim malzemesinde stok değişmez."},
+{num:"6",title:"Fatura Girişi",app:"Create Supplier Invoice",path:["Supplier Invoice Processing","Create Supplier Invoice"],fields:[["Company Code","1010"],["Gross Invoice Amount","27,060"],["Reference","IV##04"],["Delivery Note","DN##04"]],steps:["<b>Create Supplier Invoice</b>'ı başlatın.","Delivery note <b>DN##04</b> referansı; tax code <b>1I</b>.","<b>Simulate</b> → <b>Post</b>; belge numarasını not edin."],info:null,warn:null,result:null}
+]},
+{id:20,title:"Post a Non-Valuated GR and Dependent Invoice – Analyze FI Postings",app:"Post GR / Create Supplier Invoice",sc:"T-S50A## IT donanımı teslimatı yapıyor. Non-Valuated GR konfigürasyonunun etkisini analiz edin.",tasks:[
+{num:"1",title:"IT Malzemeleri için Mal Girişi",app:"Post Goods Receipt for Purchasing Document",path:["Goods Receipt Processing","Post Goods Receipt for Purchasing Document"],fields:[["Delivery Note","DN##05"],["T-ITH100## GR?","HAYIR – GR Expected işaretli değil"],["External Hard Disk GR?","EVET – Non-Valuated GR"]],steps:["<b>Post Goods Receipt for Purchasing Document</b>'ı başlatın.","İkinci PO numarasını girin.","T-ITH100## için GR oluşturulamaz (GR Expected=No).","External Hard Disk kalemini seçin; delivery note <b>DN##05</b> → <b>Post</b>."],info:null,warn:"T-ITH100## için mal girişi yapılamaz. Non-valuated GR için muhasebe belgesi oluşmaz.",result:null},
+{num:"2",title:"IT Fatura Girişi",app:"Create Supplier Invoice",path:["Supplier Invoice Processing","Create Supplier Invoice"],fields:[["Company Code","1010"],["Gross Invoice Amount","EUR 337.70"],["Reference","IV##05"],["Reference Category","Purchase Order/Scheduling Agreement"]],steps:["<b>Create Supplier Invoice</b>'ı başlatın.","<b>Purchase Order/Scheduling Agreement</b> referans kategorisini seçin.","PO numarasını girin; her iki kalem için tax code <b>1I</b>.","<b>Simulate</b> → <b>Post</b>."],info:"Non-valuated GR olduğu için fatura anında tüketim hesabı (51100000) borçlandırılır.",warn:null,result:"51100000: 230 DR (Mouse) + 77 DR (HD) | 12600000: 30.70 DR | 21100000: 337.70 CR"}
+]}
+]},
+{unit:6,title:"Self-Service Requisition",ex:[
+{id:21,title:"Create a Purchase Requisition Using Self-Service",app:"My Purchase Requisitions – New",sc:"Çalışan olarak self-servis aracılığıyla ihtiyaç duyduğunuz malzemeleri sipariş edebilirsiniz.",tasks:[
+{num:"1",title:"Kullanıcı Varsayılan Cost Center",app:"My Purchase Requisitions – New",path:["Employee Self Services V2","My Purchase Requisitions – New","User Actions Menu","Default Settings for User"],fields:[["Cost Center","10101201"]],steps:["<b>My Purchase Requisitions – New</b>'ı başlatın.","<b>(Profile) → Default Settings for User</b>'ı seçin.","Cost Center <b>10101201</b> → <b>Save</b>."],info:null,warn:"Varsayılan değerleri değiştirdikten sonra katalog görünmüyorsa F5 ile yenileyin.",result:null},
+{num:"2",title:"Katalogdan Malzeme Siparişi",app:"My Purchase Requisitions – New",path:["My Purchase Requisitions – New","Employee Catalog"],fields:[["Material 1","Notebook T520 / 1 PC"],["Material 2","Privacy filter for notebook T520 / 1 PC"],["Material 3","Keyboard MS natural Ergon / 1 PC"],["Supplier (tümü)","IT-Service Hamburg (T-S52IT)"],["Cart Name","Notebook Employee ##"]],steps:["<b>Employee Catalog</b>'a girin.","T520 ile arama yapın; Lenovo T520 ve Privacy filter'ı sepete ekleyin.","Keyboard'u gezinme menüsünden bulup ekleyin.","Sepeti görüntüleyin; tedarikçi T-S52IT olmalı.","<b>Order</b> ile SAP S/4HANA'ya aktar.","View Cart → Cart adını <b>Notebook Employee ##</b> yap → <b>Order</b>."],info:null,warn:null,result:null},
+{num:"3",title:"Kupa Siparişi",app:"My Purchase Requisitions – New",path:["My Purchase Requisitions – New","Employee Catalog"],fields:[["Material","SAP Mug white 6 pcs / 2 Set"],["Cart Name","Mugs Employee ##"]],steps:["Kataloğa girin; 'Mug' ile arayın.","2 set sepete ekle; stok miktarını görüntüle.","<b>Order</b> → cart adı <b>Mugs Employee ##</b> → Create."],info:null,warn:null,result:"Mugs talebi için follow-on document (PO) otomatik oluşur."}
+]},
+{id:22,title:"Order Requested Material and Check the Status",app:"Process Purchase Requisitions (V2) / My Purchase Requisitions – New",sc:"Çalışanın talebi onaylandı; satın alma departmanı siparişe dönüştürebilir.",tasks:[
+{num:"1",title:"Talebi PO'ya Dönüştürme",app:"Process Purchase Requisitions (V2)",path:["Purchase Requisition Processing","Process Purchase Requisitions (V2)"],fields:[["Purchasing Group","Z##"],["Processing Status","Not edited"],["Supplier","T-S52IT"]],steps:["<b>Process Purchase Requisitions (V2)</b>'yi başlatın.","Purchasing Group <b>Z##</b>, Status <b>Not edited</b> → <b>Go</b>.","T-S52IT tedarikçili 3 kalemi seçin → <b>Create Purchase Order</b>.","Tüm mesajları onaylayın; PO'yu kaydedin."],info:null,warn:null,result:"Talep durumu 'Follow on Document Created' olur."}
+]},
+{id:23,title:"Confirm Receipt of Your Requested Materials",app:"Confirm Receipt of Goods – New / My Purchase Requisitions – New",sc:"Çalışan olarak talep ettiğiniz malzemeleri teslim aldınız. Mal girişini onaylayın.",tasks:[
+{num:"1–2",title:"Malzeme Teslim Onayı ve Durum Kontrolü",app:"Confirm Receipt of Goods – New",path:["Employee Self Services V2","Confirm Receipt of Goods – New"],fields:[["Delivery Note","DN-EM##"]],steps:["<b>Confirm Receipt of Goods – New</b>'ı başlatın.","Notebook Employee ## talebi otomatik listelenir; PO numarasına tıklayın.","<b>Edit</b> → Delivery note <b>DN-EM##</b>, tüm kalemleri seç → <b>Confirm</b>.","<b>My Purchase Requisitions – New</b> uygulamasında durumu kontrol edin."],info:null,warn:null,result:"Talep durumu: PO + GR follow-on belgeleri oluşmuştur."}
+]}
+]},
+{unit:7,title:"Advanced Transactions in Procurement",ex:[
+{id:24,title:"Create a Contract",app:"SAP GUI – ME31K",sc:"Satın alma departmanı tedarikçiyle çerçeve sözleşme imzaladı. Miktar sözleşmesi (MK) oluşturun.",tasks:[
+{num:"1",title:"Quantity Contract Oluşturma",app:"SAP GUI – ME31K",path:["Logistics","Materials Management","Purchasing","Outline Agreement","Contract","Create (ME31K)"],fields:[["Supplier","T-S52A##"],["Agreement Type","MK (Quantity Contract)"],["Purchasing Organization","101C"],["Purchasing Group","Z##"],["Plant","------- (tüm fabrikalar)"],["Validity Start","<Önceki ayın 1. günü>"],["Validity End","<Bugün + 2 ay>"],["Item 10: A500-##","10,000 PC / EUR 50"],["Item 20: C500-##","40,000 PC / EUR 48"],["Item 30: D500-##","40,000 PC / EUR 66"],["Header Condition RA01","5% Discount on Gross"]],steps:["SAP GUI'da <b>ME31K</b>'yi açın.","Supplier, Agreement Type <b>MK</b>, Purch. Org., Group ve Plant girin.","Header Data'da geçerlilik tarihlerini girin.","Item Overview'da 3 kalemi girin.","<b>Header → Conditions</b>: RA01 için %5 ve validity start girin.","<b>Save</b>; sözleşme numarasını not edin."],info:null,warn:null,result:"Quantity Contract (MK) oluşturulur. Sözleşme numarasını not edin."}
+]},
+{id:25,title:"Maintain the Source List",app:"SAP GUI – ME01 / ME05",sc:"T-S52A## ile sözleşme yapıldıktan sonra sözleşme kalemlerini otomatik kaynak olarak tanımlayın.",tasks:[
+{num:"1",title:"A500-## için Kaynak Listesi (ME01)",app:"SAP GUI – ME01",path:["Logistics","Materials Management","Purchasing","Master Data","Source List","Maintain (ME01)"],fields:[["Material","A500-##"],["Plant","1010"],["Valid From","<Önceki ayın 1. günü>"],["Valid To","<Yılsonuna kadar>"],["Fixed","X"],["MRP Indicator","1 (MRP'de dikkate al)"]],steps:["SAP GUI'da <b>ME01</b>'i açın.","Material <b>A500-##</b>, Plant <b>1010</b>.","<b>Edit → Generate Records</b>; tarihleri ayarla → <b>Continue</b>.","Sözleşme kalemi satırında <b>Fixed</b> ve <b>MRP 1</b> göstergelerini işaretle.","<b>Save</b>."],info:"Sistem 2 kaynak oluşturur: T-S52A## (sözleşme) ve T-S50A## (info record).",warn:null,result:null},
+{num:"2",title:"C500-## ve D500-## Toplu Kaynak (ME05)",app:"SAP GUI – ME05",path:["Logistics","Materials Management","Purchasing","Master Data","Source List","Follow-On Functions","Generate (ME05)"],fields:[["Materials","C500-## ve D500-## (tek değerler)"],["Generate: Outline Agreements Only","X"],["Existing Records: Become Invalid","X"],["Test Run","Seçili değil"]],steps:["SAP GUI'da <b>ME05</b>'i açın.","C500-## girin; Multiple Selection ile D500-##'yi tek değer ekle.","Diğer alanları doldur → <b>Execute</b>.","Tüm kalemleri seç → <b>Fix</b> → Kaydet."],info:null,warn:"C500-## ile D500-## arasında RANGE SEÇMEYİN. Sadece tek değerleri girin.",result:"Kaynak listesi kayıtları oluşturulur."}
+]},
+{id:26,title:"Create a Purchase Requisition with the Advanced Transaction ME51N",app:"SAP GUI – ME51N",sc:"Gelişmiş işlem ME51N ile satın alma talepleri oluşturun; kaynakların otomatik atanmasını sağlayın.",tasks:[
+{num:"1",title:"Varsayılan Değerler (Personal Setting)",app:"SAP GUI – ME51N",path:["Logistics","Materials Management","Purchasing","Purchase Requisition","Create (ME51N)","Personal Setting","Default Values"],fields:[["Purchasing Group","Z##"],["Plant","1010"],["Tracking Number","GR##"],["Source Determination","X"]],steps:["SAP GUI'da <b>ME51N</b>'yi açın.","<b>(Personal Setting) → Default Values</b> sekmesi.","<b>More Fields...</b> ile eksik alanları ekle.","Değerleri gir → Kaydet."],info:null,warn:null,result:null},
+{num:"2",title:"Stok Malzemeleri için Talep",app:"SAP GUI – ME51N",path:["ME51N","Item Overview","Item Details","Source of Supply Tab"],fields:[["Item 10","B500-## (Oil tray) / 20 PC"],["Item 20","C500-## (Wheel bearing) / 100 PC"],["Item 30","D500-## (Suspension) / 100 PC"]],steps:["Item overview'da kalemleri girin → <b>Enter</b>.","Item Details → <b>Source of Supply</b> sekmesinde kaynakları not edin.","<b>Save</b>; belge numarasını not edin."],info:"B500-##: Info Record (T-S50A##) | C500-##: Contract (T-S52A##) | D500-##: Contract (T-S52A##)",warn:null,result:null},
+{num:"3",title:"Çoklu Hesap Atamalı Talep",app:"SAP GUI – ME51N",path:["ME51N","Account Assignment Tab","Multiple Account Assignment"],fields:[["Material","A500-## / 10 PC / Account Assignment K"],["4 PC → Cost Center","T-ENG## / G/L 51700000"],["6 PC → Cost Center","T-CCB## / G/L 51100000"]],steps:["Item overview'da A500-##, 10 PC, Account Assignment <b>K</b> girin.","<b>Account Assignment → (Multiple Account Assignment)</b>.","Her iki satır için miktar, cost center ve G/L girin.","<b>Save</b>; belge numarasını not edin."],info:"A500-## kaynağı: Contract item (T-S52A##).",warn:null,result:null},
+{num:"4",title:"Talep Listesi (ME5A)",app:"SAP GUI – ME5A",path:["Logistics","Materials Management","Purchasing","Purchase Requisition","List Displays","General (ME5A)"],fields:[["Tracking Number","GR##"]],steps:["SAP GUI'da <b>ME5A</b>'yı açın.","Tracking Number <b>GR##</b> → <b>Execute</b>.","Bir kalemi çift tıkla → <b>Status</b> sekmesini kontrol et."],info:"Listede 2. kolon işleme durumunu (N = Not edited) gösterir. Fixed vendor ve sözleşme numarası görünür.",warn:null,result:null}
+]},
+{id:27,title:"Create a Purchase Order with the Advanced Transaction ME21N",app:"SAP GUI – ME21N",sc:"T-S50A## tedarikçisine atanmış talepleri manuel olarak PO'ya dönüştürün.",tasks:[
+{num:"1",title:"Belge Genel Görünümü Yapılandırma",app:"SAP GUI – ME21N",path:["Logistics","Materials Management","Purchasing","Purchase Order","Create","Vendor/Supplying Plant Known (ME21N)"],fields:[["Selection Variant","SV## – PurchRequ Group ##"],["Filter","Purchasing Group Z## / Assigned + open + released"],["Layout","L## – Layout Group ##"],["Gruplandırma","Fixed vendor, PR, PR item | Kolon: Material, Short Text"]],steps:["SAP GUI'da <b>ME21N</b>'yi açın → Document Overview On.","Selection Variant → Purchase Requisitions; filtreler → <b>Save as Variant SV##</b>.","<b>Execute</b> → Change Breakdown ve Layout ayarları → <b>Save layout L##</b>."],info:null,warn:null,result:null},
+{num:"2–3",title:"T-S50A## Taleplerini PO'ya Dönüştür",app:"SAP GUI – ME21N",path:["ME21N","Document Overview","Fixed Vendor T-S50A##","Adopt"],fields:[],steps:["Document overview'da <b>T-S50A##</b> satırını seçin → <b>(Adopt)</b>.","<b>Save</b>; PO numarasını not edin.","Dönüştürülen talebin Status sekmesini kontrol edin."],info:null,warn:null,result:"PO oluşturulur. Dönüştürülen talebin durumu: 'PO created'."}
+]},
+{id:28,title:"Convert Purchase Requisitions Automatically to PO",app:"SAP GUI – MK02 / MM02 / ME59N",sc:"T-S52A## tedarikçisine atanmış tüm talepler otomatik olarak PO'ya dönüştürülmeli.",tasks:[
+{num:"1–2",title:"Otomatik PO Göstergelerini Kontrol Et",app:"SAP GUI – MK02 / MM02",path:["Logistics","MM","Purchasing","Master Data","Vendor","Purchasing","Change (MK02)"],fields:[["Supplier","T-S52A## / Purchasing Org. 101C"],["Role","FLVN01 (Supplier)"],["Automatic Purchase Order","X"],["Materials A500-##, C500-##, D500-##","MM02 → Purchasing view → Automatic PO: X"]],steps:["<b>MK02</b>'de T-S52A## için <b>Automatic PO</b>'yu kontrol edin/set edin.","<b>MM02</b>'de her 3 malzeme için <b>Automatic PO</b> göstergesini kontrol edin/set edin."],info:null,warn:null,result:null},
+{num:"3",title:"Otomatik PO Dönüşümü (ME59N)",app:"SAP GUI – ME59N",path:["Logistics","MM","Purchasing","Purchase Requisition","Follow-On Functions","Create PO Automatically (ME59N)"],fields:[["Purchasing Group","Z##"],["Fixed Vendor","T-S52A##"],["New PO per Purchasing Group","Seçili"],["Detailed Log","2 (All Messages)"]],steps:["SAP GUI'da <b>ME59N</b>'yi açın.","Değerleri girin → <b>Execute</b>.","PO numarasını not edin."],info:null,warn:null,result:"'Purchase order successfully created, Requisition successfully converted.' mesajı görünür."},
+{num:"4–5",title:"PO ve Sözleşme Release Dokümantasyonu",app:"SAP GUI – ME23N",path:["Logistics","MM","Purchasing","Purchase Order","Display (ME23N)"],fields:[],steps:["<b>ME23N</b>'de PO'yu açın.","Item overview'da sağa kaydırarak PR ve Outline Agreement numaralarını kontrol edin.","Net fiyatı çift tıkla → <b>Conditions</b>: %5 sözleşme indirimini kontrol et.","Sözleşme numarasını çift tıkla → <b>Item → Statistics → Release Documentation</b>."],info:null,warn:null,result:"Sözleşme release dokümantasyonu PO numarasıyla güncellenir."}
+]},
+{id:29,title:"Post Goods Receipt with Transaction for Goods Movements",app:"SAP GUI – MIGO_GR / MMBE",sc:"T-S50A## ve T-S52A## tedarikçileri malzemeleri teslim ediyor. Mal girişlerini MIGO ile kaydedin.",tasks:[
+{num:"1",title:"MIGO Varsayılan Değerleri",app:"SAP GUI – MIGO",path:["Logistics","MM","Inventory Management","Goods Movement","GR for Purchase Order (MIGO_GR)","Settings","Default Values"],fields:[["Storage Location","0001"],["Plant","1010"],["Propose OK Function","X"]],steps:["SAP GUI'da <b>MIGO_GR</b>'yi açın.","<b>Settings → Default Values</b>; değerleri girin → <b>Adopt</b>."],info:null,warn:null,result:null},
+{num:"2",title:"T-S52A## Teslimatı – Mal Girişi",app:"SAP GUI – MIGO",path:["MIGO","Goods Receipt","Purchase Order","Find PO"],fields:[["Vendor","T-S52A##"],["Plant","1010"],["Delivery Note","DN##06"],["Quantity","Tüm sipariş miktarı"]],steps:["MIGO'da: transaction <b>Goods Receipt</b>, reference <b>Purchase Order</b>.","<b>(Find PO)</b>: Vendor T-S52A##, Plant 1010 → <b>Find</b>.","Tüm kalemleri seç → <b>Adopt</b>.","Delivery note <b>DN##06</b> girin.","OK checkbox'larını kontrol et → <b>Post</b>; belge numarasını not edin."],info:null,warn:null,result:null},
+{num:"5",title:"B500-## Kalite Muayene Stoku",app:"SAP GUI – MIGO",path:["MIGO","Item Detail","Where Tab","Quality Inspection Stock"],fields:[["Material","B500-##"],["Supplier","T-S50A##"],["Delivery Note","DN##07"],["Stock Type","Quality Inspection"]],steps:["MIGO'da yeni mal girişi; PO numarasını girin.","Item detail → <b>Where</b> sekmesi → <b>Quality Inspection</b>.","Delivery note <b>DN##07</b> → <b>Post</b>; belge numarasını not edin."],info:null,warn:null,result:"B500-## sonuç: Unrestricted 10 PC | Quality Inspection 20 PC | On-Order 0 PC."}
+]},
+{id:30,title:"Enter an Invoice with Advanced Transaction",app:"SAP GUI – MIRO",sc:"T-S52A## sizi faturalandırdı. MIRO ile faturayı girin.",tasks:[
+{num:"1–2",title:"MIRO ile Fatura ve PO Geçmişi",app:"SAP GUI – MIRO",path:["Logistics","MM","Logistics Invoice Verification","Document Entry","Enter Invoice (MIRO)"],fields:[["Company Code","1010"],["Invoice Date","<Bugün>"],["Reference","IV##06"],["Amount","EUR 12,435.50"],["Tax Amount","EUR 1,130.50"],["Tax Code","1I"],["Reference Category","Delivery Note → DN##06"]],steps:["SAP GUI'da <b>MIRO</b>'yu açın; Company Code <b>1010</b>.","Basic Data'ya fatura verilerini girin.","PO Reference: Delivery Note → <b>DN##06</b> → <b>Enter</b>; bakiye sıfır olmalı.","<b>Simulate</b> → <b>Post</b>; belge numarasını not edin.","<b>Invoice Document → Display</b>: PO History'yi <b>Show PO structure</b> ile görüntüleyin."],info:null,warn:null,result:"PO geçmişi (GR ve IR) güncellenir."}
+]}
+]},
+{unit:8,title:"Automated Procurement Process",ex:[
+{id:31,title:"Material Master Record: Create MRP Data",app:"Display Material / Create Material",sc:"E500-## malzemesi gelecekte MRP ile otomatik planlanacak. Gerekli MRP verilerini ekleyin.",tasks:[
+{num:"1–2",title:"MRP Verisi Oluşturma",app:"Create Material",path:["Material Master","Create Material"],fields:[["Material","E500-##"],["Views","MRP 1 + MRP 2"],["Plant","1010"],["MRP Type (MRP 1)","VB (Manual Reorder Point)"],["Reorder Point","100 PC"],["MRP Controller","0##"],["Lot Sizing Procedure","FX (Fixed Lot Size)"],["Fixed Lot Size","300 PC"],["Planned Delivery Time (MRP 2)","7 gün"],["GR Processing Time (MRP 2)","1 gün"]],steps:["<b>Create Material</b>'ı başlatın (MRP görünümü yoksa Change değil Create kullan).","E500-## girin → Continue.","<b>MRP 1</b> ve <b>MRP 2</b> görünümlerini seç; Plant <b>1010</b>.","MRP 1 verilerini girin.","MRP 2 sekmesinde planlama sürelerini girin.","<b>Save</b>."],info:null,warn:"MRP verisi hiç oluşturulmamışsa Create Material kullanılmalıdır (Change Material değil).",result:null}
+]},
+{id:32,title:"Run MRP with Automatic Source Determination",app:"Manage Purchasing Info Records / Check Material Coverage",sc:"MRP, malzeme gereksinimlerini belirleyecek ve mümkünse otomatik kaynak ataması yapacak.",tasks:[
+{num:"1",title:"Info Record'da Otomatik Kaynak",app:"Manage Purchasing Info Records",path:["Sources of Supply Management","Manage Purchasing Info Records"],fields:[["Material","E500-##"],["Supplier","T-S50C##"],["Automatic Sourcing","X (Seçili)"]],steps:["<b>Manage Purchasing Info Records</b>'ı başlatın.","E500-## ve T-S50C## ile filtrele.","Info record detayında <b>Edit</b> → <b>Automatic Sourcing</b>'i işaretle → <b>Save</b>."],info:null,warn:null,result:null},
+{num:"2–3",title:"MRP Çalıştırma ve Sonuç",app:"Check Material Coverage",path:["MRP","Check Material Coverage"],fields:[["Material","E500-##"],["Plant","1010"],["Shortage Definition","MRP Standard"]],steps:["<b>Check Material Coverage</b>'ı açın; değerleri girin → <b>OK</b>.","Stock/Requirements List: 10 PC mevcut, reorder point 100 PC altında.","<b>Start MRP Run</b>'a tıklayın; tamamlanınca yeni talebi görün.","Talep numarasına tıkla; Quick View'da Fixed Vendor'ı not edin."],info:null,warn:null,result:"300 PC'lik satın alma talebi oluşur. Fixed Vendor: T-S50C##."}
+]},
+{id:33,title:"Create a Purchase Order Automatically",app:"Maintain Business Partner / Change Material / Automatic Creation of POs",sc:"MRP'nin oluşturduğu talep otomatik olarak PO'ya dönüştürülecek. ERS da aktifleştirilecek.",tasks:[
+{num:"1",title:"Tedarikçi Göstergelerini Ayarla",app:"Maintain Business Partner",path:["Supplier and BP","Maintain Business Partner"],fields:[["Business Partner","T-S50C## / Role: FLVN01"],["Automatic Purchase Order","X (Kontrol/Set et)"],["Eval. Receipt Settlement","X (Set et)"],["GR-Based Invoice Verification","X (Kontrol et)"]],steps:["<b>Maintain Business Partner</b>'ı açın; T-S50C##, role <b>FLVN01</b>.","Purchasing → Purchasing Data: <b>Eval. Receipt Settlement</b>'i set et.","<b>Save</b>."],info:null,warn:null,result:null},
+{num:"2",title:"Malzeme Automatic PO Göstergesi",app:"Change Material",path:["Material Master","Change Material"],fields:[["Material","E500-##"],["View","Purchasing"],["Plant","1010"],["Automatic PO","X"]],steps:["<b>Change Material</b>: E500-##, Purchasing, Plant 1010.","<b>Autom. PO</b>'yu işaretle → <b>Save</b>."],info:null,warn:null,result:null},
+{num:"3",title:"Otomatik PO Oluşturma",app:"Automatic Creation of Purchase Orders from Requisitions",path:["Fiori Search","Automatic Creation of Purchase Orders from Requisitions"],fields:[["Purchasing Organization","101C"],["Fixed Vendor","T-S50C##"],["Detailed Log","2 (All Messages)"]],steps:["Fiori Search'ten uygulamayı bulun.","Değerleri girin → <b>Execute</b>; PO numarasını not edin."],info:null,warn:null,result:"'Purchase order successfully created, Requisition successfully converted.' mesajı görünür."}
+]},
+{id:34,title:"Execute Evaluated Receipt Settlement",app:"Manage Purchase Orders / Post GR / Create Evaluated Receipt Settlement",sc:"Otomatik oluşturulan PO için mal girişi yapın ve ERS ile otomatik fatura oluşturun.",tasks:[
+{num:"2",title:"Manage PO'dan Mal Girişi",app:"Manage Purchase Orders",path:["Purchase Order Processing","Manage Purchase Orders","Post Goods Receipt for Purchasing Document"],fields:[["Purchase Order","<Ex.33'teki PO>"],["Delivery Note","DN##08"],["Document Date","<Bugün>"],["Storage Location","0001"]],steps:["<b>Manage Purchase Orders</b>'ı açın; PO'yu bulun.","PO listesinde <b>Standard PO</b>'ya tıkla → <b>Post Goods Receipt for Purchasing Document</b>.","Delivery note <b>DN##08</b>, storage location <b>0001</b> → <b>Post</b>; belge numarasını not edin."],info:null,warn:null,result:null},
+{num:"3",title:"ERS Otomatik Fatura",app:"Create Evaluated Receipt Settlement",path:["Supplier Invoice Processing","Create Evaluated Receipt Settlement"],fields:[["Company Code","1010"],["GR Posting Date From","<Dün>"],["GR Posting Date To","<Bugün>"],["Supplier","T-S50C##"],["Document Selection","3 (Per Order Item)"],["Test Run","X (Önce test)"]],steps:["<b>Create Evaluated Receipt Settlement</b>'ı başlatın.","Test Run ile çalıştır; 1 kalem seçilir → <b>Cancel</b>.","Test Run'ı kaldır → <b>Execute</b>; fatura belge numarasını not edin."],info:null,warn:null,result:"ERS ile otomatik fatura oluşturulur. Manuel fatura girişi gerekmez."}
+]}
+]},
+{unit:9,title:"Reporting and Analytics",ex:[
+{id:35,title:"Evaluate Some KPIs for Contracts",app:"Contract Expiry / Off-Contract Spend / Manage Purchase Contracts",sc:"Analytics tile grubu oluşturun ve sözleşme KPI'larını analiz edin.",tasks:[
+{num:"1",title:"Analytics Tile Grubu Oluşturma",app:"SAP Fiori Launchpad",path:["Fiori Launchpad","Edit Home Page","+ Add Group"],fields:[["Group Name","Analytics"],["Apps","Contract Expiry / Off-Contract Spend / Purchasing Group Activities / Procurement Overview"]],steps:["Kişiselleştirme modunu aç → <b>+ Add Group</b> → <b>Analytics</b>.","App Finder → Purchasing Analytics kataloğu: Contract Expiry, Off-Contract Spend, Purchasing Group Activities'i raptiyele.","Purchasing – Procurement Overview Page: Procurement Overview'ı raptiyele.","Kaydet."],info:null,warn:null,result:null},
+{num:"2",title:"Sona Erme Analizi",app:"Contract Expiry",path:["Analytics","Contract Expiry"],fields:[["Purchasing Organization","101C"],["Sona Erme Penceresi","Sonraki 90 gün"]],steps:["<b>Contract Expiry</b>'yi başlatın.","Drilldown: <b>By Purchasing Organization</b>.","101C için sözleşmeleri kontrol edin."],info:null,warn:null,result:"90 gün içinde sona erecek sözleşmeler listelenir."},
+{num:"3",title:"KPI Tile Oluşturma (Actual vs. Target)",app:"Contract Expiry",path:["Analytics","Contract Expiry","(Share)","Save as Tile"],fields:[["Tile Format","Actual vs. Target"],["Title","Contract Expiry"],["Subtitle","Actual vs. Target"],["Groups","Analytics"],["Value Measure","Expiring Contracts"],["Goal Type","Minimizing"],["Critical / Warning / Target","10 / 3 / 0"]],steps:["<b>Contract Expiry</b>'yi açın.","<b>(Share) → Save as Tile</b>; değerleri girin → <b>OK</b>.","Launchpad'e dön; F5 ile yenile."],info:null,warn:null,result:null},
+{num:"4",title:"Sözleşme Tarihi Güncelleme",app:"Contract Expiry → Manage Purchase Contracts",path:["Contract Expiry","Add Filter","Jump To","Manage Purchase Contracts"],fields:[["Supplier Filter","T-S52A##"],["Valid To","<Gelecek yıl sonu>"]],steps:["<b>Add Filter → Supplier</b>: T-S52A##.","<b>Jump To → Manage Purchase Contracts</b>.","Sözleşme numarasına tıkla → <b>Edit</b> → Valid To'yu değiştir → <b>Save</b>.","Launchpad'de KPI tile'ı yenile."],info:null,warn:null,result:"Sona erme KPI'ı düşmeli."},
+{num:"5–6",title:"Sözleşme Dışı Harcama Analizi",app:"Off-Contract Spend",path:["Analytics","Off-Contract Spend"],fields:[["Filter","Cari yıl"],["Görünüm","By Purchasing Organization → By Supplier"],["Supplier Filter","T-S50A## / T-S50C## / T-S52A##"]],steps:["<b>Off-Contract Spend</b>'i açın; cari yıl filtresi ekle.","<b>By Purchasing Organization</b>: 101C değerlerini not et.","Supplier filtresi ekle → <b>By Supplier</b>."],info:null,warn:null,result:null}
+]},
+{id:36,title:"Control the Purchasing Group Activities",app:"Purchasing Group Activities",sc:"Z## satın alma grubunuzla kaç satın alma belgesi oluşturulduğunu analiz edin.",tasks:[
+{num:"1–3",title:"Satın Alma Grubu Aktivite Analizi",app:"Purchasing Group Activities",path:["Analytics","Purchasing Group Activities"],fields:[["Grafik Tipi","Column Chart with 2 Y-Axes"],["Görünüm","By Purchasing Group"],["Ölçüler","# of POs / # of Contracts / # of Deliveries / PO Net Amount"],["Boyutlar","Calendar Year / Calendar Month / Purchasing Group"],["Sıralama","Calendar Year, Month, Purchasing Group — Ascending"]],steps:["<b>Purchasing Group Activities</b>'i başlatın; varsayılan grafik tipini not edin.","<b>(Settings)</b>: Dimension/Measure ayarlarını yap; Sort'u yapılandır → <b>OK</b>.","Purchasing Group <b>Z##</b> filtresi ekle.","<b>Drill Down → Supplier</b>; <b>(Tabular View)</b>'a geç.","<b>(Export to Spreadsheet)</b>'e tıkla."],info:null,warn:null,result:"Tedarikçi bazında PO ve net tutar verileri Excel'e aktarılır."}
+]},
+{id:37,title:"Use the Procurement Overview Page",app:"Procurement Overview",sc:"Procurement Overview sayfasını kişiselleştirin ve satın alma talebi kartını test edin.",tasks:[
+{num:"1",title:"Varsayılan Filtre Varyantı",app:"Procurement Overview",path:["Analytics","Procurement Overview"],fields:[["Display Currency","EUR"],["Purchasing Group","Z##"],["Variant Name","Z##"],["Set as Default","Evet"]],steps:["<b>Procurement Overview</b>'ı açın; filtre: EUR ve Z##.","<b>(Select View) → Save As</b>; ad <b>Z##</b>, default: Evet → Save.","Launchpad'e dön; uygulamayı tekrar aç: Z## varyantı seçili gelmeli."],info:null,warn:null,result:null},
+{num:"2",title:"Kart Yönetimi",app:"Procurement Overview",path:["Procurement Overview","Manage Cards"],fields:[["Gizlenecek","Supplier Performance Monitoring / Supplier Performance Monitoring Including Questionnaire Score / Monitor RFQs"]],steps:["<b>(Manage Cards)</b>: ilgili kartları gizle → <b>OK</b>.","Kalan kartları sürükle-bırak ile düzenle."],info:null,warn:null,result:null},
+{num:"3",title:"Kaynak Atamasız Talep (ME51N)",app:"SAP GUI – ME51N",path:["SAP GUI – ME51N","Personal Settings","Default Values"],fields:[["Plant","1010"],["Delivery Date","<Yarın / Always propose>"],["Source Determination","Deselected"],["Item 1","C500-## / 10 PC"],["Item 2","D500-## / 10 PC"]],steps:["SAP GUI'da <b>ME51N</b>'yi açın.","Personal Settings → Default Values: <b>Source Determination'ı kaldır</b>.","C500-## ve D500-## kalemlerini gir → Kaydet."],info:null,warn:null,result:null},
+{num:"4",title:"Talep Kartından PO Oluşturma",app:"Procurement Overview → Process Purchase Requisitions",path:["Procurement Overview","Monitor Purchase Requisition Items Card","Process Purchase Requisitions"],fields:[["Source of Supply","Contract (sözleşme kalemi)"]],steps:["Procurement Overview'da <b>Go</b>.","<b>Monitor Purchase Requisition Items</b> kartından açık kaleme tıkla.","Process Purchase Requisitions açılır; sözleşme kalemini kaynak olarak ata.","Kalemi seç → <b>Create Purchase Order</b>; mesajları onayla.","<b>Back</b> → <b>Go</b>: kalem artık gösterilmemeli."],info:null,warn:null,result:"PO oluşturulunca açık talep listesinden düşer."}
+]}
+]}
+];
+
+const UC=['u1','u2','u3','u4','u5','u6','u7','u8','u9'];
+
+function path(a){if(!a||!a.length)return'';return'<div class="pr">'+a.map((p,i)=>`<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`).join('')+'</div>';}
+
+function tbl(f){if(!f||!f.length)return'';return'<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>'+f.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('')+'</tbody></table>';}
+
+function steps(s){if(!s||!s.length)return'';return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';}
+
+function task(t){
+  let h=`<div class="task"><div class="thdiv"><span class="tn">Görev ${t.num}</span><span class="tt">${t.title}</span><span class="ab">${t.app}</span></div>`;
+  if(t.path&&t.path.length){h+=`<div class="sl2">PATH</div>${path(t.path)}`;}
+  if(t.fields&&t.fields.length){h+=`<div class="sl2">Field / Value</div>${tbl(t.fields)}`;}
+  if(t.steps&&t.steps.length){h+=`<div class="sl2">Adımlar</div>${steps(t.steps)}`;}
+  if(t.warn)h+=`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`;
+  if(t.info)h+=`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`;
+  if(t.result)h+=`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`;
+  return h+'</div>';
+}
+
+function card(e,uid){
+  const sc=e.tasks.reduce((a,t)=>a+(t.steps?t.steps.length:0),0);
+  const tc=e.tasks.length;
+  const body=e.tasks.map((t,i)=>task(t)+(i<e.tasks.length-1?'<div class="dv"></div>':'')).join('');
+  return `<div class="card" id="ex-${e.id}"><div class="ch" onclick="toggle(this)"><span class="exn">EX ${e.id}</span><div class="cl"><div class="ct">${e.title}</div><div class="ca">${e.app}</div></div><div class="cr"><span class="sb">${tc} görev · ${sc} adım</span><span class="chev">›</span></div></div><div class="cb"><div class="scenario">${e.sc}</div>${body}</div></div>`;
+}
+
+function unit(u,i){
+  const cls=UC[i]||'u1';
+  return `<div class="ug ${cls}"><div class="uh"><span class="ubadge">Ünite ${u.unit}</span><span class="utitle">${u.title}</span><span class="uc">${u.ex.length} egzersiz</span></div>${u.ex.map(e=>card(e,i)).join('')}</div>`;
+}
+
+// ── RENDER ──
+document.getElementById('app').innerHTML=D.map((u,i)=>unit(u,i)).join('');
+
+// ── BUILD FILTER BUTTONS ──
+const USHORT=['Navigasyon','Org. Yapı','Plain Proc.','Master Data','Stock/Cons.','Self-Service','Adv. Trans.','Automated','Raporlama'];
+const frow=document.getElementById('frow');
+D.forEach(function(u,i){
+  var b=document.createElement('button');
+  b.className='fb';
+  b.dataset.u=String(u.unit);
+  b.textContent='U'+u.unit+' · '+(USHORT[i]||u.title.split(' ')[0]);
+  frow.appendChild(b);
+});
+
+// snapshot card body HTML for highlight restore
+const origHTML=new Map();
+document.querySelectorAll('.card').forEach(function(c){
+  var cb=c.querySelector('.cb');
+  if(cb) origHTML.set(c.id,cb.innerHTML);
+});
+
+// ── STATE ──
+var activeU='all';
+var expanded=false;
+var searchActive=false;
+
+// ── ORIGINAL TOGGLE — untouched ──
+function toggle(h){h.parentElement.classList.toggle('open');}
+
+// ── EXPAND / COLLAPSE ALL ──
+var xpb=document.getElementById('xpb');
+xpb.addEventListener('click',function(){
+  // when search is active, toggle only visible open cards
+  if(searchActive){
+    var visCards=[].slice.call(document.querySelectorAll('.card:not(.hid)'));
+    var anyOpen=visCards.some(function(c){return c.classList.contains('open');});
+    visCards.forEach(function(c){c.classList.toggle('open',!anyOpen);});
+    xpb.textContent=!anyOpen?'Tümünü Kapat':'Tümünü Aç';
+    xpb.classList.toggle('active',!anyOpen);
+    return;
+  }
+  expanded=!expanded;
+  document.querySelectorAll('.card:not(.hid)').forEach(function(c){
+    c.classList.toggle('open',expanded);
+  });
+  xpb.textContent=expanded?'Tümünü Kapat':'Tümünü Aç';
+  xpb.classList.toggle('active',expanded);
+});
+
+// ── SEARCH ELEMENTS ──
+var searchEl=document.getElementById('search');
+var clrBtn=document.getElementById('clr');
+var cntEl=document.getElementById('cnt');
+var nores=document.getElementById('nores');
+
+function escRe(s){return s.replace(/[.+?^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'\\*');}
+
+function hlNode(node,re){
+  var w=document.createTreeWalker(node,NodeFilter.SHOW_TEXT,null,false);
+  var hits=[],n;
+  while((n=w.nextNode())){
+    if(n.parentElement.closest('mark')) continue;
+    re.lastIndex=0;
+    if(re.test(n.textContent)) hits.push(n);
+  }
+  hits.forEach(function(tn){
+    var frag=document.createDocumentFragment();
+    var last=0;
+    tn.textContent.replace(re,function(m,o){
+      frag.appendChild(document.createTextNode(tn.textContent.slice(last,o)));
+      var mk=document.createElement('mark');
+      mk.textContent=m;
+      frag.appendChild(mk);
+      last=o+m.length;
+    });
+    frag.appendChild(document.createTextNode(tn.textContent.slice(last)));
+    tn.parentNode.replaceChild(frag,tn);
+  });
+}
+
+// ── MAIN FILTER FUNCTION ──
+function run(){
+  var raw=searchEl.value.trim();
+  var q=raw.toLowerCase();
+  // safe regex — escape special chars
+  var re=raw?new RegExp(raw.replace(/[.+?^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'\\*'),'gi'):null;
+  searchActive=!!raw;
+  clrBtn.style.display=raw?'block':'none';
+  var shown=0;
+  var totalVisible=0;
+
+  document.querySelectorAll('.ug').forEach(function(ug){
+    var badge=ug.querySelector('.ubadge');
+    var uNum=badge?badge.textContent.replace(/[^0-9]/g,''):'';
+    var unitOk=(activeU==='all'||activeU===uNum);
+    if(!unitOk){ug.classList.add('hid');return;}
+    ug.classList.remove('hid');
+    var ugVis=false;
+
+    ug.querySelectorAll('.card').forEach(function(card){
+      // restore original body HTML (removes stale highlights)
+      var cb=card.querySelector('.cb');
+      if(cb&&origHTML.has(card.id)) cb.innerHTML=origHTML.get(card.id);
+      // remove highlights from card header
+      var hdr=card.querySelector('.ch');
+      if(hdr){
+        hdr.querySelectorAll('mark').forEach(function(mk){
+          mk.replaceWith(document.createTextNode(mk.textContent));
+        });
+        hdr.normalize();
+      }
+
+      // build searchable text from title + app name + full body
+      var txt=(card.querySelector('.ct')?card.querySelector('.ct').textContent:'')+' '+
+              (card.querySelector('.ca')?card.querySelector('.ca').textContent:'')+' '+
+              (cb?cb.textContent:'');
+      var match=!q||txt.toLowerCase().indexOf(q)>=0;
+
+      if(match){
+        card.classList.remove('hid');
+        ugVis=true;
+        shown++;
+        totalVisible++;
+        if(re){
+          // apply highlight
+          if(hdr) hlNode(hdr,re);
+          if(cb) hlNode(cb,re);
+          // auto-open card so highlights are visible
+          if(!card.classList.contains('open')){
+            card.classList.add('open');
+            card.dataset.soq='1';
+          }
+        } else {
+          // search cleared — close cards we auto-opened, restore expanded state
+          if(card.dataset.soq){
+            card.classList.remove('open');
+            delete card.dataset.soq;
+          }
+          // re-apply expanded state
+          if(expanded) card.classList.add('open');
+        }
+      } else {
+        card.classList.add('hid');
+        if(card.dataset.soq){card.classList.remove('open');delete card.dataset.soq;}
+      }
+    });
+
+    ug.classList.toggle('hid',!ugVis);
+  });
+
+  // update counter
+  cntEl.textContent=String(shown);
+
+  // show no-result only when there is an active query or filter
+  nores.style.display=(shown===0&&(raw||activeU!=='all'))?'block':'none';
+
+  // sync expand button label — when search active, reflect visible open state
+  if(raw){
+    var anyOpen=[].slice.call(document.querySelectorAll('.card:not(.hid)')).some(function(c){return c.classList.contains('open');});
+    xpb.textContent=anyOpen?'Tümünü Kapat':'Tümünü Aç';
+    xpb.classList.toggle('active',anyOpen);
+  } else {
+    xpb.textContent=expanded?'Tümünü Kapat':'Tümünü Aç';
+    xpb.classList.toggle('active',expanded);
+  }
+}
+
+// ── EVENTS ──
+searchEl.addEventListener('input',run);
+searchEl.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){searchEl.value='';run();searchEl.blur();}
+});
+clrBtn.addEventListener('click',function(){searchEl.value='';run();searchEl.focus();});
+
+frow.addEventListener('click',function(e){
+  var b=e.target.closest('.fb');
+  if(!b) return;
+  activeU=b.dataset.u;
+  frow.querySelectorAll('.fb').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+  run();
+});
+
+// ── INIT ──
+run();
+</script>
+</body>
+</html>
