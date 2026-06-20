@@ -1,0 +1,2971 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IEE2E – SAP S/4HANA Cloud End-to-End Business Processes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u6"].on{background:rgba(239,68,68,.15);color:#ef4444;border-color:rgba(239,68,68,.4);}
+.fb[data-u="u7"].on{background:rgba(251,191,36,.15);color:#fbbf24;border-color:rgba(251,191,36,.4);}
+.fb[data-u="u8"].on{background:rgba(52,211,153,.15);color:#34d399;border-color:rgba(52,211,153,.4);}
+.fb[data-u="u9"].on{background:rgba(129,140,248,.15);color:#818cf8;border-color:rgba(129,140,248,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug.collapsed .ug-body{display:none;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.sl2{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--td);margin:11px 0 5px;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+.dv{height:1px;background:var(--border);margin:13px 0;}
+b{color:var(--text);font-weight:500;}
+/* ── ARAMA SONUÇ PANELİ ── */
+#sr-panel{max-width:1100px;margin:0 auto;padding:18px 22px 60px;display:none;}
+.sr-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin-bottom:14px;font-family:var(--mono);font-size:11px;}
+.sr-count{color:var(--tm);}
+.sr-count b{color:var(--bl);}
+.sr-close{background:none;border:none;color:var(--td);cursor:pointer;font-family:var(--mono);font-size:11px;padding:2px 6px;border-radius:3px;transition:color .15s;}
+.sr-close:hover{color:var(--text);}
+.sr-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;padding:14px 17px;transition:border-color .18s;}
+.sr-card:hover{border-color:var(--bh);}
+.sr-bc{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.sr-unit{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:2px 8px;border-radius:3px;border:1px solid;text-transform:uppercase;}
+.sr-sep{color:var(--td);font-size:11px;}
+.sr-exn{font-family:var(--mono);font-size:11px;color:var(--tm);}
+.sr-tn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:1px 6px;border-radius:3px;}
+.sr-th{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.sr-tt{font-size:14px;font-weight:600;flex:1;}
+.sr-ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;}
+.sr-sc{font-style:italic;color:var(--tm);font-size:12.5px;border-left:3px solid var(--bbd);padding:7px 11px;margin-bottom:10px;background:var(--bbg);border-radius:0 5px 5px 0;}
+.sr-path{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:0 0 9px;}
+.sr-pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.sr-pc:first-child{border-radius:4px 0 0 4px;}
+.sr-pc:last-child{border-radius:0 4px 4px 0;}
+.sr-pc:only-child{border-radius:4px;}
+.sr-pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+@media(max-width:600px){
+  #toolbar{padding:8px 14px 9px;}
+  #search-row{grid-template-columns:1fr auto;}
+  #sctr{display:none;}
+  main{padding:18px 12px 60px;}
+  header{padding:14px 16px 12px;}
+  #homebtn{top:14px;right:16px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="meta">
+    <span class="cid">IEE2E · 2602</span>
+    <h1>Exploring End-to-End Business Processes in SAP Business Suite</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Egzersiz: <span class="n">56</span></div>
+    <div class="st">Ünite: <span class="n">6</span></div>
+    <div class="st">Süre: <span class="n">16s 25dk</span></div>
+    <div class="st">Sistem: <span class="n">SAP S/4HANA Cloud</span></div>
+  </div>
+  <button id="homebtn" onclick="location.href='index.html'">🏠 Home</button>
+</header>
+
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg style="position:absolute;left:8px;top:50%;transform:translateY(-50%);width:14px;height:14px;opacity:.4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Egzersiz, app, adım ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">56</b> / 56 egzersiz</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+
+<main id="app"></main>
+<div id="sr-panel"></div>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+
+<script>
+const D=[
+{unit:4,title:"Performing the Record-to-Report Process: Focus on Financial and Management Accounting",ex:[
+{id:1,title:"Prepare Your User and Fiori Launchpad FI",app:"Maintain Business Users",
+sc:"SAP S/4HANA Cloud kiracısına giriş yaptıktan sonra kullanıcınıza General Ledger Accountant iş rolünü atayarak Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign BR_GL_ACCOUNTANT Role",app:"Maintain Business Users",
+path:["SAP Fiori Launchpad","Search","Maintain Business Users"],
+fields:[
+["── Role Assignment ──",""],
+["Business Role","BR_GL_ACCOUNTANT"],
+["Role Name","General Ledger Accountant"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını arama çubuğuna yazarak açın.",
+"<b>Search</b> alanına kullanıcı adınızı girin ve <b>Go</b>'ya tıklayın.",
+"Kullanıcı satırına tıklayın ve <b>Edit</b>'i seçin.",
+"<b>Assigned Business Roles</b> bölümünde <b>Add</b>'i seçin.",
+"<b>Search</b> alanına <b>BR_GL_ACCOUNTANT</b> girin ve ara.",
+"<b>General Ledger Accountant</b> rolünün bulunduğu satırı seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b>'e tıklayın.",
+"<b>Navigate to Home Page</b>'i seçin ve sayfayı <b>F5</b> ile yenileyin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü kullanıcınızdan kaldırmayın. Yalnızca yeni rolü ekleyin.",
+result:"<b>BR_GL_ACCOUNTANT</b> rolü atandı. General Ledger Accountant rolü, Fiori Launchpad'de <b>General Ledger</b> alanına erişim sağlar."
+}]
+},
+{id:2,title:"From Balance Sheet to the Posted Document",app:"Balance Sheet / Income Statement",
+sc:"Bilanço ekranını görüntüleyerek G/L hesabı 10010000 (Petty Cash) üzerindeki belgeye kadar detaya inecek ve T-Hesap Görünümü'ne ulaşacaksınız.",
+tasks:[
+{num:"1",title:"Display Balance Sheet and Drill Down",app:"Balance Sheet / Income Statement",
+path:["SAP Fiori Launchpad","General Ledger","Overview","Balance Sheet / Income Statement"],
+fields:[
+["── Selection ──",""],
+["Company Code","1010"],
+["Ledger","0L"],
+["Statement Version","1010"],
+["Statement Type","Normal (Actual - Actual)"],
+["End Period","Current period - current year"],
+["Comparison End Period","Current period - previous year"],
+["Currency","EUR"]
+],
+steps:[
+"<b>Balance Sheet / Income Statement</b> uygulamasını açın ve tablodaki verileri girin.",
+"<b>Go</b>'ya tıklayın — ASSETS, LIABILITIES ve diğer toplamlar görünür.",
+"<b>Expand All</b> butonuna tıklayarak tüm bilanço yapısını açın.",
+"Arama alanına <b>10010000</b> girin ve Enter'a basın.",
+"<b>Petty Cash</b> satırındaki Period Balance tutarını seçin.",
+"Açılan ekranda <b>Display Line Items in General Ledger</b>'ı seçin.",
+"Gösterilen belgelerden birinin journal entry numarasını seçin.",
+"<b>Display Journal Entries - New Version</b> bağlantısını seçin.",
+"<b>Line Items</b> bölümünde <b>T-Account View</b>'a tıklayın.",
+"Çıkmak için <b>SAP Logo</b>'ya tıklayın."
+],
+result:"Muhasebe belgesi, G/L hesabı 10010000 (Petty Cash) için borç ve alacak taraflarını gösteren <b>T-Account View</b> ile görüntülendi."
+}]
+},
+{id:3,title:"Create GL Account",app:"Manage G/L Account Master Data",
+sc:"Şirket kodu 1010'da ofis malzemeleri giderlerini grup numarasına göre ayırmak için 65100### numaralı G/L hesabını 6510000'den kopyalayarak oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Copy G/L Account 6510000 to 65100###",app:"Manage G/L Account Master Data",
+path:["SAP Fiori Launchpad","General Ledger","Overview","Manage G/L Account Master Data"],
+fields:[
+["── Selection Criteria ──",""],
+["Chart of Account","YCOA"],
+["G/L Account","65100000"],
+["View","Chart of Accounts View"],
+["── New G/L Account ──",""],
+["Account number","65100###"],
+["Description","Office Supplies ###"],
+["Company Code","1010"]
+],
+steps:[
+"<b>Manage G/L Account Master Data</b> uygulamasını açın.",
+"Tablodaki seçim kriterlerini girin ve <b>Go</b>'ya tıklayın.",
+"Sonuçta gelen <b>6510000</b> hesabının satırını işaretleyin.",
+"<b>Copy</b>'ye tıklayın.",
+"<b>New Accounts</b> ekranında <b>Account number</b> alanına <b>65100###</b> girin.",
+"<b>Description</b> alanına <b>Office Supplies ###</b> girin.",
+"<b>Company Code Assignment</b>'ta <b>1010</b>'u işaretleyin (X).",
+"<b>Copy</b>'ye tıklayın — sistem oluşturma işlemi başlar."
+],
+result:"65100### hesabı oluşturma işlemi başlatıldı. Tamamlandığında launchpad'de bir bildirim görünecektir."
+},
+{num:"2",title:"Verify G/L Account Creation",app:"Manage G/L Account Master Data",
+steps:[
+"Aynı ekranda <b>View Logs</b>'a tıklayın.",
+"<b>FinanceApplicationLog-ShowDetails</b> ekranında sağ oka tıklayın.",
+"<b>LogDetails</b>'te hesabın başarıyla oluşturulduğunu doğrulayın.",
+"<b>SAP Logo</b>'ya tıklayarak Fiori Launchpad'e dönün."
+],
+result:"<b>G/L Account</b> 65100### başarıyla oluşturuldu. Alternatif hesap numarası uyarısı görmezden gelinebilir."
+}]
+},
+{id:4,title:"Post a General Journal Entry",app:"Post General Journal Entries",
+sc:"Şirket kodu 1010 için iki genel yevmiye kaydı yapılacak: ilki banka hesabına nakit girişi (500 EUR), ikincisi vergi dahil ofis malzemeleri nakit ödemesi (1### EUR).",
+tasks:[
+{num:"1",title:"Post Cash Receipt Entry",app:"Post General Journal Entries",
+path:["SAP Fiori Launchpad","General Ledger","Journal Entries","Post General Journal Entries"],
+fields:[
+["── Document Header ──",""],
+["Journal Entry Date","Today's date (DDMMYYYY)"],
+["Posting Date","Today's date (DDMMYYYY)"],
+["Journal Entry Type","SA"],
+["Company Code","1010"],
+["Transaction Currency","EUR"],
+["── Line Item 1 ──",""],
+["Company Code","1010"],
+["G/L Account","10010000"],
+["Debit","500"],
+["── Line Item 2 ──",""],
+["G/L Account","11002000"],
+["Credit","500"]
+],
+steps:[
+"<b>Post General Journal Entries</b> uygulamasını açın.",
+"<b>Step 1: Document Header</b> verilerini girin.",
+"<b>Step 2: Line Item 1</b> verilerini girin (G/L Account: 10010000, Debit: 500).",
+"<b>Step 3: Line Item 2</b> verilerini girin ve Enter'a basın — Value Date zorunlu alan olarak görünür.",
+"<b>Simulate</b>'e tıklayın — geçici journal entry numarası görünür.",
+"<b>Post</b>'a tıklayın — başarı mesajı ve journal entry numarası görünür.",
+"<b>Back</b>'e tıklayın ve bir sonraki adım için ekranda kalın."
+],
+result:"Muhasebe kaydı deftere işlendi: Borç 10010000 (Petty Cash) 500 EUR / Alacak 11002000 (Incoming Checks) 500 EUR."
+},
+{num:"2",title:"Post Office Supplies Payment with Tax and Add Note",app:"Post General Journal Entries",
+fields:[
+["── Document Header ──",""],
+["Journal Entry Date","Today's date (DDMMYYYY)"],
+["Posting Date","Today's date (DDMMYYYY)"],
+["Journal Entry Type","SA"],
+["Company Code","1010"],
+["Transaction Currency","EUR"],
+["── Line Item 1 ──",""],
+["Company Code","1010"],
+["G/L Account","65100###"],
+["Debit","1###"],
+["Item Text","Simple post ###"],
+["Tax Code","1I (10% Input Tax (Training))"],
+["Cost Center","BIKEA-###"],
+["── Line Item 2 ──",""],
+["G/L Account","10010000"],
+["Credit","1###"],
+["── Tax Items ──",""],
+["Calculate tax","Selected"],
+["Net entry","Deselected"]
+],
+steps:[
+"Önceki uygulamada kalın veya yeniden açın.",
+"<b>Header</b> verilerini girin (Journal Entry Date, Posting Date, SA, 1010, EUR).",
+"<b>Line Item 1</b>'de G/L Account <b>65100###</b> ve Debit <b>1###</b> girin.",
+"Satır öğesini genişletmek için <b>></b> okuna tıklayın.",
+"<b>Item Text</b>: Simple Post ###, <b>Tax Code</b>: <b>1I</b>, <b>Cost Center</b>: <b>BIKEA-###</b> girin.",
+"<b>Line Item 2</b>'de G/L Account <b>10010000</b>, Credit <b>1###</b> girin.",
+"<b>Tax Items</b> bölümünde <b>Calculate Tax</b>'ı seçin, Net Entry'yi kaldırın.",
+"<b>Simulate</b>'e tıklayın — üç satır öğesi görünür (otomatik vergi satırı dahil).",
+"<b>Post</b>'a tıklayın.",
+"<b>Notes</b> sekmesine gidin, metin alanına <b>Urgent</b> yazın ve <b>Submit</b> (ok) ile kaydedin.",
+"<b>SAP Logo</b> ile ana sayfaya dönün."
+],
+warn:"65100### hesabı bir <b>CO nesnesine</b> atanmayı gerektirir ve vergiyle ilgilidir. Kayıt öncesinde borç ve alacak toplamı 0 olmalıdır.",
+result:"Vergi satırı ile muhasebe kaydı deftere işlendi. Belgeye 'Urgent' notu eklendi. Üç satır kalemi: borç 65100###, alacak 10010000, vergi satırı."
+}]
+},
+{id:5,title:"Display a Financial Statement",app:"Balance Sheet / Income Statement",
+sc:"Mevcut dönem için bilanço oluşturacak, ardından Segment 1000_C'ye göre filtreleyecek ve sonuçları PDF olarak dışa aktaracaksınız.",
+tasks:[
+{num:"1",title:"Generate Balance Sheet, Filter by Segment, Export PDF",app:"Balance Sheet / Income Statement",
+path:["SAP Fiori Launchpad","General Ledger","Overview","Balance Sheet / Income Statement"],
+fields:[
+["── Selection ──",""],
+["Company Code","1010"],
+["Ledger","0L (Leading Ledger)"],
+["Statement Version","1010"],
+["Statement Type","Normal (Actual - Actual)"],
+["End Period","Current period and current year"],
+["Comparison End Period","Current period and previous year"],
+["Currency","EUR"]
+],
+steps:[
+"<b>Balance Sheet / Income Statement</b> uygulamasını açın ve tablodaki verileri girin.",
+"<b>Go</b>'ya tıklayın, ardından <b>Balance Sheet</b> sekmesine geçin.",
+"<b>Expand All</b> ve <b>Collapse All</b> butonlarıyla navigasyon yapın.",
+"<b>Adapt Filters</b>'a tıklayın, <b>Segment</b>'i seçin ve <b>OK</b>'a tıklayın.",
+"<b>Segment</b> alanında değerler listesini açın ve <b>1000_C, Segment C</b>'yi seçin.",
+"<b>OK</b> ve ardından <b>Go</b>'ya tıklayın.",
+"<b>Create PDF Preview</b> butonuna tıklayın.",
+"<b>Options for PDF Preview</b> penceresinde <b>Show G/L Accounts</b>'u seçin.",
+"<b>Create</b>'e tıklayın — PDF indirme ve yazdırma seçenekleri görünür.",
+"Rapor sekmesini kapatın ve <b>SAP Logo</b> ile ana sayfaya dönün."
+],
+result:"<b>Balance Sheet</b> verisi Segment 1000_C'ye filtrelenerek PDF önizlemesi oluşturuldu. İndirme ve yazdırma seçenekleri kullanılabilir."
+}]
+},
+{id:6,title:"Prepare Your User and Fiori Launchpad FI-AP",app:"Maintain Business Users",
+sc:"Accounts Payable Accountant iş rolünü kullanıcınıza atayarak Borçlar hesabı işlemleri için Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign BR_AP_ACCOUNTANT Role",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role","BR_AP_ACCOUNTANT"],
+["Role Name","Accounts Payable Accountant"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"<b>Search</b>'e kullanıcı adınızı yazın ve <b>Go</b>'ya tıklayın.",
+"Kullanıcı satırına tıklayın.",
+"<b>Assigned Business Roles</b> bölümünde <b>Add</b>'i seçin.",
+"<b>BR_AP_ACCOUNTANT</b> girin ve ara.",
+"<b>Accounts Payable Accountant</b> satırını seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b>'e tıklayın ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"Kullanıcınızdaki mevcut rolleri kaldırmayın. Yalnızca yeni rolü ekleyin.",
+result:"<b>BR_AP_ACCOUNTANT</b> rolü atandı. Launchpad yenilendikten sonra <b>Accounts Payable</b> alanı görünecektir."
+}]
+},
+{id:7,title:"Create a Business Partner FI",app:"Manage Business Partner Master Data",
+sc:"Şirket kodu 1010 için IEE2E-### kod numaralı yeni bir tedarikçi iş ortağı master kaydı oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Create Business Partner as Organization",app:"Manage Business Partner Master Data",
+path:["SAP Fiori Launchpad","Accounts Payable","Supplier","Manage Business Partner Master Data"],
+fields:[
+["── Organization ──",""],
+["Business Partner","IEE2E-###"],
+["Grouping","BPAB (external alpha-numeric numbering)"],
+["BP Role","FLVN00 Supplier (Fin. Accounting)"],
+["Name 1","Bicycle Supplies ###"],
+["── Address Tab ──",""],
+["Street","Sample Street (street of your choice)"],
+["House number","###"],
+["City","Walldorf"],
+["Postal Code","69190"],
+["Country","DE"],
+["Region","BW"],
+["Language","EN"],
+["── Company Codes Tab ──",""],
+["Company Code","1010"],
+["Reconciliation Account","21100000"],
+["Payment Terms","0001"],
+["Payment Methods","T"],
+["── Bank Accounts Tab ──",""],
+["ID","01"],
+["Bank Country/Region","DE"],
+["Bank Key","50070024"],
+["Account Number","8888###"]
+],
+steps:[
+"<b>Manage Business Partner Master Data</b> uygulamasını açın.",
+"<b>Create</b> → <b>Organization</b>'ı seçin.",
+"Organization verilerini girin (IEE2E-###, BPAB, FLVN00, Bicycle Supplies ###).",
+"<b>Address</b> sekmesinde adres bilgilerini girin ve <b>OK</b>'a tıklayın.",
+"FLVN00 rol detaylarına gitmek için <b>></b> okuna tıklayın.",
+"<b>Company Codes</b> sekmesine gidin, <b>Create</b>'e tıklayın ve 1010'u girin.",
+"Reconciliation Account: 21100000, Payment Methods: T girin ve <b>Apply</b>'ya iki kez tıklayın.",
+"<b>Bank Accounts</b> sekmesine gidin, <b>Create</b>'e tıklayın.",
+"Banka hesabı bilgilerini girin ve <b>></b> ile detaylara girin.",
+"<b>Propose IBAN</b>'a tıklayın ve önerilen IBAN'ı onaylayın.",
+"<b>Apply</b>'ya iki kez tıklayın, ardından <b>Create</b>'e tıklayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"IEE2E-### <b>Business Partner</b>'ı, Supplier (Fin. Accounting) rolü, şirket kodu 1010 verileri ve önerilen IBAN ile banka hesabıyla oluşturuldu."
+}]
+},
+{id:8,title:"Post a Vendors Invoice and Analyze the Impact",app:"Create Supplier Invoice",
+sc:"IEE2E-### tedarikçisi için 2200 EUR tutarında tedarikçi faturası oluşturacak, ardından tedarikçi bakiyelerini ve satır kalemlerini analiz edeceksiniz.",
+tasks:[
+{num:"1",title:"Create Supplier Invoice",app:"Create Supplier Invoice",
+path:["SAP Fiori Launchpad","Accounts Payable","Supplier Invoices","Create Supplier Invoice"],
+fields:[
+["── Invoice Header ──",""],
+["Company Code","1010"],
+["Invoice date","Today"],
+["Invoicing Party","Bicycle Supplies ### (type and select from list)"],
+["Gross Invoice Amount","2200 EUR"],
+["Reference","###"],
+["── G/L Account Items Tab ──",""],
+["Debit/Credit Indicator","Debit"],
+["G/L Account","65100###"],
+["Amount","2000"],
+["Tax Code","1I"],
+["Cost Center","BIKEA-###"]
+],
+steps:[
+"<b>Create Supplier Invoice</b> uygulamasını açın.",
+"Header verilerini girin (Company Code, Invoice date, Invoicing Party, Gross Amount, Reference).",
+"<b>Enter</b>'a tıklayın. Referans hatası varsa <b>Check</b>'e tıklayın.",
+"<b>G/L Account Items</b> sekmesine gidin ve <b>Add</b>'i seçin.",
+"G/L hesap verilerini girin (Debit, 65100###, 2000).",
+"<b>Show Details</b>'e tıklayın ve Tax Code 1I ile Cost Center BIKEA-### girin.",
+"<b>Check</b>'e tıklayın — bakiye EUR 0.00 olmalı.",
+"<b>Post</b>'a tıklayın — başarı mesajında fatura numarası görünür.",
+"Açılan pencerede <b>No</b>'ya tıklayarak Fiori Launchpad'e dönün."
+],
+result:"Tedarikçi faturası deftere işlendi. Fatura numarası ile belgeler oluşturuldu. Kayıt öncesinde bakiye EUR 0,00 doğrulandı."
+},
+{num:"2",title:"Analyze Supplier Balances and Line Items",app:"Display Supplier Balances",
+fields:[
+["── Supplier Balances ──",""],
+["Supplier","IEE2E-###"],
+["Company Code","1010"],
+["Fiscal Year","YYYY (Current Year)"],
+["── Supplier Line Items ──",""],
+["Supplier","IEE2E-###"],
+["Company Code","1010"],
+["Status","All Items"],
+["Posting Date","To Today"],
+["Item Type","Normal Items"]
+],
+steps:[
+"<b>Accounts Payable</b> → <b>Suppliers</b> → <b>Display Supplier Balances</b> uygulamasını açın.",
+"Tablodaki verileri girin ve <b>Go</b>'ya tıklayın.",
+"IEE2E-### tedarikçisi için bakiyeler görünür.",
+"Bir borç/alacak tutarına tıklayarak <b>Manage Supplier Line Items</b>'a geçin.",
+"<b>SAP Logo</b> ile ana sayfaya dönün.",
+"Doğrudan <b>Manage Supplier Line Items</b> uygulamasını açın ve aynı verileri girin.",
+"<b>Go</b>'ya tıklayın — Clearing Status sütununda kalemler görünür."
+],
+result:"Tedarikçi bakiyeleri ve satır kalemleri görüntülendi. <b>Clearing Status</b> sütunu IEE2E-### için açık ve kapatılmış kalemleri göstermektedir."
+}]
+},
+{id:9,title:"Post a Manual Outgoing Payment",app:"Create Supplier Invoice",
+sc:"Önce IEE2E-### tedarikçisi için 1100 EUR fatura oluşturacak, ardından tek ödeme yapacak ve otomatik ödeme çalıştırmasını kontrol edeceksiniz.",
+tasks:[
+{num:"1",title:"Create Vendor Invoice for Manual Payment",app:"Create Supplier Invoice",
+path:["SAP Fiori Launchpad","Accounts Payable","Supplier Invoices","Create Supplier Invoice"],
+fields:[
+["── Basic Data ──",""],
+["Company Code","1010"],
+["Transaction","Invoice"],
+["Invoicing Party","IEE2E-###"],
+["Invoice Date","Current Date"],
+["Posting Date","Current Date"],
+["Gross Invoice Amount","1100"],
+["Currency","EUR"],
+["Reference","Invoice 02-###"],
+["── Item Data ──",""],
+["Debit/Credit Indicator","Debit"],
+["G/L Account","65100###"],
+["Amount","1000"],
+["Tax Code","1I"],
+["Cost Center","BIKEA-###"]
+],
+steps:[
+"<b>Create Supplier Invoice</b> uygulamasını açın.",
+"<b>Basic Data</b> bilgilerini girin (tablodaki veriler).",
+"<b>G/L Accounts Items</b> sekmesine gidin, <b>Add</b>'e tıklayın ve Item Data'yı girin.",
+"Vergi verilerini <b>Show Details</b> ile genişleterek girin — vergi otomatik hesaplanır.",
+"<b>Check</b>'e tıklayın.",
+"<b>Post</b>'e tıklayın — belge numarasını not edin.",
+"Yeni fatura sorusunda <b>No</b>'ya tıklayın."
+],
+result:"Satıcı faturası deftere işlendi. Tekil ödeme adımında kullanmak üzere belge numarasını not edin."
+},
+{num:"2",title:"Create Single Payment",app:"Manage Supplier Line Items",
+path:["SAP Fiori Launchpad","Accounts Payable","Overview","Manage Supplier Line Items"],
+fields:[
+["── Open Item Filter ──",""],
+["Supplier","IEE2E-###"],
+["Company Code","1010"],
+["Status","Open Items"],
+["Item Status","Normal Items"]
+],
+steps:[
+"<b>Manage Supplier Line Items</b> uygulamasını açın.",
+"Tablodaki filtre bilgilerini girin ve <b>Go</b>'ya tıklayın.",
+"Yeni oluşturduğunuz faturayı seçin ve <b>Create Single Payment</b>'a tıklayın.",
+"Gerekirse value date'i değiştirin ve <b>Create</b>'e tıklayın.",
+"Uyarı mesajını <b>Accept</b> ile geçin — ödeme çalıştırma ID'sini not edin.",
+"<b>Back to Supplier Line Items Application</b>'a tıklayın.",
+"<b>SAP Logo</b> ile ana sayfaya dönün."
+],
+result:"Tekil ödeme oluşturuldu. <b>Payment run ID</b> not edildi. Otomatik ödeme çalıştırması işlenecektir."
+},
+{num:"3",title:"Check Automatic Payments",app:"Manage Automatic Payments",
+path:["SAP Fiori Launchpad","Accounts Payable","Payments","Manage Automatic Payments"],
+fields:[
+["── Automatic Payments Filters ──",""],
+["Created by","Enter your user ID"],
+["Company Code","1010"]
+],
+steps:[
+"<b>Manage Automatic Payments</b> uygulamasını açın.",
+"Tablodaki filtre kriterlerini girin ve <b>Go</b>'ya tıklayın.",
+"<b>Payments Processed</b> sekmesine geçin.",
+"Ödeme çalıştırmasının durumunun <b>Payment Posted</b> olduğunu doğrulayın.",
+"Satır sonundaki <b>></b> detay butonuna tıklayın.",
+"<b>Payments</b> sekmesinde ödeme belge numarasını (20XXXXXXXX) bulun.",
+"Numaraya tıklayın ve <b>Display Journal Entries</b>'i seçin.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Ödeme çalıştırması durumu: <b>Payment Posted</b>. Otomatik ödeme belgesi için muhasebe kaydı ayrıntıları görüntülendi."
+}]
+},
+{id:10,title:"Prepare Your User and Fiori Launchpad FI-AA",app:"Maintain Business Users",
+sc:"Asset Accountant iş rolünü kullanıcınıza atayarak Sabit Kıymet muhasebesi işlemleri için Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign BR_AA_ACCOUNTANT Role",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role","BR_AA_ACCOUNTANT"],
+["Role Name","Asset Accountant"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"<b>BR_AA_ACCOUNTANT</b> girin ve ara.",
+"<b>Asset Accountant</b> satırını seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b>'e tıklayın ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"Kullanıcınızdaki mevcut rolleri kaldırmayın. Yalnızca yeni rolü ekleyin.",
+result:"<b>BR_AA_ACCOUNTANT</b> rolü atandı. Launchpad yenilendikten sonra <b>Fixed Assets</b> alanı görünecektir."
+}]
+},
+{id:11,title:"Create Asset Master Record",app:"Manage Fixed Assets",
+sc:"Şirket kodu 1010 için CNC lathe ### açıklamalı yeni bir sabit kıymet master kaydı oluşturacak ve amortisman alanlarının kullanım ömürlerini değiştireceksiniz.",
+tasks:[
+{num:"1",title:"Set Default Company Code",app:"User Settings",
+path:["SAP Fiori Launchpad","User Icon","Settings","Default Values"],
+fields:[
+["── Financial Accounting ──",""],
+["Company Code","1010"]
+],
+steps:[
+"Sağ üst köşedeki <b>User</b> ikonuna tıklayın.",
+"<b>Settings</b> → <b>Default Values</b> seçin.",
+"<b>Financial Accounting</b> bölümünde <b>Company Code</b>: 1010 girin.",
+"<b>Save</b>'e tıklayın."
+]
+},
+{num:"2",title:"Create Asset Master Record",app:"Manage Fixed Assets",
+path:["SAP Fiori Launchpad","Fixed Assets","Overview","Manage Fixed Assets"],
+fields:[
+["── Asset Creation ──",""],
+["Asset Class","2000"],
+["Company Code","1010"],
+["Description","CNC lathe ###"],
+["Cost center","BIKEA-###"]
+],
+steps:[
+"<b>Manage Fixed Assets</b> uygulamasını açın ve <b>Create</b>'e tıklayın.",
+"<b>Create Main Asset</b> ekranında <b>Company Code</b> 1010 ve <b>Asset Class</b> 2000 girin.",
+"<b>OK</b>'a tıklayın.",
+"<b>Asset Description</b> alanına <b>CNC lathe ###</b> girin.",
+"<b>Time-Dependent</b> alanına gidin ve <b>Cost Center</b>: <b>BIKEA-###</b> girin.",
+"<b>Create</b>'e tıklayın — kıymet numarası 20000___-0 formatında görünür. Not alın.",
+"<b>Back</b> (<) ile geri dönün."
+],
+result:"<b>Asset master record</b> oluşturuldu. Sonraki egzersizler için sabit kıymet numarası 20000___-0 (CNC torna ###)'yı not edin."
+},
+{num:"3",title:"Change Useful Life in Depreciation Areas",app:"Manage Fixed Assets",
+fields:[
+["── Depreciation Areas ──",""],
+["Depreciation Area 01 (Book)","10 years"],
+["Depreciation Area 15","10 years"],
+["Depreciation Area 32 (IFRS)","8 years"]
+],
+steps:[
+"Kıymet detay ekranında <b>Edit</b>'e tıklayın.",
+"<b>Valuation</b> alanına kadar kaydırın.",
+"<b>0L</b> satırında, amortisman alanı <b>1</b> için <b>Useful Life</b>: 10 girin.",
+"<b>0L</b> satırında, amortisman alanı <b>15</b> için <b>Useful Life</b>: 10 girin.",
+"<b>Save</b>'e tıklayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Kullanım ömrü güncellendi: <b>Depreciation area</b>'ları 01 ve 15 = 10 yıl, alan 32 = 8 yıl."
+}]
+},
+{id:12,title:"Post and Analyze Asset Acquisition",app:"Create Supplier Invoice",
+sc:"CNC Lathe için IEE2E-### tedarikçisine 44.000 EUR (vergi dahil %10) tutarında entegre kıymet alımı yapacak ve oluşturulan değerleri analiz edeceksiniz.",
+tasks:[
+{num:"1",title:"Post Asset Acquisition via Supplier Invoice",app:"Create Supplier Invoice",
+path:["SAP Fiori Launchpad","Fixed Assets","Postings","Acquisitions and Transfers","Create Supplier Invoice"],
+fields:[
+["── Basic Data ──",""],
+["Invoice Date","January 7, CY"],
+["Reference","CNC Lathe ###"],
+["Posting Date","Today"],
+["Amount","44000"],
+["Text","CNC Lathe ###"],
+["Inv. Party","IEE2E-###"],
+["── Asset Items ──",""],
+["Asset","Your noted main asset number (200_____-0)"],
+["Amount","40000"],
+["Tax Code","1I"],
+["Asset Value Date","January 7, CY"]
+],
+steps:[
+"<b>Create Supplier Invoice</b> uygulamasını açın.",
+"Header verilerini girin. Metin için <b>Show More</b>'a tıklayın.",
+"<b>Asset Items</b>'a gidin ve <b>Add</b>'e tıklayın.",
+"Asset Items verilerini girin (kıymet numarası, miktar 40000, Tax Code 1I).",
+"<b>Check</b>'e tıklayın.",
+"<b>Simulate</b>'e tıklayın — AP görünümünden simülasyon görünür. Uyarıları kabul edin.",
+"<b>Post</b>'a tıklayın.",
+"Başarı mesajını <b>No</b> ile onaylayın."
+],
+info:"CNC torna için ana sabit kıymet numaranızı bulmak üzere <b>F4</b> arama yardımını kullanın. AP hesabı 21100000, takas hesabı 16014000'e karşılık alacaklandırılır.",
+result:"Sabit kıymet alımı deftere işlendi: Makine hesabı 16002000 borçlandırıldı (40.000 EUR), borç hesabı 21100000 alacaklandırıldı (44.000 EUR), vergi 4.000 EUR."
+},
+{num:"2",title:"Check Posted Asset Values",app:"Manage Fixed Assets",
+path:["SAP Fiori Launchpad","Fixed Assets","Overview","Manage Fixed Assets"],
+steps:[
+"<b>Manage Fixed Assets</b> uygulamasını açın.",
+"Kıymet satırınızın sağındaki <b>Display Asset</b> (>) okuna tıklayın.",
+"Aşağı kaydırarak <b>Ledger</b> alanını görün — Capitalization date dolu olmalı.",
+"<b>Valuation</b> alanına kaydırın, amortisman alanı <b>1</b> için > okuna tıklayın.",
+"<b>Value Display</b> sekmesinde <b>Journal Entries</b>'e tıklayın.",
+"Journal entry numarasına tıklayın ve <b>Display Journal Entries - T-Account View</b>'ı seçin.",
+"Amortisman alanı <b>32</b> için aynı adımları tekrarlayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Sabit kıymet değerleri <b>Ledger 0L</b> (yerel değerleme) ve <b>2L</b> (IFRS) üzerinde kontrol edildi. IFRS farkı olmadığından her iki defterde aynı değerler görünmektedir."
+}]
+},
+{id:13,title:"Create a Ledger-Specific Posting",app:"Post General Journal Entries",
+sc:"Farklı muhasebe prensipleri nedeniyle Ledger Group 0L ve 2L'ye ayrı ayrı karşılık kaydı yapacak ve ardından Display Line Items'ta sonuçları görüntüleyeceksiniz.",
+tasks:[
+{num:"1",title:"Post Provision to Ledger Group 0L",app:"Post General Journal Entries",
+path:["SAP Fiori Launchpad","General Ledger","Journal Entries","Post General Journal Entries"],
+fields:[
+["── Header ──",""],
+["Journal Entry Date","15th of the previous month"],
+["Posting Date","15th of the previous month"],
+["Journal Entry Type","SA"],
+["Company Code","1010"],
+["Transaction Currency","EUR"],
+["Ledger Group","0L"],
+["Header Text","Provision IEE2E-### 0L"],
+["── First Line Item ──",""],
+["Company Code","1010 (already maintained)"],
+["G/L Account","66019900"],
+["Debit","1000"],
+["Item Text","Provision IEE2E-### 0L"],
+["Cost Center","BIKEA-###"],
+["── Second Line Item ──",""],
+["Company Code","1010 (already maintained)"],
+["G/L Account","24031100"],
+["Credit","1000"]
+],
+steps:[
+"<b>Post General Journal Entries</b> uygulamasını açın.",
+"Header verilerini girin (özellikle <b>Ledger Group</b>: 0L).",
+"<b>Enter</b>'a tıklayın.",
+"<b>First line item</b> verilerini girin, ardından <b>></b> ile genişletin.",
+"Item Text ve Cost Center alanlarını doldurun.",
+"<b>Second line item</b> verilerini girin.",
+"<b>Post</b>'a tıklayın.",
+"Başarı penceresinde <b>Display</b>'e tıklayarak belgeyi inceleyin.",
+"<b>Show More</b>'a tıklayın — Ledger Group 0L görünür."
+],
+result:"<b>Ledger Group 0L</b>'e karşılık deftere işlendi: Borç 66019900 (1.000 EUR), Alacak 24031100 (1.000 EUR)."
+},
+{num:"2",title:"Post Provision to Ledger Group 2L",app:"Post General Journal Entries",
+fields:[
+["── Header ──",""],
+["Journal Entry Date","15th of the previous month"],
+["Posting Date","15th of the previous month"],
+["Journal Entry Type","SA"],
+["Company Code","1010"],
+["Transaction Currency","EUR"],
+["Ledger Group","2L"],
+["Header Text","Provision IEE2E-### 2L"],
+["── First Line Item ──",""],
+["G/L Account","66019900"],
+["Debit","2000"],
+["Item Text","Provision IEE2E-### 2L"],
+["Cost Center","BIKEA-###"],
+["── Second Line Item ──",""],
+["G/L Account","24031100"],
+["Credit","2000"]
+],
+steps:[
+"<b>Manage Journal Entries</b> ekranında <b>New</b>'e tıklayın.",
+"<b>Similar Journal Entry</b>'yi seçin.",
+"<b>Do not propose amounts</b>'ı seçin ve <b>OK</b>'a tıklayın.",
+"Header'da <b>Ledger Group</b>'u <b>2L</b> olarak değiştirin.",
+"<b>Header Text</b>: Provision IEE2E-### 2L girin.",
+"Line item 1'e Amount <b>2000</b>, Item Text, Cost Center girin.",
+"Line item 2'ye Credit <b>2000</b> girin.",
+"<b>Post</b>'a tıklayın — Ledger Group 2L görünür.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>Ledger Group 2L</b>'e karşılık deftere işlendi: Borç 66019900 (2.000 EUR), Alacak 24031100 (2.000 EUR)."
+},
+{num:"3",title:"Display Ledger-Specific Line Items",app:"Display Line Items in General Ledger",
+path:["SAP Fiori Launchpad","General Ledger","Journal Entries","Analysis","Display Line Items in General Ledger"],
+fields:[
+["── Selection ──",""],
+["Ledger","0L or 2L"],
+["Company Code","1010"],
+["G/L Account","24031100"],
+["Status","All Items"],
+["Profit Center","P9### (### = your user ID)"]
+],
+steps:[
+"<b>Display Line Items in General Ledger</b> uygulamasını açın.",
+"Ledger (0L veya 2L), Company Code, G/L Account 24031100, Status: All Items girin.",
+"<b>Adapt Filters</b> → <b>Profit</b> araması → <b>Profit Center</b>'ı seçin ve <b>OK</b>'a tıklayın.",
+"<b>Profit Center</b>: P9### girin ve <b>Go</b>'ya tıklayın.",
+"Journal Entry belgesini seçin ve <b>Manage Journal Entries</b>'i seçin.",
+"Sol tarafta Ledger bilgisi görünür (0L veya 2L).",
+"Ledger 2L için adımları tekrarlayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"G/L hesabı 24031100 için satır kalemleri görüntülendi. Deftere özgü kayıtlar (0L: 1.000 EUR / 2L: 2.000 EUR) <b>Profit Center</b> filtresi ile doğrulandı."
+}]
+},
+{id:14,title:"Prepare Your User and Fiori Launchpad CO",app:"Maintain Business Users",
+sc:"Cost Accountant Overhead iş rolünü kullanıcınıza atayarak Controlling işlemleri için Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign BR_OVERHEAD_ACCOUNTANT Role",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role","BR_OVERHEAD_ACCOUNTANT"],
+["Role Name","Cost Accountant Overhead"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"<b>BR_OVERHEAD_ACCOUNTANT</b> girin ve ara.",
+"Satırı seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b> ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü kullanıcınızdan kaldırmayın. Önceden atanmış tüm rolleri koruyun.",
+result:"<b>BR_OVERHEAD_ACCOUNTANT</b> rolü atandı. Launchpad yenilendikten sonra <b>Overhead Accounting</b> alanı görünecektir."
+}]
+},
+{id:15,title:"Create Cost Center",app:"Manage Cost Centers",
+sc:"Pazarlama departmanı ve yeni üretim hattı için MAR-### ve MAN-### maliyet merkezlerini oluşturacak ve IEE2E grubu altında doğrulanacaksınız.",
+tasks:[
+{num:"1",title:"Create Marketing Cost Center MAR-###",app:"Manage Cost Centers",
+path:["SAP Fiori Launchpad","Overhead Accounting","Overview","Manage Cost Centers"],
+fields:[
+["── General Information ──",""],
+["Cost Center","MAR-###"],
+["Name","Marketing IEE2E ###"],
+["Description","Marketing IEE2E ###"],
+["Valid From","January 1, <current fiscal year>"],
+["Valid To","December 31, 2099"],
+["Person Responsible","your log on user"],
+["Department","keep empty"],
+["Cost Center Category","9 (Marketing)"],
+["── Organizational Units ──",""],
+["Standard Hierarchy Node","IEE2E"],
+["Company Code","1010"],
+["Profit Center","P9###"]
+],
+steps:[
+"<b>Overhead Accounting</b> → <b>Overview</b> → <b>Manage Cost Centers</b>'ı açın.",
+"<b>Create</b>'e tıklayın ve <b>Full Screen</b>'i seçin.",
+"Tablodaki tüm verileri girin.",
+"<b>Create</b>'e tıklayın.",
+"<b>Back</b> (<) ile geri dönün — bir sonraki adım için ekranda kalın."
+],
+result:"MAR-### maliyet merkezi (Marketing IEE2E ###), <b>Standard Hierarchy Node</b> IEE2E altında oluşturuldu."
+},
+{num:"2",title:"Create Manufacturing Cost Center MAN-###",app:"Manage Cost Centers",
+fields:[
+["── General Information ──",""],
+["Cost Center","MAN-###"],
+["Name","Manuf. IEE2E ###"],
+["Description","Manufacturing IEE2E ###"],
+["Valid From","January 1, <current fiscal year>"],
+["Valid To","December 31, 2099"],
+["Cost Center Category","F (Production)"],
+["── Organizational Units ──",""],
+["Standard Hierarchy Node","IEE2E"],
+["Company Code","1010"],
+["Profit Center","P9###"]
+],
+steps:[
+"Aynı ekranda <b>Create</b>'e tıklayın ve <b>Full Screen</b>'i seçin.",
+"MAN-### maliyet merkezi için tablodaki verileri girin.",
+"<b>Create</b>'e tıklayın.",
+"<b>Back</b> (<) ile geri dönün.",
+"<b>SAP Icon</b> ile son açık sayfaya dönün."
+],
+result:"MAN-### maliyet merkezi (Manufacturing IEE2E ###), <b>Standard Hierarchy Node</b> IEE2E altında oluşturuldu."
+},
+{num:"3",title:"Verify Cost Centers in Group IEE2E",app:"Manage Cost Center Groups",
+steps:[
+"<b>SAP Fiori Launchpad</b> arama alanına <b>Manage Cost Center Groups</b> yazın.",
+"<b>Cost Center Group</b> alanına <b>IEE2E</b> girin ve <b>Go</b>'ya tıklayın.",
+"Sonuçta <b>IEE2E</b> bağlantısına tıklayın.",
+"<b>MAR-###</b> ve <b>MAN-###</b>'in IEE2E üst düğümü altında göründüğünü doğrulayın.",
+"<b>Back</b> (<) ve <b>SAP Icon</b> ile Fiori Launchpad'e dönün."
+],
+result:"Her iki maliyet merkezi MAR-### ve MAN-### da IEE2E maliyet merkezi grup hiyerarşisi altında doğrulandı."
+}]
+},
+{id:16,title:"Check Controlling Settings of Cost G/L Accounts",app:"Manage G/L Account Master Data",
+sc:"Masraf G/L hesaplarının CO alanlarını kontrol edeceksiniz: 65100### (Primary Costs) ve 94311000 (Secondary Costs - Activity Allocation).",
+tasks:[
+{num:"1",title:"Check CO Settings for G/L Accounts",app:"Manage G/L Account Master Data",
+path:["SAP Fiori Launchpad","General Ledger","Overview","Manage G/L Account Master Data"],
+fields:[
+["── Selection ──",""],
+["Chart of Accounts","YCOA"],
+["G/L Account","65100### then 94311000"]
+],
+steps:[
+"<b>Manage G/L Account Master Data</b> uygulamasını açın.",
+"Chart of Accounts: <b>YCOA</b>, ilk G/L Account'u girin ve <b>Go</b>'ya tıklayın.",
+"Hesabın > (Details) okuna tıklayın.",
+"<b>General</b> sekmesinde G/L Account Type'ın <b>Primary Costs or Revenue</b> olduğunu görün.",
+"<b>Controlling Data</b> sekmesine gidin ve <b>Edit</b>'e tıklayın.",
+"<b>Cost Element Category</b> alanının giriş yardımını açın — Kategori 01 seçili.",
+"<b>Cancel</b> ve <b>Back</b> (<) ile geri dönün.",
+"İkinci hesap (<b>94311000</b>) için aynı adımları tekrarlayın — Type: Secondary Costs, Category 43.",
+"<b>SAP Icon</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>G/L Account</b> 65100###: Primary Costs, Kategori 01. <b>G/L Account</b> 94311000: Secondary Costs, Kategori 43 (Internal Activity Allocation) — <b>Direct Activity Allocation</b> kayıtlarında kullanılır."
+}]
+},
+{id:17,title:"Create Activity Type",app:"Manage Activity Types",
+sc:"IT departmanı için diğer departmanlara verilen IT hizmetlerini saatlik olarak takip edecek IT### aktivite türünü oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Create Activity Type IT###",app:"Manage Activity Types",
+path:["SAP Fiori Launchpad","Overhead Accounting","Master Data","Manage Activity Types"],
+fields:[
+["── General Information ──",""],
+["Activity Type","IT###"],
+["Name","IT Services IEE2E###"],
+["Description","IT Services IEE2E###"],
+["Valid From","January 1, <current fiscal year>"],
+["Valid To","December 31, 2099"],
+["Activity Unit","H (Hours)"],
+["Cost Center Categories","* (All Categories)"],
+["── Allocation ──",""],
+["Activity Type Category","1 (Manual entry, manual allocation)"],
+["Allocation Cost Element","94311000 (Pers hrs)"]
+],
+steps:[
+"<b>Manage Activity Types</b> uygulamasını açın.",
+"<b>Create</b>'e tıklayın ve <b>Full Screen</b>'i seçin.",
+"Tablodaki tüm verileri girin.",
+"<b>Create</b>'e tıklayın.",
+"<b>SAP Icon</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>Activity Type</b> IT### (IT Services, Saat), tahsis maliyet unsuru 94311000 ile oluşturuldu."
+}]
+},
+{id:18,title:"Plan rates for cost center / activity type",app:"Manage Cost Rates - Plan",
+sc:"IT### aktivite türü için maliyet oranlarını F2121_PlanCostRateTemplate.xlsx dosyasını düzenleyerek yükleyeceksiniz.",
+tasks:[
+{num:"1",title:"Prepare Plan Cost Rate Excel File",app:"Excel",
+fields:[
+["── Template Fields ──",""],
+["Activity Type","IT### (replace ### with your logon number)"],
+["From Fiscal Year","<current fiscal year>"],
+["To Fiscal Year","<current fiscal year + 1>"],
+["Save As","F2121_###_PlanCostRate.xlsx"]
+],
+steps:[
+"<b>Downloads → F2121 → F2121</b> klasöründeki <b>F2121_PlanCostRateTemplate.xlsx</b> dosyasını açın.",
+"<b>Activity Type</b> sütunundaki ### yerine kullanıcı numaranızı yazın.",
+"<b>From Fiscal Year</b>: mevcut mali yılı girin.",
+"<b>To Fiscal Year</b>: mevcut mali yıl + 1 girin.",
+"<b>File → Save As</b> ile dosyayı <b>F2121_###_PlanCostRate.xlsx</b> olarak kaydedin.",
+"Dosyayı ve Excel'i kapatın."
+]
+},
+{num:"2",title:"Import Cost Rate via Manage Cost Rates - Plan",app:"Manage Cost Rates - Plan",
+path:["SAP Fiori Launchpad","Search","Manage Cost Rates - Plan"],
+steps:[
+"<b>Manage Cost Rates - Plan</b> uygulamasını açın.",
+"<b>Upload</b>'a tıklayın.",
+"<b>Browse</b> butonuna tıklayın.",
+"<b>Downloads → F2121 → F2121 → F2121_###_PlanCostRate.xlsx</b> dosyasını seçin.",
+"<b>Open → Upload → OK</b>'a tıklayın.",
+"Başarı mesajını doğrulayın — Cost Center 10101753 ve IT### aktivite türü listede görünür.",
+"Doğrulamak için <b>Activity Type</b>: IT### girin ve <b>Go</b>'ya tıklayın.",
+"<b>SAP Icon</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>Activity Type</b> IT### için maliyet oranı başarıyla içe aktarıldı. Maliyet merkezi 10101753 ve IT### maliyet oranı listesinde görünmektedir."
+}]
+},
+{id:19,title:"Post an activity allocation",app:"Manage Direct Activity Allocation",
+sc:"IT### aktivite türünden gönderilen maliyet merkezi 10101753'ten MAN-### ve MAR-###'e doğrudan aktivite tahsisi yapacak ve sonuçları raporlayacaksınız.",
+tasks:[
+{num:"1",title:"Post Direct Activity Allocation",app:"Manage Direct Activity Allocation",
+path:["SAP Fiori Launchpad","Overhead Accounting","Overview","Manage Direct Activity Allocation"],
+fields:[
+["── Header ──",""],
+["Document Header Text","###_Direct Activity Alloc"],
+["Journal Entry Date","Current date"],
+["Posting Date","Current date"],
+["Translation Date","Current date"],
+["Journal Entry Type","CO (Secondary Cost)"],
+["── Allocation Items ──",""],
+["Sender Cost Center 1","10101753 - IT Services (DE)"],
+["Sender Activity Type 1","IT### - IT Services (Hours)"],
+["Receiver Cost Center 1","MAN-### - Manuf. ###"],
+["Quantity 1","20"],
+["Sender Cost Center 2","10101753 - IT Services (DE)"],
+["Sender Activity Type 2","IT### - IT Services (Hours)"],
+["Receiver Cost Center 2","MAR-### - Marketing ###"],
+["Quantity 2","10"]
+],
+steps:[
+"<b>Manage Direct Activity Allocation</b> uygulamasını açın.",
+"<b>Create</b>'e tıklayın ve <b>Full Screen</b>'i seçin.",
+"Header bilgilerini girin.",
+"<b>Allocation Items</b> bölümünde <b>Settings</b> ikonuna tıklayın.",
+"<b>Amount in Global Currency</b>'yi seçin; <b>Item Text</b> ve <b>Receiver WBS Element</b>'i kaldırın. <b>OK</b>'a tıklayın.",
+"İlk tahsis satırını girin (10101753, IT###, MAN-###, 20 saat).",
+"<b>Enter</b>'a tıklayın — EUR 2000 maliyet görünür (20 saat × 100 EUR/saat).",
+"<b>Allocation Items</b> bölümünde <b>Create</b>'e tıklayın (sağ alt köşedeki değil).",
+"İkinci tahsis satırını girin (10101753, IT###, MAR-###, 10 saat).",
+"<b>Enter</b>'a tıklayın.",
+"Sağ alt köşedeki <b>Create</b>'e tıklayın — iki Journal Entry oluşur (0L ve 2L).",
+"<b>SAP Icon</b> ile Fiori Launchpad'e dönün."
+],
+result:"İki muhasebe kaydı oluşturuldu (Ledger 0L ve 2L). MAN-### IT faaliyet tahsisinden 2.000 EUR, MAR-### ise 1.000 EUR almaktadır."
+},
+{num:"2",title:"Check Results in Cost Centers Plan/Actual",app:"Cost Centers Plan/Actual",
+steps:[
+"<b>SAP Fiori Launchpad</b> aramasında <b>Cost Centers Plan/Actual</b> yazın ve açın.",
+"<b>Plan Category</b>: ACT01, <b>Cost Center</b>: 10101753 girin ve <b>Go</b>'ya tıklayın.",
+"Navigation Panel'den <b>Activity Type</b>'ı maliyet merkezi altına sürükleyin.",
+"IT### aktivite türü için Direct Activity Allocation postings'leri görüntüleyin.",
+"<b>SAP Icon</b> ile Fiori Launchpad'e dönün."
+],
+result:"Faaliyet tahsisi <b>Cost Centers Plan/Actual</b> raporunda görünmektedir. Gerçekleşen tutarlar, miktarların planlanan maliyet oranlarıyla çarpımını yansıtmaktadır."
+}]
+},
+{id:20,title:"Manage WBS elements",app:"Project Control - Enterprise Projects",
+sc:"Paris, Singapur ve Atlanta fuar katılımlarını takip etmek için IEE2E overhead proje profiliyle üç WBS projesi oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Create Project FAIRPAR### for Paris",app:"Project Control - Enterprise Projects",
+path:["SAP Fiori Launchpad","Search","Project Control - Enterprise Projects"],
+fields:[
+["── Header ──",""],
+["Project Name","Fair Paris ###"],
+["Project ID","FAIRPAR###"],
+["Project Profile","Overhead Project"],
+["Planned Start","January 1, <current fiscal year>"],
+["Planned Finish","December 31, <current fiscal year>"],
+["── General Information ──",""],
+["Responsible Cost Center","MAR-### (Marketing)"],
+["Profit Center","P9### (Shared Services)"],
+["Project Currency","EUR"]
+],
+steps:[
+"<b>Project Control – Enterprise Projects</b> uygulamasını açın.",
+"<b>Create</b>'e tıklayın.",
+"Tablodaki bilgileri girin.",
+"<b>Create</b>'e tıklayın.",
+"<b><</b> ile <b>Project Control – Enterprise Projects</b> penceresine geri dönün."
+],
+result:"FAIRPAR### projesi (Fair Paris ###), <b>Overhead Project</b> profili ile oluşturuldu."
+},
+{num:"2",title:"Copy Project for Singapore and Atlanta",app:"Project Control - Enterprise Projects",
+fields:[
+["── Singapore ──",""],
+["Project Name","Fair Singapore ###"],
+["Project ID","FAIRSIN###"],
+["Planned Start","January 1, <current fiscal year>"],
+["Planned Finish","keep empty"],
+["── Atlanta ──",""],
+["Project Name","Fair Atlanta ###"],
+["Project ID","FAIRATL###"],
+["Planned Start","January 1, <current fiscal year>"],
+["Planned Finish","keep empty"]
+],
+steps:[
+"<b>FAIRPAR###</b> için arama yapın ve <b>Go</b>'ya tıklayın.",
+"<b>Fair Paris ###</b> projesini işaretleyin ve <b>Copy</b>'ye tıklayın.",
+"Singapur verileri için tabloyu doldurun ve <b>Copy</b>'ye tıklayın.",
+"<b>Create</b>'e tıklayın ve <b><</b> ile geri dönün.",
+"Adımları Atlanta için tekrarlayın.",
+"<b>SAP Icon</b> ile Fiori Launchpad'e dönün."
+],
+result:"Üç proje oluşturuldu: FAIRPAR###, FAIRSIN###, FAIRATL### — hepsi MAR-### maliyet merkezi altında <b>Overhead Project</b> profiliyle."
+}]
+}
+]},
+{unit:6,title:"Performing the Source-to-Pay Process: Focus on Procurement",ex:[
+{id:21,title:"Prepare Your User and Fiori Launchpad MM",app:"Maintain Business Users",
+sc:"Satın alma işlemleri için üç farklı iş rolünü kullanıcınıza atayarak MM Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign MM Business Roles",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role 1","BR_EMPLOYEE_PROCUREMENT"],
+["Business Role 2","BR_PRODMASTER_SPECIALIST"],
+["Business Role 3","BR_PURCHASER"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"<b>BR_EMPLOYEE_PROCUREMENT, BR_PRODMASTER_SPECIALIST, BR_PURCHASER</b> girin ve ara.",
+"Üç rolün bulunduğu satırları seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b>'e tıklayın ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü kullanıcınızdan kaldırmayın. Yalnızca yeni rolleri ekleyin.",
+result:"Üç MM rolü atandı. Launchpad yenilendikten sonra <b>Purchasing</b> ve <b>Materials Management</b> alanları görünecektir."
+}]
+},
+{id:22,title:"Extend Business Partner for Purchasing",app:"Manage Business Partner Master Data",
+sc:"Daha önce oluşturduğunuz IEE2E-### iş ortağını Supplier (FLVN01) rolüyle satın alma perspektifinden genişleteceksiniz.",
+tasks:[
+{num:"1",title:"Extend Business Partner with Purchasing Role",app:"Manage Business Partner Master Data",
+path:["SAP Fiori Launchpad","Accounts Payable","Supplier","Manage Business Partner Master Data"],
+fields:[
+["── Business Partner ──",""],
+["Business Partner","IEE2E-###"],
+["Role","Supplier (FLVN01)"],
+["── Purchasing Organizations ──",""],
+["Purchasing Organization","1010"],
+["Purchasing Group","000"],
+["Planned Delivery Time","15"],
+["Order Currency","EUR"],
+["Automatic Purchasing Order","selected"],
+["Payment Terms","0001"],
+["Incoterms","FH"]
+],
+steps:[
+"<b>Manage Business Partner Master Data</b> uygulamasını açın.",
+"<b>IEE2E-###</b> için arama yapın ve <b>Go</b>'ya tıklayın.",
+"Satırı seçin ve <b>></b> okuna tıklayın.",
+"<b>Edit</b> ikonuna tıklayın.",
+"<b>Roles</b> sekmesine gidin ve <b>Create</b> ikonuna tıklayın.",
+"Yeni satıra <b>Supplier (FLVN01)</b> girin ve <b>></b> okuna tıklayın.",
+"<b>Purchasing Organizations</b> sekmesini açın ve <b>Create</b>'e tıklayın.",
+"<b>Purchasing Organization</b>: 1010, <b>Purchasing Group</b>: 000 girin.",
+"<b>Planned Delivery Time</b>: 15, <b>Order Currency</b>: EUR girin.",
+"<b>Automatic Purchasing Order</b> onay kutusunu seçin.",
+"<b>Payment Terms</b>: 0001, <b>Incoterms</b>: FH girin.",
+"<b>Apply</b>'ya iki kez tıklayın.",
+"<b>Save</b>'e tıklayın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"IEE2E-### <b>Business Partner</b>'ı, Supplier (FLVN01) rolü ve <b>Purchasing Organization</b> 1010 verileriyle genişletildi."
+}]
+},
+{id:23,title:"Create Product Master Record (IEE2E - ILT)",app:"Create Material",
+sc:"Bisiklet üretiminde kullanılacak kilit (R124-###) için yeni hammadde material master kaydını R122-###'ten kopyalayarak oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Create Material R124-### by Copying R122-###",app:"Create Material",
+path:["SAP Fiori Launchpad","Search","Create Material"],
+fields:[
+["── Material ──",""],
+["Material","R124-###"],
+["Industry","M"],
+["Material Type","ROH"],
+["Copy from Material","R122-###"],
+["── Views ──",""],
+["Views","Basic Data 1, Purchasing, Accounting 1, Costing 2"],
+["── Org Levels ──",""],
+["Plant","1010"],
+["Copy From Plant","1010"],
+["── Details ──",""],
+["Descr.","Lock IEE2E-###"],
+["Gross Weight","500"],
+["Unit of Weight","g"],
+["Net Weight","500"],
+["Purchasing Group","000"],
+["Price control","S"],
+["Standard Price","10"]
+],
+steps:[
+"<b>Create Material</b> uygulamasını açın.",
+"<b>Material</b>: R124-###, <b>Material Type</b>: ROH, <b>Copy from</b>: R122-### girin.",
+"<b>Continue</b>'ye tıklayın.",
+"<b>Select View(s)</b> penceresinde: Basic Data 1, Purchasing, Accounting 1, Costing 2'yi seçin.",
+"<b>Create views selected</b> onay kutusunu seçin.",
+"<b>Org. Levels (F6)</b> ikonuna tıklayın — <b>Plant</b>: 1010, <b>Copy from Plant</b>: 1010 girin.",
+"<b>Continue</b> (yeşil tik) ikonuna tıklayın.",
+"<b>Basic Data 1</b>: Descr. = Lock IEE2E-###, Gross Weight = 500, Unit of Weight = g, Net Weight = 500 girin.",
+"<b>Purchasing</b> sekmesi: Purchasing Group = 000. Enter'a basın, uyarıyı onaylayın.",
+"<b>Accounting 1</b> sekmesi: Price Control = S, Standard Price = 10.",
+"<b>Costing 2</b> sekmesinde 10 EUR standart fiyatı doğrulayın.",
+"<b>Save</b>'e tıklayın — 'R124-### created' mesajı görünür.",
+"<b>Exit</b> ile Fiori Launchpad'e dönün."
+],
+info:"<b>Save</b>'den sonra oluşturma mesajı görünmüyorsa <b>Save</b>'i tekrar seçin.",
+result:"R124-### malzemesi (Lock IEE2E-###), Standart Fiyatı 10 EUR ile <b>ROH</b> olarak oluşturuldu. <b>Basic Data</b>, <b>Purchasing</b>, <b>Accounting 1</b> ve <b>Costing 2</b> görünümleri oluşturuldu."
+}]
+},
+{id:24,title:"Create a Purchase Requisition",app:"Manage Purchase Requisitions - Professional",
+sc:"Kilit R124-### için iki satın alma talebi oluşturacak, birini güncelleyecek, kopyalayarak ikincisini üretecek ve Joule asistanıyla sonuçları görüntüleyeceksiniz.",
+tasks:[
+{num:"1",title:"Maintain Default Settings for Purchase Requisitions",app:"Default Settings for Users - Purchase Requisitions",
+path:["SAP Fiori Launchpad","Search","Default Settings for Users - Purchase Requisitions"],
+fields:[
+["── Basic Parameters ──",""],
+["Plant","1010"],
+["Company Code","1010"],
+["Storage Location","101C"],
+["Currency","EUR"],
+["Purchasing Group","000"],
+["Purchasing Org.","1010"],
+["Purchasing Document Type","NB"],
+["── Account Assignment ──",""],
+["Cost Center","MAN-###"],
+["Account Assignment Category","K (Cost Center)"]
+],
+steps:[
+"<b>Default Settings for Users - Purchase Requisitions</b> uygulamasını açın.",
+"Kullanıcı ID'nizi girin (F000###).",
+"Tablodaki Basic Parameters ve Account Assignment değerlerini girin.",
+"<b>Save</b>'e tıklayın ve <b>SAP</b> ile Fiori Launchpad'e dönün."
+]
+},
+{num:"2",title:"Create First Purchase Requisition (FIRST PR GR###)",app:"Manage Purchase Requisitions - Professional",
+path:["SAP Fiori Launchpad","Purchasing","Purchase Requisition Processing","Manage Purchase Requisitions - Professional"],
+fields:[
+["── PR Header ──",""],
+["Purchase Requisition Descrip.","FIRST PR GR###"],
+["── Item ──",""],
+["Account Assignment Cat.","K"],
+["Cost Center","MAN-###"],
+["Material","R124-###"],
+["Quantity Requested","20 PC"],
+["Delivery Date","Today + 10 days"]
+],
+steps:[
+"<b>Manage Purchase Requisitions - Professional</b> uygulamasını açın.",
+"<b>Create</b>'e tıklayın.",
+"<b>Purchase Requisition Descrip.</b>: FIRST PR GR### girin.",
+"Items bölümünde <b>Create Material</b>'a tıklayın ve tablodaki malzeme değerlerini girin.",
+"<b>Apply</b>'ya tıklayın.",
+"Teslimat tarihi uyarısı varsa <b>Generate Explanation</b>'ı okuyun ve <b>Close</b>'a tıklayın.",
+"<b>Apply</b>'ya tıklayın, ardından <b>Create</b>'e tıklayın.",
+"Teslimat tarihi diyalogunda <b>Create</b>'e tıklayın. PR numarasını not edin.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"İlk Satın Alma Talebi FIRST PR GR### oluşturuldu. <b>PR</b> numarasını not edin."
+},
+{num:"3",title:"Update Quantity to 50 in First PR",app:"Manage Purchase Requisitions - Professional",
+fields:[["Quantity Requested","50"]],
+steps:[
+"<b>Manage Purchase Requisitions - Professional</b> uygulamasını açın ve <b>Go</b>'ya tıklayın.",
+"Arama alanına <b>GR###</b> girin.",
+"İlk PR'ın satırını seçin.",
+"<b>Edit</b>'e tıklayın.",
+"<b>Quantity</b>'yi <b>50</b> olarak değiştirin.",
+"<b>Save</b>'e tıklayın ve <b>Back</b>'e tıklayın."
+]
+},
+{num:"4",title:"Create Second Purchase Requisition by Copying",app:"Manage Purchase Requisitions - Professional",
+fields:[
+["── Modified Values ──",""],
+["Purchase Requisition Descrip.","SECOND PR GR###"],
+["Quantity Requested","200"],
+["Delivery Date","Today + 13 days"],
+["Purchasing Group","000"],
+["Account Assign. Cat.","Delete Entry K"]
+],
+steps:[
+"Önceki adımda düzenlediğiniz PR'ı seçin ve <b>Copy</b>'ye tıklayın.",
+"<b>Purchase Requisition Descrip.</b>'i silin ve <b>SECOND PR GR###</b> yazın.",
+"Satır kalemi detaylarına gidin (<b>></b>).",
+"<b>Account Assignment Category</b> K'yı silin.",
+"<b>Quantity Requested</b>: 200, <b>Delivery Date</b>: bugün + 13 gün girin.",
+"<b>Purchasing Group</b>'un 000 olduğunu doğrulayın.",
+"<b>Apply</b>'ya tıklayın.",
+"<b>Create</b>'e tıklayın.",
+"<b>Back</b> ve <b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"İkinci Satın Alma Talebi SECOND PR GR###, hesap ataması olmaksızın ve 200 adet miktarıyla oluşturuldu."
+},
+{num:"5",title:"Show Purchase Requisitions Using Joule",app:"Joule",
+steps:[
+"Fiori Launchpad'de <b>Joule</b>'u açın.",
+"<b>Message Joule</b> alanına '<b>Show purchase requisitions I have created</b>' yazın.",
+"Sonuçlarda PR listesi görünür — <b>Open</b>'a tıklayarak detayları inceleyin.",
+"<b>SAP</b> ile Fiori Launchpad'e ve <b>Close</b> ile Joule'u kapatın."
+],
+result:"Her iki satın alma talebi (FIRST PR ve SECOND PR), <b>Joule</b> yapay zeka asistanı aracılığıyla görüntülendi."
+}]
+},
+{id:25,title:"Process RFQ and Quotation",app:"Manage RFQs",
+sc:"R124-### için iç kaynaklama talebi (RFQ) oluşturacak, iki tedarikçiden fiyat teklifi alacak ve en iyi teklifi Compare Supplier Quotations ile ödüllendireceksiniz.",
+tasks:[
+{num:"1",title:"Create RFQ (Internal Sourcing Request)",app:"Manage RFQs",
+path:["SAP Fiori Launchpad","Purchasing","Manage RFQs"],
+fields:[
+["── RFQ Header ──",""],
+["RFQ Description","Request for Price ###"],
+["Quotation Deadline","Today's date"],
+["Purchasing Organization","1010"],
+["Company Code","1010"],
+["Purchasing Group","000"],
+["Follow-On Document Type","Quantity Contract (MK)"],
+["Validity Period Start","Today's Date"],
+["Validity Period End","Today's Date + 3 Month"],
+["Target Value","3000"],
+["Currency","EUR"],
+["── Item ──",""],
+["Material","R124-###"],
+["Quantity","300"],
+["Plant","1010"],
+["Info Update","Mark (X)"],
+["── Bidders ──",""],
+["Supplier 1","IEE2E-###"],
+["Supplier 2","10300002"]
+],
+steps:[
+"<b>Manage RFQs</b> uygulamasını açın.",
+"<b>Create</b> → <b>Int. Sourcing Req.</b>'ı seçin.",
+"Tablodaki tüm header verilerini girin.",
+"<b>Delivery and Payment Terms</b> sekmesinde Target Value: 3000, Currency: EUR girin.",
+"<b>Items</b> bölümünde Material: R124-###, Plant: 1010, Requested Quantity: 300 girin.",
+"<b>Info Record Update</b> kutusunu (X) işaretleyin.",
+"<b>Bidders</b> bölümünde <b>Create</b>'e tıklayın ve IEE2E-### ekleyin.",
+"İkinci bidder olarak 10300002 ekleyin.",
+"<b>Create</b>'e tıklayın. E-posta uyarısını yok sayın.",
+"<b>Publish</b>'e tıklayın — RFQ onay için gönderilir (otomatik onaylanır).",
+"Belge numarasını not alın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>RFQ</b> oluşturuldu ve yayımlandı. Sonraki adımlar için <b>RFQ</b> belge numarasını not edin."
+},
+{num:"2",title:"Create Supplier Quotations",app:"Manage RFQs",
+fields:[
+["── Supplier IEE2E-### Quotation ──",""],
+["Quotation Submission Date","Today's date"],
+["Net Order Price for R124-###","9.50 EUR"],
+["── Supplier 10300002 Quotation ──",""],
+["Quotation Submission Date","Today's date"],
+["Net Order Price for R124-###","11 EUR"]
+],
+steps:[
+"<b>Manage RFQs</b> uygulamasını açın.",
+"Not ettiğiniz RFQ numarasını girerek arama yapın.",
+"Satırı seçin ve teklifi açın.",
+"<b>Bidders</b> sekmesinde IEE2E-### için radio butonunu seçin.",
+"<b>Create Quotation</b>'a tıklayın.",
+"<b>Items</b> sekmesinde R124-### için Net Order Price: 9.50 girin.",
+"<b>Create</b>'e ve ardından <b>Submit</b>'e tıklayın.",
+"<b>Back</b>'e tıklayın.",
+"İkinci tedarikçi (10300002) için tekrar edin — Net Order Price: 11 EUR.",
+"<b>Quotations</b> sekmesinde oluşturulan teklifleri görüntüleyin.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+]
+},
+{num:"3",title:"Compare and Award Best Quotation",app:"Compare Supplier Quotations",
+steps:[
+"<b>Compare Supplier Quotations</b> uygulamasını açın.",
+"RFQ numaranızı girin ve <b>Go</b>'ya basın.",
+"Her iki teklifi seçin ve <b>Compare</b>'a tıklayın.",
+"R124-### için en iyi teklif (IEE2E-### / 9.50 EUR) yeşil renkte görünür.",
+"Diğer tedarikçi (10300002) için Awarded Quantity'yi 0 yapın.",
+"<b>Save</b>'e tıklayın.",
+"En iyi teklif için (IEE2E-###) <b>Award</b>'a tıklayın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"En iyi teklif: IEE2E-### tarafından birim başına 9,50 EUR. Teklif kabul edildi. Belge onaya gönderildi (otomatik onaylandı)."
+}]
+},
+{id:26,title:"Create Quantity Contract and Check Sources of Supply",app:"Manage Supplier Quotations",
+sc:"Ödüllendirilen teklif referansıyla Quantity Contract (MK) oluşturacak ve ardından R124-### için mevcut tedarik kaynaklarını kontrol edeceksiniz.",
+tasks:[
+{num:"1",title:"Create Purchase Contract from Awarded Quotation",app:"Manage Supplier Quotations",
+path:["SAP Fiori Launchpad","Purchasing","Manage Supplier Quotations"],
+fields:[
+["── Follow-on Documents ──",""],
+["Supplier","IEE2E-### with material R124-###"],
+["Purchase Contract Name","Quantity Contract ###"],
+["Contract Type","Quantity Contract (MK)"],
+["── Item ──",""],
+["Target Quantity","1000"]
+],
+steps:[
+"<b>Manage Supplier Quotations</b> uygulamasını açın.",
+"RFQ numaranızı girin ve <b>Go</b>'ya tıklayın.",
+"Ödüllendirilmiş (Awarded) durumdaki IEE2E-### teklifini açın.",
+"<b>Follow-On Document</b> → <b>Create Purchase Contract</b>'a tıklayın.",
+"Header'da <b>Purchase Contract Name</b>: Quantity Contract ### girin.",
+"<b>Items</b>'da <b>Target Quantity</b>: 1000 girin.",
+"<b>Create</b>'e tıklayın.",
+"Sözleşme numarasını not edin.",
+"<b>Back</b> ve <b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"IEE2E-### tedarikçisi için Hedef Miktar 1000 ile satın alma sözleşmesi (<b>Quantity Contract MK</b>) oluşturuldu."
+},
+{num:"2",title:"Check Sources of Supply for R124-###",app:"Manage Sources of Supply",
+steps:[
+"<b>Manage Sources of Supply</b> uygulamasını açın.",
+"<b>Material</b>: R124-### girin ve <b>Go</b>'ya tıklayın.",
+"R124-### için mevcut tedarik kaynakları listelenir (sözleşme + bilgi kayıtları).",
+"<b>Home</b>'a tıklayarak Fiori Launchpad'e dönün."
+],
+info:"<b>RFQ</b>'da <b>Info Update</b> işaretlendiğinde bilgi kayıtları arka planda otomatik olarak oluşturuldu.",
+result:"Tedarik kaynakları görünür: teklif süreci sırasında otomatik olarak oluşturulan yeni sözleşme ve bilgi kayıtları."
+}]
+},
+{id:27,title:"Create Purchase Order with Reference to Contract",app:"Process Purchase Requisitions (V2)",
+sc:"İki satın alma talebini birleştirerek sözleşmeyi tedarik kaynağı olarak atayacak ve bir Satın Alma Siparişi oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Assign Contract as Source of Supply",app:"Process Purchase Requisitions (V2)",
+path:["SAP Fiori Launchpad","Purchasing","Process Purchase Requisitions (V2)"],
+fields:[
+["── Filter ──",""],
+["Material ID","R124-###"],
+["Purchasing Group","000"]
+],
+steps:[
+"<b>Process Purchase Requisitions (V2)</b> uygulamasını açın.",
+"<b>Adapt Filters</b> → <b>Material ID</b> ekleyin ve <b>OK</b>'a tıklayın.",
+"<b>Material ID</b>: R124-### girin ve <b>Go</b>'ya tıklayın.",
+"İki PR görünür — ilkini seçin ve <b>Assign Source of Supply</b>'ya tıklayın.",
+"Oluşturduğunuz sözleşmeyi seçin ve <b>Assign</b>'a tıklayın. <b>OK</b> ile onaylayın.",
+"İkinci PR için aynı adımı tekrarlayın.",
+"Her iki PR'da Fixed Supplier: IEE2E-### görünür."
+]
+},
+{num:"2",title:"Create Purchase Order from PRs",app:"Process Purchase Requisitions (V2)",
+steps:[
+"Her iki PR'ı işaretleyin ve <b>Create Purchase Order</b>'a tıklayın.",
+"Sistem uyarılarını onaylayın.",
+"<b>Standard PO</b> satın alma siparişi türünü seçin ve <b>Order</b>'a tıklayın.",
+"Satın alma siparişi numarasını not edin.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+warn:"<b>Create Purchase Order</b> butonu aktif değilse, listeyi yenilemek için <b>Go</b>'ya tıklayın ve tekrar deneyin.",
+result:"IEE2E-### tedarikçisi için her iki <b>PR</b>'yi sözleşme kaynak olarak birleştiren <b>Purchase Order</b> oluşturuldu."
+},
+{num:"3",title:"View PO via Easy Filter and Add to Insights",app:"Manage Purchase Orders",
+steps:[
+"<b>Manage Purchase Orders</b> uygulamasını açın.",
+"<b>Easy Filter</b>'a tıklayın ve '<b>Show purchase orders for supplier IEE2E-###</b>' girin.",
+"<b>Go</b>'ya tıklayın — PO'nuz listelenir.",
+"<b>Additional options (...)</b> → <b>Add Card to Insight</b>'ı seçin.",
+"Kart adı: <b>Purchase Orders - IEE2E-###</b> girin ve <b>Next</b>'e tıklayın.",
+"<b>Add</b> ile onaylayın — PO listesi Fiori Launchpad My Home'a eklenir.",
+"<b>Open</b> ile PO detaylarını görüntüleyin ve çıktı yönetimini inceleyin.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>Purchase Order</b>, <b>Easy Filter</b>'da görünmektedir. Hızlı <b>PO</b> erişimi için <b>My Home</b> sayfasına <b>Insight Card</b> eklendi."
+}]
+},
+{id:28,title:"Prepare Your User and Fiori Launchpad MM-IV",app:"Maintain Business Users",
+sc:"Depo Görevlisi iş rolünü kullanıcınıza atayarak mal hareketi işlemleri için Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign BR_WAREHOUSE_CLERK Role",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role","BR_WAREHOUSE_CLERK"],
+["Role Name","Warehouse Clerk"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"<b>BR_WAREHOUSE_CLERK</b> girin ve ara.",
+"Satırı seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b> ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü kaldırmayın. Önceden atanmış tüm rolleri koruyun.",
+result:"<b>BR_WAREHOUSE_CLERK</b> rolü atandı. Launchpad yenilendikten sonra <b>Inventory Processing</b> alanı görünecektir."
+}]
+},
+{id:29,title:"Post Goods Receipt and Analyze the Impact",app:"Post Goods Receipt for Purchasing Document",
+sc:"Satın alma siparişine karşılık mal girişi yapacak, malzeme belgesini ve finansal etkiyi analiz edecek ve 10 hasarlı parçayı bloke stoka transfer edeceksiniz.",
+tasks:[
+{num:"1",title:"Post Goods Receipt for Purchase Order",app:"Post Goods Receipt for Purchasing Document",
+path:["SAP Fiori Launchpad","Inventory Processing","Goods Receipt Processing","Post Goods Receipt for Purchasing Document"],
+fields:[
+["── GR Header ──",""],
+["Purchasing Document","Your PO number from Ex.27"],
+["Printing","Individual slip"],
+["Delivery Note","DEL IEE2E ###"],
+["Storage Location","101C"]
+],
+steps:[
+"<b>Post Goods Receipt for Purchasing Document</b> uygulamasını açın.",
+"<b>Purchasing Document</b> alanına PO numaranızı girin.",
+"<b>Printing</b>: Individual slip seçin.",
+"<b>Delivery Note</b>: DEL IEE2E ### (### = kullanıcı numaranız) girin.",
+"<b>Storage Location</b>: 101C girin.",
+"Kalemlerin seçili olduğunu doğrulayın.",
+"<b>Post</b>'a tıklayın ve başarı diyalogunu <b>OK</b> ile onaylayın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+warn:"İsimle ilgili uyarıyı görmezden gelin.",
+result:"Her iki kalem için mal girişi deftere işlendi (toplam 250 adet). <b>Depo konumu</b> 101C'de malzeme belgesi oluşturuldu."
+},
+{num:"2",title:"Review Material Document and Financial Impact",app:"Material Documents Overview",
+steps:[
+"<b>Material Documents Overview</b> uygulamasını açın.",
+"<b>Material</b>: R124-### girin ve <b>Go</b>'ya tıklayın.",
+"Satırı seçin ve <b>></b> ile malzeme belgesini açın.",
+"<b>Process Flow</b>'a tıklayın — satın alma belgesi, malzeme belgesi ve muhasebe belgesi görünür.",
+"<b>Material Doc. Number</b>'a tıklayın ve <b>Display Document Flow - Material Document</b>'i seçin.",
+"<b>G/L Document Flow</b>'da <b>Display as T-Accounts</b>'a tıklayın.",
+"<b>Ledger</b>'dan OE ve 2L girişlerini silin ve <b>Go</b>'ya tıklayın.",
+"Stok hesabı (Raw Materials) borç, GR/IR hesabı alacak; tüketim masraf hesabı borç görünür.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>T-Account</b> görünümü: Stok hesabı (hammadde) borçlandırıldı + <b>GR/IR</b> hesabı alacaklandırıldı. Maliyet merkezi kullanımı için tüketim hesabı borçlandırıldı."
+},
+{num:"3",title:"Transfer 10 Damaged Items to Blocked Stock",app:"Stock - Single Material",
+steps:[
+"<b>Stock Single Material</b> uygulamasını arayın ve açın.",
+"<b>Material</b>: R124-### girin ve Enter'a basın.",
+"Storage location 101C satırını seçin — <b>Transfer Stock - In Plant</b> aktif hale gelir.",
+"<b>Transfer Stock - In Plant</b>'a tıklayın.",
+"Unrestricted use stok miktarının yanındaki <b>↑</b> (yukarı ok) ikonuna tıklayın.",
+"Blocked stock miktarının yanındaki <b>↓</b> (aşağı ok) ikonuna tıklayın.",
+"<b>Quantity</b>: 10 girin ve Enter'a basın.",
+"<b>Post</b>'a tıklayın ve <b>OK</b> ile onaylayın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"Transfer tamamlandı: Tesis 1010'da depo konumu 101C'de 190 adet serbest kullanım stoğu, 10 adet bloke stok."
+}]
+},
+{id:30,title:"Post Invoice and Analyze Financial Impact",app:"Create Supplier Invoice",
+sc:"Satın alma siparişine referansla tedarikçi faturası oluşturacak ve T-Hesap görünümüyle finansal etkiyi analiz edeceksiniz.",
+tasks:[
+{num:"1",title:"Create Supplier Invoice with PO Reference",app:"Create Supplier Invoice",
+path:["SAP Fiori Launchpad","Accounts Payable","Supplier Invoices","Create Supplier Invoice"],
+fields:[
+["── Basic Data ──",""],
+["Transaction","Invoice"],
+["Company Code","1010"],
+["Invoicing Party","IEE2E-###"],
+["Reference","IEE2E-INV-###"],
+["Invoice Date","Today's Date"],
+["Posting Date","Today's Date"],
+["Gross invoice amount","2.612,50"]
+],
+steps:[
+"<b>Create Supplier Invoice</b> uygulamasını açın.",
+"Tablodaki Basic Data'yı girin.",
+"<b>Purchasing Document References</b> sekmesine gidin.",
+"PO numaranızı girin ve <b>Enter</b>'a basın.",
+"<b>Tax Code</b>'u <b>1I</b> olarak değiştirin.",
+"<b>Check</b>'e tıklayın — bakiye farkı olmamalı.",
+"<b>Simulate</b>'e tıklayın.",
+"<b>Post</b>'a tıklayın.",
+"Yeni fatura sorusunda <b>No</b>'ya tıklayın — Fiori Launchpad'e dönülür."
+],
+info:"Satın alma siparişi hatırlanmıyorsa arama yardımını kullanın: Tedarikçi olarak IEE2E-### girin ve sonuçlardan <b>PO</b>'nuzu bulun.",
+result:"Tedarikçi faturası <b>PO</b> referansıyla deftere işlendi. <b>GR/IR</b> hesabı kapatıldı, IEE2E-### için borç hesabı alacaklandırıldı."
+},
+{num:"2",title:"Review Invoice and Analyze Financial Postings",app:"Supplier Invoice List",
+steps:[
+"<b>Supplier Invoice List</b> uygulamasını açın.",
+"<b>Invoicing Party</b>: IEE2E-### girin ve <b>Go</b>'ya tıklayın.",
+"Faturayı seçin ve <b>></b> okuna tıklayın.",
+"<b>Journal Entries</b>'e tıklayın.",
+"<b>Display Process Flow - Accounts Payable</b> penceresi açılır.",
+"Journal Entry'ye tıklayın ve <b>Display Journal Entries in T-Account view</b>'ı seçin.",
+"Ledger'dan OE ve 2L'yi silin ve <b>Go</b>'ya tıklayın.",
+"GR/IR hesabı borç temizleme, Payable Domestics alacak, vergi borç görünür.",
+"Pencereyi kapatın ve <b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>T-Account</b> analizi: <b>GR/IR</b> hesabı kapatıldı (borç), Payable Domestics alacaklandırıldı (toplam fatura), %10 vergi hesabı borçlandırıldı."
+}]
+},
+{id:31,title:"Execute a Payment Run",app:"Manage Automatic Payments",
+sc:"IEE2E-### tedarikçisi için açık faturaları otomatik ödeme çalıştırmasıyla ödeyecek ve Payment Posted durumunu doğrulayacaksınız.",
+tasks:[
+{num:"1",title:"Verify Supplier Debit Balance",app:"Display Supplier Balances",
+path:["SAP Fiori Launchpad","Accounts Payable","Suppliers","Display Supplier Balances"],
+fields:[
+["── Supplier Account ──",""],
+["Supplier","IEE2E-###"],
+["Company Code","1010"],
+["Fiscal Year","Current Fiscal Year"]
+],
+steps:[
+"<b>Display Supplier Balances</b> uygulamasını açın.",
+"Tablodaki verileri girin ve <b>Go</b>'ya tıklayın.",
+"IEE2E-###'in mevcut dönemde kümülatif borç bakiyesi olduğunu doğrulayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+]
+},
+{num:"2",title:"Create Automatic Payment Parameters",app:"Manage Automatic Payments",
+path:["SAP Fiori Launchpad","Accounts Payable","Payments","Manage Automatic Payments"],
+fields:[
+["── Identification ──",""],
+["Run Date","Current Date"],
+["Identification","IE###"],
+["── Parameter ──",""],
+["Posting Date","Current Date"],
+["Docs. Entered Up To","Current Date"],
+["Additional Log","On"],
+["Company Code","1010"],
+["Next Payment Date","Current Date plus one month"],
+["Payment Method","T"],
+["Supplier","IEE2E-###"]
+],
+steps:[
+"<b>Manage Automatic Payments</b> uygulamasını açın.",
+"<b>Create Parameter</b>'e tıklayın.",
+"Identification verilerini girin (Run Date, IE###).",
+"<b>Create</b>'e tıklayın.",
+"Parameter verilerini girin (Posting Date, Docs Entered Up To, Additional Log, Company Code, Next Payment Date, Payment Method T, Supplier IEE2E-###).",
+"<b>Save</b>'e tıklayın.",
+"Ekranda kalın — bir sonraki adım için gerekli."
+]
+},
+{num:"3",title:"Create and Run Payment Proposal",app:"Manage Automatic Payments",
+steps:[
+"<b>Schedule</b> → <b>Proposal</b>'e tıklayın.",
+"<b>Start Immediately</b>'yi seçin ve <b>Schedule</b>'a tıklayın.",
+"Identification alanına IE### girin ve <b>Go</b>'ya tıklayın.",
+"<b>Proposals Processed</b> sekmesine geçin.",
+"Ödeme önerisinin sağındaki <b>></b>'a tıklayın.",
+"<b>Back</b>'e tıklayarak Manage Automatic Payments giriş ekranına dönün."
+]
+},
+{num:"4",title:"Schedule and Execute Payment Run",app:"Manage Automatic Payments",
+steps:[
+"<b>Proposals Processed</b> sekmesinde oluşturulan öneriyi seçin.",
+"<b>Schedule Payment</b>'a tıklayın.",
+"<b>Start Immediately</b>'yi seçin ve <b>Schedule</b>'a tıklayın.",
+"'Payment was scheduled' mesajı görünür — ödeme Payments Processed sekmesine geçer.",
+"<b>Payments Processed</b> sekmesine gidin.",
+"<b>></b> ile ödeme detaylarına girin.",
+"<b>Payments</b> sekmesinde <b>Payment Document No. 2xxxxxxxxx</b>'e tıklayın.",
+"<b>Display Journal Entries - New Version</b>'ı seçin.",
+"<b>Back</b>'e iki kez tıklayın ve <b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"Ödeme çalıştırması '<b>Payment Posted</b>' durumuyla tamamlandı. Otomatik ödeme belgesi için muhasebe kaydı görüntülendi."
+}]
+}
+]},
+{unit:7,title:"Performing the Design-to-Operate Process: Focus on Production",ex:[
+{id:32,title:"Prepare Your User and Fiori Launchpad PP",app:"Maintain Business Users",
+sc:"Üretim işlemleri için beş farklı iş rolünü kullanıcınıza atayarak PP Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign PP Business Roles",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role 1","BR_INVENTORY_ACCOUNTANT"],
+["Business Role 2","BR_PRODN_ENG_DISC"],
+["Business Role 3","BR_PRODN_OPTR_DISC"],
+["Business Role 4","BR_PRODN_PLNR"],
+["Business Role 5","BR_PRODN_SUPERVISOR_DISC"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"Beş rolü arama alanına girin ve ara.",
+"Tüm rolleri seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b> ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü veya önceden tahsis edilmiş rolleri kaldırmayın. Yalnızca yeni rolleri ekleyin.",
+result:"Beş PP rolü atandı. Launchpad yenilendikten sonra <b>Production Management</b> ve <b>Production Planning</b> alanları görünecektir."
+}]
+},
+{id:33,title:"Change Product Master Record for Finished Product",app:"Change Material",
+sc:"Bisikleti Make-to-Stock (MTS) olarak üretmek için F1-###'ün MRP 3 görünümünde strateji grubunu 20'den 40'a değiştireceksiniz.",
+tasks:[
+{num:"1",title:"Change Strategy Group to 40 in MRP 3 View",app:"Change Material",
+path:["SAP Fiori Launchpad","Search","Change Material"],
+fields:[
+["── Material ──",""],
+["Material","F1-###"],
+["View","MRP3"],
+["Plant","1010"],
+["── MRP 3 ──",""],
+["Strategy Group","40"]
+],
+steps:[
+"<b>Change Material</b> uygulamasını açın.",
+"<b>Material</b>: F1-### girin ve Enter'a basın.",
+"<b>MRP3</b> görünümünü seçin.",
+"<b>Org. Levels</b> butonuna tıklayın ve <b>Plant</b>: 1010 girin.",
+"<b>Continue</b> (yeşil tik) butonuna tıklayın.",
+"<b>MRP3</b> sekmesinde <b>Strategy Group</b>'u <b>40</b> olarak değiştirin.",
+"<b>Save</b>'e tıklayın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+warn:"Sistemde controlling için paralel bir eğitim varsa değeri 40'a değiştirmeyin. Bu işlem üretimi <b>MTO</b> (Siparişe Göre Üretim) yerine <b>MTS</b> (Stoka Göre Üretim) olarak değiştirir.",
+result:"F1-### malzemesi için <b>Strategy Group</b> 20'den 40'a değiştirildi. Üretim stratejisi artık <b>Make-to-Stock</b>."
+}]
+},
+{id:34,title:"Change BOM for Semi-Finished Product",app:"Change Bill of Material",
+sc:"Çerçeve seti S12-###'ün reçetesine yeni kilit (R124-###) bileşenini ekleyeceksiniz.",
+tasks:[
+{num:"1",title:"Add Lock R124-### to BOM of S12-###",app:"Change Bill of Material",
+path:["SAP Fiori Launchpad","Search","Change Bill of Material"],
+fields:[
+["── Initial Screen ──",""],
+["Material","S12-###"],
+["Plant","1010"],
+["BOM Usage","1"],
+["Alternative","1"],
+["Valid from","01.MM.YYYY"],
+["── Item ──",""],
+["Item","0040"],
+["ICt","L"],
+["Component","R124-###"],
+["Quantity","1"]
+],
+steps:[
+"<b>Change Bill of Material</b> uygulamasını açın.",
+"Initial screen verilerini girin ve <b>Enter</b>'a basın.",
+"Item overview'de tablodaki madde verilerini girin (0040, L, R124-###, 1).",
+"<b>Save</b> butonuna tıklayın."
+],
+result:"R124-### kilidi, S12-### (Frameset ###) malzemesinin <b>BOM</b>'una kalem 0040 olarak 1 adet miktarıyla eklendi."
+}]
+},
+{id:35,title:"Display Work Center",app:"Display Work Center",
+sc:"T-A### üretim iş merkezinin Basic Data, Default Values, Capacities ve Costing sekmelerindeki verileri inceleyeceksiniz.",
+tasks:[
+{num:"1",title:"Display Work Center T-A### Data",app:"Display Work Center",
+path:["SAP Fiori Launchpad","Search","Display Work Center"],
+fields:[
+["── Initial Screen ──",""],
+["Plant","1010"],
+["Work Center","T-A###"]
+],
+steps:[
+"<b>Display Work Center</b> uygulamasını açın.",
+"<b>Plant</b>: 1010 ve <b>Work Center</b>: T-A### girin.",
+"Enter'a basın.",
+"<b>Basic Data</b> sekmesini inceleyin — Work Center Category, Usage, Standard Value Key değerlerini not alın.",
+"<b>Default Value</b> sekmesine geçin — Control Key değerini not alın.",
+"<b>Capacities</b> sekmesine geçin ve <b>Capacity</b>'ye tıklayın.",
+"Factory Calendar, Operating Time, No. ind. Capacities değerlerini not alın. <b>Back</b>'e tıklayın.",
+"<b>Costing</b> sekmesine geçin.",
+"Controlling Area, Cost Center, Activity Type Setup/Machine/Labor değerlerini not alın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"T-A### iş merkezi verileri incelendi: <b>Basic Data</b>, <b>Capacities</b> (fabrika takvimi, çalışma süresi) ve <b>Costing</b> sekmesi (maliyet merkezi, Setup/Machine/Labor faaliyet tipleri)."
+}]
+},
+{id:36,title:"Change Routing for Semi-Finished Product",app:"Change Routing",
+sc:"S12-###'e kilit eklenmesinden dolayı montaj süresi uzadığı için routing'deki makine ve işgücü sürelerini 5 dakika artıracaksınız.",
+tasks:[
+{num:"1",title:"Update Machine and Labor Times in Routing",app:"Change Routing",
+path:["SAP Fiori Launchpad","Search","Change Routing"],
+fields:[
+["── Initial Screen ──",""],
+["Material","S12-###"],
+["Plant","1010"],
+["── Operation Overview ──",""],
+["Machine","35"],
+["Labor","25"]
+],
+steps:[
+"<b>Change Routing</b> uygulamasını açın.",
+"<b>Material</b>: S12-###, <b>Plant</b>: 1010 girin.",
+"<b>Enter</b> veya Continue'ye basın.",
+"<b>Change Routing: Operation Overview</b>'de tablodaki değerleri değiştirin (Machine: 35, Labor: 25).",
+"<b>Save</b> butonuna tıklayın."
+],
+result:"<b>Routing</b> güncellendi: S12-### (Frameset ###) için makine süresi 35 dakikaya, işçilik süresi 25 dakikaya değiştirildi."
+}]
+},
+{id:37,title:"Create Standard Cost Estimate and Release",app:"Manage Material Cost Estimates",
+sc:"F1-### için standart maliyet tahmini oluşturacak, işaretleyecek, serbest bırakacak ve material master'daki yeni standart fiyatı doğrulayacaksınız.",
+tasks:[
+{num:"1",title:"Create Standard Cost Estimate",app:"Manage Material Cost Estimates",
+path:["SAP Fiori Launchpad","Inventory Accounting","Price Maintenance","Manage Material Cost Estimates"],
+fields:[
+["── Cost Estimate ──",""],
+["Material","F1-###"],
+["Plant","1010"],
+["Costing Variant","PPC1"],
+["Costing Version","1"],
+["Costing Lot Size","100"],
+["Costing Date From","Current date"],
+["Costing Date To","Last day of the current year"],
+["Qty Structure Date","Current date"],
+["Valuation Date","Current date"]
+],
+steps:[
+"<b>Manage Material Cost Estimates</b> uygulamasını açın.",
+"<b>Create</b>'e tıklayın ve tablodaki verileri girin.",
+"<b>Dates</b> sekmesinde <b>Default Values</b> butonuna tıklayın.",
+"Tarihleri tabloya göre ayarlayın.",
+"<b>Enter</b>'a basın — sistem maliyet tahminini çalıştırır.",
+"Total Value for Cost of Goods Manufactured (>67,000 EUR) görünür.",
+"<b>Menu → Goto → Material Overview</b>'a gidin — tüm malzemelerin statüsü KA (hatasız).",
+"<b>Back</b>'e tıklayın ve <b>Save</b>'e tıklayın.",
+"Ana sayfaya dönün."
+],
+result:"F1-### için <b>KA</b> durumlu (hatasız maliyetlendirilmiş) standart maliyet tahmini oluşturuldu. Toplam değer yaklaşık 67.000+ EUR."
+},
+{num:"2",title:"Verify Marking Allowance and Mark Cost Estimate",app:"Release Material Cost Estimates",
+path:["SAP Fiori Launchpad","Search","Release Material Cost Estimates"],
+fields:[
+["── Mark Price Update ──",""],
+["Date","Actual Day"],
+["Company Code","1010"],
+["Plant","1010"],
+["Material","F1-###"],
+["Test Run","Deselect"]
+],
+steps:[
+"<b>Release Material Cost Estimates</b> uygulamasını açın.",
+"<b>Marking Allowance</b> butonuna tıklayın — 1010 için yeşil gösterge ve sürüm 1 varsa devam edin.",
+"Yoksa Company Code 1010'u seçin, Costing Variant: PPC1, Version: 01 girin ve işaretleme izni verin.",
+"<b>Exit</b>'e tıklayın.",
+"<b>Price Update: Mark Standard Price</b> ekranında tablodaki verileri girin.",
+"<b>Test Run</b> seçeneğini kaldırın.",
+"<b>Execute</b>'a tıklayın. 2L uyarısını yok sayın.",
+"Günlükte '1 cost estimates were updated successfully' mesajını görün.",
+"<b>Back</b>'e tıklayın."
+],
+result:"Şirket kodu 1010 için işaretlemeye izin verildi. Maliyet tahmini işaretlendi: <b>Costing 2</b> sekmesinde gelecek fiyat güncellendi (yaklaşık 697 EUR)."
+},
+{num:"3",title:"Release Cost Estimate and Check Accounting Document",app:"Release Material Cost Estimates",
+fields:[
+["── Release Settings ──",""],
+["Posting Period","Current month"],
+["Fiscal year","Current fiscal year"],
+["Company Code","1010"],
+["Plant","1010"],
+["Material","F1-###"],
+["Test Run","Deselect"]
+],
+steps:[
+"<b>Price Update: Mark Standard Price</b> ekranında <b>Release</b> butonuna tıklayın.",
+"<b>Price Update: Release Standard Price</b> ekranında verileri girin.",
+"<b>Test Run</b> seçeneğini kaldırın.",
+"<b>Execute</b>'a tıklayın — günlükte 'Price change document 3000000xxx posted' görünür.",
+"<b>Back</b>'e tıklayın — maliyet tahmini statüsü <b>FR</b> olur.",
+"Belge numarasına çift tıklayarak görüntüleyin.",
+"<b>Accounting Documents</b> butonuna tıklayın.",
+"<b>Accounting document</b>'a çift tıklayın.",
+"<b>SAP</b> ile ana sayfaya dönün."
+],
+result:"Maliyet tahmini serbest bırakıldı. <b>FR</b> durumu onaylandı. Fiyat değişikliği belgesi deftere işlendi. Stok değerlemesi için yeni standart fiyat geçerlidir."
+},
+{num:"4",title:"Display Material Master and Verify New Price",app:"Display Material",
+fields:[
+["── Costing 2 Tab ──",""],
+["Standard Price (Current)","679.71 (may vary)"],
+["Future Price","0"],
+["── Accounting 1 Tab ──",""],
+["Standard Price","679.71"],
+["Price Unit","1"],
+["Prc Ctrl","S"]
+],
+steps:[
+"<b>Release Material Cost Estimates</b> ekranında F1-###'e çift tıklayın.",
+"<b>Material Master</b>'ı seçin.",
+"<b>Costing 2</b> sekmesinde Current dönem fiyatını inceleyin.",
+"<b>Accounting 1</b> sekmesinde Standard Price değerini doğrulayın.",
+"<b>Back</b>'e birkaç kez tıklayarak ana sayfaya dönün."
+],
+result:"Yeni standart fiyat <b>Costing 2</b> (Mevcut dönem) ve <b>Accounting 1</b> sekmesinde görünmektedir. Stok artık yeni standart fiyattan değerlenmektedir."
+}]
+},
+{id:38,title:"Create PID in Demand Management",app:"Post Goods Movement",
+sc:"F1-### için bileşen stoğu girecek, MRP kontrolcü sorumluluk alanı atayacak ve 3 aylık bağımsız gereksinim planlayacaksınız.",
+tasks:[
+{num:"1",title:"Post Goods Receipt for Material Components",app:"Post Goods Movement",
+path:["SAP Fiori Launchpad","Search","Post Goods Movement"],
+fields:[
+["── Goods Receipt Other ──",""],
+["Goods Receipt","Other"],
+["S11-### / Qty","500 / SLoc: 101A / Plant: 1010"],
+["S12-### / Qty","500 / SLoc: 101A / Plant: 1010"],
+["S13-### / Qty","500 / SLoc: 101A / Plant: 1010"],
+["R14-### / Qty","500 / SLoc: 101C / Plant: 1010"],
+["S15-### / Qty","1000 / SLoc: 101B / Plant: 1010"]
+],
+steps:[
+"<b>Post Goods Movement</b> uygulamasını açın.",
+"<b>Goods Receipt</b>: Other seçin.",
+"Tablodaki tüm malzeme, miktar ve depolama konumu verilerini girin.",
+"<b>Enter</b>'a basın ve Plant: 1010 girin.",
+"<b>Post</b>'a tıklayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Başlangıç stokları deftere işlendi: S11/S12/S13 her biri 101A'da 500 adet, R14 101C'de 500 adet, S15 101B'de 1.000 L."
+},
+{num:"2",title:"Assign Area of Responsibility (MRP Controller)",app:"My Area of Responsibility - MRP Controller",
+steps:[
+"<b>My Area of Responsibility - MRP Controller</b> uygulamasını açın.",
+"Plant 1010'da MRP Controller <b>001</b>'i atayın — AOR Status'ü <b>AOR Assigned</b> yapın.",
+"Diğer atanmış MRP kontrolcülerini kaldırın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+]
+},
+{num:"3",title:"Create Planned Independent Requirements (PIRs)",app:"Maintain PIRs",
+path:["SAP Fiori Launchpad","Production Planning","Long Term Planning","Maintain PIRs"],
+fields:[
+["── Selection ──",""],
+["Material","F1-###"],
+["Plant","1010"],
+["Period Indicator","Monthly (M)"],
+["── PIR Settings ──",""],
+["Version","00"],
+["Version Active","Mark"],
+["Requirements Type","VSF"],
+["── Quantities ──",""],
+["Actual month","0"],
+["Actual month + 1","100"],
+["Actual month + 2","100"],
+["Actual month + 3","100"]
+],
+steps:[
+"<b>Maintain PIRs</b> uygulamasını açın.",
+"Material: F1-###, Plant: 1010, Period Indicator: Monthly (M) girin ve <b>Go</b>'ya tıklayın.",
+"F1-### satırını işaretleyin ve <b>Create</b>'e tıklayın.",
+"Version: 00, Version active: işaretli, Requirements Type: VSF girin.",
+"<b>Create and Edit</b>'e tıklayın.",
+"Tablodaki dönem miktarlarını (0, 100, 100, 100) girin.",
+"<b>Save</b>'e tıklayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"F1-### için <b>PIR</b>'lar oluşturuldu: Mevcut ay 0 adet, sonraki 3 ay için 100 adet. <b>Requirements Type VSF</b> ile Versiyon 00 aktif."
+}]
+},
+{id:39,title:"Extend Product Master for MRP",app:"Create Material",
+sc:"R124-### hammaddesine MRP planlama görünümlerini ekleyecek ve MRP parametrelerini (PD tipi, FX parti boyutu, güvenlik stoğu) yapılandıracaksınız.",
+tasks:[
+{num:"1",title:"Extend R124-### with MRP Views",app:"Create Material",
+path:["SAP Fiori Launchpad","Search","Create Material"],
+fields:[
+["── Material ──",""],
+["Material","R124-###"],
+["Material Type","Raw materials"],
+["── Views ──",""],
+["Views","MRP 1, MRP 2, MRP 3"],
+["── Org Levels ──",""],
+["Plant","1010"],
+["Stor. Loc.","101B"],
+["── MRP 1 ──",""],
+["MRP Type","PD"],
+["MRP Controller","001"],
+["Lot Size Procedure","FX"],
+["Fixed Lot Size","100"],
+["── MRP 2 ──",""],
+["Planned Delivery Time","10"],
+["Safety Stock","50"],
+["── MRP 3 ──",""],
+["Availability Check","SR"]
+],
+steps:[
+"<b>Create Material</b> uygulamasını açın.",
+"<b>Material</b>: R124-### girin ve <b>Continue</b>'ye tıklayın. Uyarıyı Enter ile onaylayın.",
+"<b>MRP 1, MRP 2, MRP 3</b> görünümlerini seçin.",
+"<b>Continue</b>'ye tıklayın.",
+"Org. Levels'da <b>Plant</b>: 1010, <b>Stor. Loc.</b>: 101B girin ve Enter'a basın.",
+"<b>MRP 1</b> sekmesinde: MRP Type: PD, MRP Controller: 001, Lot Size Procedure: FX, Fixed Lot Size: 100 girin. Enter'a basın.",
+"<b>MRP 2</b> sekmesinde: Planned Delivery Time: 10, Safety Stock: 50 girin. Enter'a basın.",
+"<b>MRP 3</b> sekmesinde: Availability Check: SR girin. Enter'a basın.",
+"<b>Save</b>'e tıklayın."
+],
+warn:"Tüm görünümlerdeki veri bakımını tamamlamadan <b>material master</b>'ı kaydetmeyin.",
+result:"R124-### <b>MRP</b> görünümleriyle genişletildi: MRP Type PD, FX lot size 100, teslim süresi 10 gün, emniyet stoğu 50, müsaitlik kontrolü SR."
+}]
+},
+{id:40,title:"Run MRP and Analyze Result",app:"Monitor Material Coverage",
+sc:"F1-### ve bileşenlerinin mevcut stok durumunu inceleyecek, MRP çalıştıracak ve sonuçları analiz edeceksiniz.",
+tasks:[
+{num:"1",title:"Review Current Stock and Requirements Situation",app:"Monitor Material Coverage - Net Segments",
+path:["SAP Fiori Launchpad","Production Planning","Material Planning","Monitor Material Coverage - Net Segments"],
+steps:[
+"<b>Monitor Material Coverage - Net Segments</b> uygulamasını açın.",
+"<b>Material</b> alanına <b>*###</b> girin ve <b>Go</b>'ya tıklayın.",
+"F1-### bitmiş ürünü seçin ve <b>Manage Materials</b>'a tıklayın.",
+"F1-###'ün durumunu not edin: Bağımsız gereksinimler var, stok yok.",
+"<b>Back</b>'e tıklayın.",
+"Bileşenler için aynı işlemi yapın — gereksinim yok, stok var (500 PC / 1000 L)."
+],
+result:"Mevcut durum: F1-### için <b>PIR</b> var ancak stok yok. Bileşenler (S11, S12, S13, R14, S15) için stok var ancak gereksinim yok."
+},
+{num:"2",title:"Run MRP and Check Result",app:"Monitor Material Coverage",
+steps:[
+"<b>Monitor Material Coverage</b> uygulamasında F1-###'i işaretleyin.",
+"<b>Start MRP Run</b>'a tıklayın.",
+"<b>Go</b>'ya tıklayarak listeyi yenileyin.",
+"<b>Manage Materials</b>'a tıklayın.",
+"F1-### durumu: PIRs, Planned Orders, stok yok olduğunu doğrulayın.",
+"<b>Monitor Material Coverage</b> uygulamasını açık bırakın."
+],
+result:"<b>MRP</b> çalıştırması sonrasında: F1-### için planlı siparişler oluşturuldu. Bileşenler için talepler (bağımlı gereksinimler) oluşturuldu."
+}]
+},
+{id:41,title:"Convert Planned Order and Release Production Order",app:"Manage Material Coverage",
+sc:"Planlı siparişi üretim emrine dönüştürecek ve ardından üretim emrini serbest bırakarak durumunu doğrulayacaksınız.",
+tasks:[
+{num:"1",title:"Convert Planned Order to Production Order",app:"Monitor Material Coverage",
+steps:[
+"<b>Monitor Material Coverage</b> uygulamasını F1-### için açın.",
+"İlk planlı siparişi seçin — <b>Actions</b> sütununda <b>Edit</b> açılır listesinden <b>Convert</b>'i seçin.",
+"Açılan pencereyi <b>OK</b> ile onaylayın.",
+"F1-### durumu: PIRs, Production Order, Production Order, stok yok olduğunu doğrulayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"İlk planlı sipariş üretim emrine dönüştürüldü. Stok/gereksinim listesi buna göre güncellendi."
+},
+{num:"2",title:"Display and Release Production Order",app:"Manage Production Orders",
+path:["SAP Fiori Launchpad","Production Management - Discrete Manufacturing","Manufacturing Execution","Manage Production Orders"],
+steps:[
+"<b>Manage Production Orders</b> uygulamasını açın.",
+"İlk açılışta sorumluluk alanı seçin: <b>Production Supervisor YB4</b>, Plant 1010.",
+"<b>Back</b>'e tıklayın.",
+"<b>Material</b>: F1-### girin ve <b>Go</b>'ya tıklayın.",
+"Üretim emrinin statüsünü not edin: <b>Created</b>.",
+"Üretim emri satırının sağındaki <b>></b>'a tıklayın.",
+"Detayları inceleyin (Issues, Order Information, Components, Order Schedule, Confirmation, Inspection).",
+"Bileşen miktarlarının taahhüt edildiğini (yeşil çubuk) doğrulayın."
+],
+result:"Üretim emri '<b>Created</b>' durumuyla oluşturuldu. Bileşen miktarları sipariş oluşturma sırasında taahhüt edildi."
+},
+{num:"3",title:"Release Production Order and Check Print Status",app:"Manage Production Orders",
+steps:[
+"<b>Manage Production Orders</b> ekranında <b>Release</b>'e tıklayın.",
+"Emrin statüsünün <b>Released</b> olduğunu doğrulayın.",
+"<b>Edit Order</b>'a tıklayın.",
+"Header'da <b>i</b> ikonuna tıklayarak statüs detaylarını görün.",
+"<b>PRT Printed</b> statüsünün mevcut olduğunu doğrulayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Üretim emri serbest bırakıldı (durum: <b>Released</b>). Serbest bırakma sırasında sipariş otomatik olarak yazdırıldı (durum: PRT Printed)."
+}]
+},
+{id:42,title:"Post Goods Issues and Analyze the Impact",app:"Pick Components for Production Orders",
+sc:"F1-### üretim emri için bileşenlerin mal çıkışını yapacak ve stok/gereksinim durumunu analiz edeceksiniz.",
+tasks:[
+{num:"1",title:"Pick and Post Goods Issue for Components",app:"Pick Components for Production Orders",
+path:["SAP Fiori Launchpad","Production Execution - Discrete Manufacturing","Pick Components for Production Order"],
+fields:[
+["── Selection ──",""],
+["Profile","000002"],
+["Material","F1-###"]
+],
+steps:[
+"<b>Pick Components for Production Order</b> uygulamasını açın.",
+"<b>Profile</b>: 000002, <b>Material</b>: F1-### girin ve <b>Run</b>'a tıklayın.",
+"Üretim emrinizin tüm bileşenlerini seçin ve <b>Picking</b>'e tıklayın.",
+"R14-### malzemesi için <b>Storage Location</b>: 101C girin.",
+"Tüm bileşenleri işaretleyin ve <b>Post</b>'a tıklayın.",
+"<b>Refresh</b>'e tıklayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Tüm bileşenler için mal çıkışı deftere işlendi. Bileşenler üretim depo konumlarından tüketildi."
+},
+{num:"2",title:"Analyze Components in Production Order",app:"Manage Production Orders",
+steps:[
+"<b>Manage Production Orders</b> uygulamasını açın.",
+"<b>Material</b>: F1-### girin ve <b>Go</b>'ya tıklayın.",
+"Üretim emri satırına tıklayın ve <b>Components</b> detaylarını inceleyin.",
+"<b>Coverage</b> sütunundaki çubukları seçin — miktarların tüketildiğini doğrulayın.",
+"Açık miktarların 0 olduğunu doğrulayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Tüm bileşen miktarları mal çıkışı aracılığıyla tüketildi. Tüm bileşenler için açık miktarlar = 0."
+},
+{num:"3",title:"Check Stock/Requirements Situation for Components",app:"Monitor Material Coverage - Net Segments",
+steps:[
+"<b>Monitor Material Coverage - Net Segments</b> uygulamasını açın.",
+"<b>Material</b>: S11-###, <b>Plant</b>: 1010 girin ve <b>Go</b>'ya tıklayın.",
+"Bileşeni seçin ve <b>Manage Materials</b>'a tıklayın — stok, mal çıkışı kadar azalmıştır.",
+"Üretim emri rezervasyonları artık MRP için geçerli değil — listede görünmüyor.",
+"Diğer bileşenler (S12, S13, S15, R14) için adımları tekrarlayın.",
+"Fiori Launchpad'e dönün."
+],
+result:"S11/S12/S13/S15/R14 bileşenleri: Stok, çekilen miktarlar kadar azaldı. Sipariş rezervasyonları artık stok/gereksinim listesinde yer almıyor."
+}]
+},
+{id:43,title:"Confirmation of Time for Production Order",app:"Manage Production Orders",
+sc:"Üretim emrindeki operasyon için makine (3500 saat) ve personel (3250 saat) onayı yapacak ve Final Confirmation statüsünü doğrulayacaksınız.",
+tasks:[
+{num:"1",title:"Confirm Operation Time for Production Order",app:"Manage Production Orders",
+path:["SAP Fiori Launchpad","Production Management - Discrete Manufacturing","Manufacturing Execution","Manage Production Orders"],
+fields:[
+["── Time Confirmation ──",""],
+["Confirmation Type","Final Confirmation"],
+["Machine Hours","3500"],
+["Personal Hours","3250"]
+],
+steps:[
+"<b>Manage Production Orders</b> uygulamasını açın.",
+"<b>Material</b>: F1-### girin ve <b>Go</b>'ya tıklayın.",
+"Üretim emri satırına tıklayın ve <b>Order Schedule</b>'a gidin.",
+"Operasyonu işaretleyin ve <b>></b> okuna tıklayın.",
+"<b>Manage Production Operations</b>'da <b>Confirm Operation</b>'a tıklayın.",
+"<b>Actual Data</b>'ya tıklayın.",
+"<b>Confirmation Type</b>: <b>Final Confirmation</b> girin.",
+"<b>Activities</b> alanında <b>Machine Hours</b>: 3500, <b>Personal Hours</b>: 3250 girin.",
+"<b>Save</b>'e tıklayın.",
+"<b>Back</b>'e tıklayarak üretim emrine dönün — operasyon statüsü <b>Confirmed</b>.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"İşlem <b>Final Confirmation</b> ile onaylandı. Durum: <b>Confirmed</b>. Güncellenmiş işlem ilerleme durumu onaylanan toplam miktarı göstermektedir (yeşil çubuk)."
+}]
+},
+{id:44,title:"Post the Goods Receipt for Production Order and Analyze the Impact",app:"Post Goods Movement",
+sc:"Üretim emri için mal girişi yapacak, sipariş statüsünü ve F1-### stok durumunu analiz edeceksiniz.",
+tasks:[
+{num:"1",title:"Check Current Stock and Get Production Order Number",app:"Manage Production Orders",
+steps:[
+"<b>Stock Single Material</b> uygulamasını açın.",
+"<b>Material</b>: F1-### girin — stok olmadığını doğrulayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün.",
+"<b>Manage Production Orders</b> uygulamasını açın.",
+"<b>Material</b>: F1-### girin ve <b>Go</b>'ya tıklayın.",
+"Üretim emri numarasını not alın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"F1-### için mevcut stok: 0 adet. <b>GR</b> kaydı için üretim emri numarası not edildi."
+},
+{num:"2",title:"Post Goods Receipt for Production Order",app:"Post Goods Movement",
+path:["SAP Fiori Launchpad","Search","Post Goods Movement"],
+steps:[
+"<b>Post Goods Movement</b> uygulamasını açın.",
+"<b>Goods Receipt for Order</b>'ı seçin.",
+"Üretim emri numaranızı girin.",
+"<b>OK</b> bayrağını seçin.",
+"<b>Check</b>'e tıklayın.",
+"<b>Post</b>'a tıklayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"F1-### için mal girişi deftere işlendi. Üretim emrinin durumu <b>Delivered</b> olarak değiştirildi."
+},
+{num:"3",title:"Verify Production Order Status and Final Stock",app:"Manage Production Orders",
+steps:[
+"<b>Manage Production Orders</b> uygulamasını açın.",
+"<b>Material</b>: F1-### girin ve <b>Go</b>'ya tıklayın.",
+"Sipariş statüsünü doğrulayın: <b>Delivered</b>.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün.",
+"<b>Stock Single Material</b> uygulamasını açın.",
+"<b>Material</b>: F1-### — stokta 100 PC olduğunu doğrulayın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Üretim emri durumu: <b>Delivered</b>. F1-### için stok: 100 adet."
+}]
+},
+{id:45,title:"Prepare Your User and Fiori Launchpad PP-PCC",app:"Maintain Business Users",
+sc:"Üretim Muhasebecisi iş rolünü kullanıcınıza atayarak üretim maliyeti analiz işlemleri için Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign BR_PRODN_ACCOUNTANT Role",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role","BR_PRODN_ACCOUNTANT"],
+["Role Name","Production Accountant"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"<b>BR_PRODN_ACCOUNTANT</b> girin ve ara.",
+"Satırı seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b> ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü veya önceden tahsis edilmiş rolleri kaldırmayın.",
+result:"<b>BR_PRODN_ACCOUNTANT</b> rolü atandı. Launchpad yenilendikten sonra <b>Product Costing</b> alanı görünecektir."
+}]
+},
+{id:46,title:"Evaluate Production Order",app:"Analyze Production Costs - Event-Based",
+sc:"Tamamlanmış üretim emrini olay tabanlı üretim maliyeti analiz uygulamalarıyla inceleyecek, üretim sapmalarını analiz edecek ve muhasebe belgelerini görüntüleyeceksiniz.",
+tasks:[
+{num:"1",title:"Analyze Production Costs via Analyze Production Costs - Event-Based",app:"Analyze Production Costs - Event-Based",
+path:["SAP Fiori Launchpad","Product Costing Space","Analyze Production Costs - Event-Based"],
+steps:[
+"<b>Analyze Production Costs - Event-Based</b> uygulamasını açın.",
+"<b>Order</b> alanına üretim emri numaranızı girin.",
+"<b>Current Order Status</b> filtresinde <b>Closed</b>'ı seçin.",
+"<b>Go</b>'ya tıklayın.",
+"<b>></b> okuna tıklayarak detayları görün.",
+"<b>Order Costs</b> sekmesine gidin.",
+"Sol taraftaki açılır menüden <b>Costs by Business Transaction</b> görünümünü seçin.",
+"<b>Maximize</b> butonuna tıklayın.",
+"Bir satıra sağ tıklayın → <b>Expand → Expand all</b>'ı seçin.",
+"Olay tabanlı kapanış maliyetlerini inceleyin (Variance posting, WIP clearing).",
+"<b>AI Summarize</b> butonunu deneyin (sadece Order Costs için).",
+"<b>Close</b>'a tıklayın ve uygulamada kalın."
+],
+result:"Olay bazlı tasfiye gerçek bakiyeyi ve <b>WIP</b>'yi kapattı. Üretim sapmaları hesaplandı ve görünür hale geldi. Tasfiye hesabı 55100000."
+},
+{num:"2",title:"Analyze Variance by G/L Account View",app:"Analyze Production Costs - Event-Based",
+steps:[
+"Sol taraftaki açılır menüden <b>Variance by G/L Account</b> görünümünü seçin.",
+"Bir satıra sağ tıklayın → <b>Expand → Expand all</b>'ı seçin.",
+"<b>Total Cost Variance</b> sütununda toplam sapmaları görün.",
+"G/L Account ve Origin sütunlarını inceleyin.",
+"<b>Minimize</b> ikonuna tıklayın ve uygulamada kalın."
+],
+result:"Üretim sapmaları <b>G/L</b> hesabına göre gösterildi. <b>Total Cost Variance</b> sütunu = hedef ve gerçek maliyetler arasındaki tüm sapmaların toplamı."
+},
+{num:"3",title:"Display Line Items in Production Accounting",app:"Display Line Items - Production Accounting",
+steps:[
+"<b>Related Apps</b>'a tıklayın.",
+"<b>Display Line Items – Production Accounting</b>'e gidin.",
+"Başlık açılır menüsünden <b>SAP - Grouped by G/L Account Only</b> görünümünü seçin.",
+"G/L hesapları için detayları açın: 13200000, 52070000, 52570000, 54200100, 55100000.",
+"Olay tabanlı uzlaşma, WIP temizleme ve sapma kayıtlarını inceleyin.",
+"Uygulamada kalın."
+],
+result:"Satır kalemleri doğrular: <b>WIP</b> kapatıldı (13200000), üretim sapmaları deftere işlendi (52070000/52570000), tasfiye gerçekleştirildi (55100000)."
+},
+{num:"4",title:"Display Journal Entry for Production Variances",app:"Display Journal Entries - New Version",
+steps:[
+"G/L Account 52070000 altındaki journal entry numarası bağlantısına tıklayın.",
+"<b>Display Journal Entries – New Version</b>'ı seçin.",
+"<b>Line Items</b> sekmesine gidin ve <b>Maximize</b>'a tıklayın.",
+"<b>Settings</b>'e tıklayın ve Account Assignment Type, SLA Line Item Type, Product, Origin Cost Center sütunlarını ekleyin.",
+"<b>OK</b>'a tıklayın.",
+"Görünümü <b>Standard_Varc_###</b> olarak kaydedin ve Varsayılan Ayar yapın.",
+"Ayrıntılı sapma kayıtlarını inceleyin (production order credit, margin analysis debit, variance categories).",
+"<b>Minimize</b>'a tıklayın ve <b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Muhasebe kaydı sapmayı göstermektedir: üretim emrinin tasfiyesi, <b>WIP</b> kapatma ve ayrıntılı sapma kategorileri (girdi fiyatı, miktar sapmaları)."
+},
+{num:"5",title:"View Production Variances in Production Cost Overview",app:"Production Cost Overview - Event-based",
+path:["SAP Fiori Launchpad","Production Costing Space","Production Cost Overview - Event-based"],
+fields:[
+["── Filters ──",""],
+["From Fiscal Period","Current period and year"],
+["Ledger","0L"],
+["Company Code","1010"],
+["Currency","EUR"],
+["Order","Your order number"]
+],
+steps:[
+"<b>Production Cost Overview – Event-based</b> uygulamasını açın.",
+"Tablodaki filtre değerlerini girin ve <b>Go</b>'ya tıklayın.",
+"<b>Order Variances – Trend</b> kartını sağ alt köşeden genişletin.",
+"Tüm sapma kategorilerini görün.",
+"İsterseniz karta sağ tıklayıp <b>Add Card to Insights</b> ile launchpad'e ekleyin.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Üretim sapmaları grafik formatında görüntülendi: son teslimat sonrası girdi miktarı sapmaları ve kalan sapmalar."
+}]
+}
+]},
+{unit:8,title:"Performing the Lead-to-Cash Process: Focus on Sales",ex:[
+{id:47,title:"Prepare Your User and Fiori Launchpad SD",app:"Maintain Business Users",
+sc:"Satış işlemleri için dört farklı iş rolünü kullanıcınıza atayarak SD Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign SD Business Roles",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role 1","BR_PRICING_SPECIALIST"],
+["Business Role 2","BR_INTERNAL_SALES_REP"],
+["Business Role 3","BR_SHIPPING_SPECIALIST"],
+["Business Role 4","BR_AR_ACCOUNTANT"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"Dört rolü girin ve ara.",
+"Tüm rolleri seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b> ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü kaldırmayın. Önceden atanmış tüm rolleri koruyun.",
+result:"Dört SD rolü atandı. Launchpad yenilendikten sonra <b>Sales</b>, <b>Shipping</b> ve <b>Accounts Receivable</b> alanları görünecektir."
+}]
+},
+{id:48,title:"Extend BP to be used in Sales",app:"Manage Business Partner Master Data",
+sc:"IEE2E-### iş ortağını önce Accounts Receivable (FLCU00) sonra Customer Sales (FLCU01) rolleriyle genişleterek satış perspektifinden kullanıma hazır hale getireceksiniz.",
+tasks:[
+{num:"1",title:"Extend BP with Accounts Receivable Role (FLCU00)",app:"Manage Business Partner Master Data",
+path:["SAP Fiori Launchpad","Search","Manage Business Partner Master Data"],
+fields:[
+["── Company Code Tab ──",""],
+["Business Partner","IEE2E-###"],
+["Role","Customer Fin. Accounting (FLCU00)"],
+["Company Code","1010"],
+["Reconciliation Account","12100000"],
+["Sort Key","001"],
+["Terms of payment","0001"]
+],
+steps:[
+"<b>Manage Business Partner Master Data</b> uygulamasını açın.",
+"<b>IEE2E-###</b> için arama yapın ve <b>></b>'ya tıklayın.",
+"<b>Edit</b>'e tıklayın.",
+"<b>Roles</b> sekmesinde <b>Create</b>'e tıklayın.",
+"<b>Customer Fin. Accounting (FLCU00)</b> girin ve <b>></b>'ya tıklayın.",
+"<b>Company Code</b> sekmesini açın ve <b>Create</b>'e tıklayın.",
+"<b>Company Code</b>: 1010 girin.",
+"<b>Reconciliation Account</b>: 12100000 girin.",
+"<b>Sort Key</b>: 001, <b>Payment Terms</b>: 0001 girin.",
+"<b>Apply</b>'ya iki kez tıklayın.",
+"Uygulamada kalın."
+],
+result:"<b>FLCU00</b> (Customer Fin. Accounting) rolü, şirket kodu 1010 ve mutabakat hesabı 12100000 ile eklendi."
+},
+{num:"2",title:"Extend BP with Customer Sales Role (FLCU01)",app:"Manage Business Partner Master Data",
+fields:[
+["── Sales Area ──",""],
+["Role","Customer (FLCU01)"],
+["Sales Organization","1010"],
+["Distribution Channel","10"],
+["Division","00"],
+["Currency","EUR"],
+["Incoterms","FH"],
+["Payment Terms","0001"],
+["Shipping Conditions","00 Standard"],
+["Customer Pricing Procedure","01 Procedure 01"],
+["Tax Classification TTX1","1"]
+],
+steps:[
+"<b>Roles</b> sekmesinde <b>Create</b>'e tıklayın.",
+"<b>Customer (FLCU01)</b> girin ve <b>></b>'ya tıklayın.",
+"<b>Sales Areas</b> sekmesini açın ve <b>Create</b>'e tıklayın.",
+"Sales Org: 1010, Distribution Channel: 10, Division: 00 girin.",
+"Sales Area Details → Sales Orders: <b>Currency</b>: EUR girin.",
+"Billing: <b>Incoterms</b>: FH, <b>Terms of payment</b>: 0001 girin.",
+"Shipping: <b>Shipping Conditions</b>: 00 Standard girin.",
+"Pricing: <b>Customer Pricing Procedure</b>: 01 girin.",
+"<b>Apply</b>'ya iki kez tıklayın.",
+"<b>Sales Areas</b> → <b>></b> → <b>Taxes</b> sekmesinde Tax Classification (DE): <b>1</b> girin.",
+"<b>Apply</b>'ya iki kez tıklayın.",
+"<b>Save</b>'e tıklayın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"IEE2E-### <b>Business Partner</b>'ı, Satış Org. 1010 için Customer (FLCU01) rolüyle genişletildi. Almanya için vergi sınıflandırması 1 olarak ayarlandı."
+}]
+},
+{id:49,title:"Create customer specific condition record",app:"Manage Prices - Sales",
+sc:"F1-### için 2850 EUR birim satış fiyatı ve IEE2E-### müşterisine özel %2 indirim koşul kaydını oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Create Material Sales Price (PPR0) for F1-###",app:"Manage Prices - Sales",
+path:["SAP Fiori Launchpad","Master Data","Price Management","Manage Prices - Sales"],
+fields:[
+["── Selection ──",""],
+["Editing Status","All"],
+["Filter Method","Filter with Applicable Criteria"],
+["Condition type","PPR0 (Price)"],
+["Key Combination","304, access number 40 (Sales org./Distr. Chl/Product)"],
+["Sales Organization","1010 (Sales Org Germany)"],
+["Distribution Channel","10 (Direct Sales)"],
+["Product","F1-###"],
+["── Condition Record ──",""],
+["Valid from","01.MM.JJJJ"],
+["Condition Amount or Ratio","2850"]
+],
+steps:[
+"<b>Manage Prices - Sales</b> uygulamasını açın.",
+"Tablodaki seçim bilgilerini girin ve <b>Go</b>'ya tıklayın.",
+"Entry help kullanarak <b>Key Combination 304, access number 40</b>'ı seçin.",
+"<b>Create</b>'e tıklayın.",
+"<b>Valid from</b>: 01.MM.JJJJ girin.",
+"<b>Condition Amount or Ratio</b>: 2850 girin.",
+"<b>Save</b>'e tıklayın — koşul kaydı oluşturuldu.",
+"<b>SAP Logo</b> ve <b>My Home</b> ile ana sayfaya dönün."
+],
+result:"Fiyat koşulu kaydı oluşturuldu: F1-### için Satış Org. 1010, Dağıtım Kanalı 10'da birim başına 2.850 EUR fiyat belirlendi."
+},
+{num:"2",title:"Verify Price in Material Master",app:"Display Material",
+fields:[
+["── Org Data ──",""],
+["Plant","1010"],
+["Sales Organization","1010"],
+["Distribution Channel","10"]
+],
+steps:[
+"<b>Display Material</b> uygulamasını açın.",
+"Material: F1-###, view: <b>Sales: Sales Org Data1</b>, Plant: 1010, Sales Org: 1010, DC: 10 girin.",
+"<b>Conditions</b>'a tıklayın — oluşturulan fiyatı görüntüleyin.",
+"<b>Back</b> (<) ve <b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"F1-### için <b>material master</b> Conditions bölümünde 2.850 EUR satış fiyatı görünmektedir."
+},
+{num:"3",title:"Create 2% Customer Discount (YK07) for IEE2E-###",app:"Manage Prices - Sales",
+fields:[
+["── Selection ──",""],
+["Editing Status","All"],
+["Filter Method","Filter with Applicable Criteria"],
+["Condition type","YK07 (Customer Discount)"],
+["Key Combination","307, access number 10 (Sales org./Distr. Chl/Sold-to)"],
+["Customer","IEE2E-###"],
+["Sales Organization","1010 (Sales Org Germany)"],
+["Distribution Channel","10 (Direct Sales)"],
+["── Condition Record ──",""],
+["Valid from","01.MM.JJJJ"],
+["Condition Amount or Ratio","-2"]
+],
+steps:[
+"<b>Manage Prices - Sales</b> uygulamasını açın.",
+"Entry help ile <b>Key Combination 307, access number 10</b>'ı seçin.",
+"<b>Go</b>'ya tıklayın.",
+"<b>Create</b>'e tıklayın.",
+"<b>Valid from</b>: 01.MM.JJJJ, <b>Condition Amount or Ratio</b>: <b>-2</b> girin.",
+"<b>Save</b>'e tıklayın — indirim koşul kaydı oluşturuldu.",
+"<b>Back</b> (<) ile Fiori Launchpad'e dönün."
+],
+result:"Müşteriye özel indirim oluşturuldu: IEE2E-### müşterisi için -%2 (YK07), geçerlilik tarihi mevcut aydan başlıyor. Satış siparişlerinde otomatik olarak uygulanır."
+}]
+},
+{id:50,title:"Create a sales order",app:"Manage Sales Orders",
+sc:"IEE2E-### müşterisinden gelen 10 bisiklet (F1-###) siparişi için standart satış siparişi (OR) oluşturacak ve fiyatlandırma koşullarını doğrulayacaksınız.",
+tasks:[
+{num:"1",title:"Create Standard Sales Order",app:"Manage Sales Orders",
+path:["SAP Fiori Launchpad","Internal Sales","Sales Processing","Manage Sales Orders"],
+fields:[
+["── Sales Order Type ──",""],
+["Sales Order Type","OR"],
+["Sales Organization","1010"],
+["Distribution Channel","10"],
+["Division","00"],
+["── Sales Order Header ──",""],
+["Sold-to-Party","IEE2E-###"],
+["Cust. Reference","12###"],
+["── Items ──",""],
+["Product","F1-###"],
+["Order Quantity","10"],
+["Item Category","TAN"],
+["Storage Location","101A"]
+],
+steps:[
+"<b>Manage Sales Orders</b> uygulamasını açın.",
+"<b>Create - Create Sales Order</b>'ı seçin.",
+"Sales Order Type: OR, Sales Org: 1010, Distribution Channel: 10, Division: 00 girin.",
+"<b>Continue</b>'ye tıklayın.",
+"<b>Sold-to-Party</b>: IEE2E-###, <b>Cust. Reference</b>: 12### girin.",
+"Items bölümünde F1-###, Quantity: 10, Item Category: TAN girin.",
+"<b>Enter</b>'a basarak müşteri ve malzeme master verilerini kopyalayın. Mesajları onaylayın.",
+"<b>Prices</b> sekmesini kontrol edin: 2,850 EUR fiyat ve -2% indirim görünmeli.",
+"<b>General Information → Basic Data</b>'da <b>Storage Location</b>: 101A girin.",
+"<b>Apply</b>'ya tıklayın, ardından <b>Create</b>'e tıklayın. Tüm mesajları onaylayın.",
+"Sipariş numarasını not alın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+info:"Malzeme satır kaleminde <b>TAN</b> kalem kategorisini kullandığınızdan emin olun.",
+result:"Satış siparişi oluşturuldu: IEE2E-### müşterisi için F1-###'den 10 adet. -%2 müşteri indirimi uygulanmış fiyat 2.850 EUR. Sipariş numarasını not edin."
+}]
+},
+{id:51,title:"Create outbound delivery, post goods issues and analyze the impact",app:"Track Sales Orders",
+sc:"Satış siparişi için giden teslimat oluşturacak, malları ambarden toplayacak, mal çıkışı kaydedecek ve T-Hesap görünümüyle finansal etkiyi analiz edeceksiniz.",
+tasks:[
+{num:"1",title:"Create Outbound Delivery from Sales Order",app:"Track Sales Orders",
+path:["SAP Fiori Launchpad","Internal Sales","Sales Processing","Monitoring","Track Sales Orders"],
+fields:[["── Filter ──",""],["Sold to Party","IEE2E-###"]],
+steps:[
+"<b>Track Sales Orders</b> uygulamasını açın.",
+"<b>Sold to Party</b>: IEE2E-### girin ve <b>Go</b>'ya tıklayın.",
+"Satış siparişi satırının <b>></b> okuna tıklayın.",
+"<b>Track Sales Orders Details</b>'te <b>Delivery Issues in Sales Order</b>'ı seçin.",
+"Items bölümünde kalemleri seçin ve <b>Create Delivery</b>'ye tıklayın. <b>Create</b> ile onaylayın.",
+"<b>Create Delivery</b> sekmesine tıklayın ve teslimat numarasını not alın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Çıkış teslimatı oluşturuldu. Sonraki adımlar için teslimat numarasını (8000xxxx) not edin."
+},
+{num:"2",title:"Pick Goods and Post Goods Issue",app:"Pick Outbound Delivery",
+path:["SAP Fiori Launchpad","Search","Pick Outbound Delivery"],
+steps:[
+"<b>Pick Outbound Delivery</b> uygulamasını açın.",
+"<b>Delivery</b> alanına teslimat numaranızı (8000xxxx) girin ve Enter'a basın.",
+"Picking işleminde <b>Picking Quantity</b>: 10 PC girin ve Enter'a basın.",
+"<b>Save</b>'e tıklayın.",
+"<b>Post GI</b>'ya tıklayın.",
+"Durum: GI 49XXXXXXXX (GI Posted) olarak değişir.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"<b>Picking</b> tamamlandı. Mal çıkışı deftere işlendi. Teslimat durumu: <b>GI Posted</b> (49XXXXXXXX)."
+},
+{num:"3",title:"Analyze GI Impact on Delivery Document",app:"Manage Outbound Deliveries",
+steps:[
+"<b>Manage Outbound Deliveries</b> uygulamasını açın.",
+"<b>Ship to party</b>: IEE2E-### girin, <b>Overall Status</b>'ü silin ve <b>Go</b>'ya tıklayın.",
+"Teslimat belgenizin <b>></b> okuna tıklayın.",
+"<b>Process Flow</b>'a tıklayın — Satış Siparişi → Teslimat → Mal Çıkışı akışı görünür.",
+"<b>Goods Issue</b>'ya tıklayın ve <b>Display Document Flow - Material Document</b>'ı seçin.",
+"<b>GL Document Flow</b> → ilk Journal Entry → <b>Display Journal Entries in T-Account View</b>'ı seçin.",
+"Ledger'dan OE ve 2L'yi silin ve <b>Go</b>'ya tıklayın.",
+"<b>SAP</b> ile Fiori Launchpad'e dönün."
+],
+result:"Belge akışı: <b>Sales Order</b> → <b>Delivery Document</b> → <b>Goods Issue</b>. <b>T-Account</b> görünümü, stok hesabının alacaklandırıldığını ve COGS'un borçlandırıldığını göstermektedir."
+}]
+},
+{id:52,title:"Create customer invoice and review the result (IEE2E - ILT)",app:"Create Billing Documents",
+sc:"Müşteriye teslim edilen 10 bisiklet için fatura oluşturacak ve muhasebe belgesini Accounts Receivable süreç akışıyla inceleyeceksiniz.",
+tasks:[
+{num:"1",title:"Create Billing Document from Outbound Delivery",app:"Create Billing Documents",
+path:["SAP Fiori Launchpad","Billing","Billing Documents and Billing Document Request","Create Billing Documents"],
+steps:[
+"<b>Create Billing Documents</b> uygulamasını açın.",
+"<b>Sold-To-Party</b>: IEE2E-### girin ve <b>Go</b>'ya tıklayın.",
+"Satış belgesini işaretleyin ve sağ taraftaki <b>Billing Settings</b>'i kontrol edin.",
+"<b>Automatically post billing documents</b>'ın açık olduğunu doğrulayın.",
+"<b>OK</b> ile Billing Settings'i kapatın.",
+"Giden teslimatınızın satırını seçin ve <b>Create Billing Documents</b>'a tıklayın.",
+"<b>Save</b>'e tıklayın — fatura belgesi oluşturuldu ve Invoice numarası sol üstte görünür.",
+"Fatura numarasını not alın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+info:"Çıkış teslimatı görünmüyorsa <b>Billing Date</b>'i şu şekilde değiştirin: Today -1 / + artı 10 gün.",
+result:"<b>Billing document</b> oluşturuldu. Fatura numarası görünmektedir. Muhasebe belgesi otomatik olarak <b>Accounts Receivable</b>'a deftere işlendi."
+},
+{num:"2",title:"Display Process Flow and Accounting Document",app:"Display Process Flow - Accounts Receivable",
+path:["SAP Fiori Launchpad","Accounts Receivable","Overview","Display Process Flow - Accounts Receivable"],
+fields:[
+["── Selection ──",""],
+["Document Type","Sales Document"],
+["Sales Document","Sales Order you created before"]
+],
+steps:[
+"<b>Display Process Flow - Accounts Receivable</b> uygulamasını açın.",
+"Document Type: Sales Document, Sales Document: satış siparişinizi girin.",
+"<b>Go</b>'ya tıklayın.",
+"Belge durumlarını görün: Sales (Completed), Delivery (Completed), Billing (Completed), Accounting (Open).",
+"<b>Accounting</b> altındaki Journal Entry belgesine tıklayın.",
+"<b>> Related Applications → Manage Journal Entries</b>'i seçin.",
+"Journal Entry Line Item 000001 sağındaki <b>></b>'a tıklayarak AR fatura detaylarını görün.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Süreç akışı tamamlandı. Muhasebe durumu Open = ödenmemiş fatura. Fatura ayrıntıları IEE2E-### müşterisini ve fatura tutarını göstermektedir."
+}]
+},
+{id:53,title:"Process customer payment",app:"Post Incoming Payments",
+sc:"IEE2E-### müşterisinden gelen 33.236,70 EUR ödemeyi kaydedecek ve müşteri satır kalemlerini inceleyeceksiniz.",
+tasks:[
+{num:"1",title:"Post Incoming Customer Payment",app:"Post Incoming Payments",
+path:["SAP Fiori Launchpad","Accounts Receivable","Payments and Clearings","Payments","Post Incoming Payments"],
+fields:[
+["── General Information ──",""],
+["Company Code","1010"],
+["Posting Date","Current Date"],
+["Journal Entry Date","Current Date"],
+["Journal Entry Type","DZ (Customer Payment)"],
+["── Bank Data ──",""],
+["G/L Account","11002060"],
+["Amount","33236,70"],
+["Currency","EUR"],
+["── Open Item Selection ──",""],
+["Account Type","Customer"],
+["Account ID","IEE2E-###"]
+],
+steps:[
+"<b>Post Incoming Payments</b> uygulamasını açın.",
+"Tablodaki tüm verileri girin.",
+"<b>Propose Items</b>'a tıklayın — IEE2E-### için açık faturalar listelenir.",
+"Önceki adımda oluşturduğunuz müşteri faturasını seçin ve <b>Clear</b>'a tıklayın.",
+"<b>Enter</b>'a basın — Bakiye EUR 0.00 olur.",
+"<b>Simulate</b>'e tıklayın.",
+"<b>Post</b>'a tıklayın.",
+"Journal Entry numarasını not alın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"33.236,70 EUR gelen ödeme deftere işlendi (Belge Türü DZ). Fatura kapatıldı. Bakiye EUR 0,00."
+},
+{num:"2",title:"Display Open and Cleared Line Items",app:"Manage Customer Line Items",
+path:["SAP Fiori Launchpad","Accounts Receivable","Overview","Quick Access","Manage Customer Line Items"],
+fields:[
+["── Filter ──",""],
+["Customer","IEE2E-###"],
+["Company Code","1010"],
+["Status","All Items"],
+["Posting date","From January 1 Current Year, To Current date"],
+["Item Type","Normal Items"]
+],
+steps:[
+"<b>Manage Customer Line Items</b> uygulamasını açın.",
+"Tablodaki filtre değerlerini girin ve <b>Go</b>'ya tıklayın.",
+"33.236,70 EUR kalemini arayın — cleared items arasında görünür.",
+"<b>Clearing Journal Entry</b> sütununa göre <b>Descending</b> sıralayarak cleared kalemleri gruplandırın.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Müşteri satır kalemleri, faturanın (33.236,70 EUR) DZ belge tipi kapatma muhasebe kaydıyla kapatıldığını göstermektedir."
+}]
+}
+]},
+{unit:9,title:"Performing the Lead-to-Cash Process: Focus on Service",ex:[
+{id:54,title:"Prepare Your User and Fiori Launchpad CS",app:"Maintain Business Users",
+sc:"Müşteri servisi işlemleri için dört farklı iş rolünü kullanıcınıza atayarak CS Fiori Launchpad'i yapılandırın.",
+tasks:[
+{num:"1",title:"Assign CS Business Roles",app:"Maintain Business Users",
+fields:[
+["── Role Assignment ──",""],
+["Business Role 1","BR_MAINTENANCE_PLANNER"],
+["Business Role 2","BR_SERVICE_PLANNER"],
+["Business Role 3","BR_CUSTOMER_SRVC_TEC"],
+["Business Role 4","BR_CUSTOMER_SRVC_MGR"]
+],
+steps:[
+"<b>Maintain Business Users</b> uygulamasını açın.",
+"Kullanıcı adınızı arayın ve <b>Edit</b>'e tıklayın.",
+"<b>Assigned Business Roles</b> → <b>Add</b>'e tıklayın.",
+"Dört rolü girin ve ara.",
+"Tüm rolleri seçin ve <b>OK</b>'a tıklayın.",
+"<b>Save</b> ve <b>Navigate to Home Page</b>'i seçin."
+],
+warn:"<b>Z_S4C_GENERIC_ROLE</b>'ü kaldırmayın. Önceden atanmış tüm rolleri koruyun.",
+result:"Dört CS rolü atandı. Launchpad yenilendikten sonra <b>Service Management</b> alanı görünecektir."
+}]
+},
+{id:55,title:"Create Technical Object (IEE2E - ILT)",app:"Manage Material Serial Numbers",
+sc:"IEE2E-### müşterisine satılan 10 bisiklet için seri numaraları oluşturacak, ekipman görünümünü aktive edecek ve servis takibini yapılandıracaksınız.",
+tasks:[
+{num:"1",title:"Add Serialization Profile to F1-### Material Master",app:"Change Material",
+path:["SAP Fiori Launchpad","Search","Change Material"],
+fields:[
+["── Material ──",""],
+["Material","F1-###"],
+["View","General Plant Data / Storage Location 2"],
+["Plant","1010"],
+["── Serial Number ──",""],
+["Serial Number Profile","YSR1"]
+],
+steps:[
+"<b>Change Material</b> uygulamasını açın.",
+"Material: F1-### girin ve Enter'a basın.",
+"<b>General Plant Data / Storage Location 2</b> görünümünü seçin ve Enter'a basın.",
+"<b>Plant</b>: 1010 girin ve Enter'a basın.",
+"<b>General Plant Parameters</b>'da <b>Serial Number Profile</b>: <b>YSR1</b> girin.",
+"<b>Save</b>'e tıklayın.",
+"<b>SAP Logo</b> ve <b>My Home</b> ile ana sayfaya dönün."
+],
+result:"F1-### malzemesine <b>YSR1</b> serileştirme profili eklendi. Malzeme seri numaralarının oluşturulmasına olanak tanır."
+},
+{num:"2",title:"Create 10 Material Serial Numbers",app:"Manage Material Serial Numbers",
+path:["SAP Fiori Launchpad","Maintenance Planning","Serial numbers in Inventory","Manage Material Serial Numbers"],
+fields:[
+["── Mass Create ──",""],
+["Material","F1-###"],
+["Category","S"],
+["Number of Serial Numbers","10"]
+],
+steps:[
+"<b>Manage Material Serial Numbers</b> uygulamasını açın.",
+"<b>Mass Create</b>'e tıklayın.",
+"Material: F1-###, Category: S, Number of Serial Numbers: 10 girin.",
+"<b>Mass Create</b>'e tıklayın ve <b>OK</b> ile onaylayın.",
+"Seçim alanında Material: F1-### girin ve <b>Go</b>'ya tıklayın.",
+"Oluşturulan seri numara listesini görüntüleyin.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"F1-### için 10 malzeme seri numarası oluşturuldu. Her seri numarası bir ekipman kaydına dönüşecektir."
+},
+{num:"3",title:"Extend Serial Number with Customer Data and Activate Equipment View",app:"Manage Material Serial Numbers",
+fields:[
+["── Partners Tab ──",""],
+["Material","F1-###"],
+["Special Stock","B"],
+["Customer","IEE2E-###"],
+["Stock Type","Unrestricted Use Stock"],
+["Partner Function","AG"],
+["Partner","IEE2E-###"]
+],
+steps:[
+"<b>Manage Material Serial Numbers</b> uygulamasını açın.",
+"Material: F1-### girin ve <b>Go</b>'ya tıklayın.",
+"İlk seri numarasının <b>></b> okuna tıklayın ve <b>Edit</b>'i seçin.",
+"<b>Partners</b> sekmesinde <b>Create</b>'e tıklayın.",
+"<b>Partner Function</b>: AG, <b>Partner</b>: IEE2E-### girin.",
+"Detay verilerinde Special Stock: B, Customer: IEE2E-###, Stock Type: Unrestricted Use Stock girin.",
+"<b>Save</b>'e tıklayın ve mesajı <b>Close</b> ile kapatın.",
+"<b>Activate Equipment View</b>'a tıklayın ve <b>OK</b> ile onaylayın.",
+"<b>Back</b> (<) ile <b>Manage Material Serial Numbers</b>'a dönün.",
+"<b>Equipment data exists</b>: Yes girin ve <b>Go</b>'ya tıklayın — oluşturulan ekipmanı görün.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+info:"Bu görev normalde tüm 10 seri numarası için tekrarlanmalıdır. Egzersiz amacıyla servis işleme için yalnızca bir ekipman gereklidir.",
+result:"İlk seri numarası, IEE2E-### müşteri verileriyle genişletildi ve ekipman görünümü etkinleştirildi. Ekipman <b>Manage Material Serial Numbers</b>'da görünmektedir."
+}]
+},
+{id:56,title:"Create a service contract and perform billing (IEE2E - ILT)",app:"Manage Service Contracts",
+sc:"IEE2E-### müşterisi için aylık 100 EUR ücretli bakım hizmet sözleşmesi oluşturacak, fatura belgesi talepleri üretecek ve fatura oluşturacaksınız.",
+tasks:[
+{num:"1",title:"Create Service Contract",app:"Manage Service Contracts",
+path:["SAP Fiori Launchpad","Service Management","Service Management","Manage Service Contracts"],
+fields:[
+["── Contract Header ──",""],
+["Description","Service Contract ###"],
+["Sold to Party","IEE2E-###"],
+["External Reference","IEE2E-###"],
+["Employee Responsible","Your User"],
+["Contract Start","01.MM-1.JJ (actual month minus one)"],
+["Contract End","31.12.JJ+1"],
+["── Item ──",""],
+["Product ID","SRV_CONTRACT"],
+["Quantity","1"],
+["Equipment ID","Your Equipment No. you created before"]
+],
+steps:[
+"<b>Manage Service Contracts</b> uygulamasını açın.",
+"<b>Create</b>'e tıklayın.",
+"Tablodaki header verilerini girin.",
+"<b>Items</b> bölümünde Product ID: SRV_CONTRACT, Quantity: 1, Equipment ID'yi girin.",
+"<b>></b> okuna tıklayın ve <b>Billing Plan</b>'ı seçin.",
+"Aylık fatura tarihlerini inceleyin — geçmiş ay girişleri görünür.",
+"<b>Apply</b>'ya tıklayın.",
+"<b>Items</b> bölümünde <b>Release all Items</b>'ı seçin.",
+"<b>Save</b>'e tıklayın — sözleşme numarası sol üstte görünür.",
+"<b>Back</b>'e iki kez tıklayarak Fiori Launchpad'e dönün."
+],
+result:"IEE2E-### müşterisi için aylık 100 EUR faturalama planıyla servis sözleşmesi oluşturuldu. Sözleşme numarası atandı ve görünmektedir."
+},
+{num:"2",title:"Schedule Billing Document Request Creation",app:"Schedule Billing Document Request Creation (Service Contracts)",
+path:["SAP Fiori Launchpad","Service Management","Service Management","Schedule Billing Document Request Creation (Service Contracts)"],
+fields:[
+["── Job Settings ──",""],
+["Job Name","IEE2E-###"],
+["BDR Creation","30"],
+["Sold to Party","IEE2E-###"]
+],
+steps:[
+"<b>Schedule Billing Document Request Creation (Service Contracts)</b> uygulamasını açın.",
+"<b>Create</b>'e tıklayın.",
+"<b>Job Name</b>: IEE2E-### girin ve <b>Step 2</b>'ye tıklayın.",
+"<b>Step 3</b>'e tıklayın.",
+"<b>BDR Creation</b>: 30, <b>Sold to Party</b>: IEE2E-### girin.",
+"<b>Schedule</b>'a tıklayın.",
+"<b>Go</b>'ya tıklayın — iş tamamlandığında yeşil onay işareti görünür.",
+"<b>Yeşil işaret</b>e tıklayın — oluşturulan 3 Billing Document Request numarasını görün.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+result:"Arka plan işi tamamlandı. 3 <b>Billing Document Request</b> oluşturuldu (faturalama planındaki geçmiş aylardaki her faturalama tarihi için bir tane)."
+},
+{num:"3",title:"Create Billing Documents for IEE2E-###",app:"Create Billing Documents",
+path:["SAP Fiori Launchpad","Billing","Billing","Create Billing Documents"],
+fields:[["── Selection ──",""],["Sold to Party","IEE2E-###"]],
+steps:[
+"<b>Create Billing Documents</b> uygulamasını açın.",
+"<b>Sold to Party</b>: IEE2E-### girin ve <b>Go</b>'ya tıklayın.",
+"Oluşturulan Billing Document Request'lerin listelendiğini görün.",
+"Tüm belgeleri seçin ve <b>Create Billing Documents</b>'a tıklayın.",
+"<b>Save all</b>'a tıklayın — Billing Documents oluşturulur ve belge numaraları görünür.",
+"<b>Process Flow</b>'a tıklayarak işlem boyunca oluşan tüm belgeleri görün.",
+"<b>SAP Logo</b> ile Fiori Launchpad'e dönün."
+],
+info:"2 geçici <b>Billing Document</b> görebilirsiniz. En az biri başarıyla oluşturulmalıdır.",
+result:"Servis sözleşmesi için faturalama belgeleri oluşturuldu. Süreç akışı tam zinciri göstermektedir: <b>Service Contract</b> → <b>Billing Document Requests</b> → <b>Billing Documents</b>."
+}]
+}
+]}
+];
+
+/* PATH */
+function path(a){
+  if(!a||!a.length)return'';
+  return'<div class="pr">'+a.map((p,i)=>
+    `<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`
+  ).join('')+'</div>';
+}
+
+/* TABLO */
+function tbl(f){
+  if(!f||!f.length)return'';
+  const rows=f.map(([a,b])=>{
+    if(a.startsWith('──'))
+      return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;
+    return`<tr><td>${a}</td><td>${b}</td></tr>`;
+  }).join('');
+  return`<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ADIMLAR */
+function steps(s){
+  if(!s||!s.length)return'';
+  return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';
+}
+
+/* TASK */
+function task(t){
+  const body=
+    path(t.path)+
+    (t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+
+    (t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+
+    tbl(t.fields)+
+    steps(t.steps)+
+    (t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');
+  return`<div class="task">
+    <div class="thdiv" onclick="togTask(this)">
+      <span class="tn">${t.num}</span>
+      <span class="tt">${t.title}</span>
+      ${t.app?`<span class="ab">${t.app}</span>`:''}
+      <span class="task-chev">›</span>
+    </div>
+    <div class="task-body">${body}</div>
+  </div>`;
+}
+
+/* KART */
+function card(e,uid){
+  let html=`<div class="card" id="ex${e.id}" data-u="${uid}">`;
+  html+=`<div class="ch" onclick="toggle(this)">
+    <span class="exn">${e.id}</span>
+    <div class="cl">
+      <div class="ct">${e.title}</div>
+      <div class="ca">${e.app}</div>
+    </div>
+    <div class="cr"><span class="sb">${e.tasks.length} Task</span><span class="chev">›</span></div>
+  </div>`;
+  html+=`<div class="cb">`;
+  if(e.sc)html+=`<div class="scenario">${e.sc}</div>`;
+  e.tasks.forEach(t=>html+=task(t));
+  html+=`</div></div>`;
+  return html;
+}
+
+/* ÜNİTE */
+function unit(u){
+  const uid=`u${u.unit}`;
+  const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',
+                5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8'};
+  const c=colors[u.unit]||'#60a5fa';
+  let h=`<div class="ug ${uid}" id="${uid}">
+    <div class="uh" onclick="togUnit(this)">
+      <span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">
+        Unit ${u.unit}
+      </span>
+      <span class="utitle">${u.title}</span>
+      <span class="uc">${u.ex.length} egzersiz</span>
+      <span class="uchev">›</span>
+    </div>
+    <div class="ug-body">`;
+  u.ex.forEach(e=>h+=card(e,uid));
+  return h+'</div></div>';
+}
+
+/* TOGGLE UNIT */
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+
+/* TOGGLE KART */
+function toggle(h){
+  h.parentElement.classList.toggle('open');
+}
+
+/* TOGGLE TASK */
+function togTask(hdr){
+  hdr.parentElement.classList.toggle('open');
+}
+
+/* ANA FİLTRE / ARAMA — v5.5 Flat Task Panel */
+var srPanel=document.getElementById('sr-panel');
+var activeU='all',expanded=false;
+
+function escRe(s){return s.replace(/[.+?^${}()|[\]\\]/g,'\\$&');}
+
+function hlStr(s,re){
+  if(!s||!re)return s||'';
+  re.lastIndex=0;
+  return String(s).replace(re,function(m){return'<mark>'+m+'</mark>';});
+}
+
+function clearSearch(){
+  document.getElementById('search').value='';
+  run();
+  document.getElementById('search').focus();
+}
+
+function buildSearchPanel(q,re){
+  srPanel.innerHTML='';
+  if(!q)return;
+  var results=[];
+  D.forEach(function(unit){
+    var uid='u'+unit.unit;
+    if(activeU!=='all'&&activeU!==uid)return;
+    unit.ex.forEach(function(ex){
+      ex.tasks.forEach(function(t){
+        var fieldsTxt=(t.fields||[]).map(function(f){return f[0]+' '+f[1];}).join(' ');
+        var stepsTxt=(t.steps||[]).join(' ').replace(/<[^>]+>/g,' ');
+        var txt=[ex.title,ex.app||'',ex.sc||'',t.title,t.app||'',
+                 fieldsTxt,stepsTxt,t.warn||'',t.info||'',t.result||''].join(' ');
+        if(txt.toLowerCase().indexOf(q)>=0)
+          results.push({unit:unit,ex:ex,task:t,uid:uid});
+      });
+    });
+  });
+  if(!results.length)return;
+  var bar=document.createElement('div');
+  bar.className='sr-bar';
+  bar.innerHTML='<span class="sr-count"><b>'+results.length+'</b> görev bulundu</span>'+
+    '<button class="sr-close" onclick="clearSearch()">✕ Aramayı Temizle</button>';
+  srPanel.appendChild(bar);
+  var COLORS={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',
+              5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8'};
+  results.forEach(function(r){
+    var t=r.task,ex=r.ex,u=r.unit;
+    var c=COLORS[u.unit]||'#60a5fa';
+    var div=document.createElement('div');
+    div.className='sr-card';
+    var bc='<div class="sr-bc">'+
+      '<span class="sr-unit" style="color:'+c+';border-color:'+c+'40;background:'+c+'12">'+
+        'U'+u.unit+' · '+u.title+'</span>'+
+      '<span class="sr-sep">›</span>'+
+      '<span class="sr-exn">EX '+ex.id+' · '+hlStr(ex.title,re)+'</span>'+
+      '<span class="sr-sep">›</span>'+
+      '<span class="sr-tn">'+t.num+'</span></div>';
+    var th='<div class="sr-th">'+
+      '<span class="sr-tt">'+hlStr(t.title,re)+'</span>'+
+      (t.app?'<span class="sr-ab">'+hlStr(t.app,re)+'</span>':'')+
+    '</div>';
+    var sc=ex.sc?'<div class="sr-sc">'+hlStr(ex.sc,re)+'</div>':'';
+    var ph='';
+    if(t.path&&t.path.length){
+      ph='<div class="sr-path">'+t.path.map(function(p,i){
+        return'<span class="sr-pc">'+hlStr(p,re)+'</span>'+
+          (i<t.path.length-1?'<span class="sr-pa">›</span>':'');
+      }).join('')+'</div>';
+    }
+    var fh='';
+    if(t.fields&&t.fields.length){
+      var rows=t.fields.map(function(f){
+        if(f[0].startsWith('──'))
+          return'<tr class="fvt-sec"><td colspan="2">'+f[0]+'</td></tr>';
+        return'<tr><td>'+hlStr(f[0],re)+'</td><td>'+hlStr(f[1],re)+'</td></tr>';
+      }).join('');
+      fh='<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>'+rows+'</tbody></table>';
+    }
+    var sh='';
+    if(t.steps&&t.steps.length){
+      sh='<ol class="sl">'+t.steps.map(function(s){
+        return'<li><span></span>'+hlStr(s,re)+'</li>';
+      }).join('')+'</ol>';
+    }
+    div.innerHTML=bc+th+sc+ph+
+      (t.warn?'<div class="box warn"><span class="bi">⚠</span><div>'+hlStr(t.warn,re)+'</div></div>':'')+
+      (t.info?'<div class="box info"><span class="bi">ℹ</span><div>'+hlStr(t.info,re)+'</div></div>':'')+
+      fh+sh+
+      (t.result?'<div class="box result"><span class="bi">✓</span><div>'+hlStr(t.result,re)+'</div></div>':'');
+    srPanel.appendChild(div);
+  });
+}
+
+function run(){
+  var raw=document.getElementById('search').value.trim();
+  var q=raw.toLowerCase();
+  var re=raw?new RegExp(escRe(raw),'gi'):null;
+  document.getElementById('clr').style.display=raw?'block':'none';
+  if(raw){
+    document.getElementById('app').style.display='none';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='none';
+    buildSearchPanel(q,re);
+    srPanel.style.display='block';
+    var cnt2=srPanel.querySelectorAll('.sr-card').length;
+    document.getElementById('cnt').textContent=String(cnt2);
+    if(!cnt2){srPanel.style.display='none';document.getElementById('nores').style.display='block';}
+  } else {
+    document.getElementById('app').style.display='';
+    srPanel.style.display='none';
+    srPanel.innerHTML='';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='';
+    var shown=0;
+    document.querySelectorAll('.ug').forEach(function(ug){
+      var badge=ug.querySelector('.ubadge');
+      var uNum=badge?badge.textContent.replace(/[^0-9]/g,''):'';
+      var ok=(activeU==='all'||activeU===('u'+uNum)||activeU===uNum);
+      ug.classList.toggle('hid',!ok);
+      if(ok){ug.querySelectorAll('.card').forEach(function(c){c.classList.remove('hid');shown++;});}
+    });
+    document.getElementById('cnt').textContent=String(shown);
+  }
+}
+
+/* RENDER */
+const app=document.getElementById('app');
+const frow=document.getElementById('frow');
+const cnt=document.getElementById('cnt');
+const nores=document.getElementById('nores');
+const srch=document.getElementById('search');
+const clr=document.getElementById('clr');
+const xpb=document.getElementById('xpb');
+const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);
+cnt.textContent=TOTAL;
+
+D.forEach(u=>{
+  app.innerHTML+=unit(u);
+  const b=document.createElement('button');
+  b.className='fb';
+  b.dataset.u=`u${u.unit}`;
+  b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;
+  frow.appendChild(b);
+});
+
+srch.addEventListener('input',e=>{run();});
+srch.addEventListener('keydown',e=>{if(e.key==='Escape'){srch.value='';run();}});
+clr.addEventListener('click',()=>{clearSearch();});
+frow.addEventListener('click',e=>{
+  const b=e.target.closest('.fb');
+  if(!b)return;
+  activeU=b.dataset.u;
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  run();
+});
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+xpb.addEventListener('click',()=>{
+  expanded=!expanded;
+  document.querySelectorAll('.card:not(.hid)').forEach(c=>{
+    c.classList.toggle('open',expanded);
+    c.querySelectorAll('.task').forEach(t=>{t.classList.toggle('open',expanded);});
+  });
+  xpb.textContent=expanded?'Tümünü Kapat':'Tümünü Aç';
+  xpb.classList.toggle('active',expanded);
+});
+run();
+</script>
+</body>
+</html>

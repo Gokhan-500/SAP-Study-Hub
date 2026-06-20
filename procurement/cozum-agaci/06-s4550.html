@@ -1,0 +1,2525 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S4550 — Cross-Functional Customizing in Materials Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+.sico{position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--td);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="u2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="u3"].on{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.4);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u5"].on{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4);}
+.fb[data-u="u6"].on{background:rgba(239,68,68,.15);color:#ef4444;border-color:rgba(239,68,68,.4);}
+.fb[data-u="u7"].on{background:rgba(251,191,36,.15);color:#fbbf24;border-color:rgba(251,191,36,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+.ug.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.u1 .ubadge{background:rgba(6,182,212,.15);color:#06b6d4;border:1px solid rgba(6,182,212,.3);}
+.u2 .ubadge{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);}
+.u3 .ubadge{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);}
+.u4 .ubadge{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);}
+.u5 .ubadge{background:rgba(34,197,94,.15);color:#22c55e;border:1px solid rgba(34,197,94,.3);}
+.u6 .ubadge{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);}
+.u7 .ubadge{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.sl li b{color:var(--text);font-weight:500;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+b{color:var(--text);font-weight:500;}
+@media(max-width:600px){#toolbar{padding:8px 14px 9px;}#search-row{grid-template-columns:1fr auto;}#sctr{display:none;}main{padding:18px 12px 60px;}header{padding:14px 16px 12px;}#homebtn{top:14px;right:16px;}}
+.uh{cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug-body{}
+.ug.collapsed .ug-body{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <button id="homebtn" onclick="location.href='index.html'">🏠 Home</button>
+  <div class="meta">
+    <span class="cid">S4550 · VER 26</span>
+    <h1 style="font-size:19px;font-weight:600;">Cross-Functional Customizing in Materials Management</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Exercises: <span class="n">27</span></div>
+    <div class="st">Units: <span class="n">7</span></div>
+    <div class="st">Duration: <span class="n">9h 15min</span></div>
+    <div class="st">System: <span class="n">Backend T41 / SAP Fiori · Client 400</span></div>
+  </div>
+</header>
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg class="sico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Exercise, app, field ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">27</b> / 27 exercise</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+<script>
+const D=[
+{unit:1,title:"General Settings",ex:[
+{id:1,title:"Check Settings for Countries and Currencies",app:"SAP GUI – SPRO / Manage Purchase Orders",
+sc:"Almanya (DE) için tarih ve ondalık formatları kontrol et. CHF/GBP/USD döviz kuru tiplerini belirle. Tedarikçi 1008 için dolaylı kur mantığını anla.",
+tasks:[
+{num:"1",title:"Check Date and Decimal Format for Germany (DE)",app:"SAP GUI – SPRO",
+path:["SPRO","ABAP Platform","General Settings","Set Countries","Define Countries/Regions"],
+steps:[
+"SAP Easy Access: Tools → Customizing → IMG → Execute Project (SPRO).",
+"<b>Goto → SAP Reference IMG</b> (F5).",
+"<b>ABAP Platform → General Settings → Set Countries → Define Countries/Regions</b>.",
+"<b>DE</b> satırına imleç getir, <b>Details</b> butonuna bas."
+],
+result:"Almanya (DE): Tarih formatı DD.MM.YYYY (Gregorian). Ondalık format 1.234.567,89."},
+{num:"2",title:"Determine Exchange Rate Types for Currency Pairs",app:"SAP GUI – SPRO",
+path:["SPRO","ABAP Platform","General Settings","Currencies","Define Translation Ratios for Currency Translation"],
+fields:[
+["── Exchange Rate Type Results ──",""],
+["CHF → EUR","M (no alternative type)"],
+["GBP → EUR","EURX (alternative type)"],
+["USD → CAD","M (no alternative type)"]
+],
+steps:[
+"SPRO: <b>ABAP Platform → General Settings → Currencies → Define Translation Ratios for Currency Translation</b>.",
+"Warning mesajını <b>Yes</b> ile onayla.",
+"<b>Position…</b> butonuna bas. Exch. Rate Type: M, From Currency: CHF, To-currency: EUR gir.",
+"Farklı bir kur tipi kullanılıp kullanılmadığını belirle.",
+"GBP/EUR ve USD/CAD çiftleri için c ve d adımlarını tekrarla."
+],
+result:"GBP → EUR: <b>EURX</b> kur tipi geçerli. CHF → EUR ve USD → CAD: M tipi kur (alternatif yok). <b>EURX</b> yalnızca GBP → EUR dönüşümleri için kullanılan alternatif kur tipidir."},
+{num:"3",title:"Check Exchange Rate in a Purchase Order Header",app:"Manage Purchase Orders",
+path:["Fiori Launchpad","Purchase Order Processing","Manage Purchase Orders"],
+fields:[
+["── Supplier 1008 ──",""],
+["Currency (General Information tab)","GBP"],
+["Exchange rate (Delivery and Invoice tab)","0.85345 (indirect quotation)"],
+["Fixed Exchange Rate","Not selected"]
+],
+steps:[
+"Fiori Launchpad'de <b>Manage Purchase Orders</b> app'ini aç.",
+"<b>Create</b> butonuna bas.",
+"Supplier: <b>1008</b> gir, Enter. Uyarı mesajını yoksay.",
+"<b>General Information</b> sekmesinde para birimi: GBP.",
+"<b>Delivery and Invoice</b> sekmesinde kur oranı /0.85345 (indirect).",
+"<b>Discard Draft</b> ile kaydetmeden çık."
+],
+result:"Kur /0.85345 = GBP 0.85345 = EUR 1. Bu dolaylı kotalamadır. Tedarikçi 1008 GBP kullandığından sistem <b>EURX</b> kur tipini uygular (adım 2'den). <b>Fixed Exchange Rate</b> seçili değil — fatura doğrulama aşamasında değiştirilebilir."},
+{num:"4",title:"Verify Exchange Rate Determination Steps",app:"SAP GUI – SPRO",
+path:["SPRO","ABAP Platform","General Settings","Currencies","Enter Exchange Rates"],
+steps:[
+"SPRO: <b>Currencies → Define Translation Ratios</b>: Exchange rate type EURX, GBP → EUR satırını bul.",
+"SPRO: <b>Currencies → Enter Exchange Rates</b>: Exchange rate type EURX, GBP → EUR: 0.85345.",
+"Yorum: GBP 1 = 1/0.85345 EUR = EUR 1.1717 (PO'da döviz birimi GBP olduğu için ters gösterilir)."
+],
+result:"<b>EURX</b> kur tipi → 0.85345 x GBP 1 = EUR 1. Satın alma siparisinde ters gösterilir: GBP 1 = EUR 1.1717."}
+]},
+
+{id:2,title:"Define a Unit of Measurement",app:"SAP GUI – CUNI",
+sc:"EDI iletişiminde kullanılacak P## paket birimi oluştur. ISO kodu Z## tanımla. PO oluşturarak birim dönüşümünü test et.",
+tasks:[
+{num:"1",title:"Define New ISO Code Z##",app:"SAP GUI – CUNI",
+path:["SPRO","ABAP Platform","General Settings","Check Units of Measurement (CUNI)","ISO codes"],
+fields:[
+["── New ISO Code ──",""],
+["ISO Code","Z##"],
+["Text","##-pack"],
+["── Optional: German Translation ──",""],
+["Language","DE"],
+["German Text","##-Packung"]
+],
+steps:[
+"SPRO: <b>ABAP Platform → General Settings → Check Units of Measurement</b> (CUNI).",
+"<b>ISO codes</b> butonuna bas.",
+"<b>New Entries</b>: ISO code Z##, Text: ##-pack gir. Kaydet.",
+"Customizing request diyalogunda <b>Create Request</b>: 'Customizing group ##' açıklama ile oluştur. <b>Continue</b>.",
+"(Opsiyonel) Z## satırını seç, <b>Goto → Translation</b>. DE seç, <b>Copy</b>. ##-Packung gir, <b>Continue</b>. Kaydet."
+]},
+{num:"2",title:"Create New Unit of Measurement P## (No Dimensions)",app:"SAP GUI – CUNI",
+path:["SPRO","ABAP Platform","General Settings","Check Units of Measurement (CUNI)","Units of Measurement"],
+fields:[
+["── New Unit of Measurement ──",""],
+["Dimension","AAAADL (no dimensions)"],
+["Internal UoM","P##"],
+["Commercial","P##"],
+["Technical","P##"],
+["UoM Text (long form)","GR##-pack"],
+["UoM Text (short form)","GR##-PA"],
+["ISO Code","Z##"],
+["Commercial Unit","Selected"],
+["Decimal Rounding","Empty (no decimal places)"]
+],
+steps:[
+"CUNI'de boyut alanına <b>AAAADL</b> gir, <b>Units of Measurement</b> butonuna bas.",
+"<b>Create</b> butonuna bas.",
+"Tüm alanları gir. <b>Commercial Unit</b> onay kutusu seçili olduğunu doğrula.",
+"<b>Decimal Rounding</b> alanını boş bırak.",
+"Kaydet. Customizing request'i onayla."
+],
+info:"İsteğe bağlı: Görev 3 — Sistemde Almanca oturum açarak yeni ölçü birimi için Almanca metinleri ekleyin (##-Packung / ##-PA)."},
+{num:"4",title:"Test New Unit of Measurement in a Purchase Order",app:"SAP GUI – ME21N",
+path:["Logistics","Materials Management","Purchasing","Purchase Order","Create","Vendor/Supplying Plant Known (ME21N)"],
+fields:[
+["── Personal Settings (Default Values tab) ──",""],
+["Document Type","NB Standard PO"],
+["Purchasing Org.","101C"],
+["Purch. Group","Z##"],
+["Company Code","1010"],
+["── PO Item ──",""],
+["Supplier","T-S52A##"],
+["Account Assignment Cat.","K"],
+["PO Quantity","100"],
+["Order Unit","PC"],
+["Material Group","21"],
+["Plant","1010"],
+["── Account Assignment Tab ──",""],
+["Cost Center","4300"],
+["── Conditions Tab ──",""],
+["Gross Price","50 EUR"],
+["Unit of Measure","P## (replace PC)"],
+["── Quantities/Weights Tab ──",""],
+["Conversion Factor","10 PC = 1 P##"]
+],
+steps:[
+"ME21N'i aç. <b>Personal Setting</b>'e tıkla.",
+"<b>Default values</b> sekmesinde PO Header kısmına Purch. Org., Purch. Group, Company Code gir. Kaydet.",
+"Supplier: T-S52A## gir, Enter.",
+"Kalem genel görünümünde: Account assignment cat. K, Short text, Qty 100, Unit PC, Matl Group 21, Plant 1010.",
+"Kalem detayında <b>Account Assignment</b> sekmesi: Cost Center 4300.",
+"<b>Conditions</b> sekmesinde: Gross Price 50 EUR, UoM: PC yerine <b>P##</b> gir.",
+"<b>Quantities/Weights</b> sekmesinde dönüşüm: <b>10 PC = 1 P##</b>.",
+"<b>Print Preview</b>: birim kısaltması GR##-PA görünür.",
+"Önizlemeyi kapat, PO'yu kaydet."
+],
+result:"Baskı önizlemesinde <b>Customizing</b> de tanımlanan kısa biçim GR##-PA görünür. Dönüşüm: 100 PC × EUR 50/P## = EUR 500 toplam (10 PC = 1 paket)."}
+]},
+
+{id:3,title:"Set Up a Factory Calendar",app:"SAP GUI – SPRO",
+sc:"Fabrika takvimini incele: Resmi tatil takvimi, özel kurallar, Ocak 2024 tatilleri. Opsiyonel: Yeni fabrika takvimi oluştur.",
+tasks:[
+{num:"Task 1",title:"Distinguish Client-Specific vs Cross-Client Settings",app:"SAP GUI – SPRO",
+path:["SPRO","ABAP Platform","General Settings","Maintain Calendar"],
+steps:[
+"SPRO: <b>ABAP Platform → General Settings → Maintain Calendar</b>.",
+"Resmi tatil ve tatil takvimi tanımları: <b>cross-client</b> (tüm client'larda aynı).",
+"Fabrika takviminin bir tesise atanması: <b>client-specific</b> (her client kendi tesisini yönetir)."
+],
+result:"Çapraz istemci: Resmi tatil tanımları ve tatil takvimleri. İstemciye özgü: Fabrika takviminin tesise (veya iş merkezine) atanması."},
+{num:"Task 2-1",title:"Inspect Factory Calendar 01",app:"SAP GUI – SPRO",
+path:["SPRO","ABAP Platform","General Settings","Maintain Calendar"],
+fields:[
+["── Factory Calendar 01 ──",""],
+["Holiday Calendar ID","08"],
+["Special Rules (current year)","None defined"],
+["Public Holidays in January 2024","1st and 6th"]
+],
+steps:[
+"Maintain Calendar ekranında <b>Factory calendar</b> radyo butonunu seç, <b>Display</b>.",
+"ID 01 satırını seç, <b>Display Definition</b>.",
+"Bağlı tatil takvimi ID: <b>08</b>.",
+"<b>Special rules</b> butonuna bas: Bu yıl için özel kural yok.",
+"Ana menüye dön. <b>Holiday calendar</b> seç, <b>Display</b>.",
+"08'i seç, <b>Display Calendar</b>. Yıl 2024 seç, <b>Display Year</b>."
+],
+result:"Fabrika takvimi 01, tatil takvimi 08'i kullanır. Mevcut yıl için özel kural yok. Ocak 2024 tatilleri: 1 Ocak (Yeni Yıl) ve 6 Ocak (Epifani)."},
+{num:"Task 2-2 (Optional)",title:"Create New Factory Calendar with Special Rule",app:"SAP GUI – SPRO",
+fields:[
+["── Factory Calendar ID Table ──",""],
+["Group 00","X0"],
+["Group 01","X1"],
+["Group 10","XA"],
+["Group 11","XB"],
+["(pattern continues)","##  →  X+letter"]
+],
+steps:[
+"Maintain Calendar'da <b>Factory calendar</b>, <b>Change</b>.",
+"<b>Create</b> butonuna bas.",
+"Factory Calendar ID: tabloya göre (##'e göre), Holiday Calendar ID: <b>08</b>. Kaydet.",
+"<b>Special rules</b> butonuna bas, <b>Create</b>.",
+"From/To Date: gelecek yıldan herhangi bir tarih. Text: şirket yıldönümü gibi. Oluştur ve kaydet.",
+"Takviminizi seç, <b>Display Calendar</b>, özel kuralın yılını seç, <b>Display Year</b>."
+],
+info:"İpucu: Takvimi tek bir işlemde gúncelleyip atamak için şu yolu kullanın: <b>Logistics → Production → Capacity Planning → Available Capacity → Factory Calendar (OP03)</b>."}
+]}
+]},
+
+{unit:2,title:"Organizational Units",ex:[
+{id:4,title:"Set Up a New Plant",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Yeni tesis PL## oluştur. Depo yerleri, şirket kodu, satınalma organizasyonu atamalarını yap. Kopyalama fonksiyonuyla tamamla. Material Ledger'ı etkinleştir ve test et.",
+tasks:[
+{num:"Task 1-1",title:"Define New Plant PL##",app:"SAP GUI – SPRO",
+path:["SPRO","Enterprise Structure","Definition","Logistics - General","Define Plant"],
+fields:[
+["── New Plant ──",""],
+["Plant Key","PL##"],
+["Country","DE"],
+["Factory Calendar","01 (Germany, standard)"]
+],
+steps:[
+"SPRO: <b>Enterprise Structure → Definition → Logistics - General → Define Plant</b>.",
+"<b>New Entries</b>.",
+"Plant: PL##, Factory Calendar: 01 gir.",
+"<b>Address</b> butonuna bas.",
+"Tesis adı, ülke: DE ve adres bilgilerini gir. <b>Copy (Enter)</b>.",
+"Kaydet. Adres penceresi tekrar açılırsa tekrar <b>Copy (Enter)</b>."
+]},
+{num:"Task 1-2",title:"Create Storage Locations 0001, 0002, 0003 for PL##",app:"SAP GUI – SPRO",
+path:["SPRO","Enterprise Structure","Definition","Materials Management","Maintain storage location"],
+fields:[
+["── Storage Locations ──",""],
+["Storage Location 1","0001 (with name)"],
+["Storage Location 2","0002 (with name)"],
+["Storage Location 3","0003 (with name)"]
+],
+steps:[
+"SPRO: <b>Enterprise Structure → Definition → Materials Management → Maintain storage location</b>.",
+"Determine Work Area: Plant: PL## gir, <b>Apply</b>.",
+"<b>New Entries</b>: 0001, 0002, 0003 gir, her birine isim ver.",
+"Kaydet.",
+"(Opsiyonel) 0001'i seç, <b>Addresses of Storage Locations</b>. <b>New Entries</b>: adres numaraları 10 ve 20, <b>Address</b> ile adres bilgisi gir. Kaydet."
+]},
+{num:"Task 1-3",title:"Assign Plant PL## to Company Code 1010",app:"SAP GUI – SPRO",
+path:["SPRO","Enterprise Structure","Assignment","Logistics - General","Assign plant to company code"],
+steps:[
+"SPRO: <b>Enterprise Structure → Assignment → Logistics - General → Assign plant to company code</b>.",
+"<b>New Entries</b>: Company code 1010, Plant PL## gir. Kaydet."
+]},
+{num:"Task 1-4",title:"Assign Purchasing Organization 101C to Plant PL##",app:"SAP GUI – SPRO",
+path:["SPRO","Enterprise Structure","Assignment","Materials Management","Assign purchasing organization to plant"],
+steps:[
+"SPRO: <b>Enterprise Structure → Assignment → Materials Management → Assign purchasing organization to plant</b>.",
+"<b>New Entries</b>: Purchasing org.: 101C, Plant: PL## gir. Kaydet."
+]},
+{num:"Task 1-5",title:"Assign Standard Purchasing Organization 101C to PL##",app:"SAP GUI – SPRO",
+path:["SPRO","Enterprise Structure","Assignment","Materials Management","Assign standard purchasing organization to plant"],
+steps:[
+"SPRO: <b>Enterprise Structure → Assignment → Materials Management → Assign standard purchasing organization to plant</b>.",
+"<b>Position</b>: Plant PL## gir, <b>Continue</b>.",
+"PL## satırında <b>POrg</b>: 101C gir. Kaydet."
+],
+result:"Standart satın alma organizasyonu 101C şu amaçlarla kullanılır: konsinye/boru hattı değerlemesi, GR'de otomatik PO oluşturma ve bilgi kaydı üzerinden tekil koşulların bulunması.",
+info:"Referans satın alma organizasyonu C100, satın alma organizasyonu 101C'ye atanmıştır; böylece organizasyonlar arası sözleşmeler ve koşullar kullanılabilir."},
+{num:"Task 1-6",title:"Verify Controlling Area Assignment",app:"SAP GUI – SPRO",
+steps:[
+"SPRO: <b>Enterprise Structure → Assignment → Logistics - General → Assign plant to company code</b>: PL## → Company code 1010.",
+"SPRO: <b>Enterprise Structure → Assignment → Controlling → Assign company code to controlling area</b>.",
+"Controlling area A000 seç, <b>Assignment of company code(s)</b>: Company code 1010 → A000."
+],
+result:"Tesis ile kontrol alanı arasında doğrudan atama yoktur. Yol: Tesis PL## → Şirket kodu 1010 → Kontrol alanı A000."},
+{num:"Task 2-1",title:"Complete Plant PL## Using Copy Function (from Plant 1010)",app:"SAP GUI – SPRO",
+path:["SPRO","Enterprise Structure","Definition","Logistics-General","Copy, delete, check plant"],
+steps:[
+"SPRO: <b>Enterprise Structure → Definition → Logistics-General → Copy, delete, check plant</b>.",
+"Select Activity diyalogunda <b>Copy, delete, check plant</b>'e çift tıkla.",
+"<b>Organizational object → Copy org. object</b>.",
+"From plant: <b>1010</b>, To plant: <b>PL##</b>. <b>Continue</b>, <b>Yes</b>.",
+"Çıkan tüm mesajları onayla."
+],
+info:"İpucu: <b>Extras → Associated Tables</b>: 300'den fazla tesise bağlı tablo otomatik kopyalanır. Kopyalama fonksiyonu kullanılmazsa tüm tablolar manuel bakımda tutulmalıdır."},
+{num:"Task 2-2",title:"Activate Material Ledger for PL## (OMX1 + CKMSTART)",app:"SAP GUI",
+path:["SAP Easy Access","Transaction OMX1"],
+fields:[
+["── OMX1 Settings ──",""],
+["Valuation Area","PL##"],
+["ML Act.","Selected"],
+["Price Det. Binding In Val. Area","Selected"],
+["Price Det.","2"]
+],
+steps:[
+"SAP Easy Access: komut alanına <b>OMX1</b> gir, Enter.",
+"Valuation area PL## satırına konumlan.",
+"<b>ML Act.</b> ve <b>Price Det. Binding In Val. Area</b> onay kutularını seç.",
+"<b>Price Det.</b>: 2 gir. Kaydet.",
+"SAP Easy Access'e dön. <b>CKMSTART</b> gir, Enter.",
+"Plant: PL## gir. <b>Test Run</b> onay kutusunu kaldır.",
+"<b>Execute</b>.",
+"<b>Start Immediately</b> seç, <b>Change print param.</b> kaldır. <b>Confirm</b>."
+]},
+{num:"Task 3-1",title:"Extend Material T-R1## to Plant PL## (Accounting 1 with EUR 1.70)",app:"Create Material",
+path:["Fiori Launchpad","Product Master","Create Material"],
+fields:[
+["── Material Extension ──",""],
+["Material","T-R1##"],
+["Copy from Material","T-R1##"],
+["Views","Purchasing, General Plant Data/Storage 1, Accounting 1"],
+["Plant","PL##"],
+["Storage Location","101B"],
+["Copy from Plant","1010"],
+["Copy from Stor.Loc","101B"],
+["── Accounting 1 Tab ──",""],
+["Standard Price (Company Code Currency)","1.70"],
+["Standard Price (Group Currency)","1.70"],
+["Price Control","S"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Material</b> app'ini aç (Product Master tile grubu).",
+"Material: T-R1##, Copy from…Material: T-R1## gir.",
+"<b>Continue</b>, ardından <b>Select View(s)</b>.",
+"Purchasing, General Plant Data/Storage 1, Accounting 1 görünümlerini seç. <b>Create views selected</b> seç. <b>Org. Levels</b>.",
+"Plant: PL##, Stor.Loc: 101B. Copy from: Plant 1010, Stor.Loc 101B. <b>Continue</b>.",
+"Accounting 1 sekmesinde Standard Price: <b>1.70</b>, Price Control: <b>S</b>'ye değiştir.",
+"<b>Save</b>. 'Prices have been recalculated' mesajında tekrar <b>Save</b>."
+]}
+]}
+]},
+
+{unit:3,title:"Master Data",ex:[
+{id:5,title:"Create Material Types",app:"SAP GUI – SPRO / Create Material",
+sc:"Optik sistemler için yeni malzeme tipi ZM## oluştur (ROH'tan kopyala). Numara atama grubunu ayarla. Test malzeme kaydı C1## oluştur.",
+tasks:[
+{num:"Task 1",title:"Define New Material Type ZM## (Copy from ROH)",app:"SAP GUI – SPRO (OMS2)",
+path:["SPRO","Logistics - General","Material Master","Basic Settings","Material Types","Define Attributes of Material Types (OMS2)"],
+fields:[
+["── New Material Type ──",""],
+["Material Type","ZM##"],
+["Description","Optical Systems ##"],
+["Copy from","ROH"],
+["── Attributes ──",""],
+["External no. assignment w/o check","Selected"],
+["Ext. Purchase Orders","2 (External purchase orders allowed)"],
+["Int. purchase orders","0 (No internal purchase orders allowed)"],
+["── User Departments (all selected) ──",""],
+["Departments","Accounting, MRP, Purchasing, Costing, Basic Data, Storage, Forecasting, Sales, Quality Management, Plant Stocks, Storage Location Stocks"],
+["── Valuation ──",""],
+["Price Control","S (Standard price)"]
+],
+steps:[
+"SPRO: <b>Logistics - General → Material Master → Basic Settings → Material Types → Define Attributes of Material Types</b> (OMS2).",
+"ROH satırını seç, <b>Copy As…</b> butonuna bas.",
+"Material Type: ZM##, Description: Optical Systems ## gir. Enter.",
+"Uyarı mesajını onayla.",
+"ZM## satırını seç, <b>Details</b> butonuna bas.",
+"<b>External no. assignment w/o check</b> onay kutusunu seç.",
+"Internal/external purchase order alanlarını tabloya göre ayarla.",
+"User departments listesinde tüm belirtilen departmanları seç, gereksizleri kaldır.",
+"Valuation bölümünde Price Control: <b>S</b>.",
+"Kaydet."
+]},
+{num:"Task 2-1",title:"Identify Number Range Group for ZM##",app:"SAP GUI – SPRO (MMNR)",
+path:["SPRO","Logistics - General","Material Master","Basic Settings","Material Types","Define Number Ranges for Each Material Type (MMNR)"],
+steps:[
+"SPRO: <b>Logistics - General → Material Master → Basic Settings → Material Types → Define Number Ranges for Each Material Type</b> (MMNR).",
+"<b>Overview</b> butonuna bas.",
+"ZM## hangi gruba ait? → ROH'tan kopyalandığı için <b>Group 1</b>."
+],
+result:"ZM## malzeme tipi, Grup 1'e aittir (ROH şablonuyla aynı)."},
+{num:"Task 2-2",title:"Assign ZM## to Number Range Group S4550",app:"SAP GUI – SPRO (MMNR)",
+steps:[
+"MMNR'da <b>Change Groups</b> butonuna bas.",
+"ZM## satırına imleç getir.",
+"<b>Assign Element to Group</b> butonuna bas.",
+"<b>Group S4550</b> satırına imleç getir, <b>Copy (Enter)</b>.",
+"Kaydet.",
+"S4550 satırına imleç getir, <b>Change Group</b>."
+],
+result:"Grup S4550: Dahili numara aralığı 03 (100000000 – 199999999). Harici numara aralığı gerekmez (kontrolsüz harici atama)."},
+{num:"Task 3",title:"Create Material C1## with Material Type ZM##",app:"Create Material",
+path:["Fiori Launchpad","Product Master","Create Material"],
+fields:[
+["── Initial Screen ──",""],
+["Material","C1##"],
+["Industry Sector","M (Mechanical Engineering)"],
+["Material Type","ZM## (Optical Systems ##)"],
+["── Views ──",""],
+["Views selected","Basic Data 1, Purchasing, MRP 1, MRP 2, MRP 3, Accounting 1"],
+["Plant","1010"],
+["── Data Entry ──",""],
+["Basic Data 1 — Description","Rear view camera ##"],
+["Basic Data 1 — Material Group","2345"],
+["Basic Data 1 — Base UoM","PC"],
+["Purchasing — Purchasing Group","Z##"],
+["MRP 1 — MRP Type","ND"],
+["MRP 3 — Availability Check","01"],
+["Accounting 1 — Valuation Class","3000"],
+["Accounting 1 — Standard Price","100"],
+["Accounting 1 — Price Control","S (suggested, can be changed)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Material</b> app'ini aç.",
+"Material: C1##, Industry Sector: Mechanical Engineering, Material Type: Optical Systems ## (ZM##).",
+"<b>Select View(s)</b>: belirtilen tüm görünümleri seç.",
+"<b>Org. Levels</b>: Plant 1010.",
+"Tüm sekmelerde verileri gir.",
+"MRP 2 sekmesinde Procurement Type: <b>F</b> (External, ZM## sadece dış tedarike izin verdiği için otomatik gelir).",
+"Accounting 1 sekmesinde Price Control: S — değiştirilebilir.",
+"Kaydet (gerekirse uyarı mesajını onaylayarak iki kez)."
+],
+result:"MRP 2: Temin türü = F (Yalnızca harici; ZM## malzeme tipi yalnızca dış satın alma siparışlerine izin verir). Muhasebe 1: <b>Price Control</b> = S, değiştirilebilir."}
+]},
+
+{id:6,title:"Adjust Settings for Field Selection",app:"SAP GUI – SPRO / Create Material",
+sc:"ZM## malzeme tipi için Var.OUn alanını gizle. Yeni field reference ZM## oluştur. PL## tesisi için depo yeri alanını zorunlu yap.",
+tasks:[
+{num:"Task 1",title:"Outline Steps for Field Selection Configuration",app:"SAP GUI – SPRO",
+steps:[
+"1. Field selection group'u belirle (F1 → Technical Info ile field name bul).",
+"2. Aynı group'taki başka alanları kontrol et.",
+"3. Başka alan varsa: aynı field selection uygulanacaksa gerek yok; uygulanmayacaksa alanı yeni boş bir gruba taşı.",
+"4. Field selection'ı etkileyen influencing factor'ı belirle (malzeme tipi, tesis vb.).",
+"5. Bu influencing factor için mevcut field reference'ı belirle.",
+"6. Field reference'ı değiştir ya da yeni oluştur. Yeni oluşturulduysa influencing factor'a ata.",
+"7. Sonucu kontrol et."
+]},
+{num:"Task 2-1",title:"Find Field Selection Group for MARA-VABME (Var.OUn Field)",app:"Display Material / SPRO",
+path:["SPRO","Logistics - General","Material Master","Field Selection","Assign Fields to Field Selection Groups"],
+fields:[
+["── Field Lookup ──",""],
+["Field Name","MARA-VABME"],
+["Field Selection Group","63"],
+["Other fields in group 63","None — only Variable Purchase Order Unit Active"]
+],
+steps:[
+"<b>Display Material</b> app'ini aç. T-R1## gir, Purchasing view, Plant 1010.",
+"<b>Var. OUn</b> alanına konumlan, F1 → <b>Technical Information</b>.",
+"Field name: <b>MARA-VABME</b>.",
+"SPRO: <b>Logistics - General → Material Master → Field Selection → Assign Fields to Field Selection Groups</b>.",
+"MARA-VABME satırına konumlan: Field Selection Group: <b>63</b>.",
+"Sıralama: Sort by Field Selection Group, Group 63'e git: Sadece bu alan var."
+]},
+{num:"Task 2-2",title:"Create New Field Reference ZM## and Hide Group 63",app:"SAP GUI – SPRO",
+path:["SPRO","Logistics - General","Material Master","Field Selection","Maintain Field Selection for Data Screens"],
+fields:[
+["── New Field Reference ──",""],
+["Copy from","ROH"],
+["Field Reference","ZM##"],
+["Sel. Group 63","Hide"]
+],
+steps:[
+"SPRO: <b>Logistics - General → Material Master → Field Selection → Maintain Field Selection for Data Screens</b>.",
+"Field ref. <b>ROH</b> satırını seç, <b>Copy As</b>.",
+"Field reference alanına <b>ZM##</b> gir. Group 63 için <b>Hide</b> radyo butonunu seç.",
+"Enter. Kaydet.",
+"SPRO: <b>OMS2</b>: Material Types → ZM## satırı → Details.",
+"<b>Field reference</b> alanına <b>ZM##</b> gir. Kaydet."
+]},
+{num:"Task 2-3",title:"Verify Field is Hidden for ZM## but Optional for ROH",app:"Create Material",
+steps:[
+"<b>Create Material</b> app'ini aç. Material type: ZM##, Industry: M, Purchasing view, Plant 1010.",
+"Var.OUn alanı: <b>gizli</b>.",
+"Uygulamadan çık (No).",
+"Tekrar <b>Create Material</b>: material type: ROH, Purchasing view, Plant 1010.",
+"Var.OUn alanı: <b>opsiyonel</b>.",
+"Kaydetmeden çık."
+],
+result:"ZM##: <b>Var.OUn</b> alanı GİZLİ. ROH: <b>Var.OUn</b> alanı İSTEĞE BAĞLI. ZM## alan referansı, yalnızca ZM## malzeme tipi için varsayılan ROH referansını geçersiz kılar."},
+{num:"Task 3-1",title:"Make Stor. Location for Ext. Proc. (MARC-LGFSB) Mandatory for Plant PL##",app:"SAP GUI – SPRO",
+path:["SPRO","Logistics - General","Material Master","Field Selection","Maintain Field Selection for Data Screens"],
+fields:[
+["── Field Lookup ──",""],
+["Field Name","MARC-LGFSB"],
+["Field Selection Group","106"],
+["Other fields in group 106","None — only Default storage location for external procurement"],
+["── New Field Reference ──",""],
+["Copy from","0001 (current reference for PL##)"],
+["Field Reference","PL##"],
+["Sel. Group 106","Reqd Entry"]
+],
+steps:[
+"<b>Display Material</b> app: T-R1##, MRP 2 view, Plant 1010.",
+"<b>Stor. Location for Ext. Proc.</b> alanına konumlan, F1 → Technical Information: <b>MARC-LGFSB</b>.",
+"SPRO: Field Selection → Assign Fields to Field Selection Groups: MARC-LGFSB → Group <b>106</b>.",
+"Group 106'da başka alan yok.",
+"SPRO: <b>Field Selection → Define Plant-Specific Field Selection</b>: PL## için mevcut field reference: <b>0001</b>.",
+"SPRO: <b>Maintain Field Selection for Data Screens</b>: 0001 satırını seç, <b>Copy As</b>.",
+"Field reference: <b>PL##</b> gir. Group 106 için <b>Reqd Entry</b> seç. Enter. Kaydet.",
+"SPRO: <b>Define Plant-Specific Field Selection</b>: <b>Position</b>, Plant: PL##.",
+"PL## satırında field reference: <b>0001</b> → <b>PL##</b> olarak değiştir. Kaydet."
+]},
+{num:"Task 3-2",title:"Verify and Test Plant-Specific Field Selection",app:"Create Material",
+steps:[
+"<b>Create Material</b>: ZM##, Industry M, MRP 2 view, Plant <b>PL##</b>.",
+"Stor. Location for Ext. Proc. alanı: <b>zorunlu</b>.",
+"Kaydetmeden çık.",
+"Tekrar Create Material: ZM##, MRP 2 view, Plant <b>1010</b>.",
+"Stor. Location for Ext. Proc. alanı: <b>opsiyonel</b>.",
+"Kaydetmeden çık."
+],
+result:"PL##: <b>Storage Location for Ext. Proc.</b> = ZORUNLU. Tesis 1010: alan = İSTEĞE BAĞLI. Yeni alan referansı PL## yalnızca PL## tesisine uygulanır."},
+{num:"Task 3-3",title:"Copy Material C1## from Plant 1010 to PL## with Mandatory Field Entry",app:"Create Material",
+fields:[
+["── Material Extension ──",""],
+["Material","C1##"],
+["Copy from Material","C1##"],
+["Views","Purchasing, MRP1, MRP2, MRP3, Accounting 1"],
+["Plant","PL##"],
+["Copy from Plant","1010"],
+["── MRP 2 Tab ──",""],
+["Stor. Location for Ext. Proc.","101C"]
+],
+steps:[
+"<b>Create Material</b>: C1## (Material and Copy from). <b>Select View(s)</b>.",
+"Enter ile mesajı onayla.",
+"Purchasing, MRP1, MRP2, MRP3, Accounting1 seç. <b>Create views selected</b> seç. <b>Org. Levels</b>.",
+"Plant: PL##, Copy from Plant: 1010. <b>Continue</b>.",
+"MRP 2 sekmesinde <b>Stor. Location for Ext. Proc.</b>: <b>101C</b> gir.",
+"Kaydet."
+]}
+]},
+
+{id:7,title:"Configure the Material Master",app:"SAP GUI – SPRO / Change Material",
+sc:"ZM## malzeme tipinde Purchasing görünümüne Environmentally Rlvt ve DG Indicator Profile alanlarını ekle. Sadece S4550-## kullanıcısı için geçerli olsun.",
+tasks:[
+{num:"Task 1",title:"Find Subscreen Number Containing Environmentally Rlvt Field",app:"Change Material",
+path:["Fiori Launchpad","Product Master","Change Material"],
+fields:[
+["── Technical Info ──",""],
+["View","Basic Data 2"],
+["Field","Environmentally Rlvt"],
+["Screen Number","2010"]
+],
+steps:[
+"Fiori Launchpad'de <b>Change Material</b> app'ini aç.",
+"T-R1## gir, <b>Select View(s)</b>: <b>Basic Data 2</b>. Continue.",
+"<b>Environmentally Rlvt</b> onay kutusuna imleç getir, F1 → <b>Technical Information</b>.",
+"Screen Number: <b>2010</b>.",
+"Kaydetmeden çık."
+]},
+{num:"Task 2-1",title:"Identify Required Customizing Steps",app:"SAP GUI – SPRO",
+steps:[
+"1. Mevcut ekran dizisi (Screen Sequence 21) kopyalanır.",
+"2. Yeni ekran dizisinde Purchasing veri ekranına subscreen 2010 eklenir.",
+"3. Kullanıcı S4550-## için screen reference ## atanır.",
+"4. Malzeme tipi ZM## için screen reference M## atanır.",
+"5. Yeni ekran dizisi, ## ve M## screen reference'larının kombinasyonuna atanır."
+]},
+{num:"Task 2-2",title:"Create New Screen Sequence (Copy from 21)",app:"SAP GUI – SPRO",
+path:["SPRO","Logistics - General","Material Master","Configuring the Material Master","Define Structure of Data Screens for Each Screen Sequence"],
+fields:[
+["── Screen Sequence Table ──",""],
+["Group 00 → Y0","Group 10 → Z0"],
+["Group 01 → Y1","Group 11 → Z1"],
+["Group 02 → Y2","Group 20 → ZA"],
+["Group 08 → Y8","Group 28 → ZL"],
+["Group 09 → Y9","Group 29 → ZM"]
+],
+steps:[
+"SPRO: <b>Logistics - General → Material Master → Configuring the Material Master → Define Structure of Data Screens for Each Screen Sequence</b>.",
+"Screen sequence <b>21</b> satırını seç, <b>Copy As</b>.",
+"SSq alanına tabloya göre kendi grubunun kodunu gir (Y* veya Z*).",
+"Description: Screen Sequence ## gir. <b>Copy (Enter)</b>.",
+"Ekrandan çıkma — aynı ekranda kal."
+]},
+{num:"Task 2-3",title:"Add Subscreen 2010 to Purchasing Data Screen",app:"SAP GUI – SPRO",
+steps:[
+"Change View 'Screen sequences' Overview'de: yeni ekran dizisini seç, Dialog Structure'da <b>Data screens</b>'e çift tıkla.",
+"Logical Screen <b>14</b> (Purchasing) satırını seç. Dialog Structure'da <b>Subscreens</b>'e çift tıkla.",
+"6 subscreen var (son ikisi boş, 0001 = boş subscreen).",
+"5. subscreen'i <b>2010</b> ile değiştir.",
+"Kaydet."
+]},
+{num:"Task 2-4",title:"Define Screen Reference ## for User S4550-##",app:"SAP GUI – SPRO",
+path:["SPRO","Logistics - General","Material Master","Configuring the Material Master","Assign Screen Sequences to User/Material Type/Transaction/Industry Sector"],
+fields:[
+["── User Screen Reference ──",""],
+["Name (User)","S4550-##"],
+["SRef: user","##"]
+],
+steps:[
+"SPRO: <b>Assign Screen Sequences to User/Material Type/Transaction/Industry Sector</b>.",
+"Dialog Structure'da <b>User screen reference</b> düğümüne çift tıkla.",
+"<b>New Entries</b>: Name: S4550-##, SRef: user: ##. Kaydet."
+]},
+{num:"Task 2-5",title:"Define Screen Reference M## for Material Type ZM##",app:"SAP GUI – SPRO",
+steps:[
+"SPRO: aynı aktivite (Assign Screen Sequences...).",
+"Dialog Structure'da <b>Material type screen reference</b> düğümüne çift tıkla.",
+"ZM## satırında SRef: matl type alanını <b>ROH</b>'tan <b>M##</b>'ye değiştir.",
+"Kaydet."
+]},
+{num:"Task 2-6",title:"Assign New Screen Sequence to Screen References",app:"SAP GUI – SPRO",
+fields:[
+["── Screen Sequence Control Entry ──",""],
+["SRef: trans.","01"],
+["SRef: User","##"],
+["SRef: matl type","M##"],
+["SRef: industry","M"],
+["SSq","<kendi ekran dizisi kodu>"]
+],
+steps:[
+"SPRO: aynı aktivite (Assign Screen Sequences...).",
+"Dialog Structure'da <b>Screen sequence control</b> düğümüne tıkla.",
+"<b>New Entries</b>: Tabloyu doldur.",
+"Kaydet."
+]},
+{num:"Task 3",title:"Test: Environment Subscreen Visible in Purchasing View for ZM##",app:"Change Material",
+steps:[
+"Fiori Launchpad'de <b>Change Material</b> app'ini aç.",
+"C1## gir, <b>Select View(s)</b>: Purchasing view, Org. Levels: Plant 1010 veya PL##.",
+"Purchasing sekmesinde <b>Environment</b> alt ekranı görünür: DG Indicator Profile ve Environmentally Rlvt alanları mevcut.",
+"ROH malzeme T-R1## için test et: Purchasing view'da Environment alt ekranı görünmez.",
+"ZM## için screen reference M## atandı; T-R1## (ROH) için bu atama yok → yeni ekran dizisi çağrılmaz."
+],
+result:"ZM## malzemeleri: Satın alma görünümü artık <b>DG Indicator Profile</b> ve <b>Environmentally Rlvt</b> alanlarını içeren <b>Environment</b> alt ekranını kapsar. ROH malzemeleri: değişiklik yok — ekran sırası aynı."}
+]},
+
+{id:8,title:"Define Settings for Business Partners",app:"SAP GUI – SPRO / Maintain Business Partner",
+sc:"E-posta iletişimi için ZSUP## BP rolü oluştur. Numara aralığı, gruplama, hesap grubu atama. E-posta alanını zorunlu yap ve test et.",
+tasks:[
+{num:"1",title:"Create BP Role ZSUP## (Copy from FLVN01)",app:"SAP GUI – SPRO",
+path:["SPRO","Cross-Application Components","SAP Business Partner","Business Partner","Basic Settings","Business Partner Roles","Define BP Roles"],
+fields:[
+["── New BP Role ──",""],
+["BP Role","ZSUP##"],
+["Copy from","FLVN01 (Supplier)"],
+["Title","Mail Suppliers ##"],
+["Description","Mail Suppliers ##"]
+],
+steps:[
+"SPRO: <b>Cross-Application Components → SAP Business Partner → Business Partner → Basic Settings → Business Partner Roles → Define BP Roles</b>.",
+"BP Role <b>FLVN01</b> satırını seç, <b>Copy As…</b>.",
+"BP Role: ZSUP##, Title ve Description: Mail Suppliers ## gir.",
+"Enter. Kaydet."
+]},
+{num:"2",title:"Create Number Range 2##0000–2##9999",app:"SAP GUI – SPRO",
+path:["SPRO","Cross-Application Components","SAP Business Partner","Business Partner","Basic Settings","Number Ranges and Groupings","Define Number Ranges"],
+fields:[
+["── Number Range ──",""],
+["Number Range No.","<group number + 10> (e.g. group 07 → 17)"],
+["From No.","2##0000"],
+["To Number","2##9999"],
+["External","Not selected (internal)"]
+],
+steps:[
+"SPRO: <b>Cross-Application Components → SAP Business Partner → Business Partner → Basic Settings → Number Ranges and Groupings → Define Number Ranges</b>.",
+"<b>Intervals (Change Intervals)</b>.",
+"<b>Insert Line</b>: Number Range No.: <group number+10>, From: 2##0000, To: 2##9999. External seçme.",
+"Kaydet. Transport mesajını onayla."
+]},
+{num:"3",title:"Define Grouping ZS## and Assign Number Range",app:"SAP GUI – SPRO",
+path:["SPRO","Cross-Application Components","SAP Business Partner","Business Partner","Basic Settings","Number Ranges and Groupings","Define Groupings and Assign Number Ranges"],
+fields:[
+["── Grouping ──",""],
+["Grouping","ZS##"],
+["Short Name","Suppliers ##"],
+["Description","Mail Suppliers ##"],
+["Number Range","<group number + 10>"]
+],
+steps:[
+"SPRO: <b>Define Groupings and Assign Number Ranges</b>.",
+"<b>New Entries</b>: ZS##, Suppliers ##, Mail Suppliers ##, number range gir.",
+"Kaydet."
+]},
+{num:"4",title:"Assign Grouping ZS## to Account Group ZSUP",app:"SAP GUI – SPRO",
+path:["SPRO","Cross-Application Components","Master Data Synchronization","Customer/Vendor Integration","Business Partner Settings","Settings for Vendor Integration","Field Assignment for Vendor Integration","Assign Keys","Define Number Assignment for Direction BP to Vendor"],
+fields:[
+["── Assignment ──",""],
+["Grouping","ZS##"],
+["Group","ZSUP"],
+["Same Nos.","Selected"]
+],
+steps:[
+"SPRO: <b>Cross-Application Components → Master Data Synchronization → Customer/Vendor Integration → Business Partner Settings → Settings for Vendor Integration → Field Assignment → Assign Keys → Define Number Assignment for Direction BP to Vendor</b>.",
+"<b>New Entries</b>: Grouping ZS##, Group ZSUP, <b>Same Nos.</b> onay kutusunu seç.",
+"Kaydet."
+]},
+{num:"5",title:"Make Internet Mail Address Mandatory for Role ZSUP##",app:"SAP GUI – SPRO",
+path:["SPRO","Cross-Application Components","SAP Business Partner","Business Partner","Basic Settings","Field Groupings","Configure Field Attributes per BP Role"],
+steps:[
+"SPRO: <b>Cross-Application Components → SAP Business Partner → Business Partner → Basic Settings → Field Groupings → Configure Field Attributes per BP Role</b>.",
+"<b>Configure Field Attributes for Each Role Category (0001-3500)</b>'ye çift tıkla.",
+"<b>FLVN01</b> satırını seç, <b>Copy As…</b>.",
+"BP Role: <b>ZSUP##</b> gir, Enter.",
+"ZSUP## satırını seç, <b>Field Grouping</b>.",
+"<b>Data Set Addresses</b>'e çift tıkla.",
+"Fld Groups listesinde <b>Addresses: Internet Mail Address</b>'e kaydır.",
+"<b>Req.entry</b> radyo butonunu seç.",
+"Kaydet."
+]},
+{num:"6",title:"Test: Create Business Partner with Role ZSUP##",app:"Maintain Business Partner",
+path:["Fiori Launchpad","Business Partner Master","Maintain Business Partner"],
+fields:[
+["── Create Organization ──",""],
+["Grouping","ZS## (Mail Suppliers ##)"],
+["Create in BP role","ZSUP## (Mail Suppliers ##)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Maintain Business Partner</b> app'ini aç.",
+"<b>Create Organization</b> butonuna bas.",
+"Grouping: <b>ZS##</b> ve BP role: <b>ZSUP##</b> seç.",
+"'Change to another BP role in create mode' diyalogunda <b>Create</b>.",
+"Address sekmesinde tüm zorunlu alanları doldur.",
+"BP'yi kaydet: E-Mail alanı zorunlu, numara kendi aralığından gelir."
+],
+result:"<b>E-Mail</b> alanı, BP rolü ZSUP## için zorunludur. İş ortağı numarası 2##0000–2##9999 aralığındadır."}
+]}
+]},
+{unit:4,title:"Valuation and Account Assignment",ex:[
+{id:9,title:"Check and Adjust the Organizational Structure Settings",app:"SAP GUI – SPRO",
+sc:"Hesap belirleme için organizasyon yapısını kontrol et: değerleme düzeyi, hesap planı, gruplama kodu. PL## için yeni VG## gruplama kodu ata.",
+tasks:[
+{num:"Task 1-1",title:"Determine Valuation Level",app:"SAP GUI – SPRO",
+path:["SPRO","Enterprise Structure","Definition","Logistics - General","Define valuation level"],
+steps:[
+"SPRO: <b>Enterprise Structure → Definition → Logistics - General → Define valuation level</b>.",
+"Değerleme düzeyi: <b>Plant level</b> (tesis düzeyi) — değiştirilemez."
+],
+result:"Değerleme düzeyi = Tesis (değiştirilemez). Her tesis = bir değerleme alanı. Otomatik hesap belirleme her tesis için ayrı yapılandırılabilir."},
+{num:"Task 1-2",title:"Find Chart of Accounts for Company Code 1010",app:"SAP GUI – SPRO",
+path:["SPRO","Financial Accounting","Financial Accounting Global Settings","Global Parameters for Company Code","Enter Global Parameters"],
+steps:[
+"SPRO: <b>Financial Accounting → Financial Accounting Global Settings → Global Parameters for Company Code → Enter Global Parameters</b>.",
+"Company code 1010 satırını seç, <b>Details</b>."
+],
+result:"Şirket kodu 1010, hesap planı YCOA'yı kullanır."},
+{num:"Task 1-3",title:"Check Valuation Grouping Code Configuration",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Define Valuation Control"],
+steps:[
+"SPRO: <b>Materials Management → Valuation and Account Assignment → Account Determination → Account Determination Without Wizard → Define Valuation Control</b>.",
+"Valuation grouping code: <b>Active</b>."
+],
+result:"Değerleme gruplama kodu AKTİF → her değerleme alanına (tesisine) bir kod atanmalıdır."},
+{num:"Task 1-4",title:"Check Valuation Grouping Code for Plant 1010",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Group Together Valuation Areas"],
+steps:[
+"SPRO: <b>Materials Management → Valuation and Account Assignment → Account Determination → Account Determination Without Wizard → Group Together Valuation Areas</b>.",
+"Valuation area 1010 satırına bak."
+],
+result:"Değerleme gruplama kodu 0001, değerleme alanı 1010'a atanmıştır. Ayrıca 1020 ve 1710 alanlarına da atanmıştır → aynı G/L hesap atamaları geçerlidir."},
+{num:"Task 2",title:"Assign New Valuation Grouping Code VG## to Plant PL##",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Group Together Valuation Areas"],
+steps:[
+"SPRO: <b>Group Together Valuation Areas</b>.",
+"<b>Position</b>: Valuation Area: PL##. <b>Continue</b>.",
+"PL## satırında valuation grouping code: <b>VG##</b> gir.",
+"Kaydet."
+]}
+]},
+
+{id:10,title:"Create Valuation Classes and Account Category References",app:"SAP GUI – SPRO / Create Material",
+sc:"ZM## malzeme tipi için yeni hesap kategori referansı AR## ve değerleme sınıfı VC## oluştur. Malzeme kaydı C2## ile test et.",
+tasks:[
+{num:"Task 1",title:"Explain Account Category Reference and Valuation Class",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Define Valuation Classes"],
+fields:[
+["── Account Category Reference ──",""],
+["ROH → Ref 0001","Valuation classes: 0710, 0720, 3000, 3001, 3002, 3003, YB30"],
+["FERT → Ref 0009","Valuation class: 7920"],
+["HALB → Ref 0008","Valuation class: 7900"],
+["NLAG","No account category reference — no value updating"]
+],
+steps:[
+"SPRO: <b>Materials Management → Valuation and Account Assignment → Account Determination → Account Determination Without Wizard → Define Valuation Classes</b>.",
+"<b>Material type/account category reference</b> butonuna bas: malzeme tiplerini incele.",
+"<b>Back</b>. <b>Valuation Class</b> butonuna bas: her referans için izin verilen valuation class'ları incele."
+],
+result:"Hesap kategori referansı = malzeme tipi ile izin verilen değerleme sınıfları arasındaki bağlantı. Değerleme sınıfı = G/L hesap ataması için anahtar. NLAG: değer güncellemesi yok → değerleme sınıfı gerekmez."},
+{num:"Task 2-1",title:"Create Account Category Reference AR## and Valuation Class VC##",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Define Valuation Classes"],
+fields:[
+["── New Account Category Reference ──",""],
+["ARef","AR##"],
+["Description","Any description"],
+["── New Valuation Class ──",""],
+["ValCl","VC##"],
+["ARef","AR##"],
+["── ZM## Material Type Assignment ──",""],
+["Account Category Reference","AR## (replace 0001)"]
+],
+steps:[
+"SPRO: <b>Define Valuation Classes</b>.",
+"<b>Account category reference</b> butonuna bas. <b>New Entries</b>: ARef: AR##. Kaydet.",
+"<b>Back</b>. <b>Valuation Class</b> butonuna bas. <b>New Entries</b>: ValCl: VC##, ARef: AR##. Kaydet.",
+"<b>Back</b>. <b>Material type/account category reference</b> butonuna bas.",
+"ZM## satırında Account category reference: <b>0001</b> → <b>AR##</b>. Kaydet."
+],
+result:"AR## referansı ZM## malzeme tipine atanarak yalnızca VC## değerleme sınıfına izin verilmektedir."},
+{num:"Task 2-2",title:"Create Material C2## to Test Valuation Class Defaulting",app:"Create Material",
+path:["Fiori Launchpad","Product Master","Create Material"],
+fields:[
+["── Material C2## ──",""],
+["Material Type","ZM## (Optical Systems ##)"],
+["Industry Sector","M (Mechanical Engineering)"],
+["Views","Basic Data 1, Purchasing, Accounting 1"],
+["Plant","1010"],
+["Basic Data 1 — Material Group","L002"],
+["Basic Data 1 — Base UoM","PC"],
+["Purchasing — Purchasing Group","Z##"],
+["Accounting 1 — Standard Price","10"],
+["Accounting 1 — Valuation Class","VC## (defaulted automatically)"],
+["Accounting 1 — Price Control","S"]
+],
+steps:[
+"<b>Create Material</b>: C2##, Industry M, ZM##.",
+"<b>Select View(s)</b>: Basic Data 1, Purchasing, Accounting 1. Plant: 1010.",
+"Tüm alanları gir.",
+"Accounting 1 sekmesinde Valuation Class: <b>VC##</b> otomatik önerilir (tek izin verilen sınıf).",
+"Kaydet (gerekirse iki kez)."
+],
+result:"Sistem, AR## hesap kategori referansındaki tek izin verilen değerleme sınıfı olduğu için VC##'yi otomatik olarak varsayılan yapar."},
+{num:"Task 2-3",title:"Extend Material C2## to Plant PL##",app:"Create Material",
+steps:[
+"<b>Create Material</b>: C2## (Material ve Copy from). <b>Select View(s)</b>.",
+"Enter ile mesajı onayla.",
+"Purchasing ve Accounting 1 görünümlerini seç. <b>Create views selected</b>. <b>Org. Levels</b>.",
+"Plant: PL##, Copy from Plant: 1010. <b>Continue</b>. Kaydet."
+]}
+]},
+
+{id:11,title:"Set Up Account Determination for Specific Transactions",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"İşlem BSX ve WRX için kuralları ve G/L hesaplarını kontrol et. ZM## malzemeleri (VC##) için plant 1010 ve PL##'de stok hesabı ata. GR ile doğrula.",
+tasks:[
+{num:"Task 1-1",title:"Check Rules for BSX and WRX Transactions",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Configure Automatic Postings"],
+fields:[
+["── Transaction Dependencies ──",""],
+["BSX (Stock posting)","Valuation grouping code + valuation class"],
+["WRX (GR/IR clearing)","Chart of accounts only (no valuation class dependency)"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings</b>. Valuation Area diyaloğu çıkarsa <b>Cancel</b>.",
+"<b>Account Assignment</b> butonuna bas.",
+"<b>BSX</b> satırına çift tıkla. YCOA'yı onayla. <b>Rules</b> butonuna bas.",
+"Kuralları not et. <b>Back</b>.",
+"<b>WRX</b> için tekrarla."
+]},
+{num:"Task 1-2",title:"Determine G/L Accounts for Plant 1010 (Valuation Classes)",app:"SAP GUI – SPRO",
+fields:[
+["── BSX Accounts — Plant 1010 (VGC 0001) ──",""],
+["Valuation Class 3000","13100000"],
+["Valuation Class 3040","13400000"],
+["Valuation Class 3050","13500000"],
+["Valuation Class 3100","13600000"],
+["── WRX Account (all classes) ──",""],
+["GR/IR clearing","21120000"]
+],
+steps:[
+"SPRO: <b>Group Together Valuation Areas</b>: Plant 1010 → Valuation grouping code <b>0001</b>.",
+"SPRO: <b>Configure Automatic Postings → Account Assignment</b>.",
+"<b>BSX</b>'e çift tıkla, YCOA onayla: valuation class — G/L hesap çiftlerini not et.",
+"<b>WRX</b>'e çift tıkla: tek hesap tüm valuation class'lar için geçerli."
+]},
+{num:"Task 2-1",title:"Assign Stock Account for VC## in Plant 1010 (BSX)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Configure Automatic Postings"],
+fields:[
+["── New Entry (copy from 3000) ──",""],
+["Valuation Grouping Code","0001"],
+["Valuation Class","VC## (replace 3000)"],
+["G/L Account","13100000 (same as class 3000)"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Account Assignment → BSX</b>. YCOA onayla.",
+"Valuation Grouping Code: 0001, Valuation Class: <b>3000</b> satırına imleç getir.",
+"<b>Copy</b> butonuna bas. Kopyalanan satırda Valuation Class: <b>VC##</b> olarak değiştir.",
+"Kaydet."
+]},
+{num:"Task 2-2",title:"Verify Using Simulation (Plant 1010)",app:"SAP GUI – SPRO",
+fields:[
+["── Simulation: MvT 101, Plant 1010, Material T-R1## ──",""],
+["BSX (Inventory posting)","13100000"],
+["WRX (GR/IR clearing)","21120000"],
+["── Simulation: MvT 101, Plant 1010, Material C2## ──",""],
+["BSX","13100000 (same result)"],
+["WRX","21120000"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Simulation</b>.",
+"Plant: 1010, Material: T-R1##, MvT: 101. Enter.",
+"<b>GR goods receipt</b> satırına çift tıkla. <b>Account Assignments</b>.",
+"C2## için tekrarla — sonuç aynı."
+]},
+{num:"Task 2-3",title:"Create PO and Post GR to Verify Account Posting (Plant 1010)",app:"Create Purchase Order – Advanced / Post GR for PD",
+fields:[
+["── PO ──",""],
+["Supplier","T-S52A##"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["Item 1: Material C2##","10 PC, EUR 10, Plant 1010"],
+["Item 2: Material T-R1##","10 PC, EUR 1.70, Plant 1010"],
+["── GR Accounting Result ──",""],
+["Inventory - Raw Material","13100000"],
+["GR/IR","21120000"]
+],
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>. Supplier: T-S52A##.",
+"İki kalemi gir. Kaydet. PO numarasını not et.",
+"Fiori: <b>Post Goods Receipt for Purchasing Document</b>. PO numarasını gir.",
+"Her iki kalem için Stor.Loc: <b>101B</b>. Her iki kalemi seç, <b>Post</b>.",
+"Malzeme belgesi numarasına tıkla. Process Flow → Accounting Document."
+]},
+{num:"Task 3-1",title:"Assign Stock Account 13105500 for Plant PL## (BSX — New Entries)",app:"SAP GUI – SPRO",
+fields:[
+["── New Entries for BSX ──",""],
+["VG## + 3000","13105500"],
+["VG## + VC##","13105500"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Account Assignment → BSX</b>. YCOA onayla.",
+"<b>New Entries</b>.",
+"1. satır: Valuation modif.: VG##, Valuation Class: 3000, Account: 13105500.",
+"2. satır: Valuation modif.: VG##, Valuation Class: VC##, Account: 13105500.",
+"Kaydet."
+],
+info:"WRX için yeni girdi gerekmez: <b>GR/IR</b> hesabı değerleme gruplama koduna bağlı değildir."},
+{num:"Task 3-2",title:"Verify Simulation and Post GR for Plant PL##",app:"SAP GUI – SPRO / SAP Fiori",
+fields:[
+["── PO: Plant PL## ──",""],
+["Supplier","T-S52A##"],
+["Item 1: C2##","10 PC, EUR 10, Plant PL##"],
+["Item 2: T-R1##","10 PC, EUR 1.70, Plant PL##"],
+["── GR Accounting Result ──",""],
+["Inventory posting (both items)","13105500"],
+["GR/IR","21120000"]
+],
+steps:[
+"SPRO Simulation: Plant: PL##, Material: T-R1##, MvT: 101 → BSX: <b>13105500</b>, WRX: 21120000.",
+"C2## için tekrarla — aynı sonuç.",
+"Fiori: <b>Create Purchase Order - Advanced</b>. İki kalemi gir (Plant: PL##). Kaydet.",
+"Fiori: <b>Post GR for Purchasing Document</b>. Stor.Loc: 101B. Post.",
+"Accounting Document: <b>her iki kalem için 13105500</b>."
+]}
+]},
+
+{id:12,title:"Subdivide a Transaction in Account Determination with the Account Grouping Code",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Mal çıkışları (MvT 201) için GBB işleminde VBR gruplama kodu ile VC## ve 3000 değerleme sınıflarına farklı hesaplar ata. Fiyat farklarını PRD işleminde ayarla.",
+tasks:[
+{num:"Task 1-1",title:"Find Account Grouping Code for MvT 201 (GBB → VBR)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Define Account Grouping for Movement Types"],
+fields:[
+["── MvT 201 (Value updating: X, Qty updating: X, no special stock) ──",""],
+["GBB Account Grouping Code","VBR"]
+],
+steps:[
+"SPRO: <b>Materials Management → Valuation and Account Assignment → Account Determination → Account Determination Without Wizard → Define Account Grouping for Movement Types</b>.",
+"<b>Position</b>: MvT: 201, Value updating: X, Qty updating: X. <b>Continue</b>.",
+"GBB satırında Account Grouping Code: <b>VBR</b>."
+]},
+{num:"Task 1-2",title:"Assign GBB Accounts for VC## and Class 3000",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Account Determination","Account Determination Without Wizard","Configure Automatic Postings"],
+fields:[
+["── GBB New Entries ──",""],
+["VGC 0001 / VBR / VC##","Debit: 51550000 | Credit: 51550000"],
+["VG## / VBR / VC##","Debit: 51550000 | Credit: 51550000"],
+["VG## / VBR / 3000","Debit: 51800000 | Credit: 51800000"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Account Assignment → GBB</b>. YCOA onayla.",
+"<b>New Entries</b>: Üç satırı tabloya göre gir.",
+"Kaydet."
+]},
+{num:"Task 1-3",title:"Assign PRD Accounts for GR/IR Postings (blank grouping code)",app:"SAP GUI – SPRO",
+fields:[
+["── PRD New Entry (blank account grouping code — for GR/IR postings) ──",""],
+["General modification","(blank)"],
+["Valuation Class","VC##"],
+["Debit","52041000"],
+["Credit","52541000"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Account Assignment → PRD</b>. YCOA onayla.",
+"<b>New Entries</b>: General modification: boş, ValCl: VC##, Debit: 52041000, Credit: 52541000.",
+"Kaydet."
+],
+info:"Boş hesap gruplama kodu, satın alma siparisine karşı mal veya fatura girişleri için önceden tanımlanmıştır."},
+{num:"Task 1-4",title:"Assign PRD Accounts for GI with MvT 201 (PRA grouping code)",app:"SAP GUI – SPRO",
+fields:[
+["── PRD New Entry (PRA — for goods issues) ──",""],
+["General modification","PRA"],
+["Valuation Class","VC##"],
+["Debit","52045500"],
+["Credit","52545500"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Account Assignment → PRD</b>. YCOA onayla.",
+"<b>New Entries</b>: General modification: PRA, ValCl: VC##, Debit: 52045500, Credit: 52545500.",
+"Kaydet."
+]},
+{num:"Task 1-5",title:"Verify via Simulation (GI for Cost Center, Material C2##, Plant 1010)",app:"SAP GUI – SPRO",
+fields:[
+["── Simulation: MvT 201, C2##, Plant 1010 ──",""],
+["BSX (Inventory posting)","13100000"],
+["GBB / VBR (Offsetting entry)","51550000"],
+["PRD / PRA (Price differences)","52045500 and 52545500"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Simulation</b>.",
+"Plant: 1010, Material: C2##, MvT: 201. Enter.",
+"<b>GI for cost center</b> satırına çift tıkla. <b>Account Assignments</b>.",
+"BSX, GBB (VBR) ve PRD (PRA) satırlarını not et."
+]},
+{num:"Task 2-1",title:"Post GI and Verify Accounts (C2##, Plant 1010, Cost Center 4110)",app:"Post Goods Movement",
+path:["Fiori Launchpad","Warehouse Processing","Post Goods Movement"],
+fields:[
+["── GI Entry ──",""],
+["Transaction","Goods Issue"],
+["Reference","Other"],
+["Material","C2##"],
+["Plant","1010"],
+["Storage Location","101B"],
+["Qty in Unit of Entry","2"],
+["Cost Center","4110"],
+["── Accounting Result ──",""],
+["Stock posting (BSX)","13100000"],
+["Offsetting entry (GBB VBR)","51550000"]
+],
+steps:[
+"Fiori: <b>Post Goods Movement</b>. İşlem: Goods Issue, referans: Other.",
+"Kalem detayında Where sekmesi: Plant 1010, Stor.Loc 101B.",
+"Quantity: 2, Material: C2##. Enter. Account Assignment: Cost Center: 4110.",
+"<b>Post</b>.",
+"İşlem: Display, Material Document. Doc. info → FI Documents."
+]},
+{num:"Task 2-2",title:"Create PO with EUR 12 Price and Post GR to See PRD Account",app:"Create Purchase Order – Advanced / Post GR for PD",
+fields:[
+["── PO ──",""],
+["Material","C2##"],
+["Qty","10 PC"],
+["Plant","1010"],
+["Net Price","EUR 12 (standard price EUR 10 → price difference)"],
+["── Accounting Result ──",""],
+["Inventory posting (BSX)","13100000"],
+["GR/IR clearing (WRX)","21120000"],
+["Price differences (PRD)","52041000"]
+],
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>. Supplier: T-S52A##.",
+"Kalem: C2##, 10 PC, Plant 1010, EUR 12. Kaydet.",
+"Fiori: <b>Post GR for Purchasing Document</b>. Stor.Loc: 101B. Post.",
+"Accounting Document'ı görüntüle."
+]}
+]},
+
+{id:13,title:"Adjust Account Determination for Special Cases",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Maliyet merkezine atanmış PO'da varsayılan G/L hesabını kontrol et. FRB1 ve FRB2 nakliye koşul tiplerinin hesap anahtarlarını incele.",
+tasks:[
+{num:"Task 1",title:"Review Default Account in Purchasing for Cost Center Assignment",app:"Manage Purchase Orders",
+path:["Fiori Launchpad","Purchase Order Processing","Manage Purchase Orders"],
+fields:[
+["── PO Item with Account Assignment K ──",""],
+["Material","C2##"],
+["Plant","1010"],
+["Qty","10 PC"],
+["Account Assignment Category","K (Cost Center)"],
+["Suggested G/L Account","51550000"]
+],
+steps:[
+"Fiori: <b>Manage Purchase Orders</b>. <b>Create</b>.",
+"Supplier: T-S52A##. Purch. Org.: 101C, Purch. Group: Z##.",
+"Kalem: Acct Assignment Cat.: K, Material: C2##, Plant: 1010, Qty: 10.",
+"Kalem detayında <b>Account Assignment</b> sekmesi: G/L account: <b>51550000</b>.",
+"Kaydetmeden çık."
+],
+result:"G/L hesap 51550000 varsayılan olarak belirlendi: YCOA + VGC 0001 (tesis 1010) + VBR (hesap atama kategorisi K) + VC## (malzeme C2##) → 51550000."},
+{num:"Task 2",title:"Determine Accounts for Freight Cost Condition Types FRB1 and FRB2",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Conditions","Define Price Determination Process","Set Calculation Schema – Purchasing"],
+fields:[
+["── Schema RM0000 ──",""],
+["FRB1 — Account Key / Accruals","FR1"],
+["FRB2 — Account Key / Accruals","FR2"],
+["── G/L Accounts ──",""],
+["FR1 (FRB1)","21730010"],
+["FR2 (FRB2)","21760000"]
+],
+steps:[
+"SPRO: <b>Materials Management → Purchasing → Conditions → Define Price Determination Process → Set Calculation Schema - Purchasing</b>.",
+"Schema <b>RM0000</b> satırını seç, <b>Control data</b> düğümüne tıkla.",
+"FRB1 → Account Key Accruals: <b>FR1</b>. FRB2 → Account Key Accruals: <b>FR2</b>.",
+"SPRO: <b>Configure Automatic Postings → Account Assignment</b>.",
+"<b>FR1</b>'e çift tıkla. YCOA onayla: hesap <b>21730010</b>.",
+"<b>Back</b>. <b>FR2</b>'ye çift tıkla: hesap <b>21760000</b>."
+],
+result:"<b>FRB1</b>, FR1'i kullanır (hesap 21730010 — stokla ilgili mal teslim maliyetleri). <b>FRB2</b>, FR2'yi kullanır (hesap 21760000 — stokla ilgisiz plansız teslim maliyetleri)."}
+]},
+
+{id:14,title:"Adjust Settings for Split Valuation",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Yeni ülke menşei COUNTRY## için yeni valuation type oluştur. T-FG##'yi genişlet ve 100 litre ilk stok girişi yap.",
+tasks:[
+{num:"Task 1-1",title:"Check Active Valuation Types for Category Origin (H)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Split Valuation","Configure Split Valuation"],
+steps:[
+"SPRO: <b>Materials Management → Valuation and Account Assignment → Split Valuation → Configure Split Valuation</b>.",
+"<b>Global Categories</b> butonuna bas.",
+"Valuation Category <b>H (Origin)</b> satırına konumlan.",
+"<b>Types → Cat.</b> butonuna bas."
+],
+result:"H (Origin) kategorisi için aktif değerleme tipleri: Land 1 ve Land 2."},
+{num:"Task 1-2",title:"Create Global Valuation Type COUNTRY##",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Valuation and Account Assignment","Split Valuation","Configure Split Valuation"],
+fields:[
+["── New Global Valuation Type ──",""],
+["Valuation Type","Country##"],
+["Description","Country of Origin"],
+["Ext. Purchase Orders","2 (External purchase orders allowed)"],
+["Int. purchase orders","0 (No internal purchase orders)"],
+["Account cat. reference","0001"]
+],
+steps:[
+"SPRO: <b>Configure Split Valuation → Global Types</b>.",
+"<b>Create</b> butonuna bas.",
+"Tüm alanları gir. Tekrar <b>Create</b>. Kaydet."
+]},
+{num:"Task 1-3",title:"Activate COUNTRY## for Valuation Category H",app:"SAP GUI – SPRO",
+steps:[
+"SPRO: <b>Configure Split Valuation → Global Categories</b>.",
+"Valuation Category <b>H</b> satırına konumlan. <b>Types → Cat.</b>",
+"<b>COUNTRY##</b> satırına konumlan. <b>Activate</b> butonuna bas.",
+"Kaydet."
+]},
+{num:"Task 1-4",title:"Check Local Settings for Plant 1010",app:"SAP GUI – SPRO",
+steps:[
+"SPRO: <b>Configure Split Valuation → Local Definitions</b>.",
+"Plant <b>1010</b> satırına konumlan. <b>Local Types</b>.",
+"<b>COUNTRY##</b> satırına konumlan. <b>Change</b>."
+],
+result:"Tesis 1010 için ek ayar gerekmemektedir. İsteğe bağlı olarak yerel düzeyde farklı Dış/İç satın alma siparışleri veya hesap kategori referansı belirtilebilir."},
+{num:"Task 2-1",title:"Verify T-FG## Has Split Valuation with Category H",app:"Display Material",
+steps:[
+"Fiori: <b>Display Material</b>. T-FG##, <b>Accounting 1</b>, Plant: 1010.",
+"Valuation category: <b>H</b> — split valuation aktif."
+]},
+{num:"Task 2-2",title:"Display Current Stock and Values (Material List MM60)",app:"Material List – MM60",
+path:["Fiori Launchpad","Enterprise Search","Material List – MM60"],
+fields:[
+["── Plant 1010 — Before Extension ──",""],
+["Land 1 — Total Stock","100 l"],
+["Land 1 — Total Value","EUR 1,000.00"],
+["Land 1 — Unit Price","EUR 10.00"]
+],
+steps:[
+"Fiori arama fonksiyonu ile <b>Material List – MM60</b> app'ini başlat.",
+"Material: T-FG##, Plant: 1010. <b>Execute</b>.",
+"Valuation type Land 1 için veri mevcut.",
+"Fiori: <b>Display Material</b>. T-FG##, Accounting 1, Plant 1010 (önce genel, sonra Org.Levels ile Land 1).",
+"Stok, değer ve fiyatı not et."
+]},
+{num:"Task 2-3",title:"Extend T-FG## — Add COUNTRY## Accounting Data (MAP EUR 12/l)",app:"Create Material",
+fields:[
+["── Accounting 1 Extension ──",""],
+["Material","T-FG##"],
+["Plant","1010"],
+["Valuation Type","COUNTRY##"],
+["Per. unit price (Moving Average)","12"],
+["Valuation Class","3000"]
+],
+steps:[
+"Fiori: <b>Create Material</b>. T-FG##. <b>Select View(s)</b>: Accounting 1. <b>Org. Levels</b>.",
+"Plant: 1010, Valuation type: <b>COUNTRY##</b>. <b>Continue</b>.",
+"Valuation Class: 3000, Per. unit price: 12.",
+"Kaydet (uyarı çıkarsa tekrar Kaydet)."
+]},
+{num:"Task 2-4",title:"Post Initial Stock (MvT 561, 100 l, COUNTRY##, Stor.Loc 101A)",app:"Post Goods Movement",
+path:["Fiori Launchpad","Warehouse Processing","Post Goods Movement"],
+fields:[
+["── GR – Other ──",""],
+["Movement Type","561"],
+["Plant","1010"],
+["Storage Location","101A"],
+["Qty in Unit of Entry","100 l"],
+["Material","T-FG##"],
+["Valuation Type (Material tab)","COUNTRY##"]
+],
+steps:[
+"Fiori: <b>Post Goods Movement</b>. İşlem: Goods Receipt, referans: Other.",
+"Kalem detayında Where: MvT <b>561</b>, Plant 1010, Stor.Loc 101A.",
+"Quantity: 100, Material: T-FG##. Enter.",
+"Material sekmesinde Valuation Type alanı görünürse: <b>COUNTRY##</b>.",
+"Valuation Type görünmüyorsa Enter'a bas.",
+"<b>Post</b>.",
+"İşlem: Display, Material Document.",
+"COUNTRY## valuation type'ına çift tıkla → Accounting 1 görünümü."
+],
+result:"COUNTRY##: Toplam Stok 100 l, Stok Değeri EUR 1.200 (100 × 12 MAP). Land 1: değişmedi, 100 l, EUR 1.000. Güncellenen stok hesabı = 13100000 (değerleme sınıfı 3000, VGC 0001)."}
+]}
+]},
+{unit:5,title:"Purchasing",ex:[
+{id:15,title:"Create Document Types in Purchasing",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Fasonculuk için yeni belge tipi X## (talep) ve Y## (sipariş) oluştur. Sadece item category L'ye izin ver. Referans bağlantılarını tanımla ve test et.",
+tasks:[
+{num:"Task 1",title:"Check Number Ranges for NB Document Type",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Requisition / Purchase Order","Define Document Types"],
+fields:[
+["── Number Ranges ──",""],
+["Purchase Requisitions — NB Internal","01"],
+["Purchase Requisitions — NB External","02"],
+["Purchase Orders — NB Internal","45"],
+["Purchase Orders — NB External","41"]
+],
+steps:[
+"SPRO: <b>Materials Management → Purchasing → Purchase Requisition → Define Document Types for Purchase Requisitions</b>.",
+"NB satırındaki numara aralıklarını not et.",
+"PO için: <b>Purchasing → Purchase Order → Define Document Types for Purchase Orders</b>."
+]},
+{num:"Task 2-1",title:"Create Purchase Requisition Document Type X## (Copy from NB)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Requisition","Define Document Types for Purchase Requisitions"],
+fields:[
+["── New PReq Document Type ──",""],
+["Type","X##"],
+["Doc. Type Descript.","X##-PReq"],
+["Copy from","NB"],
+["── Number Assignment ──",""],
+["NoRgeInt","01 (0010000000–0019999999)"],
+["NoRgeExt","(deleted — internal only)"],
+["── Allowed Item Categories ──",""],
+["Item Category","L (Subcontracting only)"],
+["── Link PReq — Document Type ──",""],
+["DTy: AN, Item Cat. PReq: L, Item Cat. PO: L","(RFQ conversion link)"]
+],
+steps:[
+"SPRO: <b>Define Document Types for Purchase Requisitions</b>.",
+"NB satırını seç, <b>Copy As</b>. Type: X##, Doc. Type: X##-PReq. <b>Copy (Enter)</b>.",
+"Specify object diyalogunda <b>only copy entry</b> seç.",
+"X## satırında NoRgeInt: F4 → 0010000000-0019999999 → NumRange 01. NoRgeExt: sil.",
+"X## seç, Dialog Structure'da <b>Allowed item categories</b>: <b>New Entries</b>, Item Cat.: L.",
+"Kaydet.",
+"Dialog Structure'da <b>Link purchase requisition - document type</b>: <b>New Entries</b>.",
+"DTy: AN, Item Cat. (PReq.): L, Item Cat. (PO): L. Kaydet."
+]},
+{num:"Task 2-2",title:"Create Purchase Order Document Type Y## (Copy from NB)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Order","Define Document Types for Purchase Orders"],
+fields:[
+["── New PO Document Type ──",""],
+["Type","Y##"],
+["Doc. Type Descript","Y##-PO"],
+["Copy from","NB"],
+["── Number Assignment ──",""],
+["NoRgeInt","47 (4700000000–4799999999)"],
+["NoRgeExt","(deleted)"],
+["── Allowed Item Categories ──",""],
+["Item Category","L (Subcontracting only)"],
+["── Link PReq → PO (item category L) ──",""],
+["NB / (blank) / L","NB item, any PReq type → PO item cat L"],
+["NB / L / L","NB SC req → PO item cat L"],
+["X## / L / L","X## SC req → PO item cat L"],
+["── Optional: Partner Schema ──",""],
+["Partner Schema","0002"]
+],
+steps:[
+"SPRO: <b>Define Document Types for Purchase Orders</b>.",
+"NB satırını seç, <b>Copy As</b>. Type: Y##, Doc. Type: Y##-PO. <b>Copy (Enter)</b>. Only copy entry.",
+"NoRgeInt: F4 → NumRange 47. NoRgeExt: sil.",
+"Y## seç, <b>Allowed item categories</b>: <b>New Entries</b>, Item Cat.: L. Kaydet.",
+"Item cat. L satırını seç, <b>Link purchase requisition - document type</b>: <b>New Entries</b>.",
+"Üç satırı tabloya göre gir. Kaydet.",
+"(Opsiyonel) <b>Materials Management → Purchasing → Partner Determination → Assign Partner Schemas to Document Types</b>: Y## için ParSc: 0002."
+]},
+{num:"Task 3-1",title:"Test: Create PR with Doc Type NB (Std + SC Items)",app:"Create Purchase Requisition – Advanced",
+path:["Fiori Launchpad","Purchase Requisition Processing","Create Purchase Requisition – Advanced"],
+fields:[
+["── PReq 1 — Document Type NB ──",""],
+["Item 1 — Material","T-FL3##"],
+["Item 1 — Qty","100 PC"],
+["Item 1 — Plant","1010"],
+["Item 1 — Purch. Group","Z##"],
+["Item 1 — Item Category","Standard"],
+["Item 2 — Item Category","L (Subcontracting)"],
+["Item 2 — other data","same as Item 1"]
+],
+steps:[
+"Fiori: <b>Create Purchase Requisition – Advanced</b>. Document Type: NB (Purchase Requisition).",
+"İki kalemi gir. Kaydet. PReq 1 numarasını not et."
+]},
+{num:"Task 3-2",title:"Test: Create PR with Doc Type X## (Only SC Items Allowed)",app:"Create Purchase Requisition – Advanced",
+steps:[
+"Fiori: <b>Create Purchase Requisition – Advanced</b>.",
+"Document Type: <b>X##-PReq (X##)</b>.",
+"Item Category F4: Sadece <b>L (Subcontracting)</b> izinli.",
+"Kalem: Item Cat. L, T-FL3##, 100 PC, Plant 1010, Z##. Kaydet. PReq 2 numarasını not et."
+],
+result:"<b>Allowed item categories</b> ayarına göre, X## belge türü için yalnızca L kalem kategorisine izin verilmektedir."},
+{num:"Task 3-3",title:"Test: Cannot Convert X## PReq to NB PO",app:"Create Purchase Order – Advanced",
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>.",
+"<b>Document Overview On</b>. <b>Selection variant</b>: My Purchase Requisitions.",
+"Document Type: <b>NB</b>. Supplier: T-S52A##.",
+"PReq 2 (X##)'yi seç, <b>Adopt</b>.",
+"Hata mesajı: PO document type NB ile PReq document type X## arasında bağlantı yok."
+],
+result:"Dönüşüm başarısız: NB PO tipi ile X## satın alma talebi tipi arasında tanımlı bir bağlantı yoktur."},
+{num:"Task 3-4",title:"Test: Convert Both PReqs to Y## PO",app:"Create Purchase Order – Advanced",
+fields:[
+["── PO Y## ──",""],
+["Document Type","Y##"],
+["Supplier","T-S52A##"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["Plant","1010"],
+["Net Price (all items)","EUR 150"]
+],
+steps:[
+"Aynı ekranda Document Type: <b>Y##</b> olarak değiştir.",
+"PReq 2 (X##)'nin hata artık yok. <b>Adopt</b>.",
+"Document Overview'de PReq 1 (NB)'yi seç, <b>Adopt</b>.",
+"Tüm kalemler için EUR 150 gir. Kaydet. Gerekirse Re-Explode onayla."
+],
+result:"Her iki satın alma talebi de Y## PO tipine dönüştürülebilir — gerekli tüm bağlantılar tanımlanmıştır."}
+]},
+
+{id:16,title:"Use Document Types in Purchasing (Optional Exercise)",app:"SAP GUI – SPRO",
+sc:"Planlama çalışmasında ZM## için X## varsayılan talep tipini tanımla. Fasonculuk kalem kategorisinin özelliklerini incele.",
+tasks:[
+{num:"Task 1",title:"Define Document Types for ZM## via MRP Group",app:"SAP GUI – SPRO (description only)",
+path:["SPRO","Materials Management","Consumption-Based Planning","MRP Groups"],
+steps:[
+"Bu adımlar bilgi amaçlıdır — eğitim sisteminde çalıştırılmasına gerek yok.",
+"1. SPRO: <b>Consumption-Based Planning → MRP Groups → Carry out Overall Maintenance of MRP Groups</b>: Yeni MRP grubu oluştur.",
+"2. Yeni MRP grubunda: Scheduling/Document Type bölümü, External Procurement kısmında Std ve SC kalemler için document type: <b>X##</b> gir.",
+"3. SPRO: <b>Consumption-Based Planning → MRP Groups → Define MRP Group for Each Material Type</b>: ZM##'ye yeni MRP grubunu ata."
+]},
+{num:"Task 2",title:"Analyze Subcontracting Item Category Properties",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Define External Representation of Item Categories"],
+fields:[
+["── Subcontracting Item Category ──",""],
+["ItmCat (Int.)","3"],
+["ItmCat (Ext.)","L"],
+["Material master records","Can be used (not mandatory)"],
+["Goods Receipts","MUST be entered (triggers component consumption)"],
+["Invoice Receipts","Can be entered (IR indicator changeable in PO item)"],
+["Additional account assignments","Allowed (not mandatory)"]
+],
+steps:[
+"SPRO: <b>Materials Management → Purchasing → Define External Representation of Item Categories</b>.",
+"Subcontracting satırını bul: ItmCat (Int.): 3, ItmCat (Ext.): L.",
+"Satırı seç, <b>Details</b>.",
+"Tüm göstergeleri incele."
+],
+result:"Mal girişi (<b>GR</b>) mutlaka girilmelidir; ancak bu durumda sağlanan malzemeler SAP sisteminde otomatik olarak tüketim olarak kayıt dışı bırakılır."}
+]},
+
+{id:17,title:"Adjust the Screen Layout of Purchasing Documents",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Fasonculuk PO'ları için farklı saha seçimi tanımla. Belge tipi Y## için Confirmation Control alanını zorunlu yap.",
+tasks:[
+{num:"1",title:"Identify Field Selection Keys for Subcontracting Items",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Order","Define Screen Layout at Document Level"],
+steps:[
+"SPRO: <b>Materials Management → Purchasing → Purchase Order → Define Screen Layout at Document Level</b>.",
+"Fasonculuk kalemler için saha seçim anahtarları: item category L bazında saha seçimi kontrol edilir."
+],
+result:"Alan seçimi anahtarları: Kalem kategorisi (L) ve belge tipi (Y##) ile kontrol. Her ikisi de alan seçimini bağımsız olarak yönetebilir."},
+{num:"2",title:"Create Field Selection Key Y##F for Document Type Y##",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Order","Define Screen Layout at Document Level"],
+fields:[
+["── New Field Selection Key ──",""],
+["Copy from","NBF (defined for NB)"],
+["Key","Y##F"],
+["Name","Y##-field selection"],
+["── Confirmation Control ──",""],
+["Confirmation Control field","Mandatory (Reqd. Entry)"]
+],
+steps:[
+"SPRO: <b>Define Screen Layout at Document Level</b>.",
+"<b>NBF</b> satırını seç, <b>Copy As</b>. Key: Y##F, Name: Y##-field selection. Kaydet.",
+"Y##F için Confirmations sekmesinde Confirmation Control: <b>Reqd. Entry</b>.",
+"SPRO: <b>Define Document Types for Purchase Orders</b>: Y## için field selection key: Y##F. Kaydet."
+]},
+{num:"3",title:"Test: Create PO with Y## — Confirmation Control Mandatory",app:"Create Purchase Order – Advanced",
+path:["Fiori Launchpad","Purchase Order Processing","Create Purchase Order – Advanced"],
+fields:[
+["── PO Y## ──",""],
+["Document Type","Y##"],
+["Supplier","T-S52A##"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["Item Category","L"],
+["Material","T-FL3##"],
+["Qty","10 PC"],
+["Plant","1010"],
+["Net Price","EUR 150"],
+["── Confirmations Tab ──",""],
+["Confirmation Control","0001 (Confirmations) — mandatory field"]
+],
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>. Document Type: Y##.",
+"Kalem: Item Cat. L, T-FL3##, 10 PC, EUR 150, Plant 1010.",
+"Kalem detayında <b>Confirmations</b> sekmesi: Confirmation Control <b>zorunlu</b> — <b>0001</b> seç.",
+"Kaydet. PO numarasını not et."
+],
+result:"<b>Confirmation Control</b> alanı, Y##F alan seçimi anahtarı nedeniyle Y## PO tipi için zorunludur."},
+{num:"4 (Optional)",title:"Test: GR Not Possible Due to Confirmation Control 0001",app:"Post Goods Receipt for Purchasing Document",
+path:["Fiori Launchpad","Warehouse Processing","Post Goods Receipt for Purchasing Document"],
+steps:[
+"Fiori: <b>Post Goods Receipt for Purchasing Document</b>.",
+"3. adımdaki PO numarasını gir.",
+"Stor.Loc seç, <b>Post</b>.",
+"Mesaj: 'No goods receipt possible for purchasing document <#######>'"
+],
+result:"Neden: <b>Confirmation Control</b> 0001 (Confirmations), GR yapılabilmesi için önce gelen teslimat (<b>VL31N</b>) girilmesini zorunlu kılar."}
+]},
+
+{id:18,title:"Create Account Assignment Categories",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Hesap atama kategorisi K ayarlarını kontrol et. Yeni kategori oluştur (gruptan bağımsız anahtar). Goods recipient zorunlu alan yap. K## account grouping ile özel hesaplar ata.",
+tasks:[
+{num:"Task 1-1",title:"Inspect Account Assignment Category K Settings",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Account Assignment","Maintain Account Assignment Categories"],
+fields:[
+["── Category K Settings ──",""],
+["Goods Receipt indicator","Defaulted (can be deselected)"],
+["GR Non-Valuated indicator","Not defaulted (can be selected)"],
+["Invoice Receipt indicator","Defaulted (can be deselected)"],
+["Account Grouping Code","VBR"]
+],
+steps:[
+"SPRO: <b>Materials Management → Purchasing → Account Assignment → Maintain Account Assignment Categories</b>.",
+"K satırını seç, <b>Details</b>.",
+"GR, GR non-valuated ve IR göstergelerini not et.",
+"Account Modification (= Account Grouping Code): <b>VBR</b>."
+]},
+{num:"Task 1-2",title:"Determine G/L Account for T-R1## Cost Center PO",app:"SAP GUI – SPRO",
+fields:[
+["── Determination Keys ──",""],
+["Chart of accounts","YCOA (Company code 1010)"],
+["Valuation grouping code","0001 (Plant 1010)"],
+["Account grouping code","VBR (Category K)"],
+["Valuation class (T-R1##)","3000"],
+["── Result ──",""],
+["G/L Account GBB/VBR/0001/3000","51100000"]
+],
+steps:[
+"SPRO: <b>Configure Automatic Postings → Account Assignment → GBB</b>. YCOA onayla.",
+"Valuation mod.: 0001, General modification: VBR, ValCl: 3000 satırını bul.",
+"G/L account: <b>51100000</b>."
+]},
+{num:"Task 1-3",title:"Test K in PO and Verify G/L 51100000",app:"Create Purchase Order – Advanced",
+fields:[
+["── PO Test ──",""],
+["Document Type","NB"],
+["Supplier","T-S52A##"],
+["Acct Assignment Cat.","K"],
+["Material","T-R1##"],
+["Qty","100 PC"],
+["Net Price","EUR 1.70"],
+["Plant","1010"],
+["Cost Center","4110"],
+["── Suggested G/L ──",""],
+["Account Assignment tab","51100000"]
+],
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>. NB, T-S52A##.",
+"Kalem: Acct Assignment Cat. K, T-R1##, 100 PC, EUR 1.70, Plant 1010.",
+"Kalem detayında <b>Account Assignment</b> sekmesi: G/L account: <b>51100000</b>.",
+"Cost Center: 4110. Kaydet. PO numarasını not et."
+],
+result:"G/L 51100000 otomatik önerildi: YCOA + VGC 0001 + VBR (kategori K) + değerleme sınıfı 3000 (T-R1##)."},
+{num:"Task 1-4",title:"Check Allowed Item Category/Account Assignment Combinations",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Account Assignment","Define Combination of Item Categories/Account Assignment Categories"],
+steps:[
+"SPRO: <b>Define Combination of Item Categories/Account Assignment Categories</b>.",
+"Account assignment category K: hem Standard hem Subcontracting item categories için kullanılabilir."
+]},
+{num:"Task 2-1",title:"Create New Account Assignment Category (Copy from K)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Account Assignment","Maintain Account Assignment Categories"],
+fields:[
+["── Key Table (group → category) ──",""],
+["Group 01 → 1","Group 06 → 6"],
+["Group 02 → 2","Group 07 → 7"],
+["Group 10 → I","Group 11 → J"],
+["Group 15 → S","Group 20 → %"],
+["(full table in exercise PDF)",""],
+["── New Category Settings ──",""],
+["Description","S4550-##"],
+["CO/PP Order","Opt. Entry"],
+["Cost Center","Opt. Entry"],
+["Goods recipient","Mand. Ent. (Required)"]
+],
+steps:[
+"SPRO: <b>Maintain Account Assignment Categories</b>.",
+"K satırını seç, <b>Copy As</b>.",
+"Acct Assignment Cat.: gruptan tabloya göre kendi anahtarını gir, Description: S4550-##. Kaydet.",
+"Yeni kategoriyi seç, <b>Details</b>. Fields bölümünde: CO/PP Order: Opt. Entry, Cost Center: Opt. Entry, Goods recipient: <b>Mand. Ent.</b>.",
+"Kaydet."
+]},
+{num:"Task 2-2",title:"Allow New Category Only with Standard Item Category",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Account Assignment","Define Combination of Item Categories/Account Assignment Categories"],
+steps:[
+"SPRO: <b>Define Combination of Item Categories/Account Assignment Categories</b>.",
+"<b>New Entries</b>: Acct Assignment Cat.: kendi kategorin, ItCat.: <b>boş</b> (Standard item).",
+"Kaydet."
+],
+info:"<b>ItCat</b> boş bırakıldığında = Standart kalem kategorisi (varsayılan). Bu, yeni kategoriyi yalnızca standart kalemlerle sınırlandırır."},
+{num:"Task 2-3",title:"Assign Account Grouping K## and Create GBB Accounts",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Account Assignment","Maintain Account Assignment Categories"],
+fields:[
+["── GBB New Entries ──",""],
+["VGC 0001 / K## / 3000","Debit: 51100000 | Credit: 51100000"],
+["VGC 0001 / K## / (blank)","Debit: 51550000 | Credit: 51550000"]
+],
+steps:[
+"SPRO: <b>Maintain Account Assignment Categories</b>: yeni kategorini seç, Details.",
+"<b>Account Modification</b>: <b>K##</b> gir. Kaydet.",
+"SPRO: <b>Configure Automatic Postings → Account Assignment → GBB</b>. YCOA.",
+"<b>New Entries</b>: İki satırı tabloya göre gir. Kaydet."
+]},
+{num:"Task 2-4",title:"Test New Category in PO — Verify G/L Accounts",app:"Create Purchase Order – Advanced",
+fields:[
+["── PO Test ──",""],
+["Supplier","T-S52A##"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["Item 1: T-R1##","100 PC, Plant 1010, Cost Center 4110, Recipient S4550-##"],
+["Item 1 Suggested G/L","51100000 (valuation class 3000)"],
+["Item 2: No material number","1 PC, Short Text, L002, Price ?,  Plant 1010, Cost Center 4110, Recipient S4550-##"],
+["Item 2 Suggested G/L","51550000 (no valuation class)"]
+],
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>. NB, T-S52A##.",
+"1. kalem: kendi hesap atama kategorin, T-R1##, 100 PC, Plant 1010. Acct Assignment: Cost Center 4110, Recipient: S4550-##.",
+"2. kalem: kendi kategorin, Short Text, 1 PC, Matl Group L002, Plant 1010. Acct Assignment: Cost Center 4110, Recipient: S4550-##.",
+"G/L account önerilerini kontrol et. Kaydet."
+],
+result:"Kalem 1: G/L 51100000 (K## + değerleme sınıfı 3000). Kalem 2: G/L 51550000 (K## + değerleme sınıfı yok). <b>Goods recipient</b> alanı zorunludur."}
+]},
+
+{id:19,title:"Define Text Types",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Talep ve sipariş metin tiplerini incele. Malzeme kaydında PO metni oluştur. Y## belge tipinde metin kopyalamayı test et.",
+tasks:[
+{num:"Task 1-1",title:"Determine Sequential Numbers for PReq Text Types",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Requisition","Texts for Purchase Requisitions","Define Text Types"],
+fields:[
+["── PReq Text Type Sequential Numbers ──",""],
+["Item Text","01"],
+["Item Note","02"],
+["Delivery Text","03"],
+["Material PO Text","04"]
+],
+steps:[
+"SPRO: <b>Materials Management → Purchasing → Purchase Requisition → Texts for Purchase Requisitions → Define Text Types</b>.",
+"Bilgi diyalogunu Continue ile onayla.",
+"Her metin tipinin sıra numarasını not et."
+]},
+{num:"Task 1-2",title:"Check Text Linkages with Material Master",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Requisition","Texts for Purchase Requisitions","Define Copying Rules for Item Texts in Purchase Requisitions"],
+fields:[
+["── Linkage ──",""],
+["Material PO Text (PReq)","Linked to: Purchase Order Text (material master)"],
+["Fixing indicator","N (displayed only — cannot be changed in PReq)"],
+["Other text types","No linkage to material master"]
+],
+steps:[
+"SPRO: <b>Define Copying Rules for Item Texts in Purchase Requisitions</b>.",
+"Her metin tipini seç, Dialog Structure'da <b>Text linkages</b> düğümüne git.",
+"Material PO Text'in kaynak nesnesini (Material master) ve fixing indicator N'yi not et."
+]},
+{num:"Task 1-3",title:"Create PO Text in Material Master (T-FL3##)",app:"Change Material",
+path:["Fiori Launchpad","Product Master","Change Material"],
+steps:[
+"Fiori: <b>Change Material</b>. T-FL3##. <b>Select View(s)</b>: Purchase Order Text.",
+"PO metni gir. Kaydet."
+]},
+{num:"Task 1-4",title:"Create PReq and Check Text Behavior",app:"Create Purchase Requisition – Advanced",
+fields:[
+["── PReq (NB) ──",""],
+["Material","T-FL3##"],
+["Qty","100 PC"],
+["Plant","1010"],
+["── Texts Tab (Item Details) ──",""],
+["Maintainable text types","Item Text, Item Note, Delivery Text"],
+["Material PO Text status","Displayed only (from material master — cannot be changed)"]
+],
+steps:[
+"Fiori: <b>Create Purchase Requisition - Advanced</b>. Doc Type: NB.",
+"Kalem gir. Item Details → <b>Texts</b> sekmesi.",
+"Material PO Text: sadece görüntülenir, durum: 'Text displayed from Mat. Master'.",
+"Item Text ve Delivery Text gir.",
+"Kaydet. PReq numarasını not et."
+]},
+{num:"Task 2-1",title:"Determine Sequential Numbers for PO Item Text Types",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Order","Texts for Purchase Orders","Define Text Types for Item Texts"],
+fields:[
+["── PO Item Text Sequential Numbers ──",""],
+["Item Text","01"],
+["Material PO Text","03"],
+["Delivery Text","04"],
+["Info Record Note","05"]
+],
+steps:[
+"SPRO: <b>Define Text Types for Item Texts</b>. Bilgi diyalogunu onayla."
+]},
+{num:"Task 2-2",title:"Check PO Text Linkages with PReq and Material Master",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Purchase Order","Texts for Purchase Orders","Define Copying Rules for Item Texts in Purchase Orders"],
+fields:[
+["── From PReq ──",""],
+["Item Text (PO) ← Item Text (PReq)","Fixing indicator: blank (copied immediately)"],
+["Delivery Text (PO) ← Delivery Text (PReq)","Fixing indicator: blank (copied immediately)"],
+["── From Material Master ──",""],
+["Material PO Text ← PO Text (MM)","Fixing indicator: * (can be adopted and changed)"]
+],
+steps:[
+"SPRO: <b>Define Copying Rules for Item Texts in Purchase Orders</b>.",
+"Her metin tipini seç, <b>Text linkages</b> düğümü.",
+"Kaynak nesne PReq ve Material Master için linkage ve fixing indicator'ları not et."
+]},
+{num:"Task 2-3",title:"Create Y## PO with Reference to PReq, Check Text Behavior",app:"Create Purchase Order – Advanced",
+fields:[
+["── PO from PReq ──",""],
+["Document Type","Y##"],
+["Supplier","T-S52A##"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["Net Price","150 EUR"],
+["Conf. Control Key","0001"],
+["── Text Status ──",""],
+["Item Text (from PReq)","Adopted immediately (blank status)"],
+["Delivery Text (from PReq)","Adopted immediately (blank status)"],
+["Material PO Text","'Can be adopted from Mat. Master' — NOT yet copied (status set)"]
+],
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>. Doc Type: Y##.",
+"Supplier: T-S52A##. PReq'i doküman görünümünden aktar.",
+"EUR 150 gir. Confirmations: 0001.",
+"Item Details → <b>Texts</b> sekmesi:",
+"Material PO Text durumunu not et: metin kopyalanabilir ama henüz kopyalanmadı.",
+"Item Text ve Delivery Text: talep metinlerinden anında aktarılmış (boş durum).",
+"Kaydet."
+],
+result:"Boş sabitleme göstergesi (PReq'den Kalem/Teslimat Metni): HEMEN benimsenir. Yıldız (*) sabitleme göstergesi (MM'den Malzeme PO Metni): metin benimsenip değiştirilebilir — ancak metin açılıp değiştirilmeden kopyalanamaz."}
+]},
+
+{id:20,title:"Specify Texts for Output Processing",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"Y## belge tipi için çıktı başlığı, form header metinleri, kalem metinleri ve form eki ayarlarını tanımla. PO önizlemesinde doğrula.",
+tasks:[
+{num:"Task 1-1",title:"Define Heading for Y## PO Output",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Messages","Texts for Messages","Define Texts for Purchase Order"],
+fields:[
+["── Heading ──",""],
+["Print Operation","1"],
+["Purchasing Doc. Type","Y##"],
+["Title","Subcontracting"]
+],
+steps:[
+"SPRO: <b>Materials Management → Purchasing → Messages → Texts for Messages → Define Texts for Purchase Order</b>.",
+"Dialog Structure'da <b>Headings</b> seçeneğine tıkla.",
+"<b>New Entries</b>: tablodaki verileri gir.",
+"Kaydet. Aktiviteden çıkma."
+],
+warn:"Ön koşul: Satın alma siparışleri için <b>SAP S/4HANA</b> çıktı yönetimi ETKİNSİZ olmalıdır. Kontrol: <b>Cross-Application Components → Output Control → Manage Application Object Type Activation → PURCHASE_ORDER</b>."},
+{num:"Task 1-2",title:"Define Form Header Texts for Y##",app:"SAP GUI – SPRO",
+fields:[
+["── Texts for Document Header ──",""],
+["Entry 1 — Print Seq. 10","Text Object: TEXT | Text ID: ST | Text Name: Z_LB_EINK"],
+["Entry 2 — Print Seq. 20","Text Object: EKKO | Text ID: F01 | Print Title: Selected (header text with title)"]
+],
+steps:[
+"Dialog Structure'da <b>Texts for Document Header</b> düğümüne çift tıkla.",
+"<b>New Entries</b>: 1. satırı gir. <b>Next Entry</b>.",
+"2. satırı gir (<b>Print Title</b> onay kutusunu seç). Kaydet. Aktiviteden çıkma."
+]},
+{num:"Task 1-3",title:"Define Item Texts for Item Category L",app:"SAP GUI – SPRO",
+fields:[
+["── Text for Document Item (Item Cat. L) ──",""],
+["Entry 1 — Seq. 10","EKPO / F03 (Material PO Text)"],
+["Entry 2 — Seq. 20","EKPO / F01 (Item Text)"],
+["Entry 3 — Seq. 30","EKPO / F04 (Delivery Text)"],
+["Print Title","NOT selected (all without title)"]
+],
+steps:[
+"Dialog Structure'da <b>Text for Document Item</b> düğümüne çift tıkla.",
+"<b>New Entries</b>: üç satırı tabloya göre gir (<b>Next Entry</b> ile aralarında geç).",
+"Kaydet. Aktiviteden çıkma."
+]},
+{num:"Task 1-4",title:"Define Supplement Texts for Y##",app:"SAP GUI – SPRO",
+fields:[
+["── Texts for Document Supplement ──",""],
+["Entry 1 — Seq. 10","EKKO / F05 (Terms of Delivery) | Print Title: Selected"]
+],
+steps:[
+"Dialog Structure'da <b>Texts for Document Supplement</b> düğümüne çift tıkla.",
+"<b>New Entries</b>: tablodaki veriyi gir (<b>Print Title</b> seç). Kaydet."
+]},
+{num:"Task 1-5",title:"Verify in Print Preview of Y## PO",app:"Create Purchase Order – Advanced",
+steps:[
+"Fiori: <b>Create Purchase Order - Advanced</b>. <b>Other Purchase Order</b>: Y## PO numarasını gir.",
+"<b>Print Preview</b> butonuna bas.",
+"Girilen ve aktarılan metinler görüntülenir.",
+"Print Title seçilen metinlerde metin tipi adı da görüntülenir."
+]}
+]},
+
+{id:21,title:"Maintain Message Schema and Message Types",app:"SAP GUI – SPRO",
+sc:"Satınalma mesaj şeması RMBEF1'i incele. NEU, MAHN, AUFB mesaj tiplerini kontrol et.",
+tasks:[
+{num:"1",title:"Find Message Schema for Purchase Orders",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Messages","Output Control","Message Determination Schemas","Define Message Schema for Purchase Order"],
+fields:[
+["── Schema Assignment ──",""],
+["Assigned Schema","RMBEF1"],
+["N indicator","Set — new message determination triggered for change messages"]
+],
+steps:[
+"SPRO: <b>Messages → Output Control → Message Determination Schemas → Define Message Schema for Purchase Order</b>.",
+"<b>Assign Schema to Purchase Order</b> seç.",
+"Schema RMBEF1 atandığını ve N göstergesi set olduğunu gör."
+],
+warn:"EX 21 ve 22 ön koşulları: Satın alma siparışleri için <b>SAP S/4HANA</b> çıktı yönetimi ETKİNSİZ olmalıdır."},
+{num:"2",title:"Check Message Types in Schema RMBEF1",app:"SAP GUI – SPRO",
+fields:[
+["── Schema RMBEF1 Message Types ──",""],
+["NEU (Purchase Order)","Requirement: 101"],
+["MAHN (Dunning)","Requirement: 103"],
+["AUFB (Dunning Order Confirmation)","Requirement: 107"]
+],
+steps:[
+"SPRO: <b>Define Message Schema for Purchase Order → Maintain Message Determination Schema: Purchase Order</b>.",
+"RMBEF1 satırını seç. Dialog Structure'da <b>Control data</b> düğümüne tıkla.",
+"Her mesaj tipi için Requirement'ı not et."
+]}
+]},
+
+{id:22,title:"Create Condition Records and Message Types",app:"SAP GUI – SPRO / ME21N",
+sc:"NEU mesaj tipini incele. Y## için koşul kaydı oluştur (2 kopya, printer: Z## satınalma grubuna ADM1). Opsiyonel: ZP## faks mesaj tipi oluştur.",
+tasks:[
+{num:"Task 1-1",title:"Inspect Message Type NEU Settings",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Messages","Output Control","Message Types","Define Message Types for Purchase Order"],
+fields:[
+["── NEU Settings ──",""],
+["Access sequence","0001"],
+["Access to conditions","Yes"],
+["Print parameter","Purchasing group"],
+["Fine-tuned control — used for","Print operations 1 (new) and 2 (change)"]
+],
+steps:[
+"SPRO: <b>Messages → Output Control → Message Types → Define Message Types for Purchase Order → Maintain Message Types for PO</b>.",
+"NEU satırını seç, <b>Details</b>.",
+"General data sekmesi: Access sequence, Access to conditions.",
+"Print sekmesi: Print parameter.",
+"<b>Back</b>. <b>Fine-Tuned Control: Purchase Order</b>: NEU'nun kullanıldığı işlemleri gör."
+]},
+{num:"Task 2-1",title:"View Access Sequence 0001 and Condition Tables",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Purchasing","Messages","Output Control","Access sequences","Define Access Sequence for Purchase Order"],
+fields:[
+["── Access Sequence 0001 Order ──",""],
+["Priority 1","Purchasing Output Determination: Purch. Org./Vendor for EDI"],
+["Priority 2","Purchasing Output Determination: Doc. Type/Purch. Org./Vendor"],
+["Priority 3","Purchasing Output Determination: Document type"]
+],
+steps:[
+"SPRO: <b>Messages → Output Control → Access sequences → Define Access Sequence for Purchase Order</b>.",
+"0001 satırını seç, Dialog Structure'da <b>Accesses</b> düğümüne tıkla.",
+"Erişim sırasını not et."
+]},
+{num:"Task 2-2",title:"Display Condition Record for NB (Doc Type — Table 3)",app:"SAP GUI – MN06",
+path:["SAP Easy Access","Logistics","Materials Management","Purchasing","Master Data","Messages","Purchase Order","Display (MN06)"],
+fields:[
+["── Doc Type NB Condition Record ──",""],
+["Transmission medium","1 (Print output)"],
+["Date/time","4"],
+["Output Device","LP01"]
+],
+steps:[
+"SAP Easy Access: <b>Logistics → Materials Management → Purchasing → Master Data → Messages → Purchase Order → Display</b> (MN06).",
+"Output Type: NEU, Enter.",
+"<b>Purchasing Output Determination: Document Type</b> seç.",
+"Doc. Type: NB, <b>Execute</b>.",
+"Condition record: Medium 1, Date/Time 4.",
+"<b>Communication</b>: Output Device: LP01."
+]},
+{num:"Task 2-3",title:"Create PO NB and Verify Message Determination",app:"SAP GUI – ME21N",
+path:["Logistics","Materials Management","Purchasing","Purchase Order","Create","Vendor/Supplying Plant Known (ME21N)"],
+fields:[
+["── PO Header ──",""],
+["Supplier","T-S52A##"],
+["Purchasing Organization","101C"],
+["Purch. Group","Z##"],
+["── Message Result ──",""],
+["Message generated for","NEU"],
+["Transmission medium","Print output"],
+["Date/time","4"],
+["Output device","LP01"],
+["Source","Condition table: Document type NB (access step 20)"]
+],
+steps:[
+"ME21N: header verilerini gir.",
+"<b>Messages</b> butonuna bas: NEU, medium Print, Date/time 4.",
+"<b>Communication</b>: output device LP01.",
+"<b>Goto → Determination analysis</b>: NEU access step 20, condition type NB.",
+"<b>Hold</b> ile kaydet. PO numarasını not et."
+]},
+{num:"Task 2-4",title:"Verify No Condition Record for Y## Document Type",app:"SAP GUI – MN06",
+steps:[
+"MN06. Output Type: NEU.",
+"<b>Purchasing Output Determination: Document Type</b>.",
+"Doc. Type: Y##, <b>Execute</b>.",
+"Sonuç: 'No condition records exist for this selection.'"
+]},
+{num:"Task 2-5",title:"Create Condition Record for Y## (2 Copies, Printer ADM1 via Z##)",app:"SAP GUI – MN04",
+path:["Logistics","Materials Management","Purchasing","Master Data","Messages","Purchase Order","Create (MN04)"],
+fields:[
+["── New Condition Record ──",""],
+["Output Type","NEU"],
+["Key Combination","Purchasing Output Determination: Document Type"],
+["Doc. Type","Y##"],
+["Medium","1 (Print output)"],
+["Date/Time","3"],
+["Output Device","(no entry — determined via purchasing group)"],
+["Number of messages","2"],
+["── Printer Assignment ──",""],
+["Purchasing Group Z##","ADM1"]
+],
+steps:[
+"MN04. Output Type: NEU.",
+"<b>Purchasing Output Determination: Document Type</b> seç.",
+"Y##, Medium: 1, Date/Time: 3 gir.",
+"<b>Communication</b>: Output Device boş, Number of messages: <b>2</b>.",
+"Kaydet.",
+"SPRO: <b>Materials Management → Purchasing → Messages → Assign Output Devices to Purchasing Groups</b>.",
+"Z## satırında Output Device: <b>ADM1</b>. Kaydet."
+]},
+{num:"Task 2-6",title:"Create Y## PO and Verify 2-Copy Print Message",app:"SAP GUI – ME21N",
+steps:[
+"ME21N: Order type Y##, Supplier T-S52A##, Purch. Group Z##.",
+"<b>Messages</b>: Transmission medium: Print output, Date/time: 3.",
+"<b>Communication</b>: Logical destination: ADM1, Number of messages: 2.",
+"<b>Hold</b>. PO numarasını not et."
+]},
+{num:"Task 3 (Optional)",title:"Create New Message Type ZP## for Fax Copy Printing",app:"SAP GUI – SPRO",
+fields:[
+["── ZP## Settings ──",""],
+["Copy from","NEU"],
+["Output Type","ZP##"],
+["Transmission medium","1 (Print output — copy for buyer)"],
+["Fine-tuned control","Operation 1 + ZP##"],
+["Schema RMBEF1","Step <50+##>, Counter 0, Cond. ZP##, Req. 101"]
+],
+steps:[
+"SPRO: <b>Define Message Types for Purchase Order → Maintain Message Types for PO</b>.",
+"NEU satırını seç, <b>Copy As…</b>: Output Type ZP##, adı gir. Enter. <b>Copy all</b>.",
+"<b>Back</b>. <b>Fine-Tuned Control</b>: <b>New Entries</b>, Operat.: 1, Cond. Type: ZP##. Kaydet.",
+"<b>Maintain Message Determination Schema: Purchase Order</b>: RMBEF1 seç, Control data.",
+"<b>New Entries</b>: Step: <50+##>, Counter: 0, ZP##, Req. 101. Kaydet."
+]},
+{num:"Task 4 (Optional)",title:"Create Condition Records for NEU (Fax) and ZP## (Print)",app:"SAP GUI – MN04",
+fields:[
+["── NEU condition record ──",""],
+["Key Combination","Doc. Type/Purch. Org/Vendor"],
+["Doc. Type / Purch.Org / Supplier","Y## / 101C / T-S52A##"],
+["Medium","2 (Fax)"],
+["── ZP## condition record ──",""],
+["Same key combination","same values"],
+["Medium","1 (Print output)"]
+],
+steps:[
+"MN04. NEU için Doc.Type/Purch.Org/Vendor tablosunda Y##/101C/T-S52A##, Medium 2. Kaydet.",
+"MN04. ZP## için aynı tablo, aynı değerler, Medium 1. Kaydet.",
+"BP (T-S52A##)'de faks numarası gir (örn. 12345). Kaydet.",
+"ME21N: Y##, T-S52A##. Messages: NEU (faks) + ZP## (print) görünmeli."
+],
+result:"T-S52A## tedarikçisi ile Y## PO için: NEU = Faks (ortam 2) tedarikçiye | ZP## = Yazdırma (ortam 1) alıcı kopyası için."}
+]},
+
+{id:23,title:"Test the SAP S/4HANA Output Management",app:"SAP GUI – SPRO / Manage Purchase Orders",
+sc:"Yeni SAP S/4HANA çıktı yönetimini etkinleştir. T-S52A## için e-posta gönderim kuralı tanımla. PO ön izlemesinde doğrula.",
+tasks:[
+{num:"1",title:"Activate New Output Management for Purchase Orders",app:"SAP GUI – SPRO",
+path:["SPRO","Cross-Application Components","Output Control","Manage Application Object Type Activation"],
+fields:[
+["── Object Type ──",""],
+["Application Object Type","PURCHASE_ORDER"],
+["Status","Application Active"]
+],
+steps:[
+"SPRO: <b>Cross-Application Components → Output Control → Manage Application Object Type Activation</b>.",
+"<b>PURCHASE_ORDER</b> satırını bul.",
+"Durum: <b>Application Active</b> değilse değiştir, kaydet.",
+"Transport request diyalogunda: Customizing Group ## request'ini seç."
+]},
+{num:"2",title:"Create Email Rule for Supplier T-S52A##",app:"SAP GUI – SPRO",
+path:["SPRO","Cross-Application Components","Output Control","Define Business Rules for Output Parameter Determination"],
+fields:[
+["── New Rule ──",""],
+["Show Rules for","Purchase Order"],
+["Determination Step","Channel"],
+["Output Type","Purchase Order"],
+["Receiver ID","T-S52A##"],
+["Channel","Email"],
+["Exclusive Indicator","X (true)"]
+],
+steps:[
+"SPRO: <b>Cross-Application Components → Output Control → Define Business Rules for Output Parameter Determination</b>.",
+"Show Rules for: Purchase Order, Determination Step: Channel.",
+"<b>Edit</b>. Table Contents'te ilk satırı seç, <b>Insert New Row</b>.",
+"Output Type: Direct Value Input → Purchase Order. Receiver ID: T-S52A##.",
+"Channel: Email. Exclusive Indicator: X (true).",
+"<b>Activate</b>, uyarıyı Yes ile onayla. Pencereyi kapat."
+]},
+{num:"3",title:"Test Email Rule in Purchase Order Preview",app:"Manage Purchase Orders",
+path:["Fiori Launchpad","Purchase Order Processing","Manage Purchase Orders"],
+steps:[
+"Fiori: <b>Manage Purchase Orders</b>. <b>Create</b>.",
+"Supplier: T-S52A##. Purch. Org. ve Purch. Group otomatik dolduğunu doğrula.",
+"<b>Output Preview</b> butonuna bas (sağ üst)."
+],
+result:"T-S52A## için EMAIL kanalıyla bir mesaj görüntülenir — özel kural eşleşir."}
+]}
+]},
+{unit:6,title:"Inventory Management",ex:[
+{id:24,title:"Adjust Settings for Material and Accounting Documents",app:"SAP GUI – SPRO",
+sc:"MIGO_TR işlemi için FI belge tipi WA'yı belirle. Muhasebe belgesi numara aralığı 49'u (4900000000–4999999999) incele. Yıl bağımsız atama.",
+tasks:[
+{num:"1",title:"Find FI Document Type for MIGO_TR (Stock Transfers/Transfer Postings)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Number Assignment","Define Number Assignment for Accounting Documents"],
+fields:[
+["── MIGO_TR ──",""],
+["FI Document Type","WA (Goods Issue)"]
+],
+steps:[
+"SPRO: <b>Materials Management → Inventory Management and Physical Inventory → Number Assignment → Define Number Assignment for Accounting Documents</b>.",
+"<b>Goods Issue Document Type</b> butonuna bas.",
+"MIGO_TR → FI document type: <b>WA (Goods Issue)</b>."
+]},
+{num:"2",title:"Find Accounting Document Number Range for WA in Company Code 1010",app:"SAP GUI – SPRO",
+fields:[
+["── Document Type WA ──",""],
+["Number Range","49"],
+["Interval","4900000000 – 4999999999"],
+["Assigned to year","9999 (not year-dependent)"]
+],
+steps:[
+"SPRO: <b>Define Number Assignment for Accounting Documents</b>.",
+"<b>Financial Accounting Document Types</b> butonuna bas.",
+"WA satırını seç, <b>Details</b>. Number range: <b>49</b>.",
+"<b>Number range information</b> butonuna bas.",
+"Company Code: 1010 gir, <b>Display Intervals</b>.",
+"49 satırına kaydır: Interval 4900000000–4999999999, Year: <b>9999</b> (yıl bağımsız)."
+],
+result:"FI belge tipi WA, numara aralığı 49'u kullanır (4900000000–4999999999). Yıl 9999 = aralık yıla bağlı DEĞİLDİR."}
+]},
+
+{id:25,title:"Adjust Settings for Goods Movements",app:"SAP GUI – SPRO / SAP Fiori",
+sc:"MvT 201'den Z## hareket tipi oluştur. KONTO alanını gizle, GRUND alanını zorunlu yap, 3 neden tanımla. V## account grouping ile hesap belirlemeyi ayarla. Test et.",
+tasks:[
+{num:"Task 1",title:"Create New Movement Type Z## (Copy from 201)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Movement Types","Copy, Change Movement Types"],
+fields:[
+["── New Movement Type ──",""],
+["From","201"],
+["To","Z99 (enter range to see 201)"],
+["New Movement Type","Z##"],
+["Copy method","Copy all"]
+],
+steps:[
+"SPRO: <b>Materials Management → Inventory Management and Physical Inventory → Movement Types → Copy, Change Movement Types</b>.",
+"Field Selection diyalogunda <b>Movement Type</b> onay kutusunu seç, <b>Apply</b>.",
+"Determine Work Area: From: 201, To: Z99. <b>Apply (Enter)</b>.",
+"201 satırını seç. <b>Edit → Copy As</b>.",
+"Movement Type: <b>Z##</b> gir. <b>Copy all</b>. Kaydet."
+]},
+{num:"Task 2-1",title:"Hide KONTO Field (Account Number) for Z##",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Movement Types","Copy, Change Movement Types"],
+fields:[
+["── Field Selection (Enjoy) ──",""],
+["Field to delete","KONTO (if present)"],
+["Reason","Account always determined automatically — no manual entry allowed"]
+],
+steps:[
+"SPRO: <b>Copy, Change Movement Types</b>. From: Z##. <b>Apply</b>.",
+"Dialog Structure'da <b>Field selection (Enjoy)</b> düğümüne tıkla.",
+"Z## ile KONTO alanı içeren satırı seç ve <b>sil</b> (Enjoy işlemlerinde Move Type seviyesinde hide/display yok — satırı kaldırmak yeterli).",
+"Kaydet."
+],
+result:"<b>KONTO</b> alanı gizli: Kullanıcı tüketim hesabını manuel giremez — her zaman otomatik hesap belirleme tarafından saptanr."},
+{num:"Task 2-2",title:"Make GRUND Field (Reason) Mandatory and Define 3 Reasons",app:"SAP GUI – SPRO",
+fields:[
+["── Field Selection ──",""],
+["Movement Type","Z##"],
+["Field Name","GRUND"],
+["Setting","Required Entry"],
+["── Reasons for Movement Z## ──",""],
+["Reason 1","1 — any description"],
+["Reason 2","2 — any description"],
+["Reason 3","3 — any description"]
+],
+steps:[
+"Dialog Structure'da <b>Field selection (Enjoy)</b> düğümünde kal.",
+"<b>New Entries</b>: Movement Type Z##, Field Name: <b>GRUND</b>, <b>Required Entry</b> radyo butonu. Kaydet.",
+"Dialog Structure'da <b>Reason for Movement</b> düğümüne tıkla.",
+"<b>New Entries</b>: Movement Type Z## için 3 satır gir (Reason: 1, 2, 3; Description: seçim serbest). Kaydet."
+]},
+{num:"Task 3-1",title:"Determine Value String and Account Grouping for Z##",app:"SAP GUI – SPRO",
+fields:[
+["── Update Control for Z## ──",""],
+["Value string","WA01 (from 201 via copy)"],
+["Transaction/event keys","BSX, GBB, PRD, UMB"],
+["GBB — original Account Modification","VBR (from 201)"]
+],
+steps:[
+"SPRO: <b>Copy, Change Movement Types</b>. Z## seçili, Dialog Structure'da <b>Update control / WM movement types</b>.",
+"Value updating ve quantity updating set, special stock yok → satırı seç, <b>Detail</b>.",
+"Value string: <b>WA01</b>.",
+"<b>Choose <detail></b> butonuna bas: WA01 içindeki işlem anahtarlarını gör.",
+"GBB için Account Modification: <b>VBR</b>."
+],
+info:"Hem 201 hem Z## değer dizisi WA01 + GBB'yi kullanır. FARKLI hesaplara deftere nakletmenin tek yolu, Z##'ye FARKLI bir hesap gruplama kodu atamaktır."},
+{num:"Task 3-2",title:"Assign New Account Grouping V## to Z## and Create GBB Accounts",app:"SAP GUI – SPRO",
+fields:[
+["── Account Grouping Change ──",""],
+["Movement Type","Z##"],
+["Old GBB Modification","VBR"],
+["New GBB Modification","V##"],
+["── GBB New Entries for V## ──",""],
+["0001 / V## / 3000","51700000 / 51700000"],
+["0001 / V## / VC##","51700000 / 51700000"],
+["VG## / V## / 3000","51700000 / 51700000"],
+["VG## / V## / VC##","51700000 / 51700000"]
+],
+steps:[
+"Dialog Structure'da <b>Account Grouping</b> düğümüne tıkla.",
+"Z##, value updating + qty updating set, no special stock satırında GBB account modification: <b>VBR → V##</b>. Kaydet.",
+"SPRO: <b>Configure Automatic Postings → Account Assignment → GBB</b>. YCOA onayla.",
+"<b>New Entries</b>: Dört satırı tabloya göre gir (her iki VGC için, her iki valuation class için). Kaydet."
+],
+warn:"Bu egzersizin doğru çalışması için <b>GOODS_MOVEMENT</b> çıktı yönetimi ETKİNSİZ olmalıdır."},
+{num:"Task 4-1",title:"Check Stock of T-R1## in Plant 1010, Stor.Loc 101B",app:"Stock Single Material",
+path:["Fiori Launchpad","Stock Monitoring","Stock Single Material"],
+steps:[
+"Fiori: <b>Stock Single Material</b>. Material: T-R1##. Plant 1010, Stor.Loc 101B.",
+"Stok miktarını not et. Stok yoksa: Post Goods Movement → MvT 561 ile ilk stok girişi yap."
+]},
+{num:"Task 4-2",title:"Post GI with Z## — Verify 3 Customizing Changes",app:"Post Goods Movement",
+path:["Fiori Launchpad","Warehouse Processing","Post Goods Movement"],
+fields:[
+["── GI with Z## ──",""],
+["Transaction","Goods Issue"],
+["Movement Type","Z##"],
+["Plant","1010"],
+["Storage Location","101B"],
+["Qty","2 PC"],
+["Material","T-R1##"],
+["Cost Center","4110"],
+["── Results ──",""],
+["G/L Account field","Hidden (cannot be entered — automatic only)"],
+["Reason for Movement","Required — select from 3 defined reasons"],
+["Offsetting account","51700000"]
+],
+steps:[
+"Fiori: <b>Post Goods Movement</b>. İşlem: Goods Issue, referans: Other.",
+"Open Detail Data. Where: MvT Z##, Plant 1010, Stor.Loc 101B.",
+"Quantity: 2. Material: T-R1##. Enter.",
+"<b>Account Assignment</b>: G/L Account alanı görünmez (hidden).",
+"<b>Where</b> sekmesinde <b>Reason for Movement</b>: zorunlu, 3 nedenden birini seç.",
+"<b>Post</b>.",
+"İşlem: Display, Material Document. Muhasebe belgesindeki G/L hesabını kontrol et."
+],
+result:"Z## mal çıkışı: <b>G/L</b> alanı = GİZLİ | Neden = ZORUNLU | Mahsup hesabı = 51700000 (V## hesap gruplama üzerinden)."},
+{num:"Task 4-3",title:"Post GI with 201 — Compare Behavior",app:"Post Goods Movement",
+fields:[
+["── GI with 201 ──",""],
+["Movement Type","201"],
+["Material / Plant / Stor.Loc","T-R1## / 1010 / 101B"],
+["Qty","2 PC"],
+["Cost Center","4110"],
+["── Results ──",""],
+["G/L Account field","Ready for input (visible)"],
+["Reason for Movement","NOT required"],
+["Offsetting account","51100000 (VBR + class 3000 for 1010)"]
+],
+steps:[
+"<b>Post Goods Movement</b>. Goods Issue, Other.",
+"MvT: 201, Plant 1010, Stor.Loc 101B, Qty 2, Material T-R1##, Cost Center 4110.",
+"<b>Account Assignment</b> sekmesi: G/L Account alanı <b>görünür ve düzenlenebilir</b>.",
+"Reason for Movement: gerekli değil.",
+"Post. Muhasebe belgesini kontrol et."
+],
+result:"MvT 201: <b>G/L</b> alanı = GÖRÜNÜR (girişe hazır) | Neden = ZORUNLU DEĞİL | Hesap = 51100000 (VBR gruplama)."}
+]},
+
+{id:26,title:"Adjust Output Determination in Inventory Management",app:"SAP GUI – SPRO",
+sc:"ME0001 prosedürü ve MLFH/MLGR/MLMD/MLUD mesaj tipleri. Opsiyonel: RL## yeni çıktı tipi oluştur, prosedüre ekle, erişim dizisi ata, koşul kaydı oluştur ve test et.",
+tasks:[
+{num:"Task 1-1",title:"Find Output Determination Procedure for Inventory Management",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Output Determination","Maintain Output Determination Procedures"],
+fields:[
+["── Assigned Procedure ──",""],
+["Procedure","ME0001"]
+],
+steps:[
+"SPRO: <b>Materials Management → Inventory Management and Physical Inventory → Output Determination → Maintain Output Determination Procedures</b>.",
+"<b>Conditions: Procedure</b> satırını seç."
+],
+warn:"Ön koşul: <b>GOODS_MOVEMENT</b> için <b>SAP S/4HANA</b> çıktı yönetimi ETKİNSİZ olmalıdır. Kontrol: <b>Cross-Application Components → Output Control → Manage Application Object Type Activation</b>."},
+{num:"Task 1-2",title:"Identify Internal Notification Output Types in ME0001",app:"SAP GUI – SPRO",
+fields:[
+["── Internal Notification Output Types ──",""],
+["MLFH","No requirement"],
+["MLGR","Requirement: 171"],
+["MLMD","Requirement: 172"],
+["MLUD","Requirement: 174"]
+],
+steps:[
+"ME0001 prosedürünü seç. Dialog Structure'da <b>Control data</b> düğümüne tıkla.",
+"M ile başlayan çıktı tiplerini ve requirement değerlerini not et."
+]},
+{num:"Task 2-1 (Optional)",title:"Create New Output Type RL## (Copy from MLGR)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Output Determination","Maintain Output Types"],
+fields:[
+["── New Output Type ──",""],
+["Output Type","RL##"],
+["Copy from","MLGR (GR Message)"],
+["Partner Function","MP"],
+["Transmission Medium","Simple mail"],
+["Processing Program","RSNASTSO"],
+["Form Routine","SAPOFFICE_AUFRUF"],
+["Access Sequence","0003"]
+],
+steps:[
+"SPRO: <b>Maintain Output Types</b>. Display → Change.",
+"MLGR satırını seç, <b>Copy As…</b>: RL##. <b>Copy all</b>. Onay pencerelerini onayla.",
+"Processing Routines: RSNASTSO + SAPOFFICE_AUFRUF doğrula.",
+"Partner functions: MP doğrula.",
+"Mail title and texts: başlığı düzenle. Kaydet. <b>Back</b>.",
+"RL## seç, <b>Details</b>. Access sequence: <b>0003</b>. Kaydet."
+]},
+{num:"Task 2-2 (Optional)",title:"Add RL## to Procedure ME0001",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Output Determination","Maintain Output Determination Procedures"],
+fields:[
+["── New Entry in ME0001 ──",""],
+["Step","5##"],
+["Counter","10"],
+["Condition Type","RL##"]
+],
+steps:[
+"SPRO: <b>Maintain Output Determination Procedures → Conditions: Procedure</b>.",
+"ME0001 satırını seç, <b>Control data</b>.",
+"<b>New Entries</b>: Step: 5##, Counter: 10, Condition Type: RL##. Kaydet."
+]},
+{num:"Task 2-3 (Optional)",title:"Define Item Print Indicator and Assign to MvT 122/124",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Print Control","General Settings"],
+fields:[
+["── New Item Print Indicator ──",""],
+["New indicator value","9 (example — not 1–7)"],
+["Assign to MvT 122","Selected"],
+["Assign to MvT 124","Selected"]
+],
+steps:[
+"SPRO: <b>Print Control → General Settings → Item Print Indicator</b>.",
+"<b>New Entries</b>: 9 (veya uygun değer — henüz kullanılmayan biri). Kaydet.",
+"SPRO: <b>Print Control → Maintain Print Indicator for Goods Receipt Documents</b>.",
+"MvT 122 ve 124 için yeni indikatörü ata. Kaydet."
+],
+info:"Yeni bir kalem baskı göstergesi yalnızca bir kurs katılımcısı tarafından oluşturulabilir (1–7 zaten mevcuttur). Zaten yapıldıysa bu adımı atlayın."},
+{num:"Task 2-4 (Optional)",title:"Create Condition Record for RL##",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Output Determination","Maintain Conditions"],
+fields:[
+["── Condition Record ──",""],
+["Output Type","RL##"],
+["Transaction/Event Type","WE"],
+["Print Version","1"],
+["Item Print Indicator","9 (new indicator)"],
+["Partner Function","MP"],
+["Transmission Medium","7 (auto-proposed)"]
+],
+steps:[
+"SPRO: <b>Maintain Conditions → Create Condition: Inventory Mgmt</b>.",
+"Output Type: RL##. Enter.",
+"Yeni satır gir: WE, print version 1, indicator 9, partner MP.",
+"<b>Communication</b>: Yes — dummy recipient. <b>Back</b>. Kaydet."
+]},
+{num:"Task 2-5 (Optional)",title:"Test: Create Return Delivery and Check SAP Business Workplace Inbox",app:"Post Goods Movement",
+path:["Fiori Launchpad","Warehouse Processing","Post Goods Movement"],
+steps:[
+"Fiori: <b>Post Goods Movement</b>. İşlem: Return Delivery, referans: Material Document.",
+"<b>Find Material Doc.</b>: Supplier T-S52A##, Plant 1010. Execute.",
+"Malzeme belgesi numarasına çift tıkla.",
+"Header seviyesinde <b>Print via Output Control</b> onay kutusunu seç.",
+"Her kalem için Reason for Movement gir, <b>Item OK</b> seçimi yap.",
+"<b>Post</b>.",
+"SAP Easy Access: <b>SAP Business Workplace</b> butonuna bas. Inbox'ta mesajı görüntüle."
+],
+result:"İade teslimatı, RL## çıktı tipini tetikler (baskı göstergesi 9 + koşul kaydı üzerinden). Mesaj, MP iş ortağının <b>SAP Business Workplace</b> gelen kutusunda görünür."}
+]}
+]},
+
+{unit:7,title:"Additional Information: Implementation Guide and Customizing",ex:[
+{id:27,title:"Define a Customizing Project",app:"SAP GUI – SPRO_ADMIN / SPRO",
+sc:"Proje 200 (SAP S/4HANA Logistics) geçerlilik süresini ve durum değerlerini incele. S4550 Materials Management görünümünü çalışma listesine ekle ve varsayılan proje olarak ayarla.",
+tasks:[
+{num:"Task 1",title:"Inspect Project 200 Details and Status Values",app:"SAP GUI – SPRO_ADMIN",
+path:["SAP Easy Access","Tools","Customizing","IMG","Project Administration (SPRO_ADMIN)"],
+fields:[
+["── Project 200 — General Data ──",""],
+["Start Date","01/01/2020"],
+["End Date","12/31/2027"],
+["── Status Values ──",""],
+["01","Open"],
+["02","In Process"],
+["03","Finished"],
+["04","Not relevant"]
+],
+steps:[
+"SAP Easy Access: <b>Tools → Customizing → IMG → Project Administration</b> (SPRO_ADMIN).",
+"Proje 200 satırını seç, <b>Display Project</b>.",
+"Start: 01/01/2020, End: 12/31/2027.",
+"<b>Status Vals</b> sekmesine tıkla: durum değerlerini not et.",
+"<b>Proj. Team Member</b> sekmesi: atanan çalışanları gör."
+]},
+{num:"Task 2-1",title:"Add S4550 Materials Management View to Worklist",app:"SAP GUI – SPRO",
+path:["SAP Easy Access","Tools","Customizing","IMG","Execute Project (SPRO)"],
+steps:[
+"SAP Easy Access: <b>Tools → Customizing → IMG → Execute Project</b> (SPRO).",
+"<b>Add to Worklist</b> butonuna bas.",
+"<b>S4550 Materials Management</b> satırını seç, <b>Copy</b>."
+]},
+{num:"Task 2-2",title:"Disable Split Screen in User-Specific Settings",app:"SAP GUI – SPRO",
+steps:[
+"SPRO'da <b>Settings → User-Specific</b>.",
+"<b>General (Customizing Projects)</b> sekmesinde <b>Split Screen</b> onay kutusunun işaretini kaldır.",
+"<b>Continue</b>."
+]},
+{num:"Task 2-3",title:"Set S4550 Materials Management as Default Project/View",app:"SAP GUI – SPRO",
+steps:[
+"Worklist'te <b>S4550 Materials Management</b> projesini seç.",
+"<b>Edit → Default Project/View → Define</b>.",
+"SPRO'dan çık ve tekrar gir: S4550 Materials Management IMG yapısı otomatik açılır."
+]},
+{num:"Task 2-4",title:"Explore IMG Icons and Find Purchasing Groups Activity",app:"SAP GUI – SPRO",
+fields:[
+["── IMG Icons ──",""],
+["Documentation","📄 Doc icon"],
+["IMG Activity","▶ Activity icon"],
+["Status Information","ℹ Status icon"],
+["Note","📌 Note icon"]
+],
+steps:[
+"SPRO'da <b>ABAP Platform</b> ve <b>General Settings</b> düğümlerini genişlet.",
+"Simgelerin üzerine imleç getirerek açıklamalarını gör.",
+"<b>Find</b> butonuna bas (🔍).",
+"Arama: <b>purchasing groups</b>.",
+"Sonuç listesinde <b>Create Purchasing Groups</b>'a çift tıkla — Customizing aktivitesi açılır."
+]},
+{num:"Task 2-5",title:"Update Z## Purchasing Group Description and Set Status",app:"SAP GUI – SPRO",
+steps:[
+"Arama listesinde <b>Create Purchasing Groups</b>'u <b>IMG - Activity</b> ikonu ile başlat.",
+"Z## satırında <b>Desc. Pur. Grp</b>: yeni bir açıklama gir.",
+"Sağa kaydırarak e-posta adresini kontrol et.",
+"Kaydet. Customizing request oluştur (Customizing group ##). Continue.",
+"<b>Status Information</b>: mevcut durum — <b>In Process</b>."
+],
+result:"<b>Status Information</b>: İşlemde. <b>IMG</b> ikonları: Documentation / IMG Activity / Status Information / Note, her Customizing aktivitesinin farklı görünümlerine hızlı erişim sağlar.",
+info:"Uygulamada <b>Customizing</b>, özel bir Customizing sisteminde yapılır (üretim sisteminde değil). Ayarlar daha sonra taşınır. Bu kursta taşıma işlemi yapılmamaktadır."}
+]}
+]},
+];
+
+function path(a){
+  if(!a||!a.length)return'';
+  return'<div class="pr">'+a.map((p,i)=>
+    `<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`
+  ).join('')+'</div>';
+}
+function tbl(f){
+  if(!f||!f.length)return'';
+  const rows=f.map(([a,b])=>{
+    if(a.startsWith('──'))
+      return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;
+    return`<tr><td>${a}</td><td>${b}</td></tr>`;
+  }).join('');
+  return`<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function steps(s){
+  if(!s||!s.length)return'';
+  return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';
+}
+function task(t){
+  const body=
+    path(t.path)+
+    (t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+
+    (t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+
+    tbl(t.fields)+
+    steps(t.steps)+
+    (t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');
+  return`<div class="task">
+    <div class="thdiv" onclick="togTask(this)">
+      <span class="tn">${t.num}</span>
+      <span class="tt">${t.title}</span>
+      ${t.app?`<span class="ab">${t.app}</span>`:''}
+      <span class="task-chev">›</span>
+    </div>
+    <div class="task-body">${body}</div>
+  </div>`;
+}
+function card(e,uid){
+  let html=`<div class="card" id="ex${e.id}" data-u="${uid}">`;
+  html+=`<div class="ch" onclick="toggle(this)">
+    <span class="exn">${e.id}</span>
+    <div class="cl">
+      <div class="ct">${e.title}</div>
+      <div class="ca">${e.app}</div>
+    </div>
+    <div class="cr"><span class="sb">${e.tasks.length} Adım</span><span class="chev">›</span></div>
+  </div>`;
+  html+=`<div class="cb">`;
+  if(e.sc)html+=`<div class="scenario">${e.sc}</div>`;
+  e.tasks.forEach(t=>html+=task(t));
+  html+=`</div></div>`;
+  return html;
+}
+function unit(u){
+  const uid=`u${u.unit}`;
+  const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',5:'#22c55e',6:'#ef4444',7:'#fbbf24'};
+  const c=colors[u.unit]||'#60a5fa';
+  let h=`<div class="ug ${uid}" id="${uid}">
+    <div class="uh" onclick="togUnit(this)">
+      <span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">Unit ${u.unit}</span>
+      <span class="utitle">${u.title}</span>
+      <span class="uc">${u.ex.length} egzersiz</span>
+      <span class="uchev">›</span>
+    </div>
+    <div class="ug-body">`;
+  u.ex.forEach(e=>h+=card(e,uid));
+  return h+'</div></div>';
+}
+function toggle(h){h.parentElement.classList.toggle('open');}
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+function togTask(hdr){hdr.parentElement.classList.toggle('open');}
+function hl(t,q){
+  if(!q)return t;
+  const r=new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi');
+  return t.replace(r,'<mark>$1</mark>');
+}
+const app=document.getElementById('app');
+const frow=document.getElementById('frow');
+const cnt=document.getElementById('cnt');
+const nores=document.getElementById('nores');
+const srch=document.getElementById('search');
+const clr=document.getElementById('clr');
+const xpb=document.getElementById('xpb');
+const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);
+cnt.textContent=TOTAL;
+let term='',filterU='all',allOpen=false;
+D.forEach(u=>{
+  app.innerHTML+=unit(u);
+  const b=document.createElement('button');
+  b.className='fb';
+  b.dataset.u=`u${u.unit}`;
+  b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;
+  frow.appendChild(b);
+});
+function run(){
+  const q=term.toLowerCase().trim();
+  let vis=0;
+  document.querySelectorAll('.ug').forEach(ug=>{
+    const uid=ug.id;
+    const uMatch=filterU==='all'||filterU===uid;
+    let uVis=false;
+    ug.querySelectorAll('.card').forEach(card=>{
+      if(!uMatch){card.classList.add('hid');return;}
+      const raw=card.querySelector('.ch').textContent+card.querySelector('.cb').innerHTML;
+      const m=!q||raw.toLowerCase().includes(q);
+      if(m){card.classList.remove('hid');vis++;uVis=true;}
+      else{card.classList.add('hid');}
+    });
+    ug.classList.toggle('hid',!uVis||!uMatch);
+  });
+  cnt.textContent=vis||(!q&&filterU==='all'?TOTAL:vis);
+  nores.style.display=(vis===0&&(q||filterU!=='all'))?'block':'none';
+  clr.style.display=q?'inline':'none';
+}
+srch.addEventListener('input',e=>{term=e.target.value;run();});
+srch.addEventListener('keydown',e=>{if(e.key==='Escape'){term='';srch.value='';run();}});
+clr.addEventListener('click',()=>{term='';srch.value='';run();srch.focus();});
+frow.addEventListener('click',e=>{
+  const b=e.target.closest('.fb');
+  if(!b)return;
+  filterU=b.dataset.u;
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  run();
+});
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+xpb.addEventListener('click',()=>{
+  allOpen=!allOpen;
+  document.querySelectorAll('.card:not(.hid)').forEach(c=>c.classList.toggle('open',allOpen));
+  xpb.textContent=allOpen?'Tümünü Kapat':'Tümünü Aç';
+  xpb.classList.toggle('active',allOpen);
+});
+</script>
+</body>
+</html>

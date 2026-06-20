@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S4515 — Invoice Verification in SAP S/4HANA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+.sico{position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--td);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="u2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="u3"].on{background:rgba(96,165,250,.15);color:#60a5fa;border-color:rgba(96,165,250,.4);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u5"].on{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4);}
+.fb[data-u="u6"].on{background:rgba(239,68,68,.15);color:#ef4444;border-color:rgba(239,68,68,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+.ug.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.u1 .ubadge{background:rgba(6,182,212,.15);color:#06b6d4;border:1px solid rgba(6,182,212,.3);}
+.u2 .ubadge{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);}
+.u3 .ubadge{background:rgba(59,130,246,.15);color:var(--bl);border:1px solid var(--bbd);}
+.u4 .ubadge{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid var(--ybd);}
+.u5 .ubadge{background:rgba(34,197,94,.15);color:var(--green);border:1px solid var(--gbd);}
+.u6 .ubadge{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.sl li b{color:var(--text);font-weight:500;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+b{color:var(--text);font-weight:500;}
+@media(max-width:600px){#toolbar{padding:8px 14px 9px;}#search-row{grid-template-columns:1fr auto;}#sctr{display:none;}main{padding:18px 12px 60px;}header{padding:14px 16px 12px;}#homebtn{top:14px;right:16px;}}
+.uh{cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug-body{}
+.ug.collapsed .ug-body{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <button id="homebtn" onclick="location.href='index.html'">🏠 Home</button>
+  <div class="meta">
+    <span class="cid">S4515 · VER 26</span>
+    <h1 style="font-size:19px;font-weight:600;">Invoice Verification in SAP S/4HANA</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Exercises: <span class="n">23</span></div>
+    <div class="st">Units: <span class="n">6</span></div>
+    <div class="st">Duration: <span class="n">4h 55min</span></div>
+    <div class="st">System: <span class="n">SAP Fiori / T41 · Client 400</span></div>
+  </div>
+</header>
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg class="sico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Exercise, app, field ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">23</b> / 23 exercise</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+<script>
+const D=[
+{unit:1,title:"Invoice Entry",ex:[
+{id:1,title:"Post an Invoice",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"Sapsota Company'den iki fatura alındı. Birini Create Supplier Invoice app ile, diğerini Create Supplier Invoice – Advanced (veya MIRO) ile gir. Kullanıcı parametrelerini ayarla.",
+tasks:[
+{num:"Task 1",title:"Enter Invoice 101## Using Create Supplier Invoice App",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Company Code","1010"],
+["Gross Invoice Amount","3300"],
+["Invoice Date","Today's date"],
+["Reference","101##"],
+["── Purchasing Document References Tab ──",""],
+["Purchase Order / Scheduling Agreement","41515101##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç (Supplier Invoice Processing tile grubu).",
+"<b>General Information</b> sekmesinde Company Code: 1010 gir, 'Data Will Be Lost' mesajını <b>OK</b> ile onayla.",
+"Gross Invoice Amount, Invoice Date ve Reference alanlarını gir.",
+"<b>Purchasing Document References</b> sekmesinde <b>Purchase Order/Scheduling Agreement</b> alanına 41515101## gir.",
+"Enter'a bas.",
+"Kalem listesinde sistem tarafından önerilen miktarlar ve tutarlar fatura 101## ile eşleştirilir. PO geçmişini görüntülemek için her kalemde <b>View</b> butonuna bas.",
+"<b>Simulate</b> butonuna bas. Posting detaylarını görüntüle.",
+"<b>Post</b> butonuna bas."
+],
+result:"Simülasyon hesapları: 1) Tedarikçi hesabı –3.300,00 | 2) GR/IR clearing 1.000,00 | 3) GR/IR clearing 2.000,00 | 4) Vergi hesabı 300,00. Not: Tam teslim/kapalı PO kalemi 2 ve henüz teslim edilmemiş kalem 4 önerilmez.",
+info:"Sistem, tam teslim ve kapatılmış olan PO kalemi 2'yi ve henüz teslim edilmemiş (fatura beklenmiyor) kalem 4'ü önermez."},
+{num:"Task 2",title:"Enter Invoice 001## Using Create Supplier Invoice – Advanced App",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Invoice date","Today's date"],
+["Reference","001##"],
+["Amount","3300"],
+["Tax amount","300"],
+["── PO Reference Tab ──",""],
+["Purchase Order / Scheduling Agreement","41515001##"],
+["Layout","All Information – Training"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA Backend: Logistics → Materials Management → Logistics Invoice Verification → Document Entry → Enter Invoice (MIRO).",
+"Company Code: 1010 gir, <b>Continue</b>.",
+"<b>Basic Data</b> sekmesinde tüm alanları gir.",
+"<b>PO Reference</b> sekmesinde PO numarasını gir.",
+"<b>Layout</b> alanında <b>All Information – Training</b> seç.",
+"Enter'a bas.",
+"<b>Show PO structure</b> butonuyla PO kalem geçmişini görüntüle.",
+"<b>Simulate</b> butonuna bas. Hesap hareketlerini kontrol et.",
+"<b>Post</b> butonuna bas."
+],
+result:"Simülasyon: 1) Tedarikçi hesabı 3.300,00– | 2) GR/IR clearing 1.000,00 | 3) GR/IR clearing 2.000,00 | 4) Vergi hesabı 300,00"},
+{num:"Task 3",title:"Set User Parameters for S4515-## User",app:"SAP GUI – User Profile",
+path:["SAP Easy Access","System","User Profile","User Data"],
+fields:[
+["── Parameters Tab ──",""],
+["Set/Get parameter ID","BUK"],
+["Parameter value (BUK)","1010"],
+["Parameter value (IVAMOUNTADJUST)","X"],
+["Parameter value (IVFIDISPLAY)","X"]
+],
+steps:[
+"Backend T41, client 400'e giriş yap.",
+"<b>System → User Profile → User Data</b> seç.",
+"<b>Maintain User Profile</b> ekranında <b>Parameters</b> sekmesini seç.",
+"<b>Set/Get parameter ID</b> alanına BUK, <b>Parameter value</b> alanına 1010 gir.",
+"IVAMOUNTADJUST ve IVFIDISPLAY parametrelerinde değer X olduğunu doğrula.",
+"<b>Save</b>."
+]}
+]},
+
+{id:2,title:"Use Different Types of Invoice Verification",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"İki faturayı farklı referans türleriyle gir: İkisi de teslimat notuna (delivery note) referanslı. PO tabanlı ve GR tabanlı fatura doğrulamasının farkını anla.",
+tasks:[
+{num:"Task 1",title:"Enter Invoice 002## with Reference to Delivery Note",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Gross Invoice Amount","440"],
+["Invoice Date","Today's date"],
+["Reference","002##"],
+["── Purchasing Document References Tab ──",""],
+["Reference Document Category","Delivery Note"],
+["Delivery Note","58E4##"],
+["── Item List Corrections ──",""],
+["Amount","400"],
+["Quantity","20"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"<b>General Information</b> sekmesinde Gross Invoice Amount, Invoice Date ve Reference gir.",
+"<b>Purchasing Document References</b> sekmesinde <b>Reference Document Category</b>: <b>Delivery Note</b> seç.",
+"<b>Delivery Note</b> alanına 58E4## gir, Enter'a bas.",
+"'Balance not zero' mesajını kapat.",
+"Kalem listesinde PO geçmişini görüntülemek için <b>View</b> butonuna bas.",
+"PO numarasını seçerek <b>Process Flow</b> sekmesine git — iki GR göreceksin.",
+"<b>Process Control</b> sekmesinde <b>Goods-Receipt-Based Invoice Verification: No</b> → PO tabanlı doğrulama aktif.",
+"Create Supplier Invoice ekranına dön.",
+"Kalem listesinde Amount: 400, Quantity: 20 olarak düzelt.",
+"<b>Post</b>."
+],
+result:"<b>PO-based IV</b> (GR-Bsd IV=Hayır): Sistem PO kalemi için TEK fatura kalemi oluşturur; toplam teslim miktarı eksi toplam faturalandırılmış miktar önerilir."},
+{num:"Task 2",title:"Enter Invoice 102## with Reference to Delivery Note",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Invoice date","Today's date"],
+["Reference","102##"],
+["Amount","1210"],
+["Tax amount","110"],
+["── PO Reference Tab ──",""],
+["Reference Document Category","Delivery Note"],
+["Delivery Note","30R3##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"<b>Basic Data</b> sekmesinde alanları gir.",
+"<b>PO Reference</b> sekmesinde <b>Delivery Note</b> kategori ve numarasını gir, Enter'a bas.",
+"Kalem listesinde iki kalem önerilir. PO numarasına çift tıkla.",
+"PO kalem detayında <b>Purchase Order History</b> sekmesi: her PO kalemi için iki GR göreceksin.",
+"<b>Invoice</b> sekmesinde <b>GR-Bsd IV</b> onay kutusunun her iki kalem için seçili olduğunu doğrula.",
+"Create Supplier Invoice – Advanced ekranına dön.",
+"<b>Post</b>."
+],
+result:"<b>GR-based IV</b> (GR-Bsd IV=Evet) teslimat notu ile: Sistem, söz konusu GR'a ait PO kalemlerini ve o GR'da deftere geçirilen miktarları AYNEN önerir."}
+]},
+
+{id:3,title:"Park an Invoice",app:"Create Supplier Invoice / Supplier Invoices List",
+sc:"Fatura 003##'ü gir ama eksik bilgi nedeniyle park et. Ardından Supplier Invoices List ile park edilmiş belgeyi bul, 40 EUR planlansız teslimat maliyeti ekle ve gönder.",
+tasks:[
+{num:"1",title:"Park Invoice 003## (Create Supplier Invoice)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Gross Invoice Amount","7744"],
+["Invoice date","Today's date"],
+["Reference","003##"],
+["── Purchasing Document References Tab ──",""],
+["Reference Document Category","Purchase Order/Scheduling Agreement"],
+["Purchase Order / Scheduling Agreement","41515003##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"<b>General Information</b> sekmesinde alanları gir.",
+"<b>Purchasing Document References</b> sekmesinde PO numarasını gir.",
+"Kalem listesinde önerilen kalemleri fatura 003## ile karşılaştır — sözleşme değişikliği masrafları henüz girilmedi, 44 EUR bakiye gösterilir.",
+"Sözleşme değişikliği masraflarının nasıl kaydedileceği bilinmediğinden <b>Park</b> butonuna bas."
+],
+result:"Park edilmiş fatura belgesi oluşturuldu. Park edilmiş faturalar için yalnızca kısmi muhasebe belgesi (başlık + tedarikçi satırı) mevcuttur. Fatura deftere geçirilene kadar tam FI kaydı oluşmaz."},
+{num:"2",title:"Display Parked Invoice via Supplier Invoices List",app:"Supplier Invoices List",
+path:["Fiori Launchpad","Supplier Invoice Processing","Supplier Invoices List"],
+fields:[
+["── Filter ──",""],
+["Invoicing Party","S4515-1##"],
+["Status","Parked"],
+["Posting Date","Today's date"]
+],
+steps:[
+"Fiori Launchpad'de <b>Supplier Invoices List</b> app'ini aç.",
+"Filter alanlarını gir, <b>Go</b>.",
+"Park edilmiş fatura numarasına tıkla.",
+"Belgenin üst kısmında <b>Parked Invoice Status</b> görünür.",
+"Ekranın sağ üstünde <b>Advanced Display</b> seç.",
+"Display Parked Invoice Document penceresinde <b>Menu → Goto → Follow-On Documents</b>: park edilmiş muhasebe belgesi görünür (sadece header + tedarikçi satırı).",
+"<b>Show PO structure</b>: PO geçmişinde park edilmiş belge <b>VRe</b> kısaltmasıyla görünür.",
+"Advanced display browser penceresini kapat ama Fiori görünümünde kal."
+],
+result:"Park edilmiş fatura: Muhasebe belgesi mevcut ancak eksik (yalnızca başlık + tedarikçi satırı). PO geçmişi 'VRe' kısaltmasını gösterir."},
+{num:"3",title:"Post Unplanned Delivery Costs EUR 40",app:"Create Supplier Invoice",
+fields:[
+["── Unplanned Delivery Costs Tab ──",""],
+["Amount","40"]
+],
+steps:[
+"Supplier Invoice ekranında <b>Edit</b> butonuna bas.",
+"<b>Unplanned Delivery Costs</b> sekmesini seç.",
+"<b>Amount</b> alanına 40 gir.",
+"<b>Post</b> butonuna bas."
+]},
+{num:"4",title:"Display Posted Accounting Document and PO History",app:"Create Supplier Invoice",
+steps:[
+"<b>Advanced Display</b> seç.",
+"Display Invoice Document penceresinde <b>Follow-On Documents</b> butonuna bas.",
+"Muhasebe belgesine çift tıkla: Belge artık tam ve gönderilmiş.",
+"PO structure'a dön: fatura artık park edilmiş (VRE) değil, gönderilmiş fatura (RE-L) olarak görünür."
+],
+result:"Deftere geçişten sonra: Muhasebe belgesi eksiksiz ve deftere geçirildi. PO geçmişi VRE (park edilmiş) → RE-L (deftere geçirilmiş fatura) olarak güncellendi."}
+]},
+
+{id:4,title:"Define and Test the Flexible Workflow",app:"Manage Workflows for Supplier Invoices / Manage Purchase Orders",
+sc:"Maliyet merkezine atanmış faturalar için esnek iş akışı tanımla: Tedarikçi serbest bırakma grubu Z0## ise + fatura tutarı ≥ 1000 EUR ise iki adımlı onay gerekli.",
+tasks:[
+{num:"Task 1-1",title:"Create Flexible Workflow (Manage Workflows for Supplier Invoices)",app:"Manage Workflows for Supplier Invoices",
+path:["Fiori Launchpad","Configuration","Manage Workflows for Supplier Invoices"],
+fields:[
+["── Workflow Scenario ──",""],
+["Scenario","Parked Invoice as Complete"],
+["── Header ──",""],
+["Workflow Name","Workflow S4515–##"],
+["── Start Conditions ──",""],
+["Condition 1","Invoice is based on Purchase Order"],
+["Condition 2","Supplier Release Group is Z0##"],
+["── Step 1 ──",""],
+["Step Type","Release of Complete Invoice"],
+["Assignment By","Role"],
+["Role","Persons responsible for all used cost centers"],
+["Recipients","All of the recipients"],
+["── Step 2 ──",""],
+["Step Type","Release of Complete Invoice"],
+["Assignment By","Role"],
+["Role","Creator of Purchase Order"],
+["Step Condition","Invoice Amount is equal to or greater than 1000 EUR"]
+],
+steps:[
+"Fiori Launchpad'de <b>Manage Workflows for Supplier Invoices</b> app'ini aç (Configuration tile grubu).",
+"<b>Workflow for Parked Invoice as Complete</b>'ı seç.",
+"<b>Create</b>'e bas.",
+"<b>Header</b> bölümünde Workflow Name gir.",
+"<b>Start Conditions</b>: 1. koşul → <b>Invoice is based on Purchase Order</b>, <b>Create another condition</b>'a tıkla, 2. koşul → <b>Supplier Release Group is</b>, Z0## gir.",
+"<b>Workflow Steps</b>: <b>Create</b>'e bas.",
+"Step 1: Step Type: <b>Release of Complete Invoice</b>. Recipients: Role → <b>Persons responsible for all used cost centers</b>, <b>All of the recipients</b> seç. <b>Create</b>.",
+"Step 2: tekrar <b>Create</b>. Step Type: Release of Complete Invoice. Role: <b>Creator of Purchase Order</b>. Step Conditions: <b>Invoice Amount is equal to or greater than</b> 1000 EUR. <b>Create</b>.",
+"<b>Save and Activate</b>."
+]},
+{num:"Task 2-1",title:"Assign Release Group Z0## to Supplier T-S52A##",app:"Manage Supplier Master Data",
+path:["Fiori Launchpad","Purchasing and Goods Receipt","Manage Supplier Master Data"],
+fields:[
+["── Company Code Data (1010) → Finance Tab ──",""],
+["Release Group","S4515–## (Z0##)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Manage Supplier Master Data</b> app'ini aç.",
+"<b>Business Partner</b> alanına T-S52A## gir, <b>Go</b>.",
+"Satır sonundaki ikona tıkla.",
+"<b>Edit</b> seç, <b>Company Codes</b> sekmesine git.",
+"Company code 1010 satırında küçük ikona tıkla.",
+"Company Code penceresinde <b>Finance</b> sekmesi: <b>Release Group</b>: S4515–## (Z0##) gir.",
+"<b>Apply</b>, ardından <b>Save</b>."
+]},
+{num:"Task 2-2",title:"Find Cost Center Responsible User",app:"Manage Cost Centers",
+path:["Fiori Launchpad","Purchasing and Goods Receipt","Manage Cost Centers"],
+fields:[
+["── Filter ──",""],
+["Controlling Area","A000"],
+["Cost Center","50##"],
+["── Result ──",""],
+["User Responsible","S4PR1–##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Manage Cost Centers</b> app'ini aç.",
+"Controlling Area: A000, Cost Center: 50## gir, <b>Go</b>.",
+"50## satırında ikona tıkla.",
+"<b>General Information</b> bölümünde <b>User Responsible</b>: S4PR1–## olduğunu not et."
+]},
+{num:"Task 2-3",title:"Create PO for T-S52A## with Two Items",app:"Manage Purchase Orders",
+path:["Fiori Launchpad","Purchasing and Goods Receipt","Manage Purchase Orders"],
+fields:[
+["── Item 10 ──",""],
+["Material","C500-##"],
+["Plant","1010"],
+["Order Quantity","10"],
+["Net Order Price","50"],
+["Account Assignment Category","Cost Center (K)"],
+["Cost Center","50##"],
+["Goods Receipt","Not selected"],
+["Delivery Date","Today's date"],
+["── Item 20 ──",""],
+["Quantity","100 (copied from item 10)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Manage Purchase Orders</b> app'ini aç.",
+"<b>Create</b>'e bas.",
+"Supplier: T-S52A## gir.",
+"<b>Items</b> bölümünde <b>Create</b>'e bas, 1. kalemi gir.",
+"Kalem satırı sonundaki ikona tıkla (item details).",
+"<b>General Information</b>: Account Assignment Category: Cost Center (K) seç.",
+"<b>Process Control</b>: Goods Receipt onay kutusunu kaldır.",
+"<b>Schedule Lines</b>: Delivery Date: Today's date.",
+"<b>Account Assignment</b>: Cost Center: 50## gir. <b>Apply</b> (iki kez).",
+"1. kalemi seç, <b>Copy</b>. Yeni kalemin Order Quantity: 100 yap.",
+"<b>Order</b> ile kaydet. PO numarasını not et."
+],
+warn:"Limit Kalem (Limit Items) oluşturmayın!"},
+{num:"Task 2-4",title:"Enter Two Invoices and Save as Completed",app:"Create Supplier Invoice",
+fields:[
+["── Invoice 1 (Item 10) ──",""],
+["Company Code","1010"],
+["Gross Invoice Amount","550"],
+["Invoice Date","Today's date"],
+["Reference","PIV0401–##"],
+["PO Item","10"],
+["── Invoice 2 (Item 20) ──",""],
+["Gross Invoice Amount","5500"],
+["Reference","PIV0402–##"],
+["PO Item","20"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"1. fatura verilerini gir. PO numarasını gir, Enter.",
+"2. kalemin onay kutusunu kaldır, <b>Check</b>.",
+"<b>Save as Completed</b>, onay penceresinde <b>Yes</b>.",
+"2. fatura için aynı adımları tekrarla: 1. kalemin onay kutusunu kaldır."
+]},
+{num:"Task 2-5",title:"Release Invoices as Cost Center Responsible (S4PR1–##)",app:"My Inbox",
+path:["Fiori Launchpad","My Home","My Inbox"],
+steps:[
+"S4515-## kullanıcısından çıkış yap.",
+"S4PR1-## / Welcome1 ile Fiori Launchpad'e giriş yap.",
+"<b>My Inbox</b> app'ini aç.",
+"İki adet <b>Release Completed Invoice</b> görevi görünür.",
+"Her görev için: görevi seç, <b>Release</b>, <b>Submit Decision</b> penceresinde <b>Submit</b>.",
+"S4PR1-## ile çıkış yap."
+]},
+{num:"Task 2-6",title:"Verify Invoice Status as Normal User",app:"Supplier Invoices List",
+path:["Fiori Launchpad","Supplier Invoice Processing","Supplier Invoices List"],
+fields:[
+["── Filter ──",""],
+["Invoicing Party","T-S52A##"],
+["── Expected Status ──",""],
+["Invoice 550 EUR","Posted"],
+["Invoice 5500 EUR","Parked and Completed (awaiting PO creator release)"]
+],
+steps:[
+"S4515-## kullanıcısıyla tekrar giriş yap.",
+"<b>My Inbox</b> app'ini aç: 5500 EUR faturası için onay görevi görünür. Bu faturayı serbest bırakma.",
+"<b>Supplier Invoices List</b> app'ini aç.",
+"Invoicing Party: T-S52A##, <b>Go</b>.",
+"Her iki faturanın durumunu not et."
+],
+result:"Fatura 550 EUR (kalem 10): Durumu Deftere Geçirildi — maliyet merkezi sorumlusu onayladı, ek onay gerekmez (tutar < 1.000 EUR). Fatura 5.500 EUR (kalem 20): Park edilmiş ve Tamamlandı — maliyet merkezi sorumlusu onayladı ancak PO oluşturucusu (kendi kullanıcınız) onayı bekleniyor; tutar ≥ 1.000 EUR."
+}
+]},
+
+{id:5,title:"Enter Taxes",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"Birden fazla vergi oranı içeren faturaları gir. PO'daki vergi kodu varsayılanlarını kontrol et. Task 1 veya Task 2'yi tercihine göre seç.",
+tasks:[
+{num:"Task 1-1",title:"Check Tax Codes in PO 41515004##",app:"Manage Purchase Orders",
+path:["Fiori Launchpad","Purchasing and Goods Receipt","Manage Purchase Orders"],
+fields:[
+["── PO Filter ──",""],
+["Purchase Order","41515004##"],
+["── Tax Tab (each item) ──",""],
+["Tax Code","1I (10% Input Tax Training)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Manage Purchase Orders</b> app'ini aç.",
+"Filter alanında PO: 41515004## gir, <b>Go</b>.",
+"PO numarasına tıkla (Standard PO metnine değil!).",
+"<b>Items</b> sekmesini seç.",
+"Her kalem satırı sonundaki oka tıkla (item details), <b>Tax</b> sekmesini seç.",
+"Tüm kalemler için vergi kodu: <b>1I</b> olduğunu doğrula."
+]},
+{num:"Task 1-2",title:"Enter Invoice 004## with Multiple Tax Rates",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── Basic Data ──",""],
+["Gross Invoice Amount","5450"],
+["Invoice Date","Today's date"],
+["Reference","004##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515004##"],
+["── Item List ──",""],
+["Item 2 — Tax Code","5I (changed from 1I)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Temel verileri gir, PO: 41515004##, Enter.",
+"2. kalem için Tax Code'u 1I'dan <b>5I</b>'ya değiştir.",
+"<b>Check</b>'e bas.",
+"<b>Tax</b> sekmesini seç — vergi tutarlarının fatura verileriyle eşleştiğini doğrula.",
+"<b>Simulate</b>. Hesap hareketlerini not et.",
+"<b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –5.450,00 | 2) GR/IR 1.000,00 | 3) GR/IR 1.000,00 | 4) GR/IR 3.000,00 | 5) Vergi 400,00 | 6) Vergi 50,00"},
+{num:"Task 2-1",title:"Enter Invoice 104## (Advanced App — Multiple Tax Rates)",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Invoice Date","Today's date"],
+["Reference","104##"],
+["Amount","2150"],
+["── Tax Tab ──",""],
+["Tax doc. currency (line 1)","100"],
+["Tax Code (line 1)","1I (10% Input Tax Training)"],
+["Tax doc. currency (line 2)","50"],
+["Tax Code (line 2)","5I (5% Input Tax Training)"],
+["── PO Reference Tab ──",""],
+["PO / Scheduling Agreement","41515104##"],
+["── Item 2 Correction ──",""],
+["Tax Code","5I"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"<b>Basic Data</b> sekmesinde alanları gir.",
+"<b>Tax</b> sekmesinde iki satır gir: 100 / 1I ve 50 / 5I.",
+"PO: 41515104##, Enter.",
+"Kalem listesinde sistem tüm kalemlere 10% vergi önerir.",
+"PO numarasına çift tıklayarak PO'yu görüntüle — kalemler için vergi kodu tanımlanmamış.",
+"Geri dön. 2. kalem için vergi kodunu <b>5I</b>'ya değiştir.",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –2.150,00 | 2) GR/IR 1.000,00 | 3) GR/IR 1.000,00 | 5) Vergi 100,00 | 6) Vergi 50,00"},
+{num:"Task 3 (Optional)",title:"Check Customizing for Tax Code Default Values",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Logistics Invoice Verification","Incoming Invoice","Maintain Default Values for Tax Codes"],
+steps:[
+"Backend T41: Tools → Customizing → IMG → Execute Project (SPRO).",
+"<b>SAP Reference IMG</b> butonuna bas.",
+"Materials Management → Logistics Invoice Verification → Incoming Invoice → <b>Maintain Default Values for Tax Codes</b>.",
+"Company code 1010 için girişi seç, <b>Details</b>.",
+"<b>Back</b>, Customizing'den çıkma.",
+"Financial Accounting → Accounts Receivable and Accounts Payable → Business Transactions → Incoming Invoices/Credit Memos → Incoming Invoices/Credit Memos – Enjoy → <b>Define Tax Code per Transaction</b> (OBZT).",
+"Country key: DE, <b>Continue</b>.",
+"V2/Invoice verification girdisini sil → V2 vergi kodu artık seçilemez."
+],
+warn:"Customizing ayarlarını değiştirmeyin — yalnızca görüntüleme amaçlı!"}
+]},
+
+{id:6,title:"Enter Cash Discount Information",app:"Create Supplier Invoice",
+sc:"Özel ödeme koşullu fatura 005##'i RN (Invoice–Net) belge tipiyle gir. Nakit iskontosu ve valüasyon ilişkisini anla.",
+tasks:[
+{num:"Task 1-1",title:"Enter Invoice 005## with Document Type RN",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Gross Invoice Amount","2530"],
+["Invoice Date","Today's date"],
+["Reference","005##"],
+["Document Type","RN (Invoice – Net)"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515005##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Gross Invoice Amount, Invoice Date ve Reference gir.",
+"<b>Show More</b> butonuna bas (General Information alt sağ).",
+"<b>Document Type</b> alanında <b>RN (Invoice – Net)</b> seç.",
+"PO: 41515005##, <b>Check</b>."
+]},
+{num:"Task 1-2",title:"Verify and Adjust Payment Terms",app:"Create Supplier Invoice",
+fields:[
+["── Payment Tab ──",""],
+["Terms of payment key","ZB01 (adjust to match supplier invoice)"]
+],
+steps:[
+"<b>Payment</b> sekmesini seç.",
+"PO'dan önerilen ödeme koşullarını görüntüle.",
+"Tedarikçi faturasına uyacak şekilde <b>ZB01</b> seç.",
+"<b>Check</b>."
+]},
+{num:"Task 1-3",title:"Simulate and Post",app:"Create Supplier Invoice",
+steps:[
+"<b>Simulate</b>. Details bölümünden hesap hareketlerini not et.",
+"<b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –2.530,00 | 2) GR/IR 200,00 | 3) Stok (Slug, MAP) –6,00 | 4) GR/IR 1.500,00 | 5) Stok (Düz conta, MAP) –45,00 | 6) GR/IR 600,00 | 7) Fiyat farkı (std fiyat) –18,00 | 8) Vergi 230,00 | 9) Nakit iskonto clearing 69,00",
+info:"MAP malzemelerde: nakit iskonto stok hesabını azaltır (MAP değişir). Standart fiyatlı malzemelerde: nakit iskonto fiyat farkı hesabına kaydedilir. Sistem hesaplama için İLK iskonto yüzdesini kullanır."},
+{num:"Task 2 (Optional)",title:"Check Customizing: Payment Terms and Default Document Type",app:"SAP GUI – SPRO",
+path:["SPRO","Financial Accounting","Accounts Receivable and Accounts Payable","Business Transactions","Incoming Invoices/Credit Memos","Maintain Terms of Payment (OBB8)"],
+steps:[
+"SPRO → Financial Accounting → Accounts Receivable and Accounts Payable → Business Transactions → Incoming Invoices/Credit Memos → <b>Maintain Terms of Payment</b> (OBB8).",
+"Terms of payment key 0002 detaylarını görüntüle — Baseline date: Document date (invoice date).",
+"Customizing'den çıkma.",
+"Materials Management → Logistics Invoice Verification → Incoming Invoice → Number Assignment → <b>Maintain Number Assignments for Accounting Documents</b> (OMR4).",
+"<b>Document Types in Invoice Verification</b> butonuna bas.",
+"MIRO ve MIR7 işlemleri için detayları görüntüle — Document type RE (Gross inv. receipt)."
+],
+warn:"Customizing ayarlarını değiştirmeyin — yalnızca görüntüleme amaçlı!"}
+]},
+
+{id:7,title:"Post an Invoice in Foreign Currency",app:"Create Supplier Invoice / Manage Purchase Orders",
+sc:"Dövizli PO 41515006## için fatura 006##'yı gir. Döviz kuru belirleme ve sabit kur kontrolünü anla.",
+tasks:[
+{num:"1",title:"Display PO 41515006## — Check Exchange Rate",app:"Manage Purchase Orders",
+path:["Fiori Launchpad","Purchasing and Goods Receipt","Manage Purchase Orders"],
+fields:[
+["── Filter ──",""],
+["Purchase Order","41515006##"],
+["── General Information Tab ──",""],
+["Currency","USD"],
+["── Delivery and Invoice Tab ──",""],
+["Planned exchange rate","(from PO)"],
+["Fixed Exchange Rate","Not selected (not fixed)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Manage Purchase Orders</b> app'ini aç.",
+"Filter: PO: 41515006##, <b>Go</b>.",
+"PO numarasına tıkla.",
+"<b>General Information</b> sekmesinde Currency: USD gör.",
+"<b>Delivery and Invoice</b> sekmesinde planned exchange rate ve <b>Fixed Exchange Rate</b> onay kutusunu kontrol et."
+],
+result:"Döviz kuru SABİT DEĞİL → fatura doğrulamasında değiştirilebilir."},
+{num:"2-3",title:"Enter Invoice 006## in USD",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Company Code","1010"],
+["Gross Invoice Amount","320"],
+["Invoice Date","Today's date"],
+["Reference","006##"],
+["── PO Reference Tab ──",""],
+["PO / Scheduling Agreement","41515006##"],
+["── Currency (auto-proposed) ──",""],
+["Currency","USD (proposed from PO)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir.",
+"<b>Purchasing Document References</b> sekmesinde PO: 41515006##, <b>Check</b>.",
+"Sistem para birimini otomatik olarak PO'dan <b>USD</b> önerir.",
+"<b>Show More</b> butonuna bas — exchange rate Details bölümünde görünür.",
+"<b>Simulate</b>. <b>Change Simulation Currency</b> ile EUR ve USD görünümleri arasında geçiş yap.",
+"<b>Post</b>."
+],
+result:"EUR tutarları döviz kuruna bağlıdır. USD tutarları: 1) Tedarikçi –320,00 | 2) GR/IR 120,00 | 3) Stok 0,00 | 4) GR/IR 200,00 | 5) Stok 0,00"}
+]},
+
+{id:8,title:"Enter an Invoice for a Purchase Order with Account Assignment",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"Hesap atamalı faturalar: Task 1 - maliyet merkezli tek hesap ataması, Task 2/3 - çoklu maliyet merkezi dağılımı.",
+tasks:[
+{num:"Task 1-1",title:"Enter Invoice 007## (Single Account Assignment)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Gross Invoice Amount","187"],
+["Invoice Date","Today's date"],
+["Reference","007##"],
+["── PO Reference Tab ──",""],
+["PO / Scheduling Agreement","41515007##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir. PO: 41515007##, <b>Check</b>.",
+"Kalem listesinde PO numarasına tıklayarak Process Control sekmesini kontrol et.",
+"Hesap ataması değiştirilebilir mi? 1. ve 3. kalem: Evet (1. kalemde GR yapılmış ama değerlenmemiş; 3. kalemde GR beklentisi yok).",
+"<b>Simulate</b>. Ardından <b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –187,00 | 2) Tüketim 80,00 | 3) GR/IR 50,00 | 4) Tüketim 40,00 | 5) Vergi 17,00"},
+{num:"Task 2",title:"Enter Invoice 107## (Multiple Account Assignment — Advanced)",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Invoice date","Today's date"],
+["Reference","107##"],
+["Amount","110"],
+["Tax Amount","10"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515107##"],
+["Layout","Acct Assignment – Cost Center"],
+["── Item Changes ──",""],
+["Total Amount","100"],
+["Total Quantity","50"],
+["── After Check — Distribution ──",""],
+["Cost Center 10101201","50 / 25"],
+["Cost Center 10101202","30 / 15"],
+["Cost Center 10101321","20 / 10"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"Basic Data alanlarını gir. PO: 41515107##, Enter.",
+"Layout: <b>Acct Assignment – Cost Center</b> seç.",
+"Kalem listesinde: A4 Folder, 100 adet, 200 EUR önerilir.",
+"<b>Acct Assgt</b> sütununda <b>Multiple Selection</b> ikonuna tıkla.",
+"Total Amount: 100, Total Quantity: 50 gir.",
+"<b>Check</b> — sistem değerleri önceki dağılım şemasına göre otomatik dağıtır.",
+"<b>Back</b> ile dön, <b>Post</b>."
+],
+info:"<b>Check</b> sonrası sistem orantılı dağıtır: 10101201: 50/25 | 10101202: 30/15 | 10101321: 20/10"},
+{num:"Task 3",title:"Enter Invoice 107## (Multiple Account Assignment — Supplier Invoice App)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Gross Invoice Amount","110"],
+["Invoice Date","Today's date"],
+["Reference","107##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515107##"],
+["── Item Changes ──",""],
+["Amount","100"],
+["Quantity","50"],
+["── After Check — Cost Center Distribution ──",""],
+["10101201","50 / 25"],
+["10101202","30 / 15"],
+["10101321","20 / 10"]
+],
+steps:[
+"(Task 2 yerine alternatif) <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir. PO: 41515107##, <b>Check</b>.",
+"Kalem listesinde Amount: 100, Quantity: 50 olarak değiştir.",
+"<b>Check</b>.",
+"Quantity alanı vurgulanır: 'Amount/Quantity has been distributed to account assignments' mesajı.",
+"Kalem satırına tıkla, <b>Account Assignment</b> sekmesini görüntüle.",
+"<b>Back to Supplier Invoice</b>, ardından <b>Post</b>."
+],
+warn:"Task 2 tamamlandıysa, Task 3 artık mevcut değildir."}
+]}
+]},
+{unit:2,title:"Variances and Invoice Block",ex:[
+{id:9,title:"Enter Invoices with Variances",app:"Create Supplier Invoice – Advanced / Create Supplier Invoice",
+sc:"Fiyat ve miktar farklılıkları içeren iki fatura gir. Tolerans sınırlarını anlayarak ödeme bloğunun nasıl çalıştığını doğrula.",
+tasks:[
+{num:"Task 1-1",title:"Enter Invoice 0091## with Variances (Advanced)",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Invoice date","Today's date"],
+["Reference","0091##"],
+["Amount","2860"],
+["Tax amount","260"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515009##"],
+["Layout","All Information – Training"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"Alanları gir. PO: 41515009##. Layout: <b>All Information – Training</b>.",
+"Kalem listesinde fatura 0091## ile eşleşecek şekilde miktar ve tutarları değiştir.",
+"Enter ile onayla — sistem her kalem için miktar ve fiyat kontrolü yapar.",
+"<b>Messages</b> butonuna bas: Mesajları not et."
+],
+result:"Mesajlar: 1) Teslim edilen miktar sıfır — kalem 1 — Miktar kontrolü | 2) Fiyat çok düşük (tolerans limiti EUR 20,00 altında) — kalem 2 — Tutar kontrolü. Bakiye alanı önündeki sarı üçgen = fatura ödeme için bloke."},
+{num:"Task 1-2",title:"Simulate, Post and Display Blocked Invoice",app:"Create Supplier Invoice – Advanced",
+steps:[
+"<b>Simulate</b>. Hesap hareketlerini not et.",
+"<b>Post</b>.",
+"<b>Display Supplier Invoice – Advanced</b> app'ini aç. VEYA MIR4.",
+"Kalem listesinde sağa kaydırarak blocking reasons'ı görüntüle.",
+"<b>Follow-On Documents</b>: muhasebe belgesine çift tıkla.",
+"Vendor satırına çift tıkla: <b>Pmnt Block</b> alanında <b>R (Invoice Verification)</b> değerini gör."
+],
+result:"Simülasyon: 1) Tedarikçi –2.860,00 | 2) GR/IR 500,00 | 3) GR/IR 2.500,00 | 4) Stok –1.400,00 | 5) GR/IR 1.000,00 | 6) Vergi 260,00"},
+{num:"Task 2-1",title:"Enter Invoice 0092## with Variances (Supplier Invoice App)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Company Code","1010"],
+["Gross Invoice Amount","4400"],
+["Invoice Date","Today's date"],
+["Reference","0092##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515009##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir. PO: 41515009##, Enter.",
+"Kalem listesinde fatura 0092## ile eşleşecek şekilde miktar ve tutarları değiştir.",
+"<b>Check</b>.",
+"Her vurgulanmış değere tıklayarak mesajı görüntüle ve not et.",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+result:"Mesajlar: Kalem1/Tutar: Fiyat çok düşük | Kalem1/Miktar: Teslim sıfır | Kalem2/Tutar: Fiyat çok düşük | Kalem3/Tutar: Fiyat çok yüksek | Kalem3/Miktar: Fatura miktarı > GR miktarı | Simülasyon: 1) Tedarikçi –4.400 | 2) GR/IR 400 | 3) GR/IR 2.500 | 4) Stok –1.400 | 5) GR/IR 2.150 | 6) Stok 350 | 7) Vergi 400"},
+{num:"Task 3 (Optional)",title:"Check Tolerance Customizing (OMR6, SPRO)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Logistics Invoice Verification","Invoice Block","Set Tolerance Limits (OMR6)"],
+fields:[
+["── Tolerance Key DQ ──",""],
+["Check type","Overrun only (not underrun)"],
+["Absolute upper limit","EUR 100"],
+["── Tolerance Key BD ──",""],
+["Small differences check","Active"],
+["Limit","EUR 5"]
+],
+steps:[
+"SPRO → Materials Management → Logistics Invoice Verification → Invoice Block → <b>Set Tolerance Limits</b> (OMR6).",
+"<b>Goto → Position Cursor</b>: Company code 1010, Tolerance key DQ. <b>Details</b>.",
+"Not: DQ toleransı (1000 sipariş – 960 teslim, 1000 faturalanan): (1000–960)×3=EUR 120 > EUR 100 → BLOKE olur.",
+"<b>Back</b>.",
+"<b>Goto → Position Cursor</b>: Company code 1010, Tolerance key BD. <b>Details</b>.",
+"IMG activity documentation: Tolerance key DQ açıklamasını oku."
+],
+warn:"Customizing ayarlarını değiştirmeyin — yalnızca görüntüleme amaçlı!"}
+]},
+
+{id:10,title:"Answer some questions about further blocking reasons",app:"SAP GUI",
+sc:"Ödeme bloğunun nasıl manuel ayarlandığını ve alt kalem tutarı kontrolünün nasıl Customizing'de yapılandırıldığını anla.",
+tasks:[
+{num:"1",title:"Manual Payment Block Options",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+steps:[
+"Faturayı ödeme için bloke etmenin iki yolu vardır:",
+"Yol 1: Header seviyesinde — <b>Payment</b> sekmesinde <b>Payment Block</b> alanını manuel set et.",
+"Yol 2: Kalem seviyesinde — kalem listesinde bir veya daha fazla kalem için <b>Manually Blocked</b> onay kutusunu seç (Advanced app'te: <b>Manual Blocking Reason</b> onay kutusu).",
+"Her iki seçenek de FI belgesinin vendor satırında ödeme bloğu anahtarı <b>R</b>'yi set eder."
+]},
+{num:"2",title:"Configure Subcontracting Item Amount Block",app:"SAP GUI – Customizing (description only)",
+fields:[
+["── Required Customizing Steps ──",""],
+["Step 1 — Activate Item Amount Check","OMR H: Activate Item Amount Check for Company Code 1010"],
+["Step 2 — Set Item Amount Check","OMR I: Company code 1010, Item category Subcontracting, GR indicator Set"],
+["Step 3 — Set Tolerance Limit","OMR6: Tolerance key AP, absolute value for company code 1010"]
+],
+steps:[
+"1. OMR H: Materials Management → LIV → Invoice Block → Item Amount Check → <b>Activate Item Amount Check</b>.",
+"2. OMR I: LIV → Invoice Block → Item Amount Check → <b>Set Item Amount Check</b>.",
+"3. OMR6: Tolerance key <b>AP</b> için şirket kodu 1010'da absolute değer gir."
+],
+warn:"AP tolerans limiti, kalem tutarı kontrolü aktif olan TÜM kalem kategorilerine uygulanır — yalnızca alt yüklenici kalemlere değil!"}
+]},
+
+{id:11,title:"Reduce an Invoice",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"Tedarikçi hatası nedeniyle faturalarda fiyat sapması var. Invoice Reduction (fatura indirgeme) ile otomatik düzelt. Task 1 veya Task 2'yi seç.",
+tasks:[
+{num:"Task 1-1",title:"Enter Invoice 0111## with Invoice Reduction (Supplier Invoice App)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Company Code","1010"],
+["Gross Invoice Amount","1276"],
+["Invoice date","Today's date"],
+["Reference","0111##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515011##"],
+["── View Change ──",""],
+["View","S4515 Invoice Reduction Layout"],
+["── Item 2 ──",""],
+["Manually Reduced","Selected"],
+["Amount from Supplier","1060"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir. PO: 41515011##, <b>Check</b>.",
+"Kalem listesi görünümünü değiştir: <b>Standard</b>'ın sağındaki oka tıkla (<b>Select view</b>).",
+"My Views diyalogunda <b>Manage</b>'e tıkla, S4515 Invoice Reduction satırında yıldız ikonuna tıkla. <b>Save</b>.",
+"Tekrar <b>Select view</b>'e tıkla, <b>S4515 Invoice Reduction Layout</b> seç.",
+"2. kalem için <b>Manually Reduced</b> onay kutusunu seç.",
+"<b>Amount from Supplier</b> alanına 1060 gir.",
+"3. ve 4. kalemlerin onay kutularını kaldır.",
+"<b>Check</b>, ardından <b>Simulate</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –1.276,00 | 2) GR/IR 100,00 | 3) GR/IR 1.000,00 | 4) Vergi 116,00 | 5) Fatura İndirimi Clearing 60,00 | 6) Tedarikçi 66,00 | 7) Fatura İndirimi Clearing –60,00 | 8) Vergi –6,00. İki muhasebe belgesi oluşturuldu."},
+{num:"Task 2-1",title:"Enter Invoice 0112## with Invoice Reduction (Advanced App)",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Invoice date","Today's date"],
+["Reference","0112##"],
+["Amount","1848"],
+["Tax amount","168"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515011##"],
+["── Layout ──",""],
+["Layout","Invoice reduction – Training (Z6_6310)"],
+["── Item 1 ──",""],
+["Correction ID","Supplier error: reduce invoice"],
+["Invoice Amount Acc. to Supplier","1640"],
+["── Last Item ──",""],
+["Amount","40 (direct correction, no reduction)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"Basic Data alanlarını gir. PO: 41515011##, Enter.",
+"Layout: <b>Invoice reduction – Training (Z6_6310)</b> seç.",
+"1. kalem için <b>Correction ID</b>: <b>Supplier error: reduce invoice</b> seç.",
+"<b>Invoice Amount Acc. to Supplier</b>: 1640 gir.",
+"Son kalem için önerilen tutarı 40 ile değiştir.",
+"Enter. Information mesajını <b>Continue</b> ile onayla.",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –1.848 | 2) GR/IR 1.600 | 3) GR/IR 50 | 4) Stok –10 | 5) Vergi 168 | 6) Fatura İnd. Clearing 40 | 7) Tedarikçi 44 | 8) Fatura İnd. Clearing –40 | 9) Vergi –4. Takip Belgeler: 2 muhasebe belgesi (fatura + alacak dekontu). PO geçmişinde fatura indirimi: yalnızca kabul edilen tutar görünür."},
+{num:"Task 3 (Optional)",title:"Check Invoice Reduction Customizing (OMR4, OMR0)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Logistics Invoice Verification","Incoming Invoice","Number Assignment","Maintain Number Assignments for Accounting Documents (OMR4)"],
+steps:[
+"SPRO → LIV → Incoming Invoice → Number Assignment → <b>Maintain Number Assignments</b> (OMR4).",
+"<b>Document Types in Invoice Verification</b> butonuna bas.",
+"MIRO için <b>Doc type invoice reduction</b>: <b>RK (Invoice Reduction)</b>.",
+"<b>Configure Automatic Postings</b> (OMR0) → <b>Account Assignment</b> butonuna bas.",
+"Transaction <b>RKA</b> (Inv.reductions from log.inv.verification).",
+"RKA'ya çift tıkla, Chart of Accounts: YCOA — clearing account: 21350000."
+],
+warn:"Customizing ayarlarını değiştirmeyin — yalnızca görüntüleme amaçlı!"}
+]},
+
+{id:12,title:"Post Invoice with Automatic Invoice Reduction",app:"SAP GUI (OMRX) / Create Supplier Invoice",
+sc:"Tedarikçi S4515-1## için A## tolerans grubu oluştur (50 EUR'ya kadar pozitif sapmalar otomatik indirgeme). Ardından fatura 012##'yi gir.",
+tasks:[
+{num:"Task 1-1",title:"Create Supplier-Specific Tolerance Group A## (OMRX)",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Logistics Invoice Verification","Incoming Invoice","Configure Supplier-Specific Tolerances (OMRX)"],
+fields:[
+["── New Entry ──",""],
+["Company Code","1010"],
+["Tolerance grp","A##"],
+["── Automatic Invoice Reduction ──",""],
+["Check limit","Absolute upper limit — Selected"],
+["Inv.Red.Tol.Amn","50"]
+],
+steps:[
+"SPRO → Materials Management → Logistics Invoice Verification → Incoming Invoice → <b>Configure Supplier-Specific Tolerances</b> (OMRX).",
+"<b>New Entries</b> butonuna bas.",
+"Company Code: 1010, Tolerance grp: A## gir.",
+"<b>Automatic Invoice Reduction</b> bölümünde: <b>Check limit in the Absolute upper limit area</b> seç.",
+"<b>Inv.Red.Tol.Amn</b>: 50 gir.",
+"Kaydet."
+]},
+{num:"Task 1-2",title:"Assign Tolerance Group A## to Supplier S4515-1## (XK02)",app:"SAP GUI – XK02",
+path:["SAP Easy Access","Logistics","Materials Management","Purchasing","Master Data","Vendor","Central","Change (XK02)"],
+fields:[
+["── Initial Screen ──",""],
+["Vendor","S4515-1##"],
+["Company Code","1010"],
+["Payment Transactions (Company code data)","Selected"],
+["── Payment Transactions Tab ──",""],
+["Tolerance group (Invoice Verification area)","A##"]
+],
+steps:[
+"SAP Easy Access: Logistics → Materials Management → Purchasing → Master Data → Vendor → Central → <b>Change</b> (XK02).",
+"Vendor: S4515-1##, Company Code: 1010, <b>Payment Transactions</b> seç, Enter.",
+"<b>Vendor: Payment Transactions</b> sekmesinde <b>Invoice Verification</b> alanında tolerans grubu <b>A##</b> gir.",
+"Kaydet."
+]},
+{num:"Task 2-1",title:"Enter Invoice 012## with Blanket Variance",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Company Code","1010"],
+["Gross Invoice Amount","968"],
+["Invoice Date","Today's date"],
+["Reference","012##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515012##"],
+["── Tax Tab ──",""],
+["Tax Amount","88 (corrected from system default)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir. PO: 41515012##, Enter.",
+"Kalem listesinde önerilen değerleri değiştirme.",
+"<b>Tax</b> sekmesine git: Tax Amount'u <b>88</b> olarak değiştir. <b>Check</b>.",
+"Bakiye: EUR 30 (yeşil renkle gösterilir — tolerans dahilinde).",
+"<b>Simulate</b>.",
+"<b>Post</b>."
+],
+result:"Bakiye EUR 30 (A## toleransı EUR 50 dahilinde pozitif fark) → deftere geçirilebilir. Simülasyon: 1) Tedarikçi –968 | 2) GR/IR 100 | 3) GR/IR 500 | 4) GR/IR 200 | 5) GR/IR 50 | 6) Vergi 88 | 7) Fatura İnd. Clearing 30 | 8) Tedarikçi 33 | 9) Fatura İnd. Clearing –30 | 10) Vergi –3"}
+]},
+
+{id:13,title:"Release Blocked Invoices",app:"Release Blocked Invoices / Display Supplier Invoice – Advanced",
+sc:"Bloke edilmiş faturaları listele. Geçersiz engelleme nedenlerini tespit et, faturaları manuel ve otomatik serbest bırak. Rastgele bloğu kaldır.",
+tasks:[
+{num:"Task 1-1",title:"List and Display Blocked Invoices",app:"Release Blocked Invoices",
+path:["Fiori Launchpad","Supplier Invoice Processing","Release Blocked Invoices"],
+fields:[
+["── Selection of Blocked Invoices ──",""],
+["Company code","1010"],
+["Supplier","S4515-1##"],
+["── Processing ──",""],
+["Mode","Release Manually"],
+["── Blocking Procedure ──",""],
+["Type","Blocked Due to Variances"],
+["── Display options ──",""],
+["Variant","/S4515"]
+],
+steps:[
+"Fiori Launchpad'de <b>Release Blocked Invoices</b> app'ini aç. VEYA MRBR.",
+"Selection alanlarını gir.",
+"Processing: <b>Release Manually</b>.",
+"Blocking Procedure: <b>Blocked Due to Variances</b>.",
+"Display options: Variant <b>/S4515</b> gir.",
+"<b>Execute</b>."
+],
+info:"Sarı renkte gösterilen bloklama nedenleri artık geçerli değil → bir sonraki otomatik serbest bırakmada silinecek."},
+{num:"Task 1-3",title:"Display Invoice for PO 41515013##",app:"Release Blocked Invoices",
+steps:[
+"Listede PO 41515013## için fatura numarasına çift tıkla.",
+"Layout: <b>All Information – Training</b> seç.",
+"PO kalemleri 10, 20 ve 40 ödenmiş.",
+"Sağa kaydırarak blocking reasons sütununu gör.",
+"PO numarasına çift tıkla: teslim tarihleri geçmiş → delivery date blokları geçersiz. Sonraki GR nedeniyle quantity blokları geçersiz. Ancak kalem 40'ta price variance hala geçerli (PO: EUR 5, invoice: EUR 6).",
+"<b>Back</b>."
+],
+result:"Fiyat farkı bloklama nedeni hâlâ geçerli olduğundan otomatik serbest bırakma yapılamaz."},
+{num:"Task 1-4",title:"Manually Release Invoice for PO 41515013##",app:"Release Blocked Invoices",
+steps:[
+"Listede PO 41515013## fatura satırını seç.",
+"<b>Release Invoice</b> butonuna bas — tüm satırlar seçilir.",
+"<b>Save Changes</b> — fatura serbest bırakılır ve listeden kaybolur."
+]},
+{num:"Task 1-5",title:"Verify Released Invoice in Second Session",app:"Display Supplier Invoice – Advanced",
+steps:[
+"Yeni browser sekmesinde <b>Display Supplier Invoice – Advanced</b> app'ini aç.",
+"Serbest bırakılan fatura numarasını gir, <b>Display Document</b>.",
+"Header verilerinde <b>Payment</b> sekmesi: <b>Pmnt Block</b>: <b>Free for payment</b>.",
+"Kalem listesinde <b>All Information – Training</b> layout seç, sona kaydır: Blocking reasons listede kalır ama ödeme engeli kaldırılmıştır."
+],
+result:"Genel serbest bırakma: Bloklama nedenleri kalemlerde kalmaya devam eder ancak fatura ödeme için serbest bırakılır."},
+{num:"Task 1-6",title:"Release Invoice for PO 41515014## by Deleting Individual Reasons",app:"Release Blocked Invoices",
+steps:[
+"Blocking list ekranında PO 41515014## faturasının bir blocking reason satırına tıkla.",
+"<b>Blocking Reason</b> butonuna bas.",
+"İkon değişir: <b>Blocking Reason Deleted</b>.",
+"<b>Save Changes</b>.",
+"Kalan tüm blocking reasons için tekrarla — son blocking reason kaldırıldığında fatura otomatik serbest bırakılır."
+],
+info:"Bloklama nedeni, <b>Save Changes</b> yapana kadar fatura kaleminden SİLİNMEZ. Her silme işlemi, bir sonraki nedene geçmeden önce ayrı bir kayıt gerektirir."
+},
+{num:"Task 1-7",title:"Verify Last Released Invoice",app:"Display Supplier Invoice – Advanced",
+steps:[
+"<b>Display Supplier Invoice – Advanced</b> app'ini aç.",
+"PO 41515014## fatura numarasını gir, <b>Display Document</b>.",
+"Kalem listesinde sona kaydır: Blocking reasons KALDIRILMIŞtır.",
+"<b>Menu → Goto → Display Change Documents</b>: kim serbest bıraktığı görünür."
+],
+result:"Tek tek neden silme: Bloklama nedenleri kalemlerden SİLİNİR. Değişiklik belgelerinde serbest bırakanı tanımlamak mümkündür."},
+{num:"Task 2-1",title:"Execute Automatic Invoice Release",app:"Release Blocked Invoices",
+fields:[
+["── Selection ──",""],
+["Company Code","1010"],
+["Supplier","S4515-1##"],
+["── Processing ──",""],
+["Mode","Release Automatically"],
+["── Blocking Procedure ──",""],
+["Type","Blocked Due to Variances"]
+],
+steps:[
+"<b>Release Blocked Invoices</b> app'ini aç. VEYA MRBR.",
+"Selection alanlarını gir.",
+"Processing: <b>Release Automatically</b>.",
+"Blocking Procedure: <b>Blocked Due to Variances</b>.",
+"<b>Execute</b>.",
+"Serbest bırakılan fatura numarasını not et."
+],
+info:"Otomatik serbest bırakma etkisi: Artık geçerli olmayan tüm nedenler silinir. Bir sonraki manuel serbest bırakma listesinde görünmezler."},
+{num:"Task 2-4",title:"Release Stochastically Blocked Invoices",app:"Release Blocked Invoices",
+fields:[
+["── Selection ──",""],
+["Company Code","1010"],
+["User","S4515-##"],
+["── Processing ──",""],
+["Mode","Release Manually"],
+["── Blocking Procedure ──",""],
+["Type","Stochastically Blocked"]
+],
+steps:[
+"<b>Release Blocked Invoices</b> app'ini aç.",
+"Selection: Company Code 1010, User: S4515-##.",
+"Processing: Release Manually. Blocking Procedure: <b>Stochastically Blocked</b>.",
+"<b>Execute</b>.",
+"<b>Select All</b> butonuna bas.",
+"<b>Release Invoice</b> butonuna bas.",
+"<b>Save Changes</b>."
+],
+info:"Faturalarınızın hiçbirinin stokastik olarak bloke edilmemiş olması mümkündür."}
+]}
+]},
+{unit:3,title:"Subsequent Debit/Credit, Delivery Costs, and Credit Memos",ex:[
+{id:14,title:"Enter a Subsequent Debit",app:"Create Supplier Invoice",
+sc:"Nakliye acentesi S4515-399'dan PO 41515014## için ek nakliye masrafı faturası 014##'yi sonraki borç (subsequent debit) olarak gir.",
+tasks:[
+{num:"1",title:"Enter Invoice 014## as Subsequent Debit",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Transaction","Subsequent Debit"],
+["Gross Invoice Amount","385"],
+["Invoice date","Today's date"],
+["Reference","014##"],
+["Invoicing Party","S4515–399"],
+["── PO Reference Tab ──",""],
+["PO / Scheduling Agreement","41515014##"],
+["── Selected Items and Amounts ──",""],
+["Item 1 (A515-##, Slug — 50 PC proposed)","Amount: 100"],
+["Item 2 (B515-##, Flat gasket — 100 PC proposed)","Amount: 250"],
+["Item 3 (C515-##, Packing gasket — 0 PC proposed)","Not selected"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"<b>General Information</b> sekmesinde Transaction: <b>Subsequent Debit</b> seç.",
+"Diğer alanları gir.",
+"<b>Purchasing Document References</b> sekmesinde PO: 41515014##, <b>Check</b>.",
+"Kalem listesinde sistem toplam faturalanan miktarı her kalem için önerir.",
+"İlk iki kalemi seç (3. kalem 0 PC, seçme).",
+"1. kalem için Amount: 100, 2. kalem için Amount: 250 gir.",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –385,00 | 2) Stok (kalem 1) 100,00 | 3) Stok (kalem 2) 250,00 | 4) Vergi 35,00"},
+{num:"2",title:"Display Invoice in Supplier Invoices List",app:"Supplier Invoices List",
+path:["Fiori Launchpad","Supplier Invoice Processing","Supplier Invoices List"],
+fields:[
+["── Filter ──",""],
+["Reference","014##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Supplier Invoices List</b> app'ini aç.",
+"Reference: 014##, <b>Go</b>.",
+"Fatura numarasına tıkla.",
+"<b>Purchasing Document References</b> sekmesini seç.",
+"Kalem satırı sonundaki oka tıkla (item details).",
+"<b>Purchase Order History</b> sekmesini seç."
+],
+result:"Ek borçlandırma, PO geçmişi belge akışında 'NB' (Nachbelastung/subsequent debit) olarak görünür."}
+]},
+
+{id:15,title:"Enter Planned Delivery Costs",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"PO 41515015## için hem malzeme maliyeti hem de planlı nakliye maliyetini aynı faturada öde. Task 1 veya Task 2'yi seç.",
+tasks:[
+{num:"Task 1-1",title:"Enter Invoice 0152## with Planned Delivery Costs (Supplier Invoice App)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Gross Invoice Amount","5588"],
+["Invoice date","Today's date"],
+["Reference","0152##"],
+["── Assignment Options ──",""],
+["PO Number","41515015##"],
+["Item Number","20"],
+["Settings — Delivery Costs","Selected"],
+["── Freight Item Correction ──",""],
+["Freight Amount","80"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Gross Invoice Amount, Invoice date, Reference gir.",
+"<b>Purchasing Document References</b> sekmesinde <b>Assignment Options</b> butonuna bas.",
+"Assignment Option penceresinde PO: 41515015##, Item: 20 gir.",
+"<b>Settings</b> sekmesinde <b>Delivery Costs</b> onay kutusunu seç, <b>Assign</b>.",
+"Kalem listesinde malzeme kalemi ve planlı teslimat maliyeti kalemi görünür.",
+"Nakliye kaleminde Amount: <b>80</b> olarak düzelt.",
+"<b>Check</b>. (Price check yapılır — tolerans dışı sapma varsa uyarı mesajı gelir.)",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –5.588,00 | 2) GR/IR 5.000,00 | 3) Navlun clearing 100,00 | 4) Stok –20,00 | 5) Vergi 508,00",
+info:"Planlanan teslimat maliyetleri, kalem listesindeki PO metinleriyle tanımlanır."},
+{num:"Task 2-1",title:"Enter Invoice 0151## with Planned Delivery Costs (Advanced App)",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Transaction","Invoice"],
+["Invoice date","Today's date"],
+["Reference","0151##"],
+["Amount","1265"],
+["Tax amount","115"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515015##"],
+["Item","10"],
+["Item type","Goods/service items + planned delivery costs"],
+["── Delivery Cost Items ──",""],
+["Freight/Quantity (proposed)","100 — change to 150"],
+["Customs (Value) (proposed)","10 — deselect"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"<b>Invoice</b> işleminin seçili olduğundan emin ol.",
+"Basic Data alanlarını gir.",
+"PO Reference'ta PO: 41515015##, Item: 10, Type: <b>Goods/service items + planned delivery costs</b> seç, Enter.",
+"Gerekirse layout: <b>All information – Training</b> seç.",
+"Customs (Gümrük) kaleminin onay kutusunu kaldır.",
+"Freight kaleminde Amount: <b>150</b> gir.",
+"Enter. (Fiyat kontrolü yapılır — sapma tolerans dışında ise ödeme bloğu.)",
+"<b>Simulate</b>, ardından <b>Post</b>.",
+"PO geçmişini görüntülemek için Display Purchase Order – Advanced app ile PO 41515015## aç."
+],
+result:"Simülasyon: 1) Tedarikçi –1.265,00 | 2) GR/IR 1.000,00 | 3) Navlun clearing 100,00 | 4) Stok 50,00 | 5) Vergi 115,00. PO geçmişi: planlanan teslimat maliyetleri AYRI kalem olarak listelenir.",
+warn:"Önceki egzersizden <b>Subsequent Debit</b> değil, <b>Invoice</b> işlemini kullandığınızdan emin olun."}
+]},
+
+{id:16,title:"Enter Unplanned Delivery Costs",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"Task 1: PO 41515016## için planlansız paketleme maliyeti 440 EUR'yu faturaya dağıt. Task 2: Yalnızca planlansız teslimat maliyeti faturası 116##.",
+tasks:[
+{num:"Task 1-1",title:"Enter Invoice 016## with Unplanned Delivery Costs (Supplier Invoice App)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Gross Invoice Amount","7084"],
+["Invoice date","Today's date"],
+["Reference","016##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515016##"],
+["── Unplanned Delivery Costs Tab ──",""],
+["Unplanned Delivery Costs","440"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir. PO: 41515016##, Enter (sadece malzeme kalemleri önerilir).",
+"<b>Unplanned Delivery Costs</b> sekmesinde <b>Unplanned Delivery Costs</b>: 440 gir.",
+"<b>Check</b>.",
+"<b>Simulate</b>, ardından <b>Post</b>.",
+"PO history'yi görüntüle: planlansız maliyetler ayrı kalem olarak listelenmez."
+],
+result:"Simülasyon: 1) Tedarikçi –7.084,00 | 2) GR/IR 5.000,00 | 3) Stok 400,00 | 4) GR/IR 1.000,00 | 5) Stok 40,00 | 6) Vergi 644,00. Dağıtım oranı 10:1 (kalem 20: EUR 10.000 toplam faturalı / kalem 30: EUR 1.000). Planlanmamış maliyetler PO geçmişinde AYRI görünmez.",
+warn:"Yalnızca <b>Goods/service items</b> seçin!"},
+{num:"Task 2-1",title:"Enter Invoice 116## — Unplanned Delivery Costs Only (Advanced App)",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Transaction","Subsequent Debit"],
+["Invoice date","Today's date"],
+["Reference","116##"],
+["Amount","198"],
+["Tax amount","18"],
+["── Details Tab (Header) ──",""],
+["Unpl. Del. Csts","180"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515116##"],
+["── Details Tab — Invoicing Party ──",""],
+["Inv. Party","S4515-399"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"Transaction: <b>Subsequent Debit</b> seç.",
+"Basic Data alanlarını gir.",
+"<b>Details</b> sekmesinde (header) <b>Unpl. Del. Csts</b>: 180 gir.",
+"PO: 41515116##, Enter.",
+"<b>Select All</b> ile tüm kalemleri seç.",
+"Tedarikçi verilerinde invoicing party PO tedarikçisiyle eşleşmiyor — <b>Details</b> sekmesinde <b>Inv. Party</b>: S4515-399 gir.",
+"Bilgi mesajını onayla.",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –198 | 2) GR/IR 15 | 3) Stok 15 | 4) Stok 60 | 5) Stok 90 | 6) Vergi 18. Dağıtım oranı: PO yapısından EUR 200:400:600. Kalem 1 dağılımı: EUR 15 GR/IR + EUR 15 stok (yalnızca yarım miktar teslim edildi)."}
+]},
+
+{id:17,title:"Enter Invoice Items Without Reference to a Purchase Order",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"Task 1: PO'ya referanslı fatura + PO'suz G/L hesabı kalemi. Task 2: Tamamen PO referanssız fatura (nakliye, malzeme, kredi kalemi).",
+tasks:[
+{num:"Task 1-1",title:"Enter Invoice 017## with G/L Account Item (Supplier Invoice App)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Transaction","Invoice"],
+["Gross Invoice Amount","3421"],
+["Invoice date","Today's date"],
+["Reference","017##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515017##"],
+["── G/L Account Items Tab ──",""],
+["Debit/Credit ind.","Debit"],
+["G/L Account","52023000 (Loss Consumption for Quality Control)"],
+["Amount","110"],
+["Item Text","Cost for Quality Inspection"],
+["Tax Code","1I (Input tax 10%)"],
+["Cost center","10101201"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Transaction: Invoice olduğunu doğrula. Temel verileri gir.",
+"PO: 41515017##. Gerekirse kalem listesini fatura verileriyle düzelt.",
+"<b>G/L Account Items</b> sekmesini seç, <b>Add</b>'e bas.",
+"Yeni G/L hesabı kalemi için alanları gir. Daha fazla alan görmek için <b>Show Details</b>.",
+"<b>Simulate</b>.",
+"<b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –3.421,00 | 2) GR/IR 1.000,00 | 3) GR/IR 2.000,00 | 4) Kalite Kontrol için Kayıp Tüketimi 110,00 | 5) Vergi 311,00"},
+{num:"Task 2-1",title:"Enter Invoice 117## Without PO Reference (Advanced App)",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Transaction","Invoice"],
+["Invoice date","Today's date"],
+["Reference","117##"],
+["Amount","880"],
+["Currency","EUR"],
+["Tax amount","80"],
+["── Payment Tab ──",""],
+["BaselineDt","Today's date"],
+["Days / Percentage (1)","14 / 2"],
+["Days / Percentage (2)","30 / –"],
+["── Details Tab ──",""],
+["Inv. Party","S4515-1##"],
+["── G/L Account Tab ──",""],
+["G/L acct","65050000 (Unplanned Delivery Costs)"],
+["Amount in doc.curr.","450"],
+["Tax Code","1I"],
+["Cost center","10101201"],
+["── Material Tab — Item 1 ──",""],
+["Material","E515-##"],
+["Plnt","1010"],
+["Amount","600"],
+["Quantity","50"],
+["── Material Tab — Item 2 ──",""],
+["Material","B515-##"],
+["Plnt","1010"],
+["D/C (Debit/Credit ind)","Credit"],
+["Amount","250"],
+["Quantity","50"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"Basic Data alanlarını gir.",
+"<b>Payment</b> sekmesinde ödeme koşullarını gir.",
+"<b>Details</b> sekmesinde Inv. Party: S4515-1## gir.",
+"<b>G/L Account</b> sekmesinde nakliye kalemini gir.",
+"<b>Material</b> sekmesinde iki malzeme kalemi gir (B515-## için Credit seç).",
+"<b>Simulate</b>.",
+"<b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi –880,00 | 3) Kayıp hesabı 600,00 | 4) Stok hesabı –250,00 | 5) Planlanmamış Teslimat Maliyetleri 450,00 | 6) Vergi 80"}
+]},
+
+{id:18,title:"Enter a Credit Memo",app:"Create Supplier Invoice / Create Supplier Invoice – Advanced",
+sc:"Task 1: Fatura 018## gir (bloke). Task 2: Sonraki kredi 118##. Task 3: Kredi notu 218##. Kredi notlarının PO geçmişinde ve bloklarda nasıl göründüğünü gör.",
+tasks:[
+{num:"Task 1",title:"Enter Invoice 018## with Variances (Blocked)",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Company Code","1010"],
+["Gross Invoice Amount","9460"],
+["Invoice date","Current date – 7 days"],
+["Reference","018##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515018##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Alanları gir. Invoice date: bugünden 7 gün önce. PO: 41515018##, <b>Check</b>.",
+"1. ve son kalem için miktar ve tutarları fatura 018## verilerine göre değiştir.",
+"<b>Check</b>, ardından <b>Post</b>."
+],
+result:"Fatura deftere geçirildi ancak fark nedeniyle ödeme için bloke edildi."},
+{num:"Task 2-1",title:"Enter Subsequent Credit 118##",app:"Create Supplier Invoice",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice"],
+fields:[
+["── General Information Tab ──",""],
+["Transaction","Subsequent Credit"],
+["Gross Invoice Amount","110"],
+["Invoice date","Today's date"],
+["Reference","118##"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515018##"],
+["── Item 4 ──",""],
+["Amount","100 (selected and entered)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice</b> app'ini aç.",
+"Transaction: <b>Subsequent Credit</b> seç.",
+"Alanları gir. PO: 41515018##, <b>Check</b>.",
+"Sistem toplam faturalanan miktarları tutar olmadan önerir, hiçbir kalem seçili değil.",
+"4. kalemi seç, Amount: 100 gir.",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+info:"<b>Subsequent Credit</b> (Alacak Dekontu değil): yalnızca toplam faturalandırılan DEĞER düzeltilir, miktar değil. Bu nedenle işlem <b>Subsequent Credit</b>'dir.",
+result:"Simülasyon: 1) Tedarikçi 110,00 | 2) Stok –100,00 | 3) Vergi –10,00"},
+{num:"Task 3-1",title:"Enter Credit Memo 218##",app:"Create Supplier Invoice – Advanced / MIRO",
+path:["Fiori Launchpad","Supplier Invoice Processing","Create Supplier Invoice – Advanced"],
+fields:[
+["── Basic Data Tab ──",""],
+["Transaction","Credit Memo"],
+["Invoice date","Today's date"],
+["Reference","218##"],
+["Amount","330"],
+["Tax amount","30"],
+["── PO Reference ──",""],
+["PO / Scheduling Agreement","41515018##"],
+["── Item 1 Correction ──",""],
+["Quantity","30"],
+["Amount","300"],
+["Items 2–4","Deselected"]
+],
+steps:[
+"Fiori Launchpad'de <b>Create Supplier Invoice – Advanced</b> app'ini aç. VEYA MIRO.",
+"Transaction: <b>Credit Memo</b> seç.",
+"Basic Data alanlarını gir. PO: 41515018##, Enter.",
+"Sistem toplam faturalanan miktar ve tutarları önerir.",
+"1. kalemin Quantity: 30, Amount: 300 olarak değiştir.",
+"2-4. kalemlerin onay kutularını kaldır.",
+"Enter. Değişiklikleri onayla.",
+"<b>Simulate</b>, ardından <b>Post</b>."
+],
+result:"Simülasyon: 1) Tedarikçi 330,00 | 2) GR/IR clearing –300,00 | 3) Vergi –30,00. PO geçmişi: alacak dekontu fatura gibi görünür — eksi işareti ile ayırt edilir."},
+{num:"Task 3-4",title:"Check if Posting Credit Memo Deletes Invoice Block",app:"Create Supplier Invoice – Advanced",
+steps:[
+"Create Supplier Invoice – Advanced ekranında kal.",
+"Invoice 018##'deki bloğu kontrol et.",
+"<b>Other Invoice Document</b> butonuna bas — kredi notu görünür.",
+"PO'ya çift tıkla, Purchase Order History sekmesi."
+],
+result:"Alacak dekontunun deftere geçirilmesi, 018## faturasındaki bloklama nedenini OTOMATİK SİLMEZ. Bloklama nedeni yalnızca otomatik serbest bırakma işlevi (<b>MRBR</b>) çalıştırıldığında silinir."}
+]},
+
+{id:19,title:"Cancel an Invoice",app:"Supplier Invoices List / Display Supplier Invoice",
+sc:"Birkaç gün önce PO 41515001## için girilen 001## referanslı faturayı iptal et (reversal reason 01).",
+tasks:[
+{num:"1",title:"Find and Display Invoice 001##",app:"Supplier Invoices List",
+path:["Fiori Launchpad","Supplier Invoice Processing","Supplier Invoices List"],
+fields:[
+["── Filter ──",""],
+["Company Code","1010"],
+["Reference","001##"],
+["── PO Items Settled ──",""],
+["Item 10","100 PC — 1,000 EUR"],
+["Item 30","100 PC — 2,000 EUR"]
+],
+steps:[
+"Fiori Launchpad'de <b>Supplier Invoices List</b> app'ini aç.",
+"Filter: Company Code 1010, Reference: 001##, <b>Go</b>.",
+"Fatura belgesi numarasını not et.",
+"Belge numarasına tıkla. Posting date ve Transaction'ı not et.",
+"<b>Journal Entries</b> butonuna bas.",
+"Process Flow penceresinde journal entry belgesine tıkla.",
+"Journal Entry penceresinde <b>Related Applications</b>'a tıkla → <b>Display Journal Entries</b>.",
+"Muhasebe hareketlerini görüntüle."
+]},
+{num:"2",title:"Cancel Invoice (Reversal Reason 01)",app:"Display Supplier Invoice",
+fields:[
+["── Reversal ──",""],
+["Reason for Reversal","01 (Reversal in current period)"],
+["── Result ──",""],
+["Posting date","Same as original invoice (not today)"],
+["Transaction","Credit Memo"],
+["FI postings","Same accounts, reversed debit/credit signs"]
+],
+steps:[
+"Faturanın görüntülendiği browser penceresinde <b>Reverse</b> butonuna bas.",
+"Reverse Invoice diyalogunda: Reason: <b>01 (Reversal in current period)</b>, <b>OK</b>.",
+"<b>Supplier Invoices List</b>'e geri dön, Reference: 001## ile filtrele.",
+"İkinci fatura <b>Reversal</b> statüsünde görünür.",
+"Reversal belge numarasına tıkla. Posting date'i orijinal fatura ile karşılaştır.",
+"<b>Journal Entries</b> butonuna bas → muhasebe hareketlerini görüntüle."
+],
+result:"İptal deftere geçiş tarihi = orijinal fatura deftere geçiş tarihi. İşlem: <b>Credit Memo</b>. FI kayıtları: aynı hesaplar ancak borç/alacak işaretleri TERS ÇEVRİLMİŞ."}
+]}
+]},
+{unit:4,title:"Automated Processes in Invoice Verification",ex:[
+{id:20,title:"Perform Invoice Verification in the Background",app:"Enter Supplier Invoice for Background Verification / Schedule Supplier Invoice Jobs",
+sc:"Dört faturayı arka planda doğrulama için zamanla. İş programını çalıştır, sonuçları kontrol et ve hatalı faturaları manuel düzelt.",
+tasks:[
+{num:"Task 1",title:"Schedule Four Invoices for Background Verification",app:"Enter Supplier Invoice for Background Verification",
+path:["Fiori Launchpad","Supplier Invoice Processing","Enter Supplier Invoice for Background Verification"],
+fields:[
+["── Invoice 1 (020##) ──",""],
+["Transaction","Invoice"],
+["Invoice date","Today's date"],
+["Reference","020##"],
+["Amount","2530"],
+["Tax amount","230"],
+["FS item type","Goods/service items"],
+["PO / Scheduling Agreement","41515020##"],
+["── Invoice 2 (120##) ──",""],
+["Reference","120##"],
+["Amount","1501.50"],
+["Tax amount","136.50"],
+["PO / Scheduling Agreement","41515120##"],
+["── Invoice 3 (220##) ──",""],
+["Reference","220##"],
+["Amount","12210"],
+["Tax amount","1110"],
+["PO / Scheduling Agreement","41515220##"],
+["── Invoice 4 (320##) ──",""],
+["Reference","320##"],
+["Amount","18150"],
+["Tax amount","1650"],
+["PO / Scheduling Agreement","41515320##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Enter Supplier Invoice for Background Verification</b> app'ini aç.",
+"1. fatura verilerini gir, <b>Schedule Background Verification</b>. Belge numarasını not et.",
+"2. fatura verilerini gir, <b>Schedule Background Verification</b>.",
+"3. fatura verilerini gir, <b>Schedule Background Verification</b>.",
+"4. fatura verilerini gir, <b>Schedule Background Verification</b>."
+],
+warn:"<b>Transaction = Invoice</b> seçili olduğundan emin olun. Kalem türü olarak <b>Goods/service items</b> seçin."},
+{num:"Task 1-2",title:"Check Documents Before Background Run",app:"Supplier Invoices List",
+path:["Fiori Launchpad","Supplier Invoice Processing","Supplier Invoices List"],
+fields:[
+["── Filter ──",""],
+["Invoicing Party","S4515-1##"],
+["Company Code","1010"],
+["Entry Type","Batch Run"]
+],
+steps:[
+"Fiori Launchpad'de <b>Supplier Invoices List</b> app'ini aç.",
+"<b>Adapt Filters</b>: <b>Entry Type</b> onay kutusunu seç, <b>OK</b>.",
+"Filtreleri gir, <b>Go</b>.",
+"Tüm faturalar <b>Defined for Background Verification</b> statüsünde — henüz gönderilemedi."
+]},
+{num:"Task 2-1",title:"Schedule Background Verification Job",app:"Schedule Supplier Invoice Jobs",
+path:["Fiori Launchpad","Supplier Invoice Processing","Schedule Supplier Invoice Jobs"],
+fields:[
+["── Step 1: Template Selection ──",""],
+["Job Template","Verification in Background"],
+["Job Name","S4515-##"],
+["── Step 2: Scheduling Options ──",""],
+["Start Immediately","Selected"],
+["Recurrence Pattern","Single Run"],
+["── Step 3: Parameters ──",""],
+["Company Code","1010"],
+["Supplier/Invoicing Party","S4515-1##"]
+],
+steps:[
+"Fiori Launchpad'de <b>Schedule Supplier Invoice Jobs</b> app'ini aç.",
+"<b>Create</b>'e bas.",
+"Her adım için verileri gir, <b>Schedule</b>'e bas.",
+"Job listesinde S4515-## ara, <b>Go</b>.",
+"Job results: <b>Navigate to the job results</b> ikonuna bas — yalnızca bir fatura gönderilmiş."
+],
+result:"Yalnızca fatura 1 (020##) doğru şekilde deftere geçirildi. Fatura 2, 3 ve 4'te hatalar var."},
+{num:"Task 3-2",title:"Correct Invoice 2 (120##) — Accept Balance Difference",app:"Invoice Overview – MIR6",
+path:["Fiori Launchpad","Search: MIR6","Invoice Overview – MIR6"],
+info:"Not: <b>Invoice Overview – MIR6</b>, standart bir SAP uygulaması değildir — Fiori Launchpad'de MIR6 işlemini başlatmak için bu kurs özelinde oluşturulmuştur.",
+fields:[
+["── Selection ──",""],
+["Fiscal Year","Current year"],
+["Invoicing Party","S4515-1##"],
+["Company Code","1010"],
+["Entry Type","Background selected"],
+["Invoice Status","All selected"]
+],
+steps:[
+"Fiori arama çubuğuna <b>MIR6</b> yazıp <b>Invoice Overview – MIR6</b> app'ini aç.",
+"Seçim kriterlerini gir, <b>Execute</b>.",
+"2. fatura için <b>Message log</b> ikonuna bas: bakiye sıfır değil.",
+"<b>Change Invoice</b> ikonuna bas.",
+"Kalem listesinde sistem 1,400 EUR bekliyor, fatura 1,365 EUR — fark 35 EUR (lehine).",
+"<b>Menu → Edit → Accept and Post</b>. Nakit iskontosu mesajını Enter ile onayla."
+]},
+{num:"Task 3-3",title:"Correct Invoice 3 (220##) — Invoice Reduction",app:"Invoice Overview – MIR6",
+fields:[
+["── Invoice Reduction Layout ──",""],
+["Layout","Invoice reduction – Training"],
+["── Item 1 ──",""],
+["Action","Deselect (not in invoice)"],
+["── Item 3 (Price variance) ──",""],
+["Correction Indicator","Supplier error: reduce invoice"],
+["Invoice Amount According to Supplier","1100"]
+],
+steps:[
+"3. fatura için <b>Message log</b> ikonuna bas: bakiye sıfır değil.",
+"<b>Change Invoice</b> ikonuna bas.",
+"Kalem listesinde: Kalem 10 PO için gösterilmiş ama faturada yok — onay kutusunu kaldır.",
+"Kalem 30'da price variance var.",
+"Layout: <b>Invoice reduction – Training</b> seç.",
+"Kalem 3 için Correction Indicator ve Invoice Amount gir.",
+"<b>Post</b> veya <b>Schedule Background Verification</b>."
+]},
+{num:"Task 3-4",title:"Reschedule Invoice 4 (320##) for Background",app:"Invoice Overview – MIR6",
+steps:[
+"4. fatura için <b>Change Invoice</b> ikonuna bas.",
+"PO numarasına çift tıklayarak PO geçmişini gör.",
+"Kalem 30: 300 adet sipariş edilmiş, 50 adet teslim alınmış — outstanding GR 250 adet.",
+"<b>Schedule Background Verification</b> — sistemin sonraki GR'yı beklemesi mantıklı."
+],
+result:"Fatura 4: 250 adet için GR henüz tamamlanmadı. Arka plan kontrolü için yeniden planlamak mantıklıdır — bekleyen GR deftere geçirildiğinde sistem tekrar doğrular."}
+]},
+
+{id:21,title:"Execute the Evaluated Receipt Settlement",app:"Create Evaluated Receipt Settlement / Maintain Business Partner",
+sc:"Tedarikçi S4515-2## için ERS (Evaluated Receipt Settlement) işlemi yap. Test run ile PO'ları belirle, birini yerleş, ardından manuel fatura girişinin ERS'i nasıl etkilediğini gör.",
+tasks:[
+{num:"1",title:"Verify ERS Indicator for Supplier S4515-2##",app:"Maintain Business Partner / BP",
+path:["Fiori Launchpad","Purchasing and Goods Receipt","Maintain Business Partner"],
+fields:[
+["── Search ──",""],
+["Business Partner","S4515–2##"],
+["── Purchasing Data Tab — Additional Purchasing Data ──",""],
+["Eval. Receipt Settlement","Set (active)"]
+],
+steps:[
+"Fiori Launchpad'de <b>Maintain Business Partner</b> app'ini aç. VEYA Backend: /NBP.",
+"Business Partner: S4515-2## gir, <b>Start</b>. Not: Search alanının <b>By Number</b> modunda olduğundan emin ol.",
+"Business partner numarasına çift tıkla.",
+"BP role: <b>Supplier</b> seç, <b>Purchasing</b>'e tıkla.",
+"<b>Purchasing Data</b> sekmesinde <b>Additional Purchasing Data</b> bölümüne kaydır.",
+"<b>Eval. Receipt Settlement</b> göstergesinin set olduğunu doğrula."
+]},
+{num:"2",title:"Execute ERS Test Run",app:"Create Evaluated Receipt Settlement / MRRL",
+path:["Fiori Launchpad","Search: Create Evaluated Receipt Settlement"],
+fields:[
+["── Selection Criteria ──",""],
+["Company Code","1010"],
+["Supplier","S4515–2##"],
+["Document Selection","3 (per order item)"],
+["Test Run","Selected"]
+],
+steps:[
+"Fiori arama ile <b>Create Evaluated Receipt Settlement</b> app'ini aç. VEYA MRRL.",
+"Seçim kriterlerini gir, <b>Test Run</b> onay kutusunu seç.",
+"<b>Execute</b>.",
+"Sistemi önerilen PO numaralarını not et.",
+"<b>Navigate back</b> ile seçim ekranına dön ama uygulamadan çıkma."
+]},
+{num:"3",title:"Settle Deliveries for One PO",app:"Create Evaluated Receipt Settlement / MRRL",
+fields:[
+["── Selection Criteria ──",""],
+["Company Code","1010"],
+["Supplier","S4515–2##"],
+["Purchase Document","41515___## (one PO from step 2)"],
+["Document Selection","3"],
+["Test Run","Not selected"]
+],
+steps:[
+"Seçim kriterlerinde belirli PO numarasını gir.",
+"<b>Test Run</b> onay kutusunu kaldır.",
+"<b>Execute</b>.",
+"Sistem fatura listesini görüntüler.",
+"Bir fatura numarasına tıkla — fatura belgesini görüntüle."
+]},
+{num:"4",title:"Post Manual Invoice and Re-run ERS",app:"Create Evaluated Receipt Settlement / MRRL",
+steps:[
+"Henüz yerleştirilmemiş bir PO için Create Supplier Invoice – Advanced ile manuel fatura gir.",
+"ERS çalıştır: Sadece kısmen manuel fatura girilmişse sistem kalan miktar için ERS faturası oluşturur.",
+"Tüm miktar için manuel fatura girilmişse sistem sıfır değerli fatura oluşturur."
+],
+result:"Tüm teslim miktarı manuel olarak faturalandırılmışsa: <b>ERS</b> o kalem için sıfır değerli fatura oluşturur. Kısmi ise: <b>ERS</b> kalan miktarı faturalar."}
+]}
+]},
+
+{unit:5,title:"GR/IR Account Maintenance",ex:[
+{id:22,title:"Use GR/IR Account Maintenance Functions",app:"Clear GR/IR Clearing Account / Display/Cancel Account Maintenance Document",
+sc:"S4515-1## için GR/IR takas hesabındaki kapatılamayan farkları bul, seçili kalemi yerleştir ve sonucu incele.",
+tasks:[
+{num:"1",title:"Prepare List of Uncleared PO Items",app:"Clear GR/IR Clearing Account",
+path:["Fiori Launchpad","Supplier Invoice Processing","Clear GR/IR Clearing Account"],
+fields:[
+["── Selection ──",""],
+["Supplier","S4515-1##"],
+["Purchase Order Date","First of last month to Today's date"],
+["Delivery Surplus","Not selected"],
+["Invoice Surplus","Selected"],
+["Last movement before key date","Today's date"],
+["Qty Var. Less Than/Equal To","– (no restriction)"],
+["Value Variance Less Than/= To","– (no restriction)"],
+["── Processing ──",""],
+["Mode","Prepare List"]
+],
+steps:[
+"Fiori Launchpad'de <b>Clear GR/IR Clearing Account</b> app'ini aç.",
+"<b>Maintain GR/IR Clearing Account</b> ekranında seçim alanlarını gir.",
+"Processing: <b>Prepare List</b> seç.",
+"<b>Execute</b>.",
+"Sistem seçim kriterlerine uyan, fark içeren PO kalemlerini listeler."
+]},
+{num:"2",title:"Select PO Item, Display PO History, and Post Clearing",app:"Clear GR/IR Clearing Account",
+steps:[
+"Listeden bir PO kalemi seç.",
+"<b>Purchase Order</b> butonuna bas — PO kalem detayındaki <b>Purchase Order History</b> sekmesinde farkın nedenini gör.",
+"<b>Maintain GR/IR Clearing Account</b> ekranına geri dön.",
+"<b>Post</b> butonuna bas.",
+"Sistem GR/IR takas hesabını kapatan bir belge oluşturur."
+]},
+{num:"3",title:"Display Account Maintenance Document",app:"Display/Cancel Account Maintenance Document",
+path:["Fiori Launchpad","Display/Cancel Account Maintenance Document"],
+steps:[
+"Fiori Launchpad'de <b>Display/Cancel Account Maintenance Document</b> app'ini aç.",
+"Sistem son kapatma belge numarasını önerir.",
+"<b>Overview</b> butonuna bas.",
+"<b>Follow-On Documents</b>'a bas.",
+"Muhasebe belgesine çift tıkla.",
+"MAP malzeme: GR/IR takas hesabı, stok hesabıyla kapatılır. Standart fiyatlı malzeme: Fiyat farkı hesabıyla kapatılır."
+],
+result:"MAP değerli malzeme: GR/IR clearing hesabı stok hesabına karşı kapatılır. Standart fiyatlı malzeme: GR/IR clearing hesabı fiyat farkı hesabına karşı kapatılır."
+},
+{num:"4",title:"Display PO History — Account Maintenance Listed",app:"Display/Cancel Account Maintenance Document",
+steps:[
+"Display/Cancel Account Maintenance Document ekranında kapatma kalemine imleç koy.",
+"<b>Purchase Order</b> butonuna bas.",
+"Kalem detayında <b>Purchase Order History</b> sekmesine bak.",
+"Hesap bakımı (account maintenance) PO geçmişinde ayrı bir işlem olarak listelenir."
+],
+result:"Hesap bakımı belgesi, PO geçmişinde kendi işlem türü olarak ayrı listelenir."}
+]}
+]},
+
+{unit:6,title:"Invoice Verification - Further Customizing",ex:[
+{id:23,title:"Adjust Further Customizing Settings in Invoice Verification",app:"SAP GUI – SPRO / MIRO",
+sc:"M8 225 mesajını kullanıcıya özel hata mesajına dönüştür. PO header metin tiplerinden hangilerinin fatura girişinde bildirildiğini incele.",
+tasks:[
+{num:"1",title:"Change Message M8 225 to Error for Your User",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Logistics Invoice Verification","Define Attributes of System Messages","Define Message Types for Area M8"],
+fields:[
+["── New Entry ──",""],
+["Message number","225"],
+["User name","Your logon user"],
+["Online","E (Error)"],
+["Batch Input","E (Error)"]
+],
+steps:[
+"Backend T41: Tools → Customizing → IMG → Execute Project (SPRO).",
+"<b>SAP Reference IMG</b>.",
+"Materials Management → Logistics Invoice Verification → <b>Define Attributes of System Messages</b> → <b>Define Message Types for Area M8</b>.",
+"<b>New Entries</b> butonuna bas.",
+"Message number: 225, User name: kendi kullanıcı adın, Online: E, Batch Input: E gir.",
+"Kaydet.",
+"<b>System → New GUI Window</b> ile yeni oturum aç.",
+"MIRO: Invoice date today, PO Reference, PO: 41515221##, Supplier: S4515-2##, <b>Continue</b>.",
+"Sistem hatası: 'Evaluated receipt settlement is active for purchase order 41515221##'."
+],
+result:"Mesaj M8 225 artık aktif ERS'li bir PO için fatura girerken kullanıcınız için uyarı yerine HATA olarak görünür.",
+warn:"Mesaj 225 için <b>New Entry</b> Customizing değişikliği bu egzersiz için kasıtlıdır. Diğer tüm Customizing adımları: yalnızca görüntüleme — ayarları değiştirmeyin!"},
+{num:"2",title:"Check Notifiable PO Header Text Types",app:"SAP GUI – SPRO",
+path:["SPRO","Materials Management","Logistics Invoice Verification","Incoming Invoice","Edit PO Supplement Text in Invoice Verification"],
+fields:[
+["── Notifiable Text Types for Company Code 1010 ──",""],
+["F03","Pricing types"],
+["F05","Terms of delivery"],
+["F06","Shipping instructions"],
+["F07","Terms of payment"],
+["F11","Contract riders (clauses)"]
+],
+steps:[
+"Customizing'de: Materials Management → Logistics Invoice Verification → Incoming Invoice → <b>Edit PO Supplement Text in Invoice Verification</b>.",
+"<b>PO Text Types</b> ekranında <b>Notifiable Purchase Order Text Types</b> butonuna bas.",
+"Company code 1010 için notifiable text type'ları not et."
+],
+result:"Şirket kodu 1010 bildirim gerektiren PO metin türleri: F03, F05, F06, F07, F11"}
+]}
+]}
+];
+
+function path(a){
+  if(!a||!a.length)return'';
+  return'<div class="pr">'+a.map((p,i)=>
+    `<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`
+  ).join('')+'</div>';
+}
+function tbl(f){
+  if(!f||!f.length)return'';
+  const rows=f.map(([a,b])=>{
+    if(a.startsWith('──'))
+      return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;
+    return`<tr><td>${a}</td><td>${b}</td></tr>`;
+  }).join('');
+  return`<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function steps(s){
+  if(!s||!s.length)return'';
+  return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';
+}
+function task(t){
+  const body=
+    path(t.path)+
+    (t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+
+    (t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+
+    tbl(t.fields)+
+    steps(t.steps)+
+    (t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');
+  return`<div class="task">
+    <div class="thdiv" onclick="togTask(this)">
+      <span class="tn">${t.num}</span>
+      <span class="tt">${t.title}</span>
+      ${t.app?`<span class="ab">${t.app}</span>`:''}
+      <span class="task-chev">›</span>
+    </div>
+    <div class="task-body">${body}</div>
+  </div>`;
+}
+function card(e,uid){
+  let html=`<div class="card" id="ex${e.id}" data-u="${uid}">`;
+  html+=`<div class="ch" onclick="toggle(this)">
+    <span class="exn">${e.id}</span>
+    <div class="cl">
+      <div class="ct">${e.title}</div>
+      <div class="ca">${e.app}</div>
+    </div>
+    <div class="cr"><span class="sb">${e.tasks.length} Adım</span><span class="chev">›</span></div>
+  </div>`;
+  html+=`<div class="cb">`;
+  if(e.sc)html+=`<div class="scenario">${e.sc}</div>`;
+  e.tasks.forEach(t=>html+=task(t));
+  html+=`</div></div>`;
+  return html;
+}
+function unit(u){
+  const uid=`u${u.unit}`;
+  const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',5:'#22c55e',6:'#ef4444'};
+  const c=colors[u.unit]||'#60a5fa';
+  let h=`<div class="ug ${uid}" id="${uid}">
+    <div class="uh" onclick="togUnit(this)">
+      <span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">Unit ${u.unit}</span>
+      <span class="utitle">${u.title}</span>
+      <span class="uc">${u.ex.length} egzersiz</span>
+      <span class="uchev">›</span>
+    </div>
+    <div class="ug-body">`;
+  u.ex.forEach(e=>h+=card(e,uid));
+  return h+'</div></div>';
+}
+function toggle(h){h.parentElement.classList.toggle('open');}
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+function togTask(hdr){hdr.parentElement.classList.toggle('open');}
+function hl(t,q){
+  if(!q)return t;
+  const r=new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi');
+  return t.replace(r,'<mark>$1</mark>');
+}
+const app=document.getElementById('app');
+const frow=document.getElementById('frow');
+const cnt=document.getElementById('cnt');
+const nores=document.getElementById('nores');
+const srch=document.getElementById('search');
+const clr=document.getElementById('clr');
+const xpb=document.getElementById('xpb');
+const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);
+cnt.textContent=TOTAL;
+let term='',filterU='all',allOpen=false;
+D.forEach(u=>{
+  app.innerHTML+=unit(u);
+  const b=document.createElement('button');
+  b.className='fb';
+  b.dataset.u=`u${u.unit}`;
+  b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;
+  frow.appendChild(b);
+});
+function run(){
+  const q=term.toLowerCase().trim();
+  let vis=0;
+  document.querySelectorAll('.ug').forEach(ug=>{
+    const uid=ug.id;
+    const uMatch=filterU==='all'||filterU===uid;
+    let uVis=false;
+    ug.querySelectorAll('.card').forEach(card=>{
+      if(!uMatch){card.classList.add('hid');return;}
+      const raw=card.querySelector('.ch').textContent+card.querySelector('.cb').innerHTML;
+      const m=!q||raw.toLowerCase().includes(q);
+      if(m){card.classList.remove('hid');vis++;uVis=true;}
+      else{card.classList.add('hid');}
+    });
+    ug.classList.toggle('hid',!uVis||!uMatch);
+  });
+  cnt.textContent=vis||(!q&&filterU==='all'?TOTAL:vis);
+  nores.style.display=(vis===0&&(q||filterU!=='all'))?'block':'none';
+  clr.style.display=q?'inline':'none';
+}
+srch.addEventListener('input',e=>{term=e.target.value;run();});
+srch.addEventListener('keydown',e=>{if(e.key==='Escape'){term='';srch.value='';run();}});
+clr.addEventListener('click',()=>{term='';srch.value='';run();srch.focus();});
+frow.addEventListener('click',e=>{
+  const b=e.target.closest('.fb');
+  if(!b)return;
+  filterU=b.dataset.u;
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  run();
+});
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+xpb.addEventListener('click',()=>{
+  allOpen=!allOpen;
+  document.querySelectorAll('.card:not(.hid)').forEach(c=>c.classList.toggle('open',allOpen));
+  xpb.textContent=allOpen?'Tümünü Kapat':'Tümünü Aç';
+  xpb.classList.toggle('active',allOpen);
+});
+</script>
+</body>
+</html>
