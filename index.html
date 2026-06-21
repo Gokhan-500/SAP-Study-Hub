@@ -3,141 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0f172a">
-<meta name="description" content="SAP Çözüm Ağacı — IEE2E, C_TS452 Procurement ve Service çalışma kaynakları">
-<title>SAP Çözüm Ağacı — Çalışma Merkezi</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<title>SAP Study Hub</title>
+
 <style>
-:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;
---blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);
---green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);
---yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);
---purple:#a78bfa;--pbg:rgba(167,139,250,.10);--pbd:rgba(167,139,250,.30);
---mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+:root{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --border:#334155;
+    --text:#f1f5f9;
+    --muted:#94a3b8;
 
-header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:40px 32px 32px;text-align:center;}
-header .eyebrow{font-family:var(--mono);font-size:11px;color:var(--bl);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
-header h1{font-size:28px;font-weight:700;margin-bottom:8px;}
-header p{font-family:var(--mono);font-size:12px;color:var(--tm);}
+    --blue:#3b82f6;
+    --green:#22c55e;
+    --purple:#a855f7;
+}
 
-main{max-width:1080px;margin:0 auto;padding:36px 24px 60px;}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-.module{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:24px;overflow:hidden;}
-.module-head{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border);background:var(--bg3);flex-wrap:wrap;gap:10px;}
-.module-head h2{font-size:16px;font-weight:600;}
-.module-code{font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:4px;letter-spacing:.05em;}
-.c-iee2e .module-code{color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);}
-.c-proc .module-code{color:var(--green);background:var(--gbg);border:1px solid var(--gbd);}
-.c-serv .module-code{color:var(--purple);background:var(--pbg);border:1px solid var(--pbd);}
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:Segoe UI, Arial, sans-serif;
+    min-height:100vh;
+}
 
-.module-body{padding:20px 24px 24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-@media (max-width:680px){.module-body{grid-template-columns:1fr;}}
+.header{
+    text-align:center;
+    padding:50px 20px 30px;
+}
 
-.section-title{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
-.links{display:flex;flex-direction:column;gap:6px;}
-.links a{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);text-decoration:none;padding:8px 10px;border-radius:6px;border:1px solid transparent;transition:border-color .15s,background .15s;}
-.links a:hover{background:var(--bg3);border-color:var(--border);}
-.links a .num{font-family:var(--mono);font-size:10px;color:var(--td);min-width:20px;}
-.links a.placeholder{color:var(--td);font-style:italic;}
+.header h1{
+    font-size:38px;
+    margin-bottom:10px;
+}
 
-footer{text-align:center;padding:20px;font-family:var(--mono);font-size:11px;color:var(--td);border-top:1px solid var(--border);}
+.header p{
+    color:var(--muted);
+    font-size:15px;
+}
+
+.grid{
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:25px;
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+}
+
+.card h2{
+    margin-bottom:8px;
+}
+
+.card p{
+    color:var(--muted);
+    margin-bottom:20px;
+}
+
+.btn{
+    display:block;
+    text-decoration:none;
+    color:white;
+    padding:12px 14px;
+    border-radius:10px;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.iee2e{
+    background:rgba(59,130,246,.15);
+    border:1px solid rgba(59,130,246,.3);
+}
+
+.proc{
+    background:rgba(34,197,94,.15);
+    border:1px solid rgba(34,197,94,.3);
+}
+
+.service{
+    background:rgba(168,85,247,.15);
+    border:1px solid rgba(168,85,247,.3);
+}
+
+footer{
+    text-align:center;
+    color:var(--muted);
+    padding:30px;
+    font-size:13px;
+}
 </style>
 </head>
+
 <body>
 
-<header>
-<div class="eyebrow">Self-Study Hub</div>
-<h1>SAP Çözüm Ağacı</h1>
-<p>IEE2E · C_TS452 Procurement · Service — sertifikasyon çalışma kaynakları</p>
-</header>
+<div class="header">
+    <h1>SAP Study Hub</h1>
+    <p>IEE2E • Procurement • Service</p>
+</div>
 
-<main>
+<div class="grid">
 
-<section class="module c-iee2e">
-  <div class="module-head">
-    <h2>IEE2E</h2>
-    <span class="module-code">S/4HANA Cloud End-to-End</span>
-  </div>
-  <div class="module-body">
-    <div>
-      <div class="section-title">Çözüm Ağacı</div>
-      <div class="links">
-        <a href="iee2e/cozum-agaci/iee2e.html"><span class="num">▸</span>Genel Çözüm Ağacı</a>
-        <a href="iee2e/cozum-agaci/exam.html"><span class="num">▸</span>Sınav Çözüm Ağacı</a>
-      </div>
-    </div>
-    <div>
-      <div class="section-title">Notlar</div>
-      <div class="links">
-        <a href="iee2e/notlar/00-kavramlar-sozlugu.html"><span class="num">00</span>Kavramlar Sözlüğü</a>
-        <a href="iee2e/notlar/01-end-to-end-surecler.html"><span class="num">01</span>End-to-End Süreçler</a>
-        <a href="iee2e/notlar/02-identifying-end-to-end-business-processes.html"><span class="num">02</span>Identifying End-to-End Processes</a>
-        <a href="iee2e/notlar/03-describing-sap-business-suite.html"><span class="num">03</span>SAP Business Suite</a>
-        <a href="iee2e/notlar/04-central-concepts-objects.html"><span class="num">04</span>Central Concepts & Objects</a>
-        <a href="iee2e/notlar/05-fico-financial-management-accounting.html"><span class="num">05</span>FI Process</a>
-        <a href="iee2e/notlar/06-procurement.html"><span class="num">06</span>Procurement</a>
-        <a href="iee2e/notlar/07-production.html"><span class="num">07</span>Production</a>
-        <a href="iee2e/notlar/08-sales.html"><span class="num">08</span>Sales (SD)</a>
-        <a href="iee2e/notlar/09-service.html"><span class="num">09</span>Service</a>
-      </div>
-    </div>
-  </div>
-</section>
+    <div class="card">
+        <h2>📦 IEE2E</h2>
+        <p>S/4HANA Cloud End-to-End</p>
 
-<section class="module c-proc">
-  <div class="module-head">
-    <h2>Procurement</h2>
-    <span class="module-code">C_TS452</span>
-  </div>
-  <div class="module-body">
-    <div>
-      <div class="section-title">Çözüm Ağacı</div>
-      <div class="links">
-        <a href="procurement/cozum-agaci/p1-s4500.html"><span class="num">P1</span>S4500 — Sourcing & Procurement</a>
-        <a href="procurement/cozum-agaci/p2-s4520.html"><span class="num">P2</span>S4520 — Purchasing</a>
-        <a href="procurement/cozum-agaci/p3-s45250.html"><span class="num">P3</span>S45250 — Consumption-Based Planning</a>
-        <a href="procurement/cozum-agaci/p4-s4510.html"><span class="num">P4</span>S4510 — Inventory Management</a>
-        <a href="procurement/cozum-agaci/p5-s4515.html"><span class="num">P5</span>S4515 — Invoice Verification</a>
-        <a href="procurement/cozum-agaci/p6-s4550.html"><span class="num">P6</span>S4550 — Cross-Functional Customizing</a>
-      </div>
-    </div>
-    <div>
-      <div class="section-title">Notlar</div>
-      <div class="links">
-        <a href="procurement/notlar/00-yakinda-eklenecek.html" class="placeholder"><span class="num">—</span>Yakında eklenecek</a>
-      </div>
-    </div>
-  </div>
-</section>
+        <a class="btn iee2e" href="iee2e/cozum-agaci/iee2e.html">
+            🌳 Solution Tree
+        </a>
 
-<section class="module c-serv">
-  <div class="module-head">
-    <h2>Service</h2>
-    <span class="module-code">S/4HANA Service</span>
-  </div>
-  <div class="module-body">
-    <div>
-      <div class="section-title">Çözüm Ağacı</div>
-      <div class="links">
-        <a href="service/cozum-agaci/s2-47000.html"><span class="num">S2</span>S47000 — Service Genel</a>
-        <a href="service/cozum-agaci/s3-s47100.html"><span class="num">S3</span>S47100 — Org. & Master Data</a>
-        <a href="service/cozum-agaci/s4-s47500.html"><span class="num">S4</span>S47500 — Service Processing</a>
-      </div>
-    </div>
-    <div>
-      <div class="section-title">Notlar</div>
-      <div class="links">
-        <a href="service/notlar/00-yakinda-eklenecek.html" class="placeholder"><span class="num">—</span>Yakında eklenecek</a>
-      </div>
-    </div>
-  </div>
-</section>
+        <a class="btn iee2e" href="iee2e/cozum-agaci/exam.html">
+            📝 Exam Tree
+        </a>
 
-</main>
+        <a class="btn iee2e" href="iee2e/notlar/00-kavramlar-sozlugu.html">
+            📚 Notes
+        </a>
+    </div>
 
-<footer>Sap-cozum-agaci · self-hosted study hub</footer>
+    <div class="card">
+        <h2>🛒 Procurement</h2>
+        <p>C_TS452 Certification</p>
+
+        <a class="btn proc" href="procurement/cozum-agaci/p1-s4500.html">
+            🌳 Solution Trees
+        </a>
+
+        <a class="btn proc" href="procurement/notlar/00-yakinda-eklenecek.html">
+            📚 Notes
+        </a>
+    </div>
+
+    <div class="card">
+        <h2>🔧 Service</h2>
+        <p>S/4HANA Service Learning</p>
+
+        <a class="btn service" href="service/cozum-agaci/s2-47000.html">
+            🌳 Solution Trees
+        </a>
+
+        <a class="btn service" href="service/notlar/00-yakinda-eklenecek.html">
+            📚 Notes
+        </a>
+    </div>
+
+</div>
+
+<footer>
+    SAP Study Hub
+</footer>
 
 </body>
 </html>
