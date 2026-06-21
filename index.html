@@ -13,10 +13,6 @@
     --border:#334155;
     --text:#f1f5f9;
     --muted:#94a3b8;
-
-    --blue:#3b82f6;
-    --green:#22c55e;
-    --purple:#a855f7;
 }
 
 *{
@@ -57,15 +53,10 @@ body{
 }
 
 .card{
-    background:var(--card);
-    border:1px solid var(--border);
+    background:#1e293b;
+    border:1px solid #334155;
     border-radius:16px;
     padding:25px;
-    transition:.2s;
-}
-
-.card:hover{
-    transform:translateY(-3px);
 }
 
 .card h2{
@@ -102,6 +93,19 @@ body{
     border:1px solid rgba(168,85,247,.3);
 }
 
+.accordion{
+    cursor:pointer;
+}
+
+.content{
+    display:none;
+    margin-top:10px;
+}
+
+.content.show{
+    display:block;
+}
+
 footer{
     text-align:center;
     color:var(--muted);
@@ -133,16 +137,25 @@ footer{
             📝 Exam Tree
         </a>
 
-        <a class="btn iee2e" href="iee2e/notlar/00-kavramlar-sozlugu.html">📚 00 Kavramlar Sözlüğü</a>
-        <a class="btn iee2e" href="iee2e/notlar/01-end-to-end-surecler.html">📚 01 End-to-End Süreçler</a>
-        <a class="btn iee2e" href="iee2e/notlar/02-identifying-end-to-end-business-processes.html">📚 02 Identifying Processes</a>
-        <a class="btn iee2e" href="iee2e/notlar/03-describing-sap-business-suite.html">📚 03 SAP Business Suite</a>
-        <a class="btn iee2e" href="iee2e/notlar/04-central-concepts-objects.html">📚 04 Central Concepts</a>
-        <a class="btn iee2e" href="iee2e/notlar/05-fico-financial-management-accounting.html">📚 05 FI Process</a>
-        <a class="btn iee2e" href="iee2e/notlar/06-procurement.html">📚 06 Procurement</a>
-        <a class="btn iee2e" href="iee2e/notlar/07-production.html">📚 07 Production</a>
-        <a class="btn iee2e" href="iee2e/notlar/08-sales.html">📚 08 Sales</a>
-        <a class="btn iee2e" href="iee2e/notlar/09-service.html">📚 09 Service</a>
+        <div class="btn iee2e accordion" onclick="toggle('iee2eNotes')">
+            📚 Notes ▼
+        </div>
+
+        <div id="iee2eNotes" class="content">
+
+            <a class="btn iee2e" href="iee2e/notlar/00-kavramlar-sozlugu.html">00 Kavramlar Sözlüğü</a>
+            <a class="btn iee2e" href="iee2e/notlar/01-end-to-end-surecler.html">01 End-to-End Süreçler</a>
+            <a class="btn iee2e" href="iee2e/notlar/02-identifying-end-to-end-business-processes.html">02 Identifying Processes</a>
+            <a class="btn iee2e" href="iee2e/notlar/03-describing-sap-business-suite.html">03 SAP Business Suite</a>
+            <a class="btn iee2e" href="iee2e/notlar/04-central-concepts-objects.html">04 Central Concepts</a>
+            <a class="btn iee2e" href="iee2e/notlar/05-fico-financial-management-accounting.html">05 FI Process</a>
+            <a class="btn iee2e" href="iee2e/notlar/06-procurement.html">06 Procurement</a>
+            <a class="btn iee2e" href="iee2e/notlar/07-production.html">07 Production</a>
+            <a class="btn iee2e" href="iee2e/notlar/08-sales.html">08 Sales</a>
+            <a class="btn iee2e" href="iee2e/notlar/09-service.html">09 Service</a>
+
+        </div>
+
     </div>
 
     <!-- Procurement -->
@@ -150,16 +163,25 @@ footer{
         <h2>🛒 Procurement</h2>
         <p>C_TS452 Certification</p>
 
-        <a class="btn proc" href="procurement/cozum-agaci/p1-s4500.html">🌳 P1 - S4500</a>
-        <a class="btn proc" href="procurement/cozum-agaci/p2-s4520.html">🌳 P2 - S4520</a>
-        <a class="btn proc" href="procurement/cozum-agaci/p3-s45250.html">🌳 P3 - S45250</a>
-        <a class="btn proc" href="procurement/cozum-agaci/p4-s4510.html">🌳 P4 - S4510</a>
-        <a class="btn proc" href="procurement/cozum-agaci/p5-s4515.html">🌳 P5 - S4515</a>
-        <a class="btn proc" href="procurement/cozum-agaci/p6-s4550.html">🌳 P6 - S4550</a>
+        <div class="btn proc accordion" onclick="toggle('procTrees')">
+            🌳 Solution Trees ▼
+        </div>
+
+        <div id="procTrees" class="content">
+
+            <a class="btn proc" href="procurement/cozum-agaci/p1-s4500.html">P1 - S4500</a>
+            <a class="btn proc" href="procurement/cozum-agaci/p2-s4520.html">P2 - S4520</a>
+            <a class="btn proc" href="procurement/cozum-agaci/p3-s45250.html">P3 - S45250</a>
+            <a class="btn proc" href="procurement/cozum-agaci/p4-s4510.html">P4 - S4510</a>
+            <a class="btn proc" href="procurement/cozum-agaci/p5-s4515.html">P5 - S4515</a>
+            <a class="btn proc" href="procurement/cozum-agaci/p6-s4550.html">P6 - S4550</a>
+
+        </div>
 
         <a class="btn proc" href="procurement/notlar/00-yakinda-eklenecek.html">
             📚 Notes
         </a>
+
     </div>
 
     <!-- Service -->
@@ -167,13 +189,22 @@ footer{
         <h2>🔧 Service</h2>
         <p>S/4HANA Service Learning</p>
 
-        <a class="btn service" href="service/cozum-agaci/s2-s47000.html">🌳 S2 - S47000</a>
-        <a class="btn service" href="service/cozum-agaci/s3-s47100.html">🌳 S3 - S47100</a>
-        <a class="btn service" href="service/cozum-agaci/s4-s47500.html">🌳 S4 - S47500</a>
+        <div class="btn service accordion" onclick="toggle('serviceTrees')">
+            🌳 Solution Trees ▼
+        </div>
+
+        <div id="serviceTrees" class="content">
+
+            <a class="btn service" href="service/cozum-agaci/s2-s47000.html">S2 - S47000</a>
+            <a class="btn service" href="service/cozum-agaci/s3-s47100.html">S3 - S47100</a>
+            <a class="btn service" href="service/cozum-agaci/s4-s47500.html">S4 - S47500</a>
+
+        </div>
 
         <a class="btn service" href="service/notlar/00-yakinda-eklenecek.html">
             📚 Notes
         </a>
+
     </div>
 
 </div>
@@ -181,6 +212,12 @@ footer{
 <footer>
     SAP Study Hub
 </footer>
+
+<script>
+function toggle(id){
+    document.getElementById(id).classList.toggle('show');
+}
+</script>
 
 </body>
 </html>
