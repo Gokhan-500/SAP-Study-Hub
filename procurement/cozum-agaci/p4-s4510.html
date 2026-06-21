@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S4510 — Inventory Management and Physical Inventory in SAP S/4HANA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+.sico{position:absolute;left:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--td);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="u2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="u3"].on{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.4);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u5"].on{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4);}
+.fb[data-u="u6"].on{background:rgba(239,68,68,.15);color:#ef4444;border-color:rgba(239,68,68,.4);}
+.fb[data-u="u7"].on{background:rgba(251,191,36,.15);color:#fbbf24;border-color:rgba(251,191,36,.4);}
+.fb[data-u="u8"].on{background:rgba(52,211,153,.15);color:#34d399;border-color:rgba(52,211,153,.4);}
+.fb[data-u="u9"].on{background:rgba(129,140,248,.15);color:#818cf8;border-color:rgba(129,140,248,.4);}
+.fb[data-u="u10"].on{background:rgba(251,113,133,.15);color:#fb7185;border-color:rgba(251,113,133,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+.ug.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.u1 .ubadge{background:rgba(6,182,212,.15);color:#06b6d4;border:1px solid rgba(6,182,212,.3);}
+.u2 .ubadge{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);}
+.u3 .ubadge{background:rgba(59,130,246,.15);color:var(--bl);border:1px solid var(--bbd);}
+.u4 .ubadge{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid var(--ybd);}
+.u5 .ubadge{background:rgba(34,197,94,.15);color:var(--green);border:1px solid var(--gbd);}
+.u6 .ubadge{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.u7 .ubadge{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+.u8 .ubadge{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);}
+.u9 .ubadge{background:rgba(129,140,248,.15);color:#818cf8;border:1px solid rgba(129,140,248,.3);}
+.u10 .ubadge{background:rgba(251,113,133,.15);color:#fb7185;border:1px solid rgba(251,113,133,.3);}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:6px;font-size:13px;color:var(--tm);line-height:1.65;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.sl li b{color:var(--text);font-weight:500;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+.dv{height:1px;background:var(--border);margin:13px 0;}
+b{color:var(--text);font-weight:500;}
+@media(max-width:600px){
+  #toolbar{padding:8px 14px 9px;}
+  #search-row{grid-template-columns:1fr auto;}
+  #sctr{display:none;}
+  main{padding:18px 12px 60px;}
+  header{padding:14px 16px 12px;}
+  #homebtn{top:14px;right:16px;}
+}
+.uh{cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug-body{}
+.ug.collapsed .ug-body{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <button id="homebtn" onclick="location.href='index.html'">🏠 Home</button>
+  <div class="meta">
+    <span class="cid">S4510 · VER 26</span>
+    <h1 style="font-size:19px;font-weight:600;">Inventory Management and Physical Inventory in SAP S/4HANA</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Egzersiz: <span class="n">43</span></div>
+    <div class="st">Ünite: <span class="n">10</span></div>
+    <div class="st">Süre: <span class="n">10s 55dk</span></div>
+    <div class="st">Sistem: <span class="n">SAP Fiori / SAP GUI</span></div>
+  </div>
+</header>
+
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg class="sico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Egzersiz, app, adım ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">43</b> / 43 egzersiz</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+<script>
+const D=[
+{unit:1,title:"Introduction to Inventory Management",ex:[
+{id:1,title:"Maintain Default Values in Transaction MIGO",app:"Post Goods Movement",
+sc:"Post Goods Movement app'indeki varsayılan değerleri kontrol et ve tesis/depo yeri varsayılanlarını gir.",
+tasks:[
+{num:"1",title:"Display Default Values",app:"Post Goods Movement",
+path:["Post Goods Movement","Menu","Settings","Default Values"],
+fields:[["── Data ──",""],
+["Goods Receipt / Purchase Order","MvT: 101 | Stock Type: Unrestricted use"],
+["Goods Receipt / Order","MvT: 101 | Stock Type: Unrestricted use"],
+["Goods Receipt / Other","MvT: 501 | Stock Type: Unrestricted use"],
+["Goods Issue / Reservation","Stock Type: Unrestricted use"],
+["Goods Issue / Other","MvT: 201 | Stock Type: Unrestricted use"]
+],
+steps:[
+"Fiori Launchpad'de <b>Post Goods Movement</b> app'ini aç (Warehouse Processing). VEYA MIGO.",
+"<b>Menu → Settings → Default Values</b> seç. <b>Change Default Values</b> penceresi açılır.",
+"Tablodaki varsayılan değerleri not et."
+],
+info:"Sonraki adım için Change Default Values penceresinde kal."},
+{num:"2",title:"Enter Default Plant and Storage Location",app:"Post Goods Movement",
+fields:[["Stor. Location","0001"],["In Plant","1010"]],
+steps:[
+"<b>Stor. Location</b>: 0001, <b>In Plant</b>: 1010 gir.",
+"<b>Adopt</b> butonuna bas. Bilgi mesajlarını <b>Continue (Enter)</b> ile onayla."
+]}
+]},
+
+{id:2,title:"Hold and Post a GR",app:"Post Goods Movement",
+sc:"PO'ya referansla A510-## için mal girişi yap. Önce veriyi tut (Hold), uygulamadan çık, ardından tutulmuş veriyi kullanarak GR'yi tamamla ve belgeyi görüntüle.",
+tasks:[
+{num:"1",title:"Find PO and Hold Data",app:"Post Goods Movement",
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>.",
+"<b>Find Purch. Order</b> butonuna bas.",
+"<b>Vendor</b>: T-S50A##, <b>Material</b>: A510-## gir, <b>Find</b>.",
+"PO <b>41510001##</b>'i seç, <b>Adopt</b>. <b>Close Search Result</b> ile arama alanını kapat.",
+"İlgili kalem için <b>Item OK</b> onay kutusunu seç.",
+"<b>Hold</b> butonuna bas. <b>Remarks</b>: 'GR for PO 41510001##' gir, Enter.",
+"Uygulamadan çık — 'Save entered document first?' sorusuna <b>No</b>."
+],
+info:"İsteğe bağlı: Post Goods Movement ile 60 PC kısmi teslimat gir, ardından MIGO ile kalan miktarı tamamla."},
+{num:"2",title:"Retrieve Held Data and Post GR",app:"Post Goods Movement",
+fields:[
+["── General Tab ──",""],
+["Delivery Note","LS/A##"],
+["Print","Selected"],
+["Version","Individual Slip"]
+],
+steps:[
+"<b>Post Goods Movement</b> app'ini yeniden aç.",
+"<b>Menu → Goods Receipt → Held Data</b> seç.",
+"Tutulan veriyi seç, <b>Get Entry</b> butonuna bas.",
+"Header veriye git, <b>General</b> sekmesinde <b>Delivery Note</b>: LS/A## gir.",
+"<b>Print</b> onay kutusunu seç, versiyon: <b>Individual Slip</b>.",
+"<b>Check</b> butonuna bas. İlk sütundaki trafik ışığı kalem durumunu gösterir.",
+"<b>Post</b> butonuna bas."
+],
+info:"Sistem yalnızca Item OK seçili kalemleri kontrol eder."},
+{num:"3",title:"Display Material Document",app:"Post Goods Movement",
+fields:[
+["── Header — Vendor Tab ──",""],
+["Vendor","T-S50A##"],
+["── Header — Doc. info Tab ──",""],
+["Entered by","S4510-## (your user)"],
+["── Item — Where Tab ──",""],
+["Movement Type","101"],
+["Stock type","Unrestricted-Use"],
+["── Item — Output Tab ──",""],
+["Output Type","WE01"]
+],
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>.",
+"<b>Execute</b> butonuna bas.",
+"Header'da <b>Vendor</b> sekmesine bak. Ardından <b>Doc. info</b> sekmesine bak.",
+"Kalem detayında <b>Where</b> sekmesine bak.",
+"Kalem detayında <b>Output</b> sekmesinde <b>Display outputs</b> seç."
+]},
+{num:"4",title:"Display GR Slip in Print Preview",app:"Output Material Documents",
+path:["Output Material Documents","Warehouse Processing"],
+fields:[["Processing Mode","2 (Repeat Processing)"]],
+steps:[
+"<b>Output Material Documents</b> app'ini aç (Warehouse Processing). VEYA MB90.",
+"<b>Processing Mode</b>: 2 gir. Sistem otomatik malzeme belgeni önerir.",
+"<b>Execute</b> butonuna bas.",
+"Belge numaranı seç, <b>Print Preview</b>.",
+"<b>Exit</b>'e üç kez bas."
+]}
+]}
+]},
+{unit:2,title:"Goods Receipts (GRs)",ex:[
+{id:3,title:"Post a Goods Receipt Without Reference",app:"Post Goods Movement / Manage Stock",
+sc:"A510-## ve B510-## için MvT 561 ile ilk stok bakiyelerini gir. Muhasebe belgesini incele (EUR 200). Manage Stock ile bloke stoka ek giriş yap.",
+tasks:[
+{num:"1",title:"Check Price Control Settings",app:"Display Material",
+path:["Display Material","Material Master","Accounting 1","Plant 1010"],
+fields:[["── Material Data ──",""],
+["A510-## — Price Control","V (Moving Average Price)"],
+["A510-## — Price","10 EUR"],
+["B510-## — Price Control","S (Standard Price)"],
+["B510-## — Price","10 EUR"]
+],
+steps:[
+"<b>Display Material</b> app'ini aç. VEYA MM03.",
+"Material: A510-##, <b>Select View(s)</b> → <b>Accounting 1</b>, Plant: 1010. Değerleri not et.",
+"<b>Menu → Material → Other Material</b> ile B510-## için tekrarla."
+]},
+{num:"2",title:"Enter Initial Stock Balance (Movement Type 561)",app:"Post Goods Movement",
+fields:[
+["── Header ──",""],
+["Transaction","Goods Receipt"],
+["Reference","Other"],
+["Movement Type","561"],
+["── Item 1 ──",""],
+["Material","A510-##"],
+["Qty in Unit of Entry","20 PC"],
+["Plant","1010"],
+["Storage Location","0001"],
+["── Item 2 ──",""],
+["Material","B510-##"],
+["Qty in Unit of Entry","20 PC"],
+["Plant","1010"],
+["Storage Location","0001"]
+],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. VEYA MIGO.",
+"İşlem: <b>Goods Receipt</b>, referans: <b>Other</b>, hareket tipi: <b>561</b>, Enter.",
+"1. kalem için alanları gir. <b>Next Item</b> ile 2. kaleme geç, B510-## gir.",
+"<b>Post</b> butonuna bas. Belge numarasını not et. Uygulamadan çıkma."
+]},
+{num:"3",title:"Display Accounting Document",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Header'da <b>Doc. info</b> sekmesinde <b>FI Documents</b> butonuna bas.",
+"Muhasebe belgesine çift tıkla."
+],
+result:"A510-## ve B510-## için her biri EUR 200 stok hesabına kaydedilir."},
+{num:"4",title:"Post Initial Entry to Blocked Stock",app:"Manage Stock",
+path:["Manage Stock","Warehouse Management"],
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Plant","1010"],["Stock Change","Initial Entry"],["Quantity","10"],["Stock Type","Blocked Stock"]],
+steps:[
+"<b>Manage Stock</b> app'ini aç (Warehouse Management).",
+"Material: A510-##, Plant: 1010 gir, Enter.",
+"Depo yeri 0001'in <b>blocked stock</b> satırındaki ikona tıkla.",
+"<b>Stock Change</b>: Initial Entry, <b>Quantity</b>: 10 gir. Post."
+]}
+]},
+
+{id:4,title:"Post a Free-of-Charge Delivery",app:"Post Goods Movement",
+sc:"Tedarikçi T-S50A## ikramiye olarak bedelsiz teslimat yapıyor. A510-## ve B510-## için MvT 511 gir. Hangi malzeme için muhasebe kaydı oluştuğunu belirle.",
+tasks:[
+{num:"1",title:"Post Free-of-Charge Delivery (Movement Type 511)",app:"Post Goods Movement",
+fields:[
+["── Header ──",""],
+["Transaction","Goods Receipt"],
+["Reference","Other"],
+["Movement Type","511"],
+["── Item 1 ──",""],
+["Material","A510-##"],
+["Qty","10 PC"],
+["Plant","1010"],
+["Storage Location","0001"],
+["Text (Where tab)","Exclusive Bonus Quantity"],
+["Vendor (Partner tab)","T-S50A##"],
+["── Item 2 ──",""],
+["Material","B510-##"],
+["Qty","10 PC"],
+["Plant","1010"],
+["Storage Location","0001"],
+["Text","Exclusive Bonus Quantity"],
+["Vendor","T-S50A##"]
+],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. İşlem: <b>Goods Receipt</b>, referans: <b>Other</b>, MvT: <b>511</b>, Enter.",
+"1. kalem için alanları gir. Enter ile <b>Partner</b> sekmesi görünür.",
+"<b>Next Item</b>. 2. kalem için B510-## verilerini gir. Enter.",
+"<b>Post</b> butonuna bas."
+]},
+{num:"2",title:"Verify Accounting Document",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"<b>Doc. info</b> sekmesinde <b>FI Documents</b> butonuna bas.",
+"Muhasebe belgesine çift tıkla. <b>Choose Layout</b> → <b>/S45</b>."
+],
+result:"Yalnızca B510-## (standart fiyat) için muhasebe kaydı oluşur. Hareketli ortalama fiyatlı A510-## için kayıt oluşmaz — mal edinim değeri yoktur."}
+]},
+
+{id:5,title:"Post a GR with Reference to a PO into Stock in Quality Inspection",app:"Post Goods Movement",
+sc:"PO 41510002## referansıyla C510-## mal girişini iki depo yerine dağıtarak kalite muayene stokuna kaydet. PO'daki varsayılan stok tipini incele.",
+tasks:[
+{num:"1",title:"Post GR and Distribute Quantity",app:"Post Goods Movement",
+fields:[
+["── Entry ──",""],
+["Transaction","Goods Receipt"],
+["Reference","Purchase Order"],
+["Movement Type","101"],
+["PO Number","41510002##"],
+["── Item 3 (C510-##) ──",""],
+["Stock Type","Quality Inspection"],
+["Stor.Loc 0001","60 PC"],
+["Stor.Loc 0002","40 PC"]
+],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>, MvT: 101.",
+"PO: <b>41510002##</b>, <b>Execute</b>.",
+"3. kalem (C510-##) için <b>Item OK</b> seç. <b>Quality Inspection</b> stok tipini doğrula.",
+"<b>Distribute Quantity</b> butonuna bas. 0001: 60 PC, 0002: 40 PC gir. <b>Adopt</b>.",
+"<b>Post</b> butonuna bas. Uygulamadan çıkma."
+],
+warn:"Sistem 3. kalemi iki satıra böler — her depo yeri için ayrı satır."},
+{num:"2",title:"Display Material Document and Stock Overview",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Kalem detayında <b>Where</b> sekmesinde <b>Stock Overview</b> butonuna bas.",
+"Plant 1010'da 0001-0002 için C510-## stoklarını gör. <b>Back</b>."
+]},
+{num:"3",title:"Find Default Stock Type from PO",app:"Post Goods Movement",
+steps:[
+"Kalem detayında <b>Purchase Order Data</b> sekmesinde PO numarasına çift tıkla.",
+"PO'da 30. kalemin detayını aç, <b>Delivery</b> sekmesini seç."
+],
+result:"Stock Type alanı: Quality inspection — değer satınalma siparişinin Delivery sekmesinden gelir."}
+]},
+
+{id:6,title:"Post a GR with Reference to a PO in GR Blocked Stock",app:"Post Goods Movement / Post GR for Purchasing Document",
+sc:"PO 41510002## açık kalemleri hasar şüphesiyle bloke stoka gir (MvT 103). Muayene sonrası MvT 105 ile serbest bırak. B510-## için Post GR for PD app kullan.",
+tasks:[
+{num:"1",title:"Post A510-## into GR Blocked Stock (MvT 103)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Receipt"],["Reference","Purchase Order"],["Movement Type","103"],["PO Number","41510002##"],["Item","10 (A510-##)"]],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>.",
+"Hareket tipi: <b>103</b>, PO: <b>41510002##</b>, kalem: <b>10</b>. <b>Execute</b>.",
+"A510-## için <b>Item OK</b> seç. <b>Post</b>."
+]},
+{num:"2",title:"Display GR Blocked Stock Overview",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Kalem detayında <b>Where</b> sekmesinde <b>Stock Overview</b>. <b>GR Blocked Stock</b> sütununu kontrol et."
+]},
+{num:"3",title:"Verify No Accounting Document (MvT 103)",app:"Post Goods Movement",
+steps:[
+"<b>Doc. Info</b> sekmesinde <b>FI Documents</b> butonuna bas."
+],
+result:"'No subsequent document found in accounting' — MvT 103 değerleme içermez."},
+{num:"4",title:"Release A510-## from GR Blocked Stock (MvT 105)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Release GR Blocked Stock"],["Reference","Material Document"],["Storage Location","0001"]],
+steps:[
+"İşlem: <b>Release GR Blocked Stock</b>, referans: <b>Material Document</b>. <b>Execute</b>.",
+"<b>Item OK</b> seç, <b>Storage Location</b>: 0001. <b>Post</b>."
+]},
+{num:"5",title:"Verify Accounting Document (MvT 105)",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Kalem detayında <b>Where</b>: hareket tipi <b>105</b>.",
+"<b>Doc. Info → FI Documents</b>: muhasebe belgesini görüntüle."
+],
+result:"MvT 105 serbest bırakma: MvT 101 ile eşdeğer muhasebe kayıtları oluşur."},
+{num:"6",title:"Post B510-## into GR Blocked Stock via App",app:"Post Goods Receipt for Purchasing Document",
+path:["Post Goods Receipt for Purchasing Document","Warehouse Processing"],
+fields:[["Purchasing Document","41510002##"],["Stock Type","Goods Receipt Blocked Stock"]],
+steps:[
+"<b>Post Goods Receipt for Purchasing Document</b> app'ini aç.",
+"PO: 41510002##. Kalem için <b>Stock Type</b>: <b>Goods Receipt Blocked Stock</b>. <b>Post</b>.",
+"Başarı penceresinde malzeme belgesi numarasına tıkla: hareket tipi <b>103</b>."
+]},
+{num:"7",title:"Release B510-## from GR Blocked Stock via App",app:"Post Goods Receipt for Purchasing Document",
+fields:[["── Data ──",""],
+["Delivered","100"],["Stock Type","GR Blocked Stock into Unrestricted-Use"],["Storage Location","0001"]],
+steps:[
+"<b>Post Goods Receipt for Purchasing Document</b> app'ini tekrar aç. PO: 41510002##.",
+"<b>Delivered</b>: 100, <b>Stock Type</b>: GR Blocked Stock into Unrestricted-Use, <b>Stor.Loc</b>: 0001. <b>Post</b>.",
+"Başarı penceresinde malzeme belgesine tıkla: hareket tipi <b>105</b>."
+]}
+]},
+
+{id:7,title:"Post a GR with Reference to a Production Order",app:"Post Goods Movement",
+sc:"T-FL## malzemesi için üretim emrine referansla 5 PC mal girişi yap. Kalite muayene stok tipi önerisini doğrula.",
+tasks:[
+{num:"1",title:"Post GR with Reference to Production Order",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Receipt"],["Reference","Order"],["Movement Type","101"],["Search — Material","T-FL##"],["Search — Plant","1010"],["Stock Type","Quality Inspection"]],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. İşlem: <b>Goods Receipt</b>, referans: <b>Order</b>.",
+"<b>Find Order</b> butonuna bas. Material: T-FL##, Plant: 1010, <b>Find</b>.",
+"5 PC'lik üretim emrini seç, <b>Adopt</b>. <b>Close Search Result</b>.",
+"<b>Item OK</b>. <b>Where</b> sekmesinde <b>Stock Type</b>: Quality inspection. <b>Post</b>."
+]},
+{num:"2",title:"Find Default Stock Type from Production Order",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Kalem detayında <b>Order Data</b> sekmesinde emir numarasına çift tıkla.",
+"<b>Goods Receipt</b> sekmesini seç."
+],
+result:"Stock Type: Quality inspection — değer üretim emrinin Goods Receipt sekmesinden gelir."}
+]},
+
+{id:8,title:"Post a GR with the Generation of a PO",app:"SAP GUI / MIGO",
+sc:"PO'suz gelen B510-## için MvT 101 ile otomatik PO oluşturarak mal girişi yap. Customizing ayarlarını önce kontrol et.",
+tasks:[
+{num:"1",title:"Check Customizing: Automatic PO Creation",app:"SAP GUI — SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Goods Receipt","Create Purchase Order Automatically"],
+steps:[
+"SPRO → SAP Reference IMG.",
+"Materials Management → Inventory Management → Goods Receipt → <b>Create Purchase Order Automatically</b>.",
+"MvT 101 için <b>Automatic PO</b> göstergesinin seçili olduğunu doğrula."
+],
+warn:"Customizing ayarlarını değiştirme."},
+{num:"2",title:"Check Standard Purchasing Organization for Plant",app:"SAP GUI — SPRO (OMKI)",
+path:["SPRO","Enterprise Structure","Assignment","Materials Management","Assign standard purchasing organization to plant"],
+steps:[
+"Enterprise Structure → Assignment → Materials Management → <b>Assign standard purchasing organization to plant</b> (OMKI).",
+"Plant 1010 için standart satınalma organizasyonu: <b>101C</b>. Exit."
+],
+warn:"Customizing ayarlarını değiştirme."},
+{num:"3",title:"Post GR with Automatic PO Generation",app:"MIGO",
+fields:[
+["Transaction","Goods Receipt"],
+["Reference","Purchase Order"],
+["── Non-Ordered Item ──",""],
+["Material","B510-##"],
+["Qty in Unit of Entry","10 PC"],
+["Vendor","T-S50A##"],
+["── Where Tab ──",""],
+["Movement Type","101"],
+["Plant","1010"],
+["Storage Location","0001"]
+],
+steps:[
+"MIGO'yu aç. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>.",
+"<b>Non-Ordered Item</b> butonuna bas.",
+"Material, Qty, Vendor gir. Enter ile <b>Partner</b> sekmesini görüntüle.",
+"<b>Where</b> sekmesinde MvT: 101, Plant: 1010, Stor.Loc: 0001. <b>Post</b>."
+]},
+{num:"4",title:"Display Auto-Generated PO",app:"MIGO",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Kalem detayında <b>Purchase Order Data</b> sekmesinde PO numarasına çift tıkla."
+],
+result:"Otomatik PO oluşumu için: malzeme kaydı, tedarikçi kaydı ve satınalma bilgi kaydı gereklidir."}
+]},
+
+{id:9,title:"Post a Cancellation with Reference to a Material Document",app:"Post GR for PD / Material Documents Overview",
+sc:"PO 41510003## için 50 PC kalite muayene stokuna GR gir. Teslimat notu eksik → iptal et (MvT 102). Teslimat notu 65## ile yeniden gir (Subsequent Delivery).",
+tasks:[
+{num:"1",title:"Post GR and Note Accounting Document",app:"Post Goods Receipt for Purchasing Document",
+path:["Post Goods Receipt for Purchasing Document","Warehouse Processing"],
+fields:[["── Selection ──",""],
+["Purchasing Document","41510003##"],["Quantity","50 PC"],["Stock Type","Quality Inspection"]],
+steps:[
+"<b>Post Goods Receipt for Purchasing Document</b> app'ini aç.",
+"PO: 41510003##. Miktar: 50 PC, <b>Stock Type</b>: Quality Inspection. <b>Post</b>.",
+"Malzeme belgesi numarasını not et. Numaraya tıkla: hareket tipi <b>101</b>.",
+"<b>Process Flow</b> sekmesinde muhasebe belgesine tıkla."
+],
+result:"Muhasebe kaydı: Inventory Raw Mat. 500,00 Debit / GR/IR 500,00 Credit"},
+{num:"2",title:"Reverse Material Document",app:"Material Documents Overview",
+path:["Material Documents Overview","Warehouse Processing"],
+fields:[
+["── Filter ──",""],
+["Plant","1010"],
+["Storage Location","0002"],
+["Stock Type","02 (Stock in Quality Inspection)"],
+["Material","A510-##"],
+["Posting Date","<Today>"]
+],
+steps:[
+"<b>Material Documents Overview</b> app'ini aç.",
+"Filtreleri gir, <b>Go</b>.",
+"Belge numarasına tıkla — teslimat notunun girilmediğini doğrula.",
+"<b>Reverse</b> butonuna bas. Kalem 0001 için onay kutusunu seç, <b>OK</b>.",
+"İptal belgesi numarasını not et. Numaraya tıkla: hareket tipi <b>102</b>.",
+"<b>Process Flow</b>'da muhasebe belgesine tıkla."
+],
+result:"İptal muhasebe kaydı: Inventory Raw Mat. – 500,00 / GR/IR – 500,00"},
+{num:"3",title:"Display Original Document as Reversed",app:"Material Documents Overview",
+steps:[
+"Orijinal mal girişi belgesinin numarasına tıkla.",
+"Belgede 1/1 kalemin iptal edildiği görünür.",
+"<b>Process Flow</b>: orijinal belge 'Reversed' olarak işaretlidir."
+]},
+{num:"4",title:"Post New GR with Subsequent Delivery",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Subsequent Delivery"],["Reference","Material Document"],["Delivery Note (General tab)","65##"],["Movement Type","101"]],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç.",
+"İşlem: <b>Subsequent Delivery</b>, referans: <b>Material Document</b>.",
+"2. adımdaki iptal belgesi numarasını gir, <b>Execute</b>.",
+"Header <b>General</b> sekmesinde <b>Delivery Note</b>: <b>65##</b> gir.",
+"<b>Item OK</b>. <b>Post</b>.",
+"İşlem: Display → Material Document → <b>Purchase Order Data</b> → <b>History</b> butonuna bas."
+]}
+]},
+
+{id:10,title:"Post a Return Delivery to a Vendor",app:"Post Goods Movement",
+sc:"Teslimat notu 65## referansıyla A510-## için 10 PC iade teslimatı yap (MvT 122, Poor quality). Muhasebe belgesini ve PO geçmişini incele.",
+tasks:[
+{num:"1",title:"Post Return Delivery (Movement Type 122)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Return Delivery"],["Reference","Delivery Note"],["Delivery Note","65##"],["Qty in Unit of Entry","10 PC"],["Reason for Movement (Where tab)","0001 (Poor quality)"]],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. İşlem: <b>Return Delivery</b>, referans: <b>Delivery Note</b>.",
+"Teslimat notu: <b>65##</b>, <b>Execute</b>.",
+"<b>Quantity</b> sekmesinde: 10 PC. <b>Where</b> sekmesinde <b>Reason for Movement</b>: <b>0001</b>.",
+"Hareket tipi otomatik <b>122</b> önerilir. <b>Item OK</b>. <b>Post</b>."
+]},
+{num:"2",title:"Display Accounting Document and PO History",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"<b>Doc. info → FI Documents</b> → muhasebe belgesine çift tıkla.",
+"Malzeme belgesine geri dön. <b>Purchase Order Data</b> sekmesinde PO numarasına çift tıkla.",
+"PO kalem detayında <b>Purchase Order History</b> sekmesini kontrol et."
+],
+result:"Muhasebe: Inventory Raw Mat. 100,00 H (Credit) / GR/IR 100,00 S (Debit). PO geçmişinde MvT 122 / –10 PC listelenir."}
+]},
+
+{id:11,title:"Enter a Return for a PO",app:"Post Goods Movement",
+sc:"PO 41510004## için 50 PC D510-## teslim al, 50 PC E510-## iade et — aynı belgede. Muhasebe kaydını ve PO geçmişini incele.",
+tasks:[
+{num:"1",title:"Post GR and Return in Same Document",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Receipt"],["Reference","Purchase Order"],["PO Number","41510004##"],["D510-## — Movement Type","101 (+)"],["E510-## — Movement Type","161 (–)"]],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>, MvT: 101.",
+"PO: <b>41510004##</b>, <b>Execute</b>.",
+"Hareket tiplerini not et: D510-## = 101 (+), E510-## = 161 (–).",
+"Her iki kalem için <b>Item OK</b>. <b>Post</b>. Belge numarasını not et."
+]},
+{num:"2",title:"Verify Accounting Document",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"<b>Doc. Info → FI Documents</b> → muhasebe belgesine çift tıkla. Layout: <b>/S45</b>."
+],
+result:"D510-##: Stok hesabına EUR 11.500 (230 EUR × 50 PC). E510-##: Stok hesabından EUR 250 (5 EUR × 50 PC)."},
+{num:"3",title:"Check Returns Item Indicator and PO History",app:"Post Goods Movement",
+steps:[
+"<b>Purchase Order Data</b> sekmesinde PO numarasına çift tıkla.",
+"Kalem genel görünümünde <b>Returns Item</b> onay kutusunu gör.",
+"E510-## kalem detayında <b>Purchase Order History</b> sekmesini kontrol et."
+]}
+]},
+
+{id:12,title:"Enter the GR for PO Item with Differing PO Price Unit",app:"SAP GUI / MIGO",
+sc:"PO 41510006## ile 2 peynir lofu sipariş edildi (12,5 kg/adet, 3,90 EUR/kg). Tolerans ayarlarını kontrol et, ağırlık değerlerini test et, 24 kg gir.",
+tasks:[
+{num:"1",title:"Check Tolerance Limits (OMC0)",app:"SAP GUI — OMC0",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Goods Receipt","Set Tolerance Limits (OMC0)"],
+steps:[
+"SPRO veya doğrudan <b>OMC0</b>. Şirket kodu: 1010.",
+"Tolerans anahtarları <b>B1</b> ve <b>B2</b> satırlarını seç.",
+"<b>Goto → Details</b> ile detayları görüntüle. SAP Easy Access'e dön."
+],
+result:"Sistemin izin verdiği maksimum varyans ±%50'dir."},
+{num:"2",title:"Test Weights and Post 24 kg GR",app:"MIGO",
+fields:[
+["PO Number","41510006##"],
+["── Test Results ──",""],
+["9 kg (Qty in PO Price Unit)","❌ Cannot be sent (error)"],
+["13 kg","⚠ Can be sent (warning)"],
+["24 kg","✓ Can be sent"],
+["40 kg","❌ Cannot be sent (error)"]
+],
+steps:[
+"MIGO'yu aç. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>. PO: <b>41510006##</b>.",
+"<b>Execute</b>. <b>Item OK</b> seç.",
+"<b>Quantity</b> sekmesinde <b>Qty in PO Price Unit</b>: sırasıyla 9, 13, 24, 40 gir, her seferinde <b>Check</b>.",
+"Son olarak <b>24 kg</b> gir. <b>Post</b>."
+]}
+]},
+
+{id:13,title:"Test the Automatic and Manual Settings of the Delivery Completed Indicator",app:"Post Goods Movement",
+sc:"PO 41510005## (Plant 1020, ±%10 tolerans) için 6 kısmi teslimat ile Delivery Completed göstergesinin otomatik/manuel davranışını test et.",
+tasks:[
+{num:"1",title:"Note Initial Values",app:"Display Stock Overview",
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Plant","1020"],["On-order Stock","100 PC"],["Total Delivered","0"],["Delivery Completed","Not set"]],
+steps:[
+"<b>Display Stock Overview</b> app'i ile A510-##, Plant 1020, <b>Execute</b>. On-order stoğu not et.",
+"<b>Create Purchase Order - Advanced</b> ile PO 41510005## aç.",
+"Kalem detayında <b>Delivery</b> sekmesinde Delivery Completed göstergesini kontrol et."
+]},
+{num:"2",title:"Post 50 PC — Set Delivery Completed Manually",app:"Post Goods Movement",
+fields:[["── Selection ──",""],
+["PO Number","41510005##"],["Quantity","50 PC"],["Plant","1020"],["Storage Location","0001"],["Delivery Completed (PO Data tab)","Set (Manuel)"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>. PO: <b>41510005##</b>.",
+"Miktar: 50 PC, <b>Item OK</b>.",
+"<b>Purchase Order Data</b> sekmesinde <b>Delivery Completed Indicator</b>: <b>Set</b>.",
+"<b>Check</b>: 'Deficit of PU Ordered quantity 50 PC' ve 'Flagging item as delivery completed' uyarıları.",
+"<b>Post</b>. Ardından Stock Overview ve PO geçmişini doğrula."
+],
+result:"Sipariş bekleyen: 0 | Toplam: 50 | Delivery Completed: Set"},
+{num:"3",title:"Post 25 PC — No Automatic Proposal",app:"Post Goods Movement",
+fields:[["PO Number","41510005##"],["Quantity","25 PC"]],
+steps:[
+"PO: 41510005##, miktar: 25 PC, <b>Item OK</b>. <b>Post</b>.",
+"Stock Overview ve PO Delivery sekmesini kontrol et."
+],
+result:"On-order: 25 | Toplam: 75 | Delivery Completed: Set değil"},
+{num:"4",title:"Post 20 PC — Distribute to Two Storage Locations",app:"Post Goods Movement",
+fields:[["── Selection ──",""],
+["PO Number","41510005##"],["Qty total","20 PC"],["Stor.Loc 0001","10 PC"],["Stor.Loc 0002","10 PC"]],
+steps:[
+"PO: 41510005##, miktar: 20 PC, <b>Item OK</b>.",
+"<b>Distribute Quantity</b>. 0001: 10 PC, 0002: 10 PC. <b>Adopt</b>. <b>Post</b>.",
+"Purchase Order Data sekmesini kontrol et: satır 1 ve 2 Completed durumunu gör."
+],
+result:"Satır 1 (0001): Completed=Set değil | Satır 2 (0002): Completed=Set | 75+10=85 henüz eşik altı; 85+10=95 → %90 aşıldı, 2. satır otomatik set eder."},
+{num:"5",title:"Cancel Last GR",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Cancellation</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Her iki kalem için <b>Item OK</b>. <b>Post</b>."
+],
+result:"On-order: 25 | Toplam: 75 | Delivery Completed: Set değil"},
+{num:"6",title:"Post 35 PC — Test Overdelivery Tolerance (+10%)",app:"Post Goods Movement",
+fields:[["PO Number","41510005##"],["Quantity","35 PC (max — 36 PC hata)"]],
+steps:[
+"PO: 41510005##. Önce 36 PC dene, <b>Check</b>: Hata — max 35 PC (75+36=111, >%110).",
+"Miktarı <b>35 PC</b> yap. <b>Post</b>."
+],
+result:"Sipariş bekleyen: 0 | Toplam: 110 | Delivery Completed: Set"}
+]},
+
+{id:14,title:"Enter a GR for a Material with the Minimum Shelf Life Expiration Date",app:"Post Goods Movement",
+sc:"F510-## için SLED kontrolü. Minimum raf ömrü 6 ay — SLED'i bugün+5 ay olarak girerek sistemin reddettiğini doğrula.",
+tasks:[
+{num:"1",title:"Check Shelf Life in Material Master",app:"Display Material",
+path:["Display Material","Material Master","General Plant Data/Storage 1"],
+fields:[["Minimum Remaining Shelf Life","6 months"],["Total Shelf Life","No entry"]],
+steps:[
+"<b>Display Material</b> app'i. F510-##, <b>General Plant Data/Storage 1</b> görünümü. Enter ile devam et.",
+"Minimum Remaining Shelf Life: <b>6 months</b>. Total Shelf Life: Giriş yok."
+]},
+{num:"2",title:"Check SLED Control in PO",app:"Create Purchase Order — Advanced / ME23N",
+fields:[["PO 41510007## — Remaining Shelf Life","6 months"]],
+steps:[
+"<b>Create Purchase Order - Advanced</b> ile PO 41510007## aç.",
+"Kalem detayında <b>Delivery</b> sekmesinde: Remaining Shelf Life: 6 months."
+]},
+{num:"3",title:"Test GR Entry with SLED Below Minimum",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Receipt"],["Reference","Purchase Order"],["PO Number","41510007##"],["SLED/BBD (Material tab)","<Today + 5 months>"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>, MvT: 101.",
+"PO: <b>41510007##</b>, <b>Execute</b>. <b>Item OK</b>.",
+"Kalem detayında <b>Material</b> sekmesinde <b>SLED/BBD</b>: bugün+5 ay gir.",
+"<b>Check</b> butonuna bas."
+],
+result:"Hata: Minimum raf ömrü (6 ay) karşılanmıyor — GR mümkün değil."}
+]}
+]},
+{unit:3,title:"Stock Transfers and Transfer Postings",ex:[
+{id:15,title:"Enter a Material-to-Material Transfer Posting",app:"Post Goods Movement",
+sc:"D510-## (dolu kartuş) sızdırıyor. 2 PC'yi E510-## (boş kartuş) olarak MvT 309 ile transfer et. Fark Loss hesabına kaydedilir.",
+tasks:[
+{num:"1",title:"Check Base Unit of Measure",app:"Display Material",
+fields:[["D510-## — Base UoM","PC"],["E510-## — Base UoM","PC"]],
+steps:[
+"<b>Display Material</b>. D510-## → <b>Basic Data 1</b>: PC. Ardından E510-## için tekrarla."
+]},
+{num:"2",title:"Post Material-to-Material Transfer (MvT 309)",app:"Post Goods Movement",
+fields:[
+["Transaction","Transfer Posting"],
+["Reference","Other"],
+["Movement Type","309"],
+["── From ──",""],
+["Material","D510-##"],
+["Plant","1010"],
+["Stor.Loc","0001"],
+["── Destination ──",""],
+["Material","E510-##"],
+["Plant","1010"],
+["Stor.Loc","0001"],
+["Qty in UnE","2 PC"]
+],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Transfer Posting</b>, referans: <b>Other</b>, MvT: <b>309</b>, Enter.",
+"<b>Transfer Posting</b> sekmesinde From ve Dest alanlarını doldur.",
+"<b>Post</b>. Uygulamadan çıkma."
+]},
+{num:"3",title:"Verify Accounting Document",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"<b>Doc. info → FI Documents</b> → muhasebe belgesine çift tıkla. Layout: <b>/S45</b>."
+],
+result:"D510-##: Inventory 13100000 Credit (H) 400–. E510-##: Inventory 13101000 Debit (S) 10. E510-##: Loss Inventory Transfer 52011000 Debit (S) 390. Fark Loss hesabına kaydedilir."}
+]},
+
+{id:16,title:"Enter a Stock-to-Stock Transfer Posting",app:"Transfer Stock – In-Plant / Post Goods Movement",
+sc:"Tek malzeme: Transfer Stock–In-Plant app. Birden fazla malzeme: Post Goods Movement ile kopyalama kuralı kullanarak. Plant 1030'da kalite muayeneden serbest kullanıma transfer.",
+tasks:[
+{num:"Task 1",title:"Single Material Transfer via Transfer Stock – In-Plant App",app:"Transfer Stock – In-Plant",
+path:["Transfer Stock – In-Plant","Warehouse Processing"],
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Plant","1030"],["Stock Change","Unrestricted → Blocked, 5 PC, Stor.Loc 0001"]],
+steps:[
+"<b>Transfer Stock – In-Plant</b> app'ini aç.",
+"A510-##, Plant 1030 gir, Enter.",
+"Depo yeri 0001 satırında unrestricted-use stok ikonuna tıkla.",
+"Blocked stok ikonuna tıkla. Quantity: 5, <b>Post</b>."
+]},
+{num:"Task 2-1",title:"Set Default Values",app:"Post Goods Movement",
+fields:[["── Settings ──",""],
+["In Plant","1030"],["Storage Location","(Delete — leave empty)"],["Propose the OK Function in Future","Selected"]],
+steps:[
+"<b>Post Goods Movement</b> app'ini aç. <b>Menu → Settings → Default Values</b>.",
+"In Plant: 1030, depo yeri girdisini sil, <b>Propose the OK Function in Future</b> seç. <b>Adopt</b>."
+]},
+{num:"Task 2-2",title:"Define Copying Rule for MvT 321",app:"Post Goods Movement",
+fields:[["Movement Type","321"],["Checkboxes","Plnt, SLoc, Plant Trfr Pstg, SLoc Trfr Pstg"]],
+steps:[
+"<b>Menu → Settings → Copying Rule Transfer Posting</b>. Enter/Change Copying Rules.",
+"<b>Insert New Lines</b>. MvT: <b>321</b>.",
+"<b>Plnt</b>, <b>SLoc</b>, <b>Plant Trfr Pstg</b>, <b>SLoc Trfr Pstg</b> onay kutularını seç. <b>Adopt</b>."
+]},
+{num:"Task 2-3",title:"Post Transfer for Two Materials (MvT 321)",app:"Post Goods Movement",
+fields:[
+["Transaction","Transfer Posting"],
+["Reference","Other"],
+["Movement Type","321"],
+["── Item 1 ──",""],
+["Material","A510-##"],
+["Plant","1030"],
+["From Stor.Loc","101Q"],
+["To Stor.Loc","0001"],
+["Quantity","10 PC"],
+["── Item 2 ──",""],
+["Material","B510-##"],
+["Quantity","10 PC"]
+],
+steps:[
+"İşlem: <b>Transfer Posting</b>, referans: <b>Other</b>, MvT: <b>321</b>, Enter.",
+"1. kalem için alanları gir.",
+"<b>Copy to New Item</b>. Sistem aynı tesis/depo bilgileriyle 2. kalemi oluşturur.",
+"2. kalem: Material: B510-##, Qty: 10 PC.",
+"<b>Post</b>."
+]}
+]},
+
+{id:17,title:"Post a Stock Transfer Between Storage Locations in Two Steps",app:"Post Goods Movement",
+sc:"Plant 1030'da 0001'den 0002'ye iki adımlı transfer: Remove from Storage (MvT 313) → Place in Storage (MvT 315). Kısıtlamaları test et.",
+tasks:[
+{num:"1",title:"Remove from Storage (MvT 313)",app:"Post Goods Movement",
+fields:[
+["Transaction","Remove from Storage"],
+["Reference","Other"],
+["Movement Type","313"],
+["── Item 1 ──",""],
+["Material","A510-##"],
+["Plant","1030"],
+["From Stor.Loc","0001"],
+["To Stor.Loc","0002"],
+["Qty","10 PC"],
+["── Item 2 ──",""],
+["Material","B510-##"],
+["Qty","10 PC"]
+],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Remove from Storage</b>, referans: <b>Other</b>, MvT: <b>313</b>, Enter.",
+"A510-## verilerini gir.",
+"<b>Copy to New Item</b>. MvT 313 için Plant, SLoc, Plant Trfr Pstg, SLoc Trfr Pstg seç. <b>Adopt</b>.",
+"2. kalem: B510-##, 10 PC.",
+"<b>Post</b>. Malzeme belgesi numarasını not et. Uygulamadan çıkma."
+]},
+{num:"2",title:"Display Transfer (SLoc) Stock",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"<b>Transfer Posting</b> sekmesinde <b>Stock Overview</b>.",
+"Depo yeri 0002 satırında <b>Detailed Display</b>: Transfer (SLoc) stoğu görünür. <b>Back</b>."
+]},
+{num:"3",title:"Test Restrictions and Place in Storage (MvT 315)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Place in Storage"],["Reference","Material Document"],["Stor.Loc","0002"]],
+steps:[
+"İşlem: <b>Place in Storage</b>, referans: <b>Material Document</b>. 1. adım belge numarasını gir, <b>Execute</b>.",
+"TEST 1: Stok tipi değiştirilebilir mi? Hayır — alan görünmez.",
+"TEST 2: 15 PC koyulabilir mi? → <b>Check</b>: Hata (transit stok aşılır).",
+"TEST 3: 5 PC koyulabilir mi? → <b>Check</b>: Geçer.",
+"TEST 4: Stor.Loc 0001'e koyulabilir mi? → <b>Check</b>: Hata.",
+"Qty: 10, Stor.Loc: 0002. <b>Post</b>."
+],
+result:"Değiştirilemez: Stok tipi. Koyulamaz: 15 PC, Stor.Loc 0001. Koyulabilir: 5 PC, Stor.Loc 0002."},
+{num:"4",title:"Verify Movement Type 315 and Zero Transit Stock",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"A510-## <b>Where</b> sekmesi: hareket tipi <b>315</b>.",
+"<b>Stock Overview → Depo yeri 0002 → Detailed Display</b>: Transfer (SLoc) = 0 PC."
+]}
+]},
+
+{id:18,title:"Post a Stock Transfer Between Plants",app:"SAP Fiori Launchpad",
+sc:"A510-## ve B510-## için stok transfer emri (UB) oluştur. Plant 1010'dan GI (MvT 351), Overdue Materials app ile Plant 1030'da GR yap.",
+tasks:[
+{num:"1",title:"Create Stock Transport Order (UB)",app:"Create Purchase Order – Advanced",
+path:["Create Purchase Order – Advanced","Purchase Order Processing"],
+fields:[
+["── Header ──",""],
+["Document Type","Stock Transp. Order (UB)"],
+["Supplying Plant","1010 (Hamburg)"],
+["Purch. Organization","101C"],
+["Purch. Group","Z##"],
+["Company Code","1010"],
+["── Item 10 ──",""],
+["Material","A510-##"],
+["Quantity","10 PC"],
+["Plant","1030 (Frankfurt)"],
+["Stor.Loc","0001"],
+["── Item 20 ──",""],
+["Material","B510-##"],
+["Quantity","10 PC"],
+["Plant","1030"],
+["Stor.Loc","0001"]
+],
+steps:[
+"<b>Create Purchase Order - Advanced</b> app'ini aç.",
+"Belge tipi: <b>Stock Transp. Order (UB)</b>. Supplying Plant: <b>1010</b>.",
+"Header Org. Data sekmesinde Purch. Org.: 101C, Purch. Group: Z##, Company Code: 1010.",
+"İki kalemi gir. Kaydet. PO numarasını not et."
+]},
+{num:"2",title:"Post Goods Issue from Supplying Plant (MvT 351)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Purchase Order"],["Movement Type","351"],["Storage Location (her iki kalem)","0001"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Issue</b>, referans: <b>Purchase Order</b>. MvT: <b>351</b>.",
+"PO numarasını gir, <b>Execute</b>.",
+"Her iki kalem için <b>Item OK</b>, <b>Storage Location</b>: 0001. <b>Post</b>.",
+"<b>Doc. Info → FI Documents</b> → muhasebe belgesini görüntüle."
+]},
+{num:"3",title:"Display Stock in Transit and Post GR",app:"Overdue Materials – Stock in Transit",
+path:["Overdue Materials – Stock in Transit","Stock Monitoring"],
+fields:[["Receiving Plant","1030"],["Material","*##"]],
+steps:[
+"<b>Overdue Materials - Stock in Transit</b> app'ini aç.",
+"Receiving Plant: 1030, Material: *##, <b>Go</b>.",
+"Bir malzeme için Shipping Duration Chart'a tıkla, detayları gör. <b>Back</b>.",
+"Bir kalem satırındaki PO numarasına tıkla → <b>Post Goods Receipt for Purchasing Document</b>.",
+"Her iki kalemi seç, <b>Post</b>. Başarı mesajını <b>OK</b> ile onayla.",
+"Aynı adımları tekrarla — transit stok azalmış olacak."
+]},
+{num:"4",title:"Verify PO Purchase Order History",app:"Create Purchase Order – Advanced",
+steps:[
+"<b>Create Purchase Order - Advanced</b> ile stok transfer emrini aç.",
+"Kalem detayında <b>Purchase Order History</b> sekmesi: GI ve GR hareketleri listelenmiş."
+]}
+]}
+]},
+{unit:4,title:"Reservations",ex:[
+{id:19,title:"Manually Create a Reservation",app:"Manage Manual Reservations / MB21",
+sc:"Plant 1030'da A510-##, B510-## için manuel rezervasyon oluştur; ikincisini kopyayla oluştur. Stok özetinde Reserved/Rcpt Reservation değerlerini kontrol et.",
+tasks:[
+{num:"Task 1-1",title:"Create Reservation 1 (Manage Manual Reservations)",app:"Manage Manual Reservations",
+path:["Manage Manual Reservations","Process Reservation"],
+fields:[
+["Movement Type","TF trfr within plant (311)"],
+["Plant","1030"],
+["Base Date","<Today + 7 days>"],
+["Receiving Storage Location","0002"],
+["── Items ──",""],
+["Item 1 — Material","A510-##"],
+["Item 1 — Quantity","10"],
+["Item 1 — Storage Location","0001"],
+["Item 2 — Material","B510-##"],
+["Item 2 — Quantity","10"],
+["Item 2 — Storage Location","0001"]
+],
+steps:[
+"<b>Manage Manual Reservations</b> app'ini aç. <b>Create Reservation</b>.",
+"Movement Type, Plant, Base Date gir. <b>Create</b>.",
+"Receiving Storage Location: 0002. İki kalemi gir.",
+"<b>Create</b>. Rezervasyon numarasını not et."
+]},
+{num:"Task 1-2",title:"Create Reservation 2 by Copying",app:"Manage Manual Reservations",
+fields:[["── Selection ──",""],
+["Base Date","<Today + 14 days>"],["Item 1-2 Storage Location","(Delete — leave empty)"],["Item 3 — Material","C510-##"],["Item 3 — Quantity","10"],["Item 3 — Requirement Date","<Today + 16 days>"]],
+steps:[
+"1. rezervasyon numarasını filtrele, <b>Go</b>. Rezervasyonu seç, <b>Copy Reservation</b>.",
+"Base Date: bugün+14 gün. <b>Copy</b>.",
+"Kopyalanan iki kalem için Storage Location girdisini sil.",
+"3. kalem: C510-##, 10 PC, Req. Date: bugün+16 gün.",
+"<b>Create</b>. Rezervasyon numarasını not et."
+]},
+{num:"Task 1-3",title:"Display Reservation Stock in Stock Overview",app:"Display Stock Overview",
+path:["Display Stock Overview","MMBE"],
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Plant","1030"],["Display version","51"]],
+steps:[
+"<b>Display Stock Overview</b> app'ini aç. VEYA MMBE.",
+"A510-##, Plant 1030, Display version: <b>51</b>, <b>Execute</b>.",
+"Sağa kaydırarak <b>Reserved</b> ve <b>Rcpt Reservation</b> sütunlarını bul."
+],
+result:"Rezervasyonlar oluşturuldu. Plant 1030: 20, Rcpt Reserv.=20. Stor.Loc 0001: 10. Stor.Loc 0002: Rcpt Reserv.=20."},
+{num:"Task 2-1",title:"Create Reservation 1 via MB21",app:"Create Reservation (MB21)",
+path:["Logistics","Materials Management","Inventory Management","Reservation","Create (MB21)"],
+fields:[["── Selection ──",""],
+["Base Date","<Today + 7 days>"],["Movement Type","311"],["Plant","1030"],["Receiving Stor.Loc","0002"],["Item 1 — Material","A510-##"],["Item 1 — Qty","10"],["Item 1 — SLoc","0001"],["Item 2 — Material","B510-##"],["Item 2 — Qty","10"],["Item 2 — SLoc","0001"]],
+steps:[
+"MB21. Base Date, MvT: 311, Plant: 1030, Enter.",
+"Receiving Stor. Loc.: 0002. İki kalemi gir.",
+"<b>Post</b>. Rezervasyon numarasını not et."
+]},
+{num:"Task 2-2",title:"Create Reservation 2 via MB21 with Reference",app:"Create Reservation (MB21)",
+fields:[["── Entry ──",""],
+["Reference Reservation","<1st number>"],["Base Date","<Today + 14 days>"],["Item 3 — Material","C510-##"],["Item 3 — Qty","10 PC"],["Item 3 — Requirem. Date","<Today + 16 days>"]],
+steps:[
+"MB21. Reference: <1. rezervasyon numarası>, Base Date: bugün+14 gün, Plant: 1030. Enter.",
+"Her iki kalemin <b>SLoc</b> girdisini sil. Seçili olduğunu doğrula. <b>Adopt</b>.",
+"<b>Edit → New Item</b>. C510-##, 10 PC, Req. Date: bugün+16 gün.",
+"<b>Post</b>. Rezervasyon numarasını not et."
+]},
+{num:"Task 2-3",title:"Change Base Date of Reservation 1",app:"Change Reservation (MB22)",
+path:["Logistics","Materials Management","Inventory Management","Reservation","Change (MB22)"],
+fields:[["Base Date","<Today + 14 days>"]],
+steps:[
+"MB22. 1. rezervasyon numarasını gir, Enter.",
+"<b>Goto → Display Header Data</b>. Base Date: bugün+14 gün, Enter. Değişikliği onayla.",
+"<b>Post</b>."
+]}
+]},
+
+{id:20,title:"Enter a Stock Transfer with Reference to Reservations",app:"Post Goods Movement",
+sc:"Önceki egzersizin rezervasyonlarını referans alarak transferleri tek belgede gir. C510-## için 5 PC ile Final Issue set et.",
+tasks:[
+{num:"1",title:"Post Transfer with Reference to Reservations",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Transfer Posting"],["Reference","Reservation"],["C510-## Quantity","5 PC (partial)"],["C510-## Final Issue","Set"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Transfer Posting</b>, referans: <b>Reservation</b>.",
+"İlk rezervasyon numarasını gir, <b>Execute</b>. İkinci rezervasyon için tekrarla.",
+"Tüm kalemler için <b>Item OK</b>.",
+"C510-## miktarını <b>5 PC</b> yap ve <b>Final Issue</b> göstergesini set et.",
+"2. rezervasyonun kalemlerine <b>Storage Location</b>: 0001 gir.",
+"<b>Post</b>."
+]},
+{num:"2",title:"Display Reservation and Verify Completed Status",app:"Display Reservation (MB23)",
+path:["Display Reservation (MB23)"],
+steps:[
+"<b>Display Reservation</b> app'ini aç (MB23).",
+"2. rezervasyon numarasını gir, <b>Go</b>.",
+"Tüm kalemler için <b>Completed</b> göstergesinin set olduğunu doğrula."
+],
+result:"1.-2. kalem: Tam miktar çekildi → otomatik Completed. 3. kalem (C510-##): Manuel Final Issue ile Completed.",
+info:"Final Issue (MIGO terimi) = Completed (rezervasyon terimi). İkisi aynı kavramı ifade eder."}
+]},
+
+{id:21,title:"Manage Reservations",app:"SAP GUI / SAP Fiori",
+sc:"Movement Allowed göstergesini test et, picking list ile doğrula, mal çekimi yap ve tamamlanan rezervasyonu sil. Customizing: Plant 1030 retansiyon süresi 30 gün.",
+tasks:[
+{num:"1",title:"Create Reservation without Movement Allowed",app:"Create Reservation (MB21)",
+path:["Logistics","Materials Management","Inventory Management","Reservation","Create (MB21)"],
+fields:[["── Selection ──",""],
+["Base Date","<Today>"],["Movement Type","311"],["Plant","1030"],["Receiving Stor.Loc","0002"],["Material","A510-##"],["Quantity","10"],["SLoc","0001"],["Move Allowed","Deselected"]],
+steps:[
+"MB21. Base Date: bugün, MvT: 311, Plant: 1030, Enter.",
+"Receiving Stor. Loc.: 0002, A510-##, 10 PC, SLoc: 0001.",
+"<b>Choose</b>. <b>Move Allowed</b> göstergesini kaldır.",
+"<b>Post</b>. Rezervasyon numarasını not et."
+]},
+{num:"2",title:"Check Reservation List and Save Layout",app:"Reservation List (MB25)",
+path:["Logistics","Materials Management","Inventory Management","Reservation","Reservation List (MB25)"],
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Plant","1030"],["Scope of List","Goods Movement Not Possible"],["Layout Name","GR##"]],
+steps:[
+"MB25. Material: A510-##, Plant: 1030, <b>Goods Movement Not Possible</b> seç. <b>Execute</b>.",
+"<b>Settings → Layout → Change</b>. <b>Movement Allowed</b> ve <b>Final Issue</b> sütunlarını ekle.",
+"<b>Save As</b>: Kullanıcıya özel, GR## adıyla kaydet. <b>Adopt</b>."
+]},
+{num:"3",title:"Test Picking List — Movement Not Possible",app:"Pick List (MB26)",
+path:["Logistics","Materials Management","Inventory Management","Reservation","Picking (MB26)"],
+steps:[
+"MB26. Rezervasyon numarasını gir, <b>Execute</b>.",
+"Sonuç: Hareket mümkün değil — picking list seçim yapamaz."
+]},
+{num:"4",title:"Enable Movement Allowed Indicator",app:"Change Reservation (MB22)",
+steps:[
+"MB22. Rezervasyon numarasını gir, Enter.",
+"<b>Edit → Additional Functions → For All Items → Movement On/Off</b>.",
+"<b>Post</b>."
+]},
+{num:"5",title:"Verify Movement Allowed in Reservation List",app:"Reservation List (MB25)",
+steps:[
+"MB25. A510-##, Plant: 1030, Scope: <b>Open Reservations</b>, Layout: GR##. <b>Execute</b>.",
+"Movement Allowed göstergesi set."
+]},
+{num:"6",title:"Post GI via Picking List",app:"Pick List (MB26)",
+steps:[
+"MB26. Rezervasyon numarasını gir, <b>Execute</b>.",
+"<b>Post</b>. İşlemden çık."
+]},
+{num:"7",title:"Verify Final Issue in Reservation List",app:"Reservation List (MB25)",
+steps:[
+"MB25. A510-##, Plant: 1030, Scope: <b>Cancellable Reservations</b>, Layout: GR##. <b>Execute</b>.",
+"Final Issue göstergesi set."
+]},
+{num:"8",title:"Check Retention Period in Customizing (OMBN)",app:"SAP GUI — OMBN",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Reservation","Define Default Values (OMBN)"],
+steps:[
+"OMBN. <b>Plant</b> butonuna bas. Plant 1030 retansiyon süresini not et."
+],
+result:"Plant 1030 için retansiyon süresi: 30 gün."},
+{num:"9",title:"Delete Completed Reservation (MBVR)",app:"Manage Reservations (MBVR)",
+path:["Logistics","Materials Management","Inventory Management","Reservation","Administer (MBVR)"],
+fields:[["── Selection ──",""],
+["Reservation","<Enter your number>"],["Base Date","<Today + 2 months>"],["Delete/Set Deletion Indicator","Selected"],["Closed Items Only","Selected"]],
+steps:[
+"MBVR. Rezervasyon numarasını, Base Date: bugün+2 ay gir.",
+"<b>Delete/Set Deletion Indicator</b> ve <b>Closed Items Only</b> seç. <b>Execute</b>.",
+"'Changes have been made.' mesajı görünür."
+]},
+{num:"10",title:"Verify Reservation Deleted",app:"Display Reservation (MB23)",
+steps:[
+"MB23. Rezervasyon numarasını gir, Enter.",
+"Rezervasyon artık görüntülenemez — silinmiş."
+]}
+]},
+
+{id:22,title:"Control Customizing Settings and Perform an Availability Check",app:"SAP GUI",
+sc:"B510-##, Plant 1020 için dinamik kullanılabilirlik kontrolü. Kontrol grubu, kural, geçerli stoklar ve ATP miktarını belirle. 60 PC rezervasyon ile uyarıyı doğrula.",
+tasks:[
+{num:"1",title:"Display Stock/Requirements List (MD04)",app:"Stock/Requirements List (MD04)",
+path:["Logistics","Materials Management","Inventory Management","Environment","Stock","Stock/Requirements List (MD04)"],
+fields:[["── Material Data ──",""],
+["Material","B510-##"],["Plant","1020"],["Warehouse stock (today)","100 PC"],["Material reservation","–80 PC"],["Purchase requisition","50 PC (next week)"],["Purchase Order","150 PC (3 months later)"]],
+steps:[
+"MD04. Material: B510-##, Plant: 1020, Enter.",
+"Tablodaki veri yapısını doğrula."
+]},
+{num:"2",title:"Determine Checking Group (MRP 3)",app:"Display Material (MM03)",
+fields:[["Availability Check (MRP 3 tab)","01 (Daily requirements)"]],
+steps:[
+"MM03. B510-##, <b>MRP 3</b> görünümü, Plant: 1020.",
+"<b>Availability Check</b> grubu: <b>01</b>."
+]},
+{num:"3",title:"Find Checking Rule for MB21 (OMB1)",app:"SAP GUI — OMB1",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Reservation","Configure Scope of Availability Check (OMB1)"],
+steps:[
+"OMB1. <b>Transaction Code</b> butonuna bas.",
+"MB21 (Create Reservation) için kontrol kuralı: <b>03</b> (Goods Issue)."
+]},
+{num:"4",title:"Check Relevant Stock/Receipts for Rule 03",app:"SAP GUI — OMB1",
+fields:[
+["── Checking Rule 01/03 ──",""],
+["Quality inspection stock","No (–)"],
+["Blocked stock","No (–)"],
+["Purchase requisitions","No (–)"],
+["Purchase orders","Yes (+)"],
+["Reservations","Yes (+)"]
+],
+steps:[
+"<b>Define Checking Rule</b> butonuna bas.",
+"Avail Check: 01, Rule: 03 satırını seç. <b>Details</b>.",
+"Tablodaki geçerli stok/hareket tiplerini not et. <b>Back</b>."
+]},
+{num:"5",title:"Calculate ATP Quantity (CO09)",app:"Availability Overview (CO09)",
+fields:[["── Material Data ──",""],
+["Material","B510-##"],["Plant","1020"],["Checking Rule","03"],["Cumulative ATP","20 PC"]],
+steps:[
+"<b>System → New GUI Window</b>. CO09.",
+"Material: B510-##, Plant: 1020, Checking Rule: 03, Enter.",
+"Cum. Atp qty: <b>20 PC</b>. (SA talebi dahil değil — Customizing ayarı.)"
+]},
+{num:"6",title:"Determine Message Type for MvT 201 (OMB1)",app:"SAP GUI — OMB1",
+steps:[
+"OMB1. <b>Movement Type</b> butonuna bas.",
+"<b>Goto → Position Cursor</b>. MvT: 201, Value updating: X, Qty updating: X. Enter.",
+"MvT 201 → Kontrol/Mesaj: <b>A (Sadece uyarı mesajı)</b>."
+]},
+{num:"7",title:"Create 60 PC Reservation and Verify Warning",app:"Create Reservation (MB21)",
+fields:[["── Selection ──",""],
+["Base Date","<Today>"],["Movement Type","201"],["Plant","1020"],["Cost Center","10101201"],["Material","B510-##"],["Quantity","60"]],
+steps:[
+"MB21. Base Date: bugün, MvT: 201, Plant: 1020, Enter.",
+"Cost Center: 10101201, Material: B510-##, 60 PC, Enter.",
+"Durum çubuğunda uyarı: 'Yalnızca 20 PC mevcut'. Tüm uyarıları onaylayarak gönder."
+]}
+]}
+]},
+{unit:5,title:"Goods Issues (GIs)",ex:[
+{id:23,title:"Post Unplanned Goods Issues",app:"Post Goods Movement",
+sc:"A510-## için maliyet merkezine 10 PC (MvT 201) ve hurdaya 20 PC (MvT 551) mal çıkışı. Önce/sonra tüketim verilerini karşılaştır.",
+tasks:[
+{num:"1",title:"Display Consumption Data (Before)",app:"Display Material",
+path:["Display Material","Material Master","Plant Stock","Additional Data","Consumption"],
+steps:[
+"<b>Display Material</b>. A510-##, Plant 1030, <b>Plant Stock</b> görünümü.",
+"<b>Additional Data → Consumption</b> sekmesi.",
+"Toplam ve plansız tüketimi not et."
+]},
+{num:"2",title:"Post Unplanned GIs (MvT 201 and 551)",app:"Post Goods Movement",
+fields:[
+["── Item 1 ──",""],
+["Movement Type","201"],
+["Material","A510-##"],
+["Qty","10 PC"],
+["Plant","1030"],
+["Stor.Loc","0001"],
+["Cost Center","10101201"],
+["── Item 2 ──",""],
+["Movement Type","551"],
+["Material","A510-##"],
+["Qty","20 PC"],
+["Plant","1030"],
+["Stor.Loc","0001"],
+["Cost Center","10101201"]
+],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Issue</b>, referans: <b>Other</b>, MvT: <b>201</b>, Enter.",
+"1. kalem: tüm alanları gir. Enter ile <b>Account Assignment</b> sekmesi görünür.",
+"Cost Center: 10101201. <b>Next Item</b>.",
+"2. kalem: A510-##, 20 PC, MvT: <b>551</b>, Plant: 1030. Enter. Cost Center: 10101201.",
+"<b>Post</b>."
+]},
+{num:"3",title:"Display Consumption Data (After)",app:"Display Material",
+steps:[
+"Adım 1 gibi tüketim verilerini tekrar görüntüle."
+],
+result:"Toplam tüketim: 10 PC (MvT 201 = plansız GI). Plansız tüketim: 10 PC. Hurda (MvT 551) tüketim güncellemez."}
+]},
+
+{id:24,title:"Post GIs with References",app:"Post Goods Movement",
+sc:"T-FL## üretim emri için 15 PC bileşen mal çıkışı gir. Final Issue göstergesinin üretim emrinde set olduğunu doğrula.",
+tasks:[
+{num:"1",title:"Post Component GI for Production Order",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Order"],["Material","T-FL##"],["Quantity","15 PC"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Issue</b>, referans: <b>Order</b>.",
+"Emir numarası için <b>F4 yardımı</b>: <b>Production Orders using the Info System</b>, list category: <b>Order Headers</b>.",
+"T-FL## ve 15 PC'lik üretim emrini seç, çift tıkla.",
+"<b>Execute</b>. Tüm kalemler için <b>Item OK</b>. <b>Post</b>. Uygulamadan çıkma."
+]},
+{num:"2",title:"Verify Final Issue Indicator in Production Order",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Herhangi bir kalemde <b>Account Assignment</b> sekmesinde emir numarasına çift tıkla.",
+"<b>Components</b> butonuna bas: tüm bileşenler için Final Issue set."
+]}
+]},
+
+{id:25,title:"Define and Test New Stock Determination Strategies",app:"SAP GUI / Post Goods Movement",
+sc:"C510-## için stok belirleme: Maliyet merkezi GI (MM01) en büyük miktar, proje GI (MM02) en küçük miktar. Plant 1030, depo yerleri 0001/0002/0003.",
+tasks:[
+{num:"1",title:"Identify Stock Determination Rules",app:"SAP GUI — SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Stock Determination","Assign Stock Determination Rule in the Applications – Inventory Management"],
+fields:[["MvT 201 — GI for cost center","MM01"],["MvT 221 — GI for project","MM02"]],
+steps:[
+"SPRO → Stock Determination → <b>Assign Stock Determination Rule in the Applications → Inventory Management</b>.",
+"MvT 201: Kural <b>MM01</b>. MvT 221: Kural <b>MM02</b>."
+]},
+{num:"2",title:"Create Stock Determination Group",app:"SAP GUI — SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Stock Determination","Define Strategies for Stock Determination"],
+fields:[["── Data ──",""],
+["Plant","1030"],["Group","GR##"],["Description","Group ##"]],
+steps:[
+"Customizing: Stock Determination → <b>Define Strategies for Stock Determination</b>.",
+"<b>Stock determination group</b> klasörü. <b>New Entries</b>.",
+"Plant: 1030, Group: GR##, Description: Group ##. Kaydet."
+]},
+{num:"3",title:"Define Two Stock Determination Strategies",app:"SAP GUI — SPRO",
+fields:[
+["── Strategy 1 (MM01) ──",""],
+["Rule","MM01"],
+["Description","Quantity-Descending GR##"],
+["Sorting","Descending (Quantity)"],
+["WM processing","3"],
+["Storage Locations","0001, 0002, 0003 (Priority 10)"],
+["── Strategy 2 (MM02) ──",""],
+["Rule","MM02"],
+["Description","Quantity-Ascending GR##"],
+["Sorting","Ascending (Quantity)"],
+["Stock determ. online","Selected"],
+["WM processing","3"]
+],
+steps:[
+"<b>Stock Determination Header Table</b> klasörü. <b>New Entries</b>.",
+"MM01 stratejisi: Rule MM01, Descending, WM: 3. <b>Stock Determination Item Table</b>: 0001, 0002, 0003 ekle (Priority: 10).",
+"MM02 stratejisi: Rule MM02, Ascending, <b>Stock determ. online</b> seç, WM: 3. Aynı depo yerlerini ekle.",
+"Kaydet."
+]},
+{num:"4",title:"Assign Stock Determination Group to Material C510-##",app:"Change Material (MM02)",
+path:["Change Material (MM02)","General Plant Data/Storage Location 2","Plant 1030"],
+fields:[["Stock determ. group","GR##"]],
+steps:[
+"MM02. C510-##, <b>General Plant Data/Storage 2</b>, Plant: 1030.",
+"<b>Stock determ. group</b>: GR##. Kaydet."
+]},
+{num:"5",title:"Test Stock Determination Strategies",app:"Post Goods Movement",
+fields:[
+["── Item 1 (MvT 201 — Cost Center) ──",""],
+["Material","C510-##"],
+["Qty","50 PC"],
+["Plant","1030"],
+["Cost Center","10101201"],
+["Result","Stor.Loc 0001 (largest quantity)"],
+["── Item 2 (MvT 221 — Project) ──",""],
+["Material","C510-##"],
+["Qty","20 PC"],
+["Plant","1030"],
+["WBS Element","F-10099"],
+["Result","Stor.Loc 0003 (smallest quantity)"]
+],
+steps:[
+"MIGO. İşlem: <b>Goods Issue</b>, referans: <b>Other</b>, MvT: 201, Enter.",
+"1. kalem: C510-##, 50 PC, Plant: 1030. Enter. Cost Center: 10101201.",
+"<b>Stock Determ. for All</b>: sistem depo yeri <b>0001</b> belirler (en büyük miktar).",
+"<b>Next Item</b>. 2. kalem: C510-##, 20 PC, MvT: <b>221</b>, Plant: 1030. Enter.",
+"WBS Element: F-10099. <b>Stock Determ. for All</b>: artan sıra listelenir, depo yeri <b>0003</b> seçilir.",
+"<b>Copy</b>. <b>Post</b>."
+]}
+]},
+
+{id:26,title:"Use Negative Stock in Inventory Management",app:"SAP GUI / Post Goods Movement",
+sc:"B510-## için negatif stoka izin verildiğini doğrula. Plant 1020, Stor.Loc 0001'den 500 PC mal çıkışı yap (mevcut: 100 PC). Negatif stoku doğrula.",
+tasks:[
+{num:"1",title:"Check Negative Stock Customizing (OMJ1)",app:"SAP GUI — OMJ1",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Goods Issue / Transfer Postings","Allow Negative Stocks (OMJ1)"],
+steps:[
+"OMJ1. <b>Valuation Area</b> klasörü: 1020/1010 için <b>Negative stocks</b> seçili.",
+"<b>Plant</b> klasörü: özel stoklar için negatif stok yok.",
+"<b>Storage Location</b> klasörü: yalnızca <b>0001 (Material)</b> için negatif stok izinli."
+],
+result:"Negatif stok: Yalnızca Stor.Loc 0001. Özel stoklar: Hayır."},
+{num:"2",title:"Verify Material Master Negative Stock Setting",app:"Display Material (MM03)",
+fields:[["── Settings ──",""],
+["Plant 1020 — Neg. stocks in plant (Storage 2 tab)","Selected"],["Total stock (Accounting 1)","100 PC"],["Total value","1.000,00 EUR"]],
+steps:[
+"MM03. B510-##, <b>General Plant Data / Storage 2</b> ve <b>Accounting 1</b>, Plant: 1020.",
+"<b>Neg. stocks in plant</b> seçili olduğunu doğrula."
+]},
+{num:"3",title:"Post 500 PC Goods Issue",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Other"],["Movement Type","201"],["Material","B510-##"],["Qty","500 PC"],["Plant","1020"],["Storage Location","0001"],["Cost Center","10101201"]],
+steps:[
+"MIGO ya da <b>Post Goods Movement</b>. İşlem: <b>Goods Issue</b>, referans: <b>Other</b>, MvT: 201.",
+"Tüm alanları gir. <b>Item OK</b>.",
+"<b>Check</b>: 'Deficit of SL Unrestricted-use 400 PC' uyarısı. Kapat.",
+"<b>Post</b>. Uygulamada kal."
+]},
+{num:"4",title:"Display Negative Stock",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"<b>Where</b> sekmesinde <b>Stock Overview</b>.",
+"B510-##, Plant 1020: negatif stok.",
+"<b>Menu → Extras → Display Material → Accounting 1</b>."
+],
+result:"Toplam stok: 400– (negatif). Toplam değer: 4.000,00– EUR."}
+]}
+]},
+{unit:6,title:"Special Procurement Processes",ex:[
+{id:27,title:"Perform the PO Process for Vendor Consignment",app:"Post Goods Movement / Create Purchase Order – Advanced",
+sc:"A510-## için konsinye tedarik: Bilgi kaydını kontrol et, konsinye SA oluştur (Item Cat. K). GR'yi bloke ve kalite muayene stokuna dağıt. Muhasebe değerleri değişmez.",
+tasks:[
+{num:"1",title:"Check Consignment Purchasing Info Record",app:"Manage Purchasing Info Records / ME1M",
+path:["Manage Purchasing Info Records","App Finder / ME1M"],
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Info Category","Consignment (2)"],["Supplier","S4515-1##"],["Price","EUR 9,50"]],
+steps:[
+"<b>Manage Purchasing Info Records</b> app'ini aç. VEYA ME1M.",
+"Material: A510-##, Info Category: Consignment (2), <b>Execute</b>.",
+"Tedarikçi S4515-1## için EUR 9,50 fiyatlı konsinye bilgi kaydı."
+]},
+{num:"2",title:"Create Consignment Purchase Order (Item Category K)",app:"Create Purchase Order – Advanced",
+fields:[["── Header ──",""],
+["Supplier","S4515-1##"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["Item Category (I col)","K (Consignment)"],
+["Material","A510-##"],
+["PO Quantity","200 PC"],
+["Plant","1010"],
+["Stor. Location","0001"]
+],
+steps:[
+"<b>Create Purchase Order - Advanced</b>. VEYA ME21N.",
+"Supplier: S4515-1##. Header Org. Data: Purch. Org.: 101C, Purch. Group: Z##.",
+"Kalem: Item Cat. K, A510-##, 200 PC, Plant: 1010, Stor.Loc: 0001.",
+"Enter — fiyat gösterilmez (konsinye). Kaydet. PO numarasını not et."
+],
+result:"Konsinye SA'da fiyat gösterilmez — bilgi kaydı fiyatı geçerlidir."},
+{num:"3",title:"Note Stock Values Before GR",app:"Display Material",
+steps:[
+"<b>Display Material</b>. A510-##, <b>Accounting 1</b> ve <b>Plant Stock</b>, Plant: 1010.",
+"Tüm konsinye stok değerleri sıfır olduğunu doğrula."
+]},
+{num:"4",title:"Post Consignment GR (Blocked + Quality Inspection Stock)",app:"Post Goods Movement",
+fields:[
+["Transaction","Goods Receipt"],
+["Reference","Purchase Order"],
+["── Distribution ──",""],
+["GR Blocked Stock","20 PC"],
+["Quality Inspection","180 PC"],
+["Storage Location","0001"],
+["Special Stock Indicator (auto)","K (Consignment)"]
+],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>.",
+"PO numarasını gir, <b>Execute</b>. <b>Item OK</b>.",
+"<b>Distribute Qty</b>: 20 PC Blocked Stock, 180 PC Quality Inspection. <b>Adopt</b>.",
+"Sağa kaydırarak Special Stock Indicator = <b>K</b> olduğunu doğrula.",
+"<b>Post</b>. Uygulamada kal."
+]},
+{num:"5",title:"Note Stock Values After GR",app:"Post Goods Movement",
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Kalem satırında Plant 1010'a çift tıkla → malzeme kaydı açılır.",
+"Konsinye kalite muayene stoku: 180 PC, Konsinye bloke stok: 20 PC.",
+"<b>Accounting 1</b>: değerler değişmedi."
+],
+result:"Konsinye GR sonrası: Cnsgt in Inspection: 180, Blocked consignment: 20. Muhasebe değerleri değişmez — konsinye stok şirkete ait değildir."}
+]},
+
+{id:28,title:"Post a Transfer Posting to Consignment Stock",app:"Transfer Stock – In-Plant / Post Goods Movement",
+sc:"Konsinye kalite muayene stokunu (180 PC) unrestricted-use konsinyeye transfer et. İki yöntemle yapılabilir.",
+tasks:[
+{num:"Task 1",title:"Transfer via Transfer Stock – In-Plant App",app:"Transfer Stock – In-Plant",
+path:["Transfer Stock – In-Plant","Warehouse Processing"],
+steps:[
+"<b>Transfer Stock – In-Plant</b> app'ini aç.",
+"A510-##, Plant: 1010, Enter.",
+"Depo yeri 0001'de Quality Inspection stok ikonuna tıkla. Selectable Stock: <b>Supplier Consignment</b> seç.",
+"Unrestricted-Use stok ikonuna tıkla. Quantity: 180, Enter, <b>Post</b>."
+]},
+{num:"Task 1-2",title:"Verify Stock via Stock – Multiple Materials App",app:"Stock – Multiple Materials",
+path:["Stock – Multiple Materials","Stock Monitoring"],
+fields:[["── Selection ──",""],
+["View","Stock Value for Sales Supplier Consignment (K)"],["Unrestricted Stock","180"],["Stock in Quality Inspection","0"],["Blocked Stock","20"]],
+steps:[
+"<b>Stock – Multiple Materials</b> app'ini aç (Stock Monitoring).",
+"<b>Select View</b>: Stock Value for Sales Supplier Consignment (K).",
+"Material: A510-##, Plant: 1010, Stor.Loc: 0001, <b>Go</b>."
+]},
+{num:"Task 2",title:"Transfer via Post Goods Movement (Alternative)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Transfer Posting"],["Reference","Other"],["Movement Type","321"],["Special Stock Indicator","K"],["Material","A510-##"],["Plant","1010"],["Stor.Loc","0001"],["Vendor (Spec. Stock tab)","S4515-1##"],["Qty","180"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Transfer Posting</b>, referans: <b>Other</b>.",
+"MvT: <b>321</b>, Special Stock Indicator: <b>K</b>, Enter.",
+"Transfer Posting sekmesinde tüm alanları doldur. Vendor: Enter sonrası Spec. Stock altında görünür.",
+"<b>Post</b>."
+]}
+]},
+
+{id:29,title:"Post a GI from Consignment Stock and Settle the Liabilities",app:"Post Goods Movement / Manage Stock / MRKO",
+sc:"Konsinye stoktan mal çekimi yap (40 PC Cost Center 4110, 10 PC Cost Center 4100). Muhasebe kaydını incele. Hareketleri listele ve borçları kapat.",
+tasks:[
+{num:"1",title:"Post 40 PC GI from Consignment (Cost Center 4110)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Other"],["Movement Type","201"],["Special Stock Indicator","K"],["Material","A510-##"],["Qty","40 PC"],["Plant","1010"],["Stor.Loc","0001"],["Vendor","S4515-1##"],["Cost Center","4110"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Issue</b>, referans: <b>Other</b>, MvT: 201, K, Enter.",
+"Tüm alanları gir. <b>Post</b>.",
+"İşlem: <b>Display</b>, <b>Execute</b>. <b>Doc. info → FI Documents</b>."
+],
+result:"Alacak (H): 21110000 / GR/IR Consi/Pipeline. Borç (S): 51100000 / Material Consumption."},
+{num:"2",title:"Post 10 PC GI via Manage Stock (Cost Center 4100)",app:"Manage Stock",
+path:["Manage Stock","Warehouse Management"],
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Plant","1010"],["Stock Change","Goods Issue for Cost Center"],["Special Stock Type","Supplier Consignment"],["Supplier","S4515-1##"],["Qty","10 PC"],["Cost Center","4100"]],
+steps:[
+"<b>Manage Stock</b> app'ini aç.",
+"A510-##, Plant: 1010, Enter.",
+"Depo yeri 0001'de Unrestricted-Use stok ikonuna tıkla.",
+"Selectable Stock: <b>Supplier Consignment</b> seç.",
+"Tüm alanları gir, Enter. <b>Post</b>."
+]},
+{num:"3",title:"List Consignment Movements (MB51)",app:"Display Material Document List (MB51)",
+fields:[["── Material Data ──",""],
+["Material","A510-##"],["Special Stock","K"],["Posting Date","Last 2 months"]],
+steps:[
+"MB51. Material: A510-##, Special Stock: K, Posting Date aralığı. <b>Execute</b>."
+],
+result:"MvT 101 +20 ve +180: Kapatma için Hayır. MvT 321 ±180: Hayır. MvT 201 –40 ve –10: EVET."},
+{num:"4",title:"Settle Consignment Liabilities (MRKO)",app:"Create Consignment and Pipeline Settlement / MRKO",
+path:["Create Consignment and Pipeline Settlement","App Finder / MRKO"],
+fields:[["── Settings ──",""],
+["Company Code","1010"],["Supplier","S4515-1##"],["Option","Consignment selected + Settle"]],
+steps:[
+"MRKO. Company Code: 1010, Supplier: S4515-1##.",
+"<b>Consignment</b> seç, <b>Settle</b> radyo butonu. <b>Execute</b>.",
+"40 + 10 PC kapatılır. Fatura numarasını not et."
+]}
+]},
+
+{id:30,title:"Create SC Purchase Order and Provide Components to Subcontractor",app:"Post Goods Movement / Create PO – Advanced",
+sc:"Fasoncu T-S50A##'ya T-FL4A## üretimi için bileşenler sağla. BOM'u kontrol et, fason SA oluştur (Item Cat. L), eksik bileşenleri gönder.",
+tasks:[
+{num:"1",title:"Display Bill of Material (CS03)",app:"Display Bill of Material (CS03)",
+path:["Display Bill of Material (CS03)","App Finder"],
+fields:[["── Material Data ──",""],
+["Material","T-FL4A##"],["Plant","1010"],["BOM Usage","1"],["T-FL4A1##","1 PC (Tire)"],["T-FL4A2##","1 PC (Rim)"],["T-FL4A3##","1 PC (Wheel bearing)"],["T-FL4A4##","1 PC (Suspension)"]],
+steps:[
+"CS03. Material: T-FL4A##, Plant: 1010, BOM Usage: 1. <b>Item</b>.",
+"Bileşenleri not et."
+]},
+{num:"2",title:"Transfer Rims to Subcontractor (MvT 541)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Transfer Posting"],["Reference","Other"],["Movement Type","541"],["From — Material","T-FL4A2##"],["From — Plant","1010"],["From — Stor.Loc","0001"],["Dest — Vendor","T-S50A##"],["Qty","300 PC"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Transfer Posting</b>, referans: <b>Other</b>, MvT: <b>541</b>, Enter.",
+"Transfer Posting sekmesinde From ve Dest alanlarını doldur. <b>Post</b>."
+]},
+{num:"3",title:"Check Current Component Stock",app:"Stocks at Subcontractor / MBLB",
+path:["Stocks at Subcontractor (MBLB)","App Finder"],
+fields:[["Supplier","T-S50A##"],["Plant","1010"]],
+steps:[
+"MBLB. Supplier: T-S50A##, Plant: 1010. <b>Execute</b>.",
+"Yalnızca T-FL4A2## için 300 PC mevcut."
+]},
+{num:"5",title:"Create Subcontracting PO (Item Category L)",app:"Create Purchase Order – Advanced",
+fields:[["── Header ──",""],
+["Supplier","T-S50A##"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["Item Category (I)","L (Subcontracting)"],
+["Material","T-FL4A##"],
+["PO Quantity","100 PC"],
+["Deliv. Date","<Today + 1 week>"],
+["Net Price","EUR 100"],
+["Plant","1010"],
+["Stor.Loc","0001"]
+],
+steps:[
+"<b>Create Purchase Order - Advanced</b>. Supplier: T-S50A##.",
+"Header: Purch. Org.: 101C, Purch. Group: Z##.",
+"Kalem: Item Cat. L, T-FL4A##, 100 PC, EUR 100, Plant: 1010.",
+"Kalem detayında <b>Material Data → Components</b>: her bileşenden 100 adet gerekli.",
+"Kaydet. PO numarasını not et."
+]},
+{num:"6",title:"Order Tires Directly to Subcontractor Address",app:"Create Purchase Order – Advanced",
+fields:[["── Header ──",""],
+["Supplier","T-S52A##"],["Material","T-FL4A1##"],["PO Quantity","500 PC"],["Net Price","EUR 300"],["Plant","1010"],["Delivery Address — Supplier","T-S50A##"],["SC Supp indicator","Selected"]],
+steps:[
+"<b>Create Purchase Order - Advanced</b>. Supplier: T-S52A##.",
+"Kalem: T-FL4A1##, 500 PC, EUR 300, Plant: 1010.",
+"Kalem detayında <b>Delivery Address</b> sekmesinde Supplier: T-S50A##, <b>SC Supp</b> seç.",
+"Kaydet. PO numarasını not et."
+]},
+{num:"7",title:"Analyze Component Status and Send Missing Parts",app:"Display Subcontracting Stocks by Supplier / ME2ON",
+path:["Display Subcontracting Stocks by Supplier (ME2ON)","App Finder"],
+fields:[["Supplier","T-S50A##"],["Plant","1010"]],
+steps:[
+"ME2ON. Supplier: T-S50A##, Plant: 1010. <b>Execute</b>.",
+"<b>Expand All</b>. T-FL4A3## ve T-FL4A4## eksik.",
+"T-FL4A3## satırını seç, <b>Post Goods Issue</b>: MvT 541, Stor.Loc: 0001. <b>Create Document</b>.",
+"T-FL4A4## için tekrarla."
+]},
+{num:"9",title:"Post GR for Tires from T-S52A##",app:"Post Goods Movement",
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>, MvT: 101.",
+"6. adımdaki PO numarasını gir, <b>Execute</b>. <b>Item OK</b>. <b>Post</b>."
+]},
+{num:"10",title:"Verify All Components Sufficient",app:"Display Subcontracting Stocks by Supplier / Subcontracting Cockpit",
+steps:[
+"ME2ON veya <b>Subcontracting Cockpit</b> app'i ile T-S50A##, Plant: 1010 filtrele.",
+"Tüm bileşenler yeterli miktarda mevcut. Yeşil ikon = yeterli."
+]}
+]},
+
+{id:31,title:"Post a GR and a Subsequent Adjustment to a Subcontract PO",app:"Post Goods Movement",
+sc:"Fasoncu 100 adet T-FL4A## teslim etti. GR gir, bileşen tüketimini (MvT 543) doğrula. Ardından 1 ek lastik için Subsequent Adjustment gir.",
+tasks:[
+{num:"1",title:"Post GR for Subcontract PO",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Receipt"],["Reference","Purchase Order"],["Movement Type","101"],["Plant","1010"],["Stor.Loc","0001"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Receipt</b>, referans: <b>Purchase Order</b>.",
+"EX 30'dan fason PO numarasını gir, <b>Execute</b>. <b>Item OK</b>. <b>Post</b>."
+]},
+{num:"2",title:"Verify Component Consumption in Material Document",app:"Post Goods Movement",
+fields:[["── Material Data ──",""],
+["T-FL4A## (Wheel)","MvT 101 (+) — Goods receipt"],
+["T-FL4A1## (Tire)","MvT 543 / O (–) — Consumption from subcontracting stock"],
+["T-FL4A2## (Rim)","MvT 543 / O (–)"],
+["T-FL4A3## (Wheel bearing)","MvT 543 / O (–)"],
+["T-FL4A4## (Suspension)","MvT 543 / O (–)"]
+],
+steps:[
+"İşlem: <b>Display</b>, referans: <b>Material Document</b>, <b>Execute</b>.",
+"Belgedeki tüm hareketleri gör — bileşenler otomatik fason stokundan tüketilir."
+]},
+{num:"3",title:"Post Subsequent Adjustment (1 Extra Tire)",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Subsequent Adjustment"],["Reference","Purchase Order"],["T-FL4A1## Qty","1 PC"],["Movement Type","543 (automatic)"]],
+steps:[
+"İşlem: <b>Subsequent Adjustment</b>, referans: <b>Purchase Order</b>. Fason PO numarasını gir.",
+"<b>Execute</b>. <b>Item OK</b>.",
+"<b>Explode BOM</b>. T-FL4A1## satırında <b>Qty in Unit of Entry</b>: 1 PC gir.",
+"<b>Post</b>."
+]}
+]},
+
+{id:32,title:"Perform a Process for Pipeline Material",app:"Post Goods Movement / MRKO",
+sc:"Pipeline malzeme P510-## oluştur (Z510-14 şablonundan), bilgi kaydı oluştur, 100 litre mal çıkışı yap (tedarikçi otomatik) ve borçları kapat.",
+tasks:[
+{num:"1",title:"Create Pipeline Material (MM01)",app:"Create Material (MM01)",
+path:["Create Material (MM01)","Material Master"],
+fields:[["── Material Data ──",""],
+["Material","P510-##"],["Industry Sector","Mechanical Engineering"],["Material Type","Pipeline materials"],["Copy from Material","Z510–14"],["Views","Basic Data 1, Purchasing, Accounting 1"],["Plant","1010"],["Description","PIPE Material Gr##"]],
+steps:[
+"MM01. P510-##, Industry Sector: Mechanical Engineering, Material Type: Pipeline materials.",
+"Copy from Material: Z510–14. <b>Select Views</b>: Basic Data 1, Purchasing, Accounting 1.",
+"Org. Levels: Plant alanlarına her ikisine de 1010. Continue.",
+"Description: PIPE Material Gr##. <b>Save</b>."
+]},
+{num:"2",title:"Create Pipeline Purchasing Info Record (ME11)",app:"Create Purchasing Info Record (ME11)",
+path:["Create Purchasing Info Record (ME11)","App Finder"],
+fields:[["── Header ──",""],
+["Supplier","S4515–1##"],["Material","P510–##"],["Purchasing Org.","101C"],["Plant","1010"],["Info Category","Pipeline"],["Pl. Deliv. Time","1"],["Standard Qty","1"],["Tax Code","1I"],["Net Price","1,45"]],
+steps:[
+"ME11. Tüm alanları gir, Info Category: Pipeline. Enter (iki kez).",
+"Kalan alanları gir. <b>Save</b>."
+]},
+{num:"3",title:"Post 100 Litre Pipeline GI",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Other"],["Movement Type","201"],["Material","P510-##"],["Qty","100 L"],["Special Stock (Where tab)","P (Pipeline material)"],["Plant","1010"],["Cost Center","10101201"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: <b>Goods Issue</b>, referans: <b>Other</b>, MvT: 201, Enter.",
+"Tüm alanları gir. Account Assignment sekmesinde Cost Center. <b>Post</b>.",
+"İşlem: Display. <b>Partner</b> sekmesinde tedarikçi: S4515–1## (otomatik).",
+"<b>Doc. Info → FI Documents</b>."
+],
+result:"Borç (S): 51100000 / 145,00 EUR | Alacak (H): 21110000 / GR/IR Consi/Pipeline / 145,00– EUR"},
+{num:"4",title:"Settle Pipeline Liabilities (MRKO)",app:"Create Consignment and Pipeline Settlement / MRKO",
+path:["Create Consignment and Pipeline Settlement","App Finder / MRKO"],
+fields:[["── Settings ──",""],
+["Company Code","1010"],["Supplier","S4515–1##"],["Option","Pipeline selected + Settle"]],
+steps:[
+"MRKO. Company Code: 1010, Supplier: S4515–1##.",
+"<b>Pipeline</b> seç, <b>Settle</b> radyo butonu. <b>Execute</b>.",
+"Fatura belgesine tıkla: GR/IR Consi/Pipeline kapatıldı, vergi kodu bilgi kaydından alındı."
+]}
+]}
+]},
+{unit:7,title:"Special Features of Material Valuation",ex:[
+{id:33,title:"Create a PO and Enter Goods Movements for Nonvaluated Material",app:"Display Material / Post Goods Movement",
+sc:"H510-## (UNBW) için SA oluştur. GR girince muhasebe belgesi oluşur (maliyet anında kaydedilir). GI girince muhasebe belgesi oluşmaz. Tüketim güncellemesini izle.",
+tasks:[
+{num:"1",title:"Display Material Master (Before)",app:"Display Material",
+fields:[["── Material Data ──",""],
+["Material Type","UNBW (Nonvaluated materials)"],["Total Stock (Plant 1010)","0 PC"],["Total Consumption","0"]],
+steps:[
+"MM03. H510-##, <b>Plant Stock</b>, Plant: 1010.",
+"<b>Information on material</b>: Malzeme tipi UNBW.",
+"<b>Additional Data → Consumption</b>: Tüketim 0."
+]},
+{num:"2",title:"Create Purchase Order (Account Assignment K)",app:"Create Purchase Order – Advanced / ME21N",
+fields:[
+["Supplier","T-S50A##"],
+["Account Assignment Cat.","K"],
+["Material","H510-##"],
+["PO Quantity","100 PC"],
+["Net Price","2 EUR"],
+["Plant","1010"],
+["Stor.Loc","0001"],
+["Purch. Org.","101C"],
+["Purch. Group","Z##"],
+["── Account Assignment Tab ──",""],
+["Cost Center","10101201"]
+],
+steps:[
+"<b>Create Purchase Order - Advanced</b>. Supplier: T-S50A##.",
+"Header: Purch. Org.: 101C, Purch. Group: Z##.",
+"Kalem: Account assignment cat.: K, H510-##, 100 PC, 2 EUR, Plant: 1010, Stor.Loc: 0001.",
+"Kalem detayında <b>Account Assignment</b> sekmesinde Cost Center: 10101201.",
+"Kaydet. PO numarasını not et."
+]},
+{num:"3",title:"Post GR and Verify Accounting Document",app:"Post Goods Movement",
+steps:[
+"<b>Post Goods Movement</b>. İşlem: GR, referans: PO. PO numarasını gir, Execute. Item OK. Post.",
+"İşlem: Display, Execute.",
+"<b>Doc. info → FI Documents</b> → muhasebe belgesine çift tıkla."
+],
+result:"Debit (S): Material Consumption 51100000 | Credit (H): GR/IR 21120000. Değerlenmemiş malzeme GR'sinde maliyet anında kaydedilir."},
+{num:"4",title:"Display Material Master After GR",app:"Display Material",
+fields:[["Total Stock","100 PC"],["Total Consumption","0 (GR does not update consumption)"]],
+steps:[
+"MM03. H510-##, Plant Stock, Plant: 1010. Additional Data → Consumption."
+]},
+{num:"5",title:"Post 25 PC GI",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Other"],["Movement Type","201"],["Material","H510-##"],["Qty","25 PC"],["Plant","1010"],["Stor.Loc","0001"],["Cost Center","212##"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: GI, referans: Other, MvT: 201. Tüm alanları gir. Post.",
+"İşlem: Display, Execute.",
+"<b>Doc. info → FI Documents</b>."
+],
+result:"Muhasebe belgesi oluşturulmadı — değerlenmemiş malzeme için GI değerleme içermez."},
+{num:"6",title:"Display Material Master After GI",app:"Display Material",
+fields:[["Total Stock","75 PC"],["Total Consumption","25 PC (GI updates consumption)"]],
+steps:[
+"MM03. H510-##, Plant Stock ve Additional Data → Consumption, Plant: 1010."
+]}
+]},
+
+{id:34,title:"Post Goods Movements for a Split-Valuated Material and Verify the Results",app:"Display Material / Post Goods Movement",
+sc:"K510-## bölünmüş değerleme (LAND 1/LAND 2). Muhasebe verilerini görüntüle, PO 41510009## için LAND 2 ile GR gir, 10 PC GI yap, sonuçları doğrula.",
+tasks:[
+{num:"1",title:"Display Plant-Level Accounting Data",app:"Display Material (MM03)",
+fields:[["── Settings ──",""],
+["Valuation Category","H (Origin)"],["Total Stock (Plant 1010)","100 PC"],["Total Value","2.000,00 EUR"],["Moving Avg Price","20,00 EUR"]],
+steps:[
+"MM03. K510-##, <b>Accounting 1</b>, Plant: 1010. Değerleri not et."
+]},
+{num:"2",title:"Display Accounting Data by Valuation Type",app:"Display Material (MM03)",
+fields:[
+["── LAND 1 ──",""],
+["Valuation Price","20 (Moving Avg)"],
+["Total Stock","100"],
+["Total Value","2.000,00 EUR"],
+["── LAND 2 ──",""],
+["Valuation Price","26 (Standard)"],
+["Total Stock","0"],
+["Total Value","0"]
+],
+steps:[
+"Muhasebe ekranında: <b>Menu → Edit → Organizational Levels</b>.",
+"Valuation Type: <b>LAND 1</b>, Continue. Değerleri not et.",
+"Tekrar Organizational Levels. Valuation Type: <b>LAND 2</b>, Continue. Değerleri not et."
+]},
+{num:"3",title:"Post GR for PO 41510009## with LAND 2",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Receipt"],["Reference","Purchase Order"],["PO Number","41510009##"],["Movement Type","101"],["Plant","1010"],["Stor.Loc","0001"],["Valuation Type (Material tab)","LAND 2"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: GR, referans: PO, MvT: 101.",
+"PO: 41510009##, Execute. Item OK.",
+"Kalem detayında <b>Material</b> sekmesinde <b>Valuation Type</b>: LAND 2 gir.",
+"Post. Uygulamada kal."
+]},
+{num:"4",title:"Display Stock Overview",app:"Post Goods Movement",
+fields:[["── Data ──",""],
+["Plant 1010 Total","300 PC"],["LAND 1","100 PC"],["LAND 2","200 PC"]],
+steps:[
+"İşlem: Display, Material Document, Execute.",
+"Kalem detayında Where → Stock Overview."
+]},
+{num:"5",title:"Post 10 PC GI for LAND 2",app:"Post Goods Movement",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Other"],["Movement Type","201"],["Plant","1010"],["Stor.Loc","0001"],["Valuation Type","LAND 2"],["Material","K510-##"],["Qty","10 PC"],["Cost Center","212##"]],
+steps:[
+"<b>Post Goods Movement</b>. İşlem: GI, referans: Other, MvT: 201, Enter.",
+"Plant ve Stor.Loc girince Valuation Type alanı görünür: LAND 2.",
+"K510-##, 10 PC, Cost Center: 212##. Post."
+]},
+{num:"6",title:"Display Final Accounting Values",app:"Display Material (MM03)",
+fields:[
+["── Plant 1010 (Total) ──",""],
+["Moving Avg Price","23,93 EUR"],
+["Total Stock","290 PC"],
+["Total Value","6.940,00 EUR"],
+["── LAND 1 ──",""],
+["Moving Avg Price","20,00 EUR"],
+["Total Stock","100 PC"],
+["Total Value","2.000,00 EUR"],
+["── LAND 2 ──",""],
+["Standard Price","26,00 EUR"],
+["Total Stock","190 PC"],
+["Total Value","4.940,00 EUR"]
+],
+steps:[
+"MM03. K510-##, Accounting 1, Plant: 1010. Ardından LAND 1 ve LAND 2 için Organizational Levels."
+]}
+]}
+]},
+
+{unit:8,title:"Physical Inventory",ex:[
+{id:35,title:"Conduct a Physical Inventory with Recount",app:"SAP Fiori / SAP GUI",
+sc:"A500-## için sayım belgesi oluştur. Sayım: 56 PC (fark >%30 → yeniden sayım). Yeniden sayım belgesini oluştur ve fark gönderiminin engellendiğini doğrula.",
+tasks:[
+{num:"1",title:"Create Physical Inventory Document (MI01)",app:"Create Single PI Document",
+path:["Create Single PI Document","Physical Inventory Processing"],
+fields:[["── Physical Inventory ──",""],
+["Planned Count Date","<Today>"],["Plant","1010"],["Storage Location","0001"],["Physical Inventory Number","IN##"],["Material","A500-##"],["Stock Type","1 (Unrestricted use)"]],
+steps:[
+"<b>Create Single PI Document</b> app'ini aç. VEYA MI01.",
+"Tüm alanları gir, Enter.",
+"Material: A500-##, Stock Type: 1. <b>Post</b>.",
+"Fiziksel envanter belgesi numarasını not et."
+]},
+{num:"2",title:"Enter Inventory Count (56 PC)",app:"Enter Inventory Count",
+path:["Enter Inventory Count","Physical Inventory Processing"],
+fields:[["── Data ──",""],
+["Inventory Document Number","<Enter your number>"],["Variance in %","30"],["Counted Qty","56 PC"]],
+steps:[
+"<b>Enter Inventory Count</b> app'ini aç. VEYA MI04.",
+"Belge numarasını ve <b>Variance in %</b>: 30 gir, Enter.",
+"Quantity: <b>56 PC</b>. <b>Post</b>.",
+"Mesaj: Fark 34 PC — Enter ile onayla."
+],
+result:"Fark %30'dan büyük (34 PC) — yeniden sayım gerekli."},
+{num:"3",title:"Create Recount Document (MI11)",app:"Process Physical Inventory Count Results",
+path:["Process Physical Inventory Count Results","Physical Inventory Management"],
+fields:[["Physical Inventory Number","IN##"]],
+steps:[
+"<b>Process Physical Inventory Count Results</b> app'ini aç. VEYA MI20.",
+"PI Number: IN##, <b>Execute</b>.",
+"Belge numarası onay kutusunu seç.",
+"<b>Menu → Goto → Recount Document</b>. MI11 açılır.",
+"PI Number: IN##, Enter. <b>Post</b>. Yeniden sayım belgesi numarasını not et."
+]},
+{num:"4",title:"Verify Posting Block After Recount",app:"Process Physical Inventory Count Results",
+steps:[
+"Listede ilk belge numarasına tıkla.",
+"Physical Inventory Status: <b>'Counted, Recounted'</b>.",
+"Listede ilk belge onay kutusunu seç. <b>Menu → Goto → Post Difference</b>.",
+"Post Inventory Differences (MI07) açılır. <b>Post</b> butonuna bas."
+],
+result:"Fark gönderilemez — 'Counted, Recounted' statüsünde kalem için fark gönderimi engellenir."}
+]},
+
+{id:36,title:"Conduct a Physical Inventory with Posting Block",app:"SAP Fiori / SAP GUI",
+sc:"B500-## için PI Block değişimini tüm aşamalarda izle: Boş → A → X → A → Boş.",
+tasks:[
+{num:"1",title:"Check Initial PI Block",app:"Display Material (MM03)",
+path:["Display Material","Material Master","Storage Location Stock"],
+steps:[
+"MM03. B500-##, <b>Storage Location Stock</b>, Plant: 1010, Stor.Loc: 0001."
+],
+result:"Adım 1: Boş (No physical inventory defined)"},
+{num:"2",title:"Create PI Document with Three Stock Types (MI01)",app:"Create Single PI Document",
+fields:[["── Physical Inventory ──",""],
+["Planned Count Date","<Today>"],["Plant","1010"],["Storage Location","0001"],["PI Number","GR##"],["Item 1","B500-## / Sty 1"],["Item 2","B500-## / Sty 2"],["Item 3","B500-## / Sty 4"]],
+steps:[
+"MI01. Tüm alanları gir. Üç satır gir: B500-## × Sty 1, 2, 4.",
+"<b>Post</b>. Belge numarasını not et."
+]},
+{num:"3",title:"Check PI Block After Document Creation",app:"Display Material (MM03)",
+steps:[
+"Adım 1 gibi PI Block'u kontrol et."
+],
+result:"Adım 3: A (Physical inventory not yet completed)"},
+{num:"4",title:"Set Posting Block (MI02)",app:"Change Physical Inventory Document",
+path:["Change Physical Inventory Document","Physical Inventory Processing"],
+steps:[
+"MI02. Belge numarasını gir.",
+"<b>Menu → Goto → Header</b>.",
+"<b>Posting Block</b> onay kutusunu seç. <b>Post</b>."
+]},
+{num:"5",title:"Check PI Block After Posting Block Set",app:"Display Material (MM03)",
+steps:[
+"Adım 1 gibi PI Block'u kontrol et."
+],
+result:"Adım 5: X (Due to phys. inv., material is blocked for movements)"},
+{num:"6",title:"Test Which Movements Are Possible",app:"Post Goods Movement",
+fields:[["── Data ──",""],
+["GR → PO, Plant 1010, Stor.Loc 0002","Possible ✓"],["Quality inspection sampling, Stor.Loc 0001","Not Possible ✗"],["Stor.Loc 0001 → 0002 Transfer","Not Possible ✗"],["GI Cost Center, Stor.Loc 0001","Not Possible ✗"],["GR Blocked Stock, Plant 1010","Possible ✓"]],
+steps:[
+"Engel yalnızca Stor.Loc 0001'deki B500-## hareketlerini etkiler.",
+"GR for PO in Stor.Loc 0002: Mümkün. GR in GR Blocked Stock: Mümkün."
+]},
+{num:"7",title:"Enter Count Results (MI04)",app:"Enter Inventory Count",
+fields:[["── Data ──",""],
+["B500-## Sty 1","488"],["B500-## Sty 2","1"],["B500-## Sty 4","0 (Zero Count)"]],
+steps:[
+"MI04. Belge numarasını gir, Enter.",
+"Sayım değerlerini gir. Sty 4 için <b>Zero Count</b> seç.",
+"<b>Post</b>."
+]},
+{num:"8",title:"Check PI Block After Count Entry",app:"Display Material (MM03)",
+steps:["Adım 1 gibi PI Block'u kontrol et."],
+result:"Adım 8: A (Physical inventory not yet completed)"},
+{num:"9",title:"Post Inventory Differences (MI20)",app:"Process Physical Inventory Count Results",
+steps:[
+"MI20. Belge veya PI Number: GR##, <b>Execute</b>.",
+"Tüm kalemleri seç. <b>Post Difference</b>. <b>Post</b>."
+]},
+{num:"10",title:"Check PI Block After Posting",app:"Display Material (MM03)",
+steps:["Adım 1 gibi PI Block'u kontrol et."],
+result:"Adım 10: Boş — döngü tamamlandı (No physical inventory defined)."}
+]},
+
+{id:37,title:"Create and Post Physical Inventory Documents in Simplified Way",app:"SAP Fiori Launchpad",
+sc:"Plant 1020, Stor.Loc 0001, Raf BL## için envanter belgeleri oluştur (max 3 kalem). Sayım gir, batch input ile fark gönder.",
+tasks:[
+{num:"1",title:"Create Physical Inventory Documents",app:"Create Physical Inventory Documents",
+path:["Create Physical Inventory Documents","Physical Inventory Management"],
+fields:[["── Data ──",""],
+["Plant","1020"],["Storage Location","0001"],["Storage Bin","BL##"],["Stock Type","Unrestricted use"],["Max Items per Document","3"],["Physical Inventory Number","BIM##"]],
+steps:[
+"<b>Create Physical Inventory Documents</b> app'ini aç.",
+"<b>Adapt Filters</b>: Storage Bin ekle. Plant: 1020, Stor.Loc: 0001, Storage Bin: BL##. <b>Go</b>.",
+"<b>Unrestricted-Use Stock</b> sekmesinde tüm malzemeleri seç.",
+"<b>Create Physical Inventory Documents</b>: Max Items: 3, PI Number: BIM##. <b>Create</b>.",
+"<b>View all Documents</b>. Belge numaralarını not et."
+]},
+{num:"2",title:"Display and View Inventory Documents",app:"Manage Physical Inventory Count",
+path:["Manage Physical Inventory Count","Physical Inventory Processing"],
+fields:[["Physical Inventory Number","BIM##"],["Plant","1020"]],
+steps:[
+"<b>Manage Physical Inventory Count</b> app'ini aç.",
+"<b>Adapt Filters</b>: PI Number ve Plant ekle. BIM##, Plant: 1020. <b>Go</b>.",
+"İki envanter belgesi görünür."
+]},
+{num:"3",title:"Enter Count Results",app:"Manage Physical Inventory Count",
+fields:[["── Data ──",""],
+["A515-##","30"],["B515-##","40"],["C515-##","49"],["D515-##","60"],["E515-##","98"]],
+steps:[
+"1. belge için Count Status ikonuna tıkla. <b>Edit</b>.",
+"Sayım değerlerini gir. <b>Save</b>. <b>Back</b>.",
+"2. belge için tekrarla.",
+"<b>Count versus Book</b> sütununda farkları kontrol et."
+]},
+{num:"4",title:"Create Batch Input Session",app:"Post Inventory Differences",
+path:["Post Inventory Differences","Physical Inventory Mass Processing"],
+fields:[["── Selection ──",""],
+["Fiscal Year","<Current year>"],["Plant","1020"],["Physical Inventory Number","BIM##"],["Session Name","MB_MI07_##"],["Hold Processed Session","Selected"]],
+steps:[
+"<b>Post Inventory Differences</b> app'ini aç.",
+"Fiscal Year, Plant: 1020, PI Number: BIM## gir.",
+"Session Name: MB_MI07_##. <b>Hold Processed Session</b> seç.",
+"<b>Execute</b>. 'Oturum oluşturuldu' mesajı."
+]},
+{num:"5",title:"Process Batch Input Session",app:"Process Batch Input Sessions",
+path:["Process Batch Input Sessions","Physical Inventory Mass Processing"],
+fields:[["── Session ──",""],
+["Session","MB_MI07_##"],["Mode","Display errors only"],["Extended log","Selected"]],
+steps:[
+"<b>Process Batch Input Sessions</b> app'ini aç.",
+"Session: MB_MI07_## gir, Enter. Oturumu seç, <b>Process</b>.",
+"<b>Display errors only</b>, <b>Extended log</b> seç. <b>Process</b>.",
+"Tamamlandıktan sonra <b>Session overview → Log → Display</b>.",
+"Belge numaralarını ve oluşturulan malzeme belgelerini not et."
+]},
+{num:"6",title:"Verify Completion Status",app:"Manage Physical Inventory Documents",
+path:["Manage Physical Inventory Documents","Physical Inventory Processing"],
+steps:[
+"<b>Manage Physical Inventory Documents</b> app'ini aç.",
+"PI Number: BIM##. <b>Count Progress</b> ve <b>Completion Progress</b> sütunlarını kontrol et."
+]}
+]},
+
+{id:38,title:"Set Up and Test a Situation Handling Use Case",app:"SAP Fiori Launchpad",
+sc:"Fiziksel envanter fark değeri >200 EUR için Situation Handling. Takım oluştur, ZS4510_## durum tipi yarat, PIN## ile test et.",
+tasks:[
+{num:"Task 1-1",title:"Create Team (Manage Teams and Responsibilities)",app:"Manage Teams and Responsibilities",
+path:["Manage Teams and Responsibilities","Situation Handling"],
+fields:[["── Settings ──",""],
+["Name","ZS4510-##"],["Description","Team S4510 Group ##"],["Global ID","ZS4510-##"],["Status","Enabled"],["Type","SPHYSINVMO"]],
+steps:[
+"<b>Manage Teams and Responsibilities</b> app'ini aç.",
+"<b>Create</b>. Team Information alanlarını doldur. Uygulamadan çıkma."
+]},
+{num:"Task 1-2",title:"Set Responsibility Definitions",app:"Manage Teams and Responsibilities",
+fields:[["Plant","1010"],["Storage Locations","101A and 0001"]],
+steps:[
+"<b>Responsibility Definitions</b> sekmesinde Plant: 1010, Stor.Loc: 101A ve 0001 gir."
+]},
+{num:"Task 1-3",title:"Verify Team Owner and Add Member",app:"Manage Teams and Responsibilities",
+fields:[["── Settings ──",""],
+["Team Owner","S4510-##"],["Team Member","S4510-##"],["Member Function","ZSMMIM_##"]],
+steps:[
+"<b>Team Owners</b> sekmesinde S4510-## otomatik atanmış olmalı (yoksa ekle).",
+"<b>Team Members</b> sekmesinde S4510-## ekle, Function: ZSMMIM_## ata.",
+"<b>Create</b> ile kaydet."
+]},
+{num:"Task 2-1",title:"Create Situation Type by Copying Template",app:"Manage Situation Types",
+path:["Manage Situation Types","Situation Handling"],
+fields:[["── Settings ──",""],
+["Template","MAN_PHYSICAL_INVENTORY_MONITOR"],["ID","ZS4510_##"],["Name","Physical Inventory Monitoring ##"]],
+steps:[
+"<b>Manage Situation Types</b> app'ini aç.",
+"'Physical' ara, <b>Go</b>. <b>MAN_PHYSICAL_INVENTORY_MONITOR</b> şablonunu seç, <b>Copy</b>.",
+"ID: ZS4510_##, Name: Physical Inventory Monitoring ## gir."
+]},
+{num:"Task 2-2",title:"Configure Message and Conditions",app:"Manage Situation Types",
+fields:[
+["── In-App Message ──",""],
+["Short Description","Inventory Difference Outside Tolerance"],
+["── Conditions ──",""],
+["Difference Value","less than –200 AND greater than 200"],
+["Is Counted","Yes"],
+["Is Deleted","No"],
+["Is Difference Posted","No"],
+["Is Recounted","No"],
+["Physical Inventory Number","PIN##"]
+],
+steps:[
+"Situation Display bölümünde <b>Short Description</b>: 'Inventory Difference Outside Tolerance' gir.",
+"Conditions bölümünde: Difference Value → less than –200, Add, greater than 200.",
+"Diğer koşulları tabloya göre gir."
+]},
+{num:"Task 2-3",title:"Configure Monitoring and Activate",app:"Manage Situation Types",
+fields:[["── Settings ──",""],
+["Monitor Instances","Selected"],["Time Zone","<Your time zone>"],["Start Batch Job At","12:00"],["Responsibility Function","ZSMMIM_##"]],
+steps:[
+"Situation Monitoring: <b>Monitor Instances</b> seç. Batch job saatini gir.",
+"Recipients: ZSMMIM_## fonksiyonunu ata.",
+"<b>Enable</b> ve <b>Save</b>."
+]},
+{num:"Task 3-1",title:"Create PI Document for Test",app:"Create Physical Inventory Documents",
+fields:[["── Data ──",""],
+["Plant","1010"],["Storage Location","101A"],["Materials","T-FL4A2##, T-FL4A3##, T-FL4A4##"],["PI Number","PIN##"]],
+steps:[
+"<b>Create Physical Inventory Documents</b>. Plant: 1010, Stor.Loc: 101A, T-FL4A*##. <b>Go</b>.",
+"3 malzemeyi seç. PI Number: PIN##. <b>Create</b>."
+]},
+{num:"Task 3-2",title:"Enter Count Results and Identify Differences",app:"Manage Physical Inventory Count",
+fields:[["── Material Data ──",""],
+["T-FL4A2##","39 (Fark: –1, –170 EUR)"],["T-FL4A3##","45 (Fark: +5, +250 EUR)"],["T-FL4A4##","37 (Fark: –3, –210 EUR)"]],
+steps:[
+"<b>Manage Physical Inventory Count</b>. PI Number: PIN##, <b>Go</b>.",
+"Her belge için sayım değerlerini gir. <b>Save</b>.",
+"<b>Difference Quantity</b> ve <b>Difference Value based on Count Entry</b> sütunlarını ekle.",
+"Farkları not et: T-FL4A3## (+250 EUR) ve T-FL4A4## (–210 EUR) eşiği aşar."
+]},
+{num:"Task 3-3",title:"Trigger Situation Type and Verify",app:"Manage Situation Types / My Situations",
+steps:[
+"<b>Manage Situation Types</b>. ZS4510_## satırında <b>Trigger Now</b>. 'OK'.",
+"<b>My Situations</b> app'ini aç: 2 mesaj görünür (T-FL4A3## ve T-FL4A4##).",
+"<b>Manage Physical Inventory Documents</b>: belge numarası yanında uyarı üçgeni ve '2' sayısı."
+]}
+]},
+
+{id:39,title:"Set the Cycle Counting Indicator in Material Master Records Using ABC Analysis",app:"SAP Fiori / SAP GUI",
+sc:"Plant 1010'daki malzemelerde döngüsel sayım (CC) göstergesini ABC analizi ile ayarla. T-FL4A4## için fixed CC = B.",
+tasks:[
+{num:"1",title:"Check CC Indicator in Material Master",app:"Display Material (MM03)",
+path:["Display Material","Material Master","General Plant Data/Storage Location 1","Plant 1010"],
+fields:[["── Material Data ──",""],
+["T-FL4A3## — CC indicator","(None)"],["T-FL4A3## — fixed","Not set"],["T-FL4A4## — CC indicator","B"],["T-FL4A4## — fixed","Set (fixed)"]],
+steps:[
+"MM03. T-FL4A3##, <b>General Plant Data/Storage Location 1</b>, Plant: 1010.",
+"CC Physical Inventory alanını not et. Ardından T-FL4A4## için tekrarla."
+]},
+{num:"2",title:"Run ABC Analysis for Cycle Counting (MIBC)",app:"ABC Analysis for Cycle Counting (MIBC)",
+path:["ABC Analysis for Cycle Counting (MIBC)","App Finder / MIBC"],
+fields:[["── Data ──",""],
+["Plant","1010"],["All Materials Held in Stock","Selected"],["Consumption/Usage","01.01.2018 – Today"],["Display List First","Selected"]],
+steps:[
+"MIBC. Tüm alanları gir, <b>Execute</b>.",
+"<b>Goto → Counting Effort</b>: sayım çabasını gör. <b>Cancel</b>.",
+"<b>Menu → Edit → Find</b>: T-FL4A3## gir. <b>Starting at current line</b> kaldır. <b>Find</b>.",
+"CC göstergesini not et. T-FL4A4## için tekrarla."
+],
+info:"CC indicator fixed=Set olan malzemelerin CC değeri ABC analizi tarafından değiştirilemez."}
+]}
+]},
+
+{unit:9,title:"Analyses",ex:[
+{id:40,title:"Use Analytical Apps for Inventory Management",app:"SAP Fiori – Analytical Apps",
+sc:"Material Documents Overview'de görünüm oluştur ve kaydet. Slow or Non-Moving Materials ile yavaş hareket eden malzemeleri belirle. Gösterge formülünü öğren.",
+tasks:[
+{num:"1",title:"Create and Save View in Material Documents Overview",app:"Material Documents Overview",
+path:["Material Documents Overview","Warehouse Processing"],
+fields:[
+["── Filter ──",""],
+["Plant","1030"],
+["Material","*##"],
+["Document Date","Last 30 days – Today"],
+["── Settings ──",""],
+["Group (Grouping Criterion)","Material"],
+["Sort","Debit/Credit Indicator (Ascending)"],
+["Columns","Quantity, D/C Indicator, Goods Movement Type, Plant, Storage Location, Material Document, Posting Date"],
+["── Saved View ──",""],
+["View Name","Movements last 30 days in plant 1030 for Group ##"],
+["Set as Default","Selected"],
+["Apply Automatically","Selected"]
+],
+steps:[
+"<b>Material Documents Overview</b> app'ini aç.",
+"Filtreleri gir, <b>Go</b>.",
+"<b>Settings (çark ikonu)</b>: Group → Material; Sort → D/C Ascending; Columns → listedekiler.",
+"<b>OK</b>.",
+"Sol üste <b>Standard → Save As</b>. View adını gir, Default ve Apply Automatically seç. <b>Save</b>.",
+"Ana sayfaya dön."
+]},
+{num:"2",title:"Test View and Analyze Movements",app:"Material Documents Overview",
+steps:[
+"<b>Material Documents Overview</b>'ı tekrar aç — varsayılan görünümle başlar.",
+"A510-## için mal çıkışlarını bul."
+],
+result:"En az şu hareketler doğrulanmalı: 10 PC MvT 201 (GI for cost center) | 20 PC MvT 551 (Scrapping)"},
+{num:"3",title:"Identify Slow or Non-Moving Materials",app:"Slow or Non-Moving Materials",
+path:["Slow or Non-Moving Materials","Stock Monitoring"],
+fields:[["── Selection ──",""],
+["Days with Low Consumption","100"],["Reference Date","<Today>"],["Display Currency","EUR"],["Slow-Moving Indicator","0,00"],["Plant","1030"],["Storage Location","0001"]],
+steps:[
+"<b>Slow or Non-Moving Materials</b> app'ini aç.",
+"Tüm alanları gir, <b>Go</b>.",
+"Grafik çubuğunun üzerinde fareyi gezdirerek toplam stok değerini gör."
+]},
+{num:"4",title:"Learn Slow-Moving Indicator Formula",app:"Slow or Non-Moving Materials",
+fields:[
+["── Calculation Values ──",""],
+["Days with Low Consumption (filter)","Yes"],
+["Stock quantity at reference date","Yes"],
+["Total consumption quantity (analysis period)","Yes"],
+["Material type / Value / Days without posting","No"]
+],
+steps:[
+"Filter'da Slow-Moving Indicator girdisini sil. Material: *510-##, <b>Go</b>.",
+"<b>Open Help</b> butonuna bas, formülü öğren."
+],
+result:"Formül: (Toplam tüketim × 100 × 365) / (Referans tarihindeki stok × Analiz süresi gün sayısı). Analiz süresi = Days with Low Consumption + 1."}
+]},
+
+{id:41,title:"Use Analytical Transactions",app:"SAP GUI / SAP Fiori",
+sc:"Tedarikçi T-S50A## mal belgelerini listele, iptal kayıtlarını filtrele, açık SA'ları görüntüle, negatif stokları kontrol et.",
+tasks:[
+{num:"1",title:"List Material Documents by Vendor (MB51)",app:"Material Document List (MB51)",
+path:["Logistics","Materials Management","Inventory Management","Environment","List Displays","Material Documents (MB51)"],
+fields:[["Supplier","T-S50A##"]],
+steps:[
+"MB51. Supplier: T-S50A##, diğer değerleri sil. <b>Execute</b>.",
+"<b>Detail List</b> butonuna bas.",
+"<b>Qty in unit of entry</b> sütunu → <b>Add Up Values</b>.",
+"<b>Material</b> sütunu → <b>Subtotal</b>.",
+"<b>Settings → Layout → Current</b>: Sort Order'a Movement Type ekle, alt toplamlar."
+]},
+{num:"2",title:"Display Cancelled Material Documents (MBSM)",app:"Cancelled Material Documents (MBSM)",
+path:["Logistics","Materials Management","Inventory Management","Environment","List Displays","Cancelled Material Documents (MBSM)"],
+fields:[["Posting Date","<Start of this week> – <Today>"],["Movement Type filter","102"]],
+steps:[
+"MBSM. Posting Date: bu haftadan bugüne. <b>Execute</b>.",
+"<b>Movement Type</b> sütunu seç. <b>Edit → Set Filter</b>: 102."
+]},
+{num:"3",title:"Display Open POs from Stock Overview (MMBE)",app:"Stock Overview (MMBE)",
+path:["Logistics","Materials Management","Inventory Management","Environment","Stock","Stock Overview (MMBE)"],
+fields:[["Material","B510-##"],["Plant","1020"]],
+steps:[
+"MMBE. Material: B510-##, Plant: 1020. <b>Execute</b>.",
+"Plant satırında <b>Environment → Open Purchase Orders</b>."
+]},
+{num:"4",title:"Display Negative Stocks (MB52)",app:"Warehouse Stock (MB52)",
+path:["Logistics","Materials Management","Inventory Management","Environment","Stock","Warehouse Stock (MB52)"],
+fields:[["Plant","1020"],["Display Negative Stocks Only","Selected"]],
+steps:[
+"MB52. Plant: 1020. <b>Display Negative Stocks Only</b> seç. <b>Execute</b>."
+]}
+]}
+]},
+
+{unit:10,title:"Further Customizing Settings",ex:[
+{id:42,title:"Create a New Movement Type",app:"SAP GUI — Customizing / MIGO",
+sc:"MvT 201'i kopyalayarak Z## hareket tipi oluştur. Mal alıcı (WEMPF) ve hareket nedeni (GRUND) zorunlu alan yap. 1=Gift, 2=Replacement. Test et.",
+tasks:[
+{num:"1",title:"Copy Movement Type 201 to Z##",app:"SAP GUI — SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Movement Types","Copy, Change Movement Types"],
+steps:[
+"SPRO → Movement Types → <b>Copy, Change Movement Types</b>.",
+"<b>Movement Type</b> onay kutusu seç, Apply.",
+"201 satırını seç, <b>Copy As</b>.",
+"Movement Type: <b>Z##</b> gir, <b>Copy</b>.",
+"<b>Copy all</b>. Kaydet."
+]},
+{num:"2",title:"Make Goods Recipient a Required Field (WEMPF)",app:"SAP GUI — SPRO",
+steps:[
+"<b>Position</b>. Movement Type: Z##. Z## satırını seç.",
+"<b>Field selection (Enjoy)</b> klasörüne çift tıkla.",
+"WEMPF (Goods Recipient) → <b>Required Entry</b> seç.",
+"<b>New Entries</b>. Field Name: <b>GRUND</b>, MvT: Z##. Kaydet."
+]},
+{num:"3",title:"Make Reason for Movement Required (GRUND)",app:"SAP GUI — SPRO",
+steps:[
+"<b>Movement Type</b> klasörü. Z## satırı, <b>Details</b>.",
+"<b>Control Reason</b>: <b>+</b> (Required) seç.",
+"<b>Reason for Movement</b> klasörüne çift tıkla.",
+"<b>New entries</b>: Z##/1/Gift ve Z##/2/Replacement gir.",
+"Kaydet."
+]},
+{num:"4",title:"Test New Movement Type Z##",app:"MIGO",
+fields:[["── Entry ──",""],
+["Transaction","Goods Issue"],["Reference","Other"],["Movement Type","Z##"],["Material","A510-##"],["Qty","1 PC"],["Plant","1010"],["Stor.Loc","0001"],["Cost Center","4100"],["Goods Recipient (Where tab)","S4510-##"],["Reason for Movement","1 or 2"]],
+steps:[
+"MIGO. İşlem: GI, referans: Other, MvT: <b>Z##</b>, Enter.",
+"Tüm alanları gir. Item OK.",
+"<b>Check</b>: 'Enter Goods Recipient' mesajı.",
+"Where sekmesinde Goods Recipient: S4510-## gir. Tekrar <b>Check</b>: 'Reason required' mesajı.",
+"Hareket nedeni gir. <b>Post</b>."
+]}
+]},
+
+{id:43,title:"Check the Customizing Settings for Transaction MIGO",app:"SAP GUI — Customizing",
+sc:"MIGO_GR ve MIGO_GI için işlem/referans belge ayarlarını kontrol et. 'Other GR' hangi işlemde aktif?",
+tasks:[
+{num:"1",title:"Check Transaction and Reference Document Settings",app:"SAP GUI — SPRO",
+path:["SPRO","Materials Management","Inventory Management and Physical Inventory","Settings for Goods Movements (MIGO)","Settings for Transactions and Reference Documents"],
+fields:[["── MIGO_GR — Goods Receipt — Others ──",""],["Others reference document","Active (visible)"],["── MIGO_GI — Goods Receipt action ──",""],["Goods Receipt action in MIGO_GI","Not Active"]],
+steps:[
+"SPRO → Settings for Goods Movements (MIGO) → <b>Settings for Transactions and Reference Documents</b>.",
+"Transaction: <b>MIGO_GR</b> seç.",
+"Dialog Structure: <b>Transaction/event</b>'e çift tıkla.",
+"<b>Goods Receipt</b> eylemini seç.",
+"<b>Reference document</b>'e çift tıkla: <b>Others</b> aktif mi?",
+"<b>MIGO_GI</b> için d–g adımlarını tekrarla."
+],
+result:"MIGO_GR: Goods Receipt → Others görüntülenebilir. MIGO_GI: Goods Receipt eylemi aktif değildir."}
+]}
+]}
+];
+
+/* ── PATH ── */
+function path(a){
+  if(!a||!a.length)return'';
+  return'<div class="pr">'+a.map((p,i)=>
+    `<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`
+  ).join('')+'</div>';
+}
+
+/* ── TABLE — section header support ── */
+function tbl(f){
+  if(!f||!f.length)return'';
+  const rows=f.map(([a,b])=>{
+    if(a.startsWith('──'))
+      return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;
+    return`<tr><td>${a}</td><td>${b}</td></tr>`;
+  }).join('');
+  return`<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ── STEPS ── */
+function steps(s){
+  if(!s||!s.length)return'';
+  return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';
+}
+
+/* ── TASK — accordion ── */
+function task(t){
+  const body=
+    path(t.path)+
+    (t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+
+    (t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+
+    tbl(t.fields)+
+    steps(t.steps)+
+    (t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');
+  return`<div class="task">
+    <div class="thdiv" onclick="togTask(this)">
+      <span class="tn">${t.num}</span>
+      <span class="tt">${t.title}</span>
+      ${t.app?`<span class="ab">${t.app}</span>`:''}
+      <span class="task-chev">›</span>
+    </div>
+    <div class="task-body">${body}</div>
+  </div>`;
+}
+
+/* ── CARD ── */
+function card(e,uid){
+  let html=`<div class="card" id="ex${e.id}" data-u="${uid}">`;
+  html+=`<div class="ch" onclick="toggle(this)">
+    <span class="exn">${e.id}</span>
+    <div class="cl">
+      <div class="ct">${e.title}</div>
+      <div class="ca">${e.app}</div>
+    </div>
+    <div class="cr"><span class="sb">${e.tasks.length} Adım</span><span class="chev">›</span></div>
+  </div>`;
+  html+=`<div class="cb">`;
+  if(e.sc)html+=`<div class="scenario">${e.sc}</div>`;
+  e.tasks.forEach(t=>html+=task(t));
+  html+=`</div></div>`;
+  return html;
+}
+
+/* ── UNIT ── */
+function unit(u){
+  const uid=`u${u.unit}`;
+  const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',
+                5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8',10:'#fb7185'};
+  const c=colors[u.unit]||'#60a5fa';
+  let h=`<div class="ug collapsed ${uid}" id="${uid}">
+    <div class="uh" onclick="togUnit(this)">
+      <span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">Unit ${u.unit}</span>
+      <span class="utitle">${u.title}</span>
+      <span class="uc">${u.ex.length} egzersiz</span>
+      <span class="uchev">›</span>
+    </div>
+    <div class="ug-body">`;
+  u.ex.forEach(e=>h+=card(e,uid));
+  return h+'</div></div>';
+}
+
+function toggle(h){h.parentElement.classList.toggle('open');}
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+function togTask(hdr){hdr.parentElement.classList.toggle('open');}
+
+/* ── SEARCH & FILTER ── */
+const app=document.getElementById('app');
+const frow=document.getElementById('frow');
+const cnt=document.getElementById('cnt');
+const nores=document.getElementById('nores');
+const srch=document.getElementById('search');
+const clr=document.getElementById('clr');
+const xpb=document.getElementById('xpb');
+const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);
+cnt.textContent=TOTAL;
+let term='',filterU='all',allOpen=false;
+
+D.forEach(u=>{
+  app.innerHTML+=unit(u);
+  const b=document.createElement('button');
+  b.className='fb';
+  b.dataset.u=`u${u.unit}`;
+  b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;
+  frow.appendChild(b);
+});
+
+/* ARAMA HIGHLIGHT */
+function hl(t,q){
+  if(!q)return t;
+  const r=new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi');
+  return t.replace(r,'<mark>$1</mark>');
+}
+
+function run(){
+  const q=term.toLowerCase().trim();
+  let vis=0;
+  document.querySelectorAll('.ug').forEach(ug=>{
+    const uid=ug.id;
+    const uMatch=filterU==='all'||filterU===uid;
+    let uVis=false;
+    ug.querySelectorAll('.card').forEach(card=>{
+      if(!uMatch){card.classList.add('hid');return;}
+      const raw=card.querySelector('.ch').textContent+
+                card.querySelector('.cb').innerHTML;
+      const m=!q||raw.toLowerCase().includes(q);
+      if(m){card.classList.remove('hid');vis++;uVis=true;}
+      else{card.classList.add('hid');}
+    });
+    ug.classList.toggle('hid',!uVis||!uMatch);
+  });
+  cnt.textContent=vis||(!q&&filterU==='all'?TOTAL:vis);
+  nores.style.display=(vis===0&&(q||filterU!=='all'))?'block':'none';
+  clr.style.display=q?'inline':'none';
+}
+
+srch.addEventListener('input',e=>{term=e.target.value;run();});
+srch.addEventListener('keydown',e=>{if(e.key==='Escape'){term='';srch.value='';run();}});
+clr.addEventListener('click',()=>{term='';srch.value='';run();srch.focus();});
+frow.addEventListener('click',e=>{
+  const b=e.target.closest('.fb');
+  if(!b)return;
+  filterU=b.dataset.u;
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  run();
+});
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+xpb.addEventListener('click',()=>{
+  allOpen=!allOpen;
+  document.querySelectorAll('.card:not(.hid)').forEach(c=>c.classList.toggle('open',allOpen));
+  xpb.textContent=allOpen?'Tümünü Kapat':'Tümünü Aç';
+  xpb.classList.toggle('active',allOpen);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S47000 – SAP S/4HANA Service</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="u3"].on{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.4);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u5"].on{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4);}
+.fb[data-u="u6"].on{background:rgba(239,68,68,.15);color:#ef4444;border-color:rgba(239,68,68,.4);}
+.fb[data-u="u7"].on{background:rgba(251,191,36,.15);color:#fbbf24;border-color:rgba(251,191,36,.4);}
+.fb[data-u="u8"].on{background:rgba(52,211,153,.15);color:#34d399;border-color:rgba(52,211,153,.4);}
+.fb[data-u="u9"].on{background:rgba(129,140,248,.15);color:#818cf8;border-color:rgba(129,140,248,.4);}
+.fb[data-u="u10"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="u11"].on{background:rgba(251,113,133,.15);color:#fb7185;border-color:rgba(251,113,133,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+.dv{height:1px;background:var(--border);margin:13px 0;}
+b{color:var(--text);font-weight:500;}
+@media(max-width:600px){
+  #toolbar{padding:8px 14px 9px;}
+  #search-row{grid-template-columns:1fr auto;}
+  #sctr{display:none;}
+  main{padding:18px 12px 60px;}
+  header{padding:14px 16px 12px;}
+  #homebtn{top:14px;right:16px;}
+}
+.uh{cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug-body{}
+.ug.collapsed .ug-body{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <div class="meta">
+    <span class="cid">S47000 · 2506</span>
+    <h1 style="font-size:17px;font-weight:600;">SAP S/4HANA Service</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Egzersiz: <span class="n">14</span></div>
+    <div class="st">Ünite: <span class="n">10</span></div>
+    <div class="st">Süre: <span class="n">5s 45dk</span></div>
+    <div class="st">Sistem: <span class="n">T41 · S47000-##</span></div>
+  </div>
+  <button id="homebtn" onclick="location.href='index.html'">🏠 Home</button>
+</header>
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.4;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Egzersiz, app, adım ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">14</b> / 14 egzersiz</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+<script>
+const D=[
+{unit:2,title:"Exploring UI Clients for SAP S/4HANA Service",ex:[{id:1,title:"Explore UI Clients for SAP S/4HANA Service",
+  app:"SAP Fiori Launchpad / WebClient UI",
+  sc:"H2 Energy Solutions projesi için SAP Fiori Launchpad ve WebClient UI arayüzleri keşfedilir. FLP'ye giriş yapılır, Spaces/Pages düzeni ayarlanır, FLP Design bölümü oluşturulur, Launchpad Space içeriği sorgulanır ve Service Professional iş rolüne geçiş yapılır.",
+  tasks:[
+    {num:"1",title:"Log On to SAP Fiori Launchpad",app:"SAP Fiori Launchpad",
+     path:["Start (Windows Icon, bottom-left)","S4HANA T41 Fiori Launchpad"],
+     fields:[["── Logon Data ──",""],["User","S47000–##"],["Password","Welcome1"],["Language","EN"]],
+     steps:["<b>Start</b> (sol alttaki Windows simgesi) → <b>S4HANA T41 Fiori Launchpad</b> seçilir.", "Giriş bilgileri girilir → <b>Log On</b> seçilir."],
+     info:"Bu kurs boyunca <b>FLP</b>, <b>SAP Fiori Launchpad</b> kısaltması olarak kullanılmaktadır."},
+    {num:"2",title:"Switch Layout Between Spaces and Pages",app:"SAP Fiori Launchpad – Settings",
+     path:["Profile (Service S47000-##)","Settings","Spaces and Pages"],
+     fields:[["── Settings ──",""],["Use Spaces","set indicator"],["Show my Home","set indicator"]],
+     steps:["<b>Profile</b> of Service S47000-## → <b>Settings</b> seçilir.", "<b>Spaces and Pages</b> seçilir.", "<b>Use Spaces</b> ve <b>Show my Home</b> göstergelerinin işaretli olduğu doğrulanır.", "<b>Save</b> seçilir."],
+     info:"<b>Use Spaces</b> ve <b>Show my Home</b> göstergelerinin işaretli olduğundan emin olun."},
+    {num:"3",title:"Create FLP Design Section in My Home",app:"My Home – Edit Page",
+     path:["My Home","Edit Page"],
+     fields:[["── New Section ──",""],["Section Title","FLP Design"],["── Assign Apps ──",""],["App 1","Manage Launchpad Pages"],["App 2","Manage Launchpad Spaces"]],
+     steps:["<b>My Home</b> → <b>Edit Page</b> seçilir.", "Section Title: <b>FLP Design</b> → <b>Add Tile</b> seçilir.", "Solda <b>User Interface - Fiori Launchpad Design</b> kategorisine kaydırılır.", "<b>Manage Launchpad Pages</b> ve <b>Manage Launchpad Spaces</b> için <b>Add to section</b> (+ simgesi) seçilir.", "<b>Back</b> → <b>Close</b>."]},
+    {num:"4",title:"Identify Pages in Launchpad Space Service Master Data",app:"Manage Launchpad Spaces",
+     path:["My Home","Manage Launchpad Spaces"],
+     fields:[["── Search ──",""],["Search field","Z_SERV"],["── Result ──",""],["Space","Z_SERV_SP_MASTER_DATA"]],
+     steps:["FLP'de <b>My Home</b> → <b>Manage Launchpad Spaces</b> uygulaması başlatılır.", "<b>Search</b> alanına <b>Z_SERV</b> girilir → arama simgesi (büyüteç) seçilir.", "<b>Z_SERV_SP_MASTER_DATA</b> tıklanır.", "<b>Pages</b> seçilerek atanan sayfalar görüntülenir.", "<b>Navigate to Home</b>."],
+     result:"<b>Z_SERV_SP_MASTER_DATA</b>'ya atanan sayfalar: <b>Products · Technical Objects · Bill of Materials · Serial Numbers · Measuring Points · Service Contracts</b>"},
+    {num:"5",title:"Switch to WebClient UI – Service Professional Role",app:"Interaction Center (WebClient UI)",
+     path:["Supporting Processes","Interaction Center"],
+     fields:[],
+     steps:["FLP → <b>Supporting Processes</b> → <b>Interaction Center</b> seçilir.", "<b>Service Professional</b> (Launch Service Professional Business Role) seçilir.", "<b>Service S47000-##</b> → <b>Sign Out</b> ile WebClient UI'dan çıkış yapılır; sekme kapatılır."]}
+  ]
+}]},
+{unit:3,title:"Describing Organizational Levels",ex:[{id:2,title:"Verify Organizational Levels",
+  app:"Manage Organizations / Search Employees / Maintain Business Partner",
+  sc:"H2 Energy Solutions organizasyon modeli yapısı incelenir. IC Service Agent pozisyonu, çalışan-kullanıcı bağlantısı ve BP-Employee ID ilişkileri doğrulanır. Dış iş ortağı C700–C## için Sales Area görüntülenir.",
+  tasks:[
+    {num:"1",title:"Display Organizational Unit Structure – Sales & Service 1010",app:"Manage Organizations",
+     path:["Organization","Organizational Management","Manage Organizations"],
+     fields:[["── Search ──",""],["Description","Sales & Service 1010"]],
+     steps:["FLP → <b>Organization</b> → <b>Organizational Management</b> → <b>Manage Organizations</b> başlatılır.", "<b>Description</b>: <b>Sales & Service 1010</b> → <b>Search</b>.", "<b>Sales & Service 1010</b> düğümünün alt yapısı genişletilir."],
+     info:"Bu egzersizin bazı bölümleri müşteriye özgü <b>Service Professional - Launch ServiceProfessional</b> tile'ına dayanmaktadır. Alternatif olarak <b>Search Organization (SAP_BR_CUSTOMER_SERVICE_MGR)</b> tile'ını kullanabilirsiniz."},
+    {num:"2",title:"Find IC Service Agent GR## Position",app:"Manage Organizations",
+     path:["Sales & Service 1010","Interaction Center DE","1st Level Support DE"],
+     fields:[],
+     steps:["Organizasyon yapısı: <b>Sales & Service 1010</b> → <b>Interaction Center DE</b> → <b>1st Level Support DE</b> şeklinde genişletilir.", "<b>1st Level Support DE</b>'nin alt yapısı genişletilerek <b>IC Service Agent GR##</b> pozisyonu görüntülenir."],
+     info:"Genişletilmiş organizasyon birimi yapısını kapatmayın; bir sonraki görevde bu yapıya ihtiyaç duyacaksınız."},
+    {num:"Task 1.1",title:"Identify Employees Assigned to IC Service Agent GR##",app:"Manage Organizations",
+     path:[],fields:[],
+     steps:["<b>IC Service Agent GR##</b> pozisyonunun alt yapısı genişletilir."],
+     result:"Atanan çalışanlar: <b>Service S4700–##</b>, <b>S47000-##</b> ve <b>Service S4750–##</b>"},
+    {num:"Task 1.2",title:"Verify Employee Link to SAP User",app:"Manage Organizations",
+     path:[],fields:[],
+     steps:["IC Service Agent GR## yapısı içinde Service S47000-## çalışanı kontrol edilir.", "<b>Navigate to Home</b>."],
+     result:"Evet, <b>Service S47000–##</b> çalışanı, <b>SAP user Service S47000–##</b> ile ilişkilendirilmiştir."},
+    {num:"Task 1.3",title:"Display Personnel Master Data – Search Employees",app:"Search Employees",
+     path:["Organization","Organization & People","Search Employees"],
+     fields:[["── Selection Criteria ──",""],["Last Name","S47000–##"],["First Name","Service"]],
+     steps:["FLP → <b>Organization</b> → <b>Organization & People</b> → <b>Search Employees</b> başlatılır.", "Seçim kriterleri girilir → <b>Search</b>.", "Result List'te <b>Last Name</b> sütunundaki <b>S47000-##</b> linkine tıklanır."],
+     info:"Gerekirse daha önce kullanılan oturum açma bilgilerini girin."},
+    {num:"Task 1.4",title:"Display SAP User Assignment of Employee",app:"Search Employees",
+     path:[],fields:[],
+     steps:["<b>Users</b> bölümüne kaydırılır → <b>Show Users</b> seçilir.", "<b>Navigate to Home</b>."],
+     result:"Çalışan, <b>SAP User S47000–##</b> ile ilişkilendirilmiştir."},
+    {num:"Task 1.5",title:"Display Business Partner – Employee ID Link",app:"Maintain Business Partner",
+     path:["Organization","Organization & People","Maintain Business Partner"],
+     fields:[["── Search (By Name) ──",""],["Find Business Partner","By Name"],["Name 1/last Name","S47000–##"],["Name 2/First Name","Service"]],
+     steps:["FLP → <b>Organization</b> → <b>Organization & People</b> → <b>Maintain Business Partner</b> başlatılır.", "Dropdown: <b>Find Business Partner</b> → <b>By Name</b>; kriterler girilir → <b>Start</b>.", "Business Partner numarasına çift tıklanır.", "<b>Identification</b> seçilerek Employee ID görüntülenir.", "<b>Back</b> → <b>Navigate to Home</b>."]},
+    {num:"Task 2.1",title:"Display Sales Area for Business Partner C700–C##",app:"Maintain Business Partner",
+     path:["Organization","Organization & People","Maintain Business Partner"],
+     fields:[["── Search (By Number) ──",""],["Find Business Partner","By Number"],["Business Partner","C700–C##"]],
+     steps:["FLP → <b>Maintain Business Partner</b> başlatılır.", "Dropdown: <b>Find Business Partner</b> → <b>By Number</b>; <b>C700–C##</b> girilir → <b>Start</b>.", "<b>C700–C##</b>'ye çift tıklanır.", "<b>Display in BP role</b> dropdown → <b>Sold-to Party</b> → <b>Sales and Distribution</b> seçilir.", "<b>Back</b>."],
+     result:"<b>BP</b>, <b>Sales Area 1010 / 10 / 00</b>'a atanmıştır."}
+  ]
+}]},
+{unit:4,title:"Exploring Master Data",ex:[{id:3,title:"Explore Master Data",
+  app:"Display Material / Manage Prices - Sales / Find Technical Object / Create Technical Object",
+  sc:"H2 Energy Solutions enerji sistemleri servis ürün master verisi ve teknik nesne yapıları incelenir. P700_SERV_ONS görüntülenir, BOM analiz edilir, ekipman EL-2## kopyalanarak garanti atanır.",
+  tasks:[
+    {num:"Task 1.1",title:"Display Service Product P700_SERV_ONS",app:"Display Material",
+     path:["Service Master Data","Products","Display Material"],
+     fields:[["── Material ──",""],["Material","P700_SERV_ONS"],["── Org. Levels ──",""],["Plant","1040"],["Sales Org.","1010"],["Distr. Channel","10"]],
+     steps:["FLP → <b>Service Master Data</b> → <b>Products</b> → <b>Display Material</b> başlatılır.", "<b>P700_SERV_ONS</b> girilir.", "<b>Select View(s)</b> → <b>Select All</b>.", "<b>Org. Levels</b>: Plant, Sales Org., Distr. Channel girilir → <b>Continue</b>."]},
+    {num:"Task 1.2",title:"Check Item Category Group",app:"Display Material – Sales: sales org. 2",
+     path:[],fields:[["── Sales: sales org. 2 ──",""],["Item Category Group","SRVP"]],
+     steps:["<b>Sales: sales org. 2</b> sekmesi seçilir."],
+     result:"<b>Item Category Group</b>: <b>SRVP</b>"},
+    {num:"Task 1.3",title:"Check Service Profile and Response Profile",app:"Display Material – Sales: General/Plant",
+     path:[],
+     fields:[["── Sales: General/Plant ──",""],["Service Profile","5X10"],["Response Profile","STANDARD"]],
+     steps:["<b>Sales: General/Plant</b> sekmesi seçilir → <b>Service Profiles</b> bölümü görüntülenir.", "<b>Navigate to Home</b>."]},
+    {num:"Task 1.4",title:"Display Conditions for P700_SERV_ONS",app:"Manage Prices - Sales",
+     path:["Service Master Data","Products","Manage Prices - Sales"],
+     fields:[["── Selection ──",""],["Condition Type","PPR0"],["Product","P700_SERV_ONS"]],
+     steps:["FLP → <b>Service Master Data</b> → <b>Products</b> → <b>Manage Prices - Sales</b> başlatılır.", "Condition Type ve Product girilir → <b>Go</b>.", "<b>Navigate to Home Page</b>."]},
+    {num:"Task 1.5",title:"Optional: Display Configurable Material SRV_CONTR_CONF",app:"Display Material",
+     path:["Service Master Data","Products","Display Material"],
+     fields:[["── Org. Levels ──",""],["Plant","1040"],["Sales Org.","1010"],["Distr. Channel","10"],["── View ──",""],["View","Classification"]],
+     steps:["FLP → <b>Service Master Data</b> → <b>Products</b> → <b>Display Material</b> başlatılır.", "<b>SRV_CONTR_CONF</b> material master'ı görüntülenir; Plant, Sales Org., Distr. Channel girilir.", "<b>Classification</b> view'i görüntülenir."]},
+    {num:"Task 1.6",title:"Optional: Display Product Price for SRV_CONTR_CONF",app:"Manage Prices - Sales",
+     path:["Service Master Data","Products","Manage Prices - Sales"],
+     fields:[["── Selection ──",""],["Condition Type","VASE"],["Product","SRV_CONTR_CONF"]],
+     steps:["FLP → <b>Manage Prices - Sales</b> başlatılır.", "Condition type <b>VASE</b> ve product <b>SRV_CONTR_CONF</b> girilir → <b>Go</b>.", "<b>Settings</b>: sütunlar ayarlanır; <b>Variant Key</b> ve <b>Condition Amount</b> sola yerleştirilir."]},
+    {num:"Task 2.1",title:"Display Functional Location Structure – H2POWC##",app:"Find Technical Object",
+     path:["Service Master Data","Technical Objects","Find Technical Object"],
+     fields:[["── Selection ──",""],["Technical Object Type","Functional Location"],["Technical Object","H2POWC##"]],
+     steps:["FLP → <b>Service Master Data</b> → <b>Technical Objects</b> → <b>Find Technical Object</b> başlatılır.", "Seçim kriterleri girilir → <b>Go</b>.", "<b>H2POWC##</b> hyperlink'i seçilir → <b>Asset Viewer</b>."]},
+    {num:"Task 2.2",title:"Find Maintenance Plant for H2POWC##–PROD",app:"Asset Viewer",
+     path:[],fields:[],
+     steps:["Sol tarafta <b>H2POWC##–PROD</b> seçilir."],
+     result:"<b>Maintenance Plant</b>: <b>1040</b>"},
+    {num:"Task 2.3",title:"Find Construction Type for Equipment EL-1##",app:"Asset Viewer",
+     path:[],fields:[],
+     steps:["<b>H2POWC##–PROD</b>'nun solundaki <b>Expand Node</b> seçilir.", "Sol tarafta <b>EL-1##</b> seçilir."],
+     result:"<b>Construction Type</b>: <b>P700-EL-100</b>"},
+    {num:"Task 2.4",title:"Check Warranty on Equipment EL-1##",app:"Asset Viewer",
+     path:[],fields:[],
+     steps:["<b>Technical Object Options</b> → <b>Display Technical Object</b>.", "<b>General Data</b> → <b>Customer Warranty</b> bölümüne kaydırılır; Master Warranty ve Warranty Start görüntülenir.", "<b>You can also</b> → <b>Display Technical Object in Asset Viewer</b>."]},
+    {num:"Task 2.5",title:"Display Material BOM for Equipment EL-1##",app:"Asset Viewer",
+     path:[],fields:[],
+     steps:["<b>EL-1##</b>'nin solundaki <b>Expand Node</b> seçilir.", "Sol tarafta <b>P700–EL-100</b> seçilir.", "Sağ tabloda <b>P700–EL-100/1040/4/1</b> Object ID sütununda <b>Expand Node</b> seçilir."]},
+    {num:"Task 2.6",title:"Identify Stock/Non-Stock Materials from BOM",app:"Asset Viewer",
+     path:[],fields:[],steps:[],
+     result:"System cooling → <b>P700–SC-100</b> (stoklı malzeme / L) | Ion Exchanger → <b>P700–IE-100</b> (stoksız malzeme / N)",
+     info:"<b>Object ID</b> sütununa göre: N = stoksuz malzeme; L = stoklu malzeme."},
+    {num:"Task 3.1",title:"Create Equipment EL-2## by Copying EL-100",app:"Create Technical Object",
+     path:["Service Master Data","Technical Objects","Create Technical Object"],
+     fields:[["── Technical Object ──",""],["Technical Object Type","Equipment"],["Technical Object","EL-2##"],["Technical Object Category","E"],["Copy with Reference to Equipment","EL-1##"]],
+     steps:["FLP → <b>Service Master Data</b> → <b>Technical Objects</b> → <b>Create Technical Object</b> başlatılır.", "Dropdown: <b>Technical Object Type Equipment</b>.", "Technical Object <b>EL-2##</b>, Category <b>E</b>, <b>Copy with Reference to Equipment EL-1##</b> → <b>Continue</b>.", "Popup: <b>Select All</b> → <b>OK</b> → <b>Save</b>."]},
+    {num:"Task 3.2",title:"Assign Customer Master Warranty 1 to EL-2##",app:"Create Technical Object – General Data",
+     path:[],
+     fields:[["── Customer Warranty ──",""],["Master Warranty","1"],["Warranty Start","First day of current month (e.g., 01.07.2024)"]],
+     steps:["<b>General Data</b> view'inde <b>Customer Warranty</b> alanına <b>Master Warranty 1</b> ve bugünün tarihi atanır.", "<b>Save</b>."],
+     info:"Üst <b>Technical Object H2POWC##-PROD</b>'u görüntülemek için <b>Structure</b> seçeneğini tıklayın."}
+  ]
+}]},
+{unit:5,title:"Working with the Interaction Center",ex:[{id:4,title:"Work with the Interaction Center",
+  app:"Interaction Center",
+  sc:"Müşteri North Sea Energy – H2 Power, enerji sistemi sorunu için H2 Energy Solutions hattını arar. IC Agent hesabı ve ekipmanı onaylar, Service Request oluşturur, Knowledge Article arar, talebi 2. seviyeye yönlendirir ve Completed olarak kapatır.",
+  tasks:[
+    {num:"1",title:"Identify Account and Equipment",app:"Interaction Center",
+     path:["Supporting Processes","Interaction Center"],
+     fields:[["── Account Search ──",""],["Account field","*H2*"],["── Confirm ──",""],["Account ID","C700–C##"],["Equipment","EL-1##"]],
+     steps:["FLP → <b>Supporting Processes</b> → <b>Interaction Center</b> başlatılır.", "<b>Account</b> alanına <b>*H2*</b> → <b>Search Account</b>.", "Result List'te C700–C## için <b>Confirm</b> seçilir.", "<b>Equipment</b> → <b>Search</b> → <b>EL-1##</b> için <b>Confirm</b>."],
+     info:"Bu egzersiz, müşteriye özgü <b>Interaction Center - Launch Service IC Agent</b> tile'ına dayanmaktadır. Şu an itibarıyla <b>SAP Fiori Apps Reference Library</b>'de <b>Interaction Center</b> için standart bir uygulama bulunmamaktadır."},
+    {num:"2",title:"Create Service Request",app:"Interaction Center – Service Request",
+     path:[],
+     fields:[["── Service Request ──",""],["Service Employee Group","ICNT_1SUP-DE"],["Description","Reduced H2 output"],["Reporter (Person)","Michael Fischer ##"],["Impact","High"],["Urgency","High"],["Subject: Category 1","Complaint"],["Subject: Category 2","Product"],["Notes","H2 output is reduced to 70%"]],
+     steps:["<b>Service Request</b> seçilir → popup: <b>ICNT_1SUP_DE</b> (1st level support).", "Sonraki popup: <b>Michael Fischer 01</b> (default Reporter).", "<b>Description</b>: Reduced H2 output; <b>Impact</b> ve <b>Urgency</b>: <b>High</b>.", "<b>Subject</b> alanı, Category 1: <b>Complaint</b> atanır.", "<b>Notes</b> → <b>New</b> → <b>H2 output is reduced to 70%</b>.", "<b>Back</b> → <b>Save</b>."]},
+    {num:"3",title:"Search for Solution – Knowledge Article Search",app:"Interaction Center – Knowledge Article Search",
+     path:[],fields:[],
+     steps:["Navigasyon alanında <b>Knowledge Article Search</b> seçilir.", "Uygun Knowledge Article mevcutsa görüntülenir."],
+     info:"Sistemde e-posta entegrasyonu kurulduysa yardım masası temsilcisi, müşteriye bir <b>Knowledge Article</b> gönderebilir."},
+    {num:"4",title:"Dispatch Service Request and End Call",app:"Interaction Center – Edit Service Request",
+     path:[],
+     fields:[["── Dispatch ──",""],["Service Team","ICNT_2SUP_DE"],["Employee Responsible","Ms. Service Support (Employee ID: 9980000460)"],["── Status Flow ──",""],["Status 1","In Process"],["Status 2","Solution Provided"],["Status 3","Completed"]],
+     steps:["Oluşturulan Service Request'in <b>Object ID</b> seçilir → <b>Edit</b>.", "<b>Service Team</b> → <b>ICNT_2SUP_DE</b> olarak değiştirilir.", "<b>Employee Responsible</b> arama alanı kullanılır → Last Name: <b>Support</b> → <b>Employee ID 9980000460</b> (Ms. Service Support) atanır.", "<b>Status</b> → <b>In Process</b> → <b>Save</b>.", "2. seviye çözüm için: <b>Edit</b> → <b>Notes</b> → <b>New</b> → örn. 'Remote check and update of system settings'.", "<b>Back</b> → <b>Status</b> → <b>Solution Provided</b>.", "Müşteri kabulünden sonra <b>Status</b> → <b>Completed</b> → <b>Save</b>.", "WebClient UI'dan çıkış yapılır."]}
+  ]
+}]},
+{unit:6,title:"Working with Service Order Management",ex:[{id:5,title:"Work with Service Order Management: Internal Service Processing",
+  app:"Manage Service Requests / Manage Service Quotations / Manage Service Orders / Release for Billing / Create Billing Documents",
+  sc:"Müşteri North Sea Energy – H2 Power sistem arızasını bildirir. Service Request → Service Order Quotation → Service Order → Goods Issue → Service Confirmation → Billing akışı eksiksiz işlenir.",
+  tasks:[
+    {num:"1",title:"Create Service Request – Defective Equipment",app:"Manage Service Requests",
+     path:["Service Order Management","Requests & Quotations","Manage Service Requests"],
+     fields:[["── Service Request ──",""],["Description","System cooling partially failed (GR##)"],["Customer","C700–C##"],["Service Employee Group","ICNT_1SUP-DE"],["Reporter (Person)","Michael Fischer ##"],["── Details ──",""],["Impact","High"],["Urgency","High"],["Category 1","Complaint"],["Category 2","Product"],["── Reference Objects ──",""],["Equipment ID","EL-1##"],["── Notes ──",""],["Notes","Temperature rise: 30 K"]],
+     steps:["FLP → <b>Service Order Management</b> → <b>Requests & Quotations</b> → <b>Manage Service Requests</b>.", "<b>Create</b> → Description: <b>System cooling partially failed (GR##)</b>.", "Customer <b>C700–C##</b> → Enter → popup: <b>ICNT_1SUP-DE</b>.", "Sonraki popup: <b>Michael Fischer ##</b>.", "Impact: <b>High</b>, Urgency: <b>High</b>, Category 1: <b>Complaint</b>.", "<b>Reference Objects</b>'e kaydır → <b>Equipment EL-1##</b>.", "<b>Notes</b> → <b>New</b> → <b>Temperature rise: 30 K</b>.", "<b>Back</b> → <b>Save</b> → <b>Navigate to Home</b>."]},
+    {num:"2",title:"Optional: Create Service Request – Installing New Equipment",app:"Manage Service Requests",
+     path:["Service Order Management","Requests & Quotations","Manage Service Requests"],
+     fields:[["── Service Request ──",""],["Description","Install Electrolyzer (GR##)"],["Customer","C700–C##"],["Service Employee Group","ICNT_1SUP-DE"],["Reporter (Person)","Michael Fischer ##"],["── Details ──",""],["Impact","Medium"],["Urgency","High"],["Category 1","Request"],["Category 2","Information"],["── Reference Objects ──",""],["Equipment","EL-2##"],["── Notes ──",""],["Notes","Install EL-2##"]],
+     steps:["FLP → <b>Manage Service Requests</b> → <b>Create</b>.", "Description: <b>Install Electrolyzer (GR##)</b>.", "Customer <b>C700–C##</b> → Enter → popup: <b>ICNT_1SUP-DE</b>.", "Reporter popup: <b>Michael Fischer GR##</b>.", "Impact: <b>Medium</b>, Urgency: <b>High</b>, Category 1: <b>Request</b>.", "<b>Reference Objects</b>: <b>Equipment EL-2##</b>.", "<b>Notes</b> → <b>New</b> → <b>Install EL-2##</b>.", "<b>Back</b> → <b>Save</b> → <b>Navigate to Home</b>."]},
+    {num:"3",title:"Create Service Order Quotation – Defective Equipment",app:"Manage Service Requests / Manage Service Quotations",
+     path:["Service Order Management","Requests & Quotations"],
+     fields:[["── Dates ──",""],["Quotation Valid From","Today's date (e.g., 01.07.20XX)"],["Quotation Valid To","Today's date +14 (e.g., 15.07.20XX)"],["── Items ──",""],["Product ID 1","P700_SERV_ONS – 3 HR – Service Item"],["Product ID 2","P700-SC-100 – 1 PC – Service Spare Item – Higher-Level: 10"],["Product ID 3","P700-OS-100 – 1 PC – Service Spare Item – Higher-Level: 10"]],
+     steps:["<b>Manage Service Requests</b> → Posting Date: <b>This Week</b> → <b>Search</b>.", "<b>System cooling partially failed (GR##)</b> işaretlenir → <b>Create Follow-Up</b> → <b>Service Order/Quot. – Order Quotation</b>.", "Tarihler ayarlanır. Otomatik eklenen ürün varsa silinir.", "Items listesine 3 ürün girilir → <b>Save</b>.", "<b>Back</b> → <b>Manage Service Quotations</b>: Posting Date: This Week, Lifecycle Status: Open → <b>Search</b>.", "Quotation linki seçilir → Items: <b>Edit List</b> → <b>Release All Items</b> → <b>Save</b>.", "<b>Accept</b> → tüm item'lar Completed olur; Processing Data: 'All items accepted'.", "<b>Transaction History</b>: Service Order otomatik oluştuğu görülür.", "<b>Navigate to Home</b>."],
+     info:"Bir ürün <b>Service Order Quotation</b>'a otomatik olarak atandıysa silin. Kayıt sonrasında kalem durumu, müşteri tarafından henüz kabul edilmediği için <b>Open</b> olarak kalır."},
+    {num:"4",title:"Optional: Create Solution Quotation – Installing Equipment",app:"Manage Service Requests / Manage Service Quotations",
+     path:["Service Order Management","Requests & Quotations"],
+     fields:[["── Dates ──",""],["Solution Quotation Valid From","Today's date"],["Solution Quotation Valid To","Today's date +14 days"],["── Item ──",""],["Product ID","P700_INST_BUNDLE – 1 AU"],["Service Products line","P700_SERV_ONS – 1 HR (dropdown)"]],
+     steps:["<b>Manage Service Requests</b> → Posting Date: This Week → <b>Search</b>.", "<b>Install Electrolyzer (GR##)</b> işaretlenir → <b>Create Follow-Up</b> → <b>Service Order/Quot. – Solution Quotation</b>.", "Items: <b>P700_INST_BUNDLE</b>, Qty: 1 AU → Enter.", "Service Products satırında <b>Select Product</b> dropdown → <b>P700_SERV_ONS</b>, Qty: 1 HR.", "<b>Save</b> → <b>Navigate to Home</b>."],
+     info:"<b>Solution Quotation</b>'ın sonraki işlem adımları bu egzersizde açıklanmamaktadır."},
+    {num:"5",title:"Plan a Service Order",app:"Manage Service Orders",
+     path:["Service Order Management","Service Orders & Confirmations","Manage Service Orders"],
+     fields:[["── Selection ──",""],["Posting Date (Time Frame)","This week"],["Life Cycle Status","Open"],["── Items ──",""],["P700_SERV_ONS","3 HR – Service Item"],["P700-SC-100","1 PC – Service Part – Higher-Level: 10"],["P700-OS-100","1 PC – Service Part Man.GI – Higher-Level: 10"],["── Parties Involved ──",""],["Service Employee Group","SRV_TECH_DE"],["Employee Responsible","Mr. Technician S4700–##"]],
+     steps:["<b>Manage Service Orders</b> → Posting Date: This Week, Status: Open → <b>Search</b>.", "<b>System cooling partially failed (GR##)</b> Service Order ID seçilir; Items kontrol edilir.", "P700-OS-100 için Item Category → <b>Service Part Man.GI</b> doğrulanır.", "<b>Parties Involved</b> alanının görünür olduğu kontrol edilir. Gerekirse <b>More</b> → <b>Personalize</b> → Parties Involved & Display Expanded.", "<b>Edit</b> → Service Employee Group: <b>SRV_TECH_DE</b>, Employee: <b>Mr. Technician S4700–##</b>.", "Header status: <b>Released</b> → <b>Save</b>.", "<b>Transaction History</b>: Material Reservations görüntülenir. P700-OS-100 rezervasyon numarası not edilir.", "<b>Planned Cost and Revenue</b> görüntülenir.", "<b>Navigate to Home</b>."],
+     warn:"<b>Item Category</b> olarak <b>Service Part Man.GI</b>'yi atayın; bu sayede <b>Stock Reservation</b> ve <b>Manual Goods Issue</b> tetiklenir.",
+     info:"<b>Technician S4700-##</b> çalışanı müsait değilse, çalışan atamasını olduğu gibi bırakın. Alternatif olarak <b>Item Category Service (FixedPrice)</b> kullanılabilir; bu durumda faturalama için <b>Service Confirmation</b> verisi yerine <b>Service Order</b> planlama verisi kullanılır."},
+    {num:"6",title:"Post Manual Goods Issue for P700-OS-100",app:"Post Goods Movement",
+     path:["Supporting Processes","Procurement","Post Goods Movement"],
+     fields:[["── Goods Issue ──",""],["Executable Action","Goods Issue"],["Reference Document","Reservation"],["Material Reservation","(P700-OS-100 reservation number, noted from step 5)"]],
+     steps:["FLP → <b>Supporting Processes</b> → <b>Procurement</b> → <b>Post Goods Movement</b>.", "<b>Executable Action</b>: Goods Issue; <b>Reference Document</b>: Reservation.", "P700-OS-100 Reservation numarası atanır.", "<b>Reservation</b> seçilir → <b>Final Issue</b> işaretlenir.", "<b>Item OK</b> → <b>Post</b>.", "<b>Navigate to Home</b>."]},
+    {num:"7",title:"Create Service Confirmation",app:"Manage Service Orders – Create Follow-Up",
+     path:["Service Order Management","Service Orders & Confirmations","Manage Service Orders"],
+     fields:[["── Selection ──",""],["Posting Date (Time Frame)","This week"],["Life Cycle Status","Released"],["── Confirmation ──",""],["Exec. Service Employee","Technician S4700-##"],["Final Service Confirmation","set flag"],["Status","Completed"]],
+     steps:["<b>Manage Service Orders</b> → Posting Date: This Week, Status: Released → <b>Search</b>.", "<b>System cooling partially failed (GR##)</b> Service Order ID → <b>Create Follow-Up</b> → <b>Service Confirmation – Confirmation</b>.", "Popup: <b>Select All</b> → <b>Choose</b>.", "<b>Parties Involved</b>: Exec. Service Employee → <b>Technician S4700-##</b>.", "<b>Service Confirmation Details</b>: <b>Final Service Confirmation</b> flag; Processing Data Status → <b>Completed</b>.", "<b>Save</b> → <b>Transaction History</b>: Service Order Status → <b>Completed</b> doğrulanır.", "<b>Navigate to Home</b>."]},
+    {num:"8",title:"Bill a Service",app:"Release for Billing / Create Billing Documents",
+     path:["Service Order Management","Service Orders & Confirmations","Release for Billing"],
+     fields:[["── Release for Billing ──",""],["Selection criterion","Created By"],["Created By","S47000-##"],["── Create Billing Documents ──",""],["Sold-To Party","C700-C##"],["Billing Date To","Today's date (e.g., 01.09.20XX)"]],
+     steps:["FLP → <b>Service Order Management</b> → <b>Service Orders & Confirmations</b> → <b>Release for Billing</b>.", "Dropdown: <b>Created By</b> → <b>S47000-##</b> → <b>Search</b>.", "<b>Select All</b> → <b>Release for Billing</b> → <b>Navigate to Home</b>.", "FLP → <b>Supporting Processes</b> → <b>Service Billing</b> → <b>Create Billing Documents</b>.", "Sold-To Party ve Billing Date girilir → <b>Go</b>.", "Billing Document Request işaretlenir → <b>Create Billing Documents</b> → <b>Save</b>.", "<b>Post Billing Document</b>.", "<b>Process Flow</b>: Service Confirmation ve Invoice görüntülenir.", "<b>Navigate to Home</b>."]}
+  ]
+}]},
+{unit:7,title:"Working with Additional Service Processes",ex:[
+{id:6,title:"Work with Service Order Management: External Service Processing",
+ app:"Manage Service Orders / Create Purchase Order – Advanced / Manage Service Entry Sheets – Lean Services / Create Supplier Invoice",
+ sc:"H2 Energy Solutions harici iş gücü kullanır. Service Order → Purchase Requisition (otomatik) → Purchase Order → Service Entry Sheet → Supplier Invoice akışı işlenir.",
+ tasks:[
+  {num:"1",title:"Create Service Order and Plan External Services",app:"Manage Service Orders",
+   path:["Service Order Management","Service Orders & Confirmations","Manage Service Orders"],
+   fields:[["── Service Order Header ──",""],["Transaction Type","SRVO – Service Order"],["Description","Check Electrolyzer — Ext Serv (GR##)"],["Sold-To Party","C700–C##"],["Service Employee Group","SRV_BO_DE"],["Equipment ID","EL-1##"],["── Item ──",""],["Product ID","P700_SERV_ONS"],["Quantity","5"],["Unit","HR"],["Item Category","Third Pty PurReq (C)"],["── Manual Price ──",""],["Price Element","PMP0 (Manual Price)"],["Price","55 EUR per Price Unit"]],
+   steps:["FLP → <b>Service Order Management</b> → <b>Service Orders & Confirmations</b> → <b>Manage Service Orders</b>.", "<b>Create</b> → <b>SRVO — Service Order</b>; header verileri girilir.", "Item verileri girilir: P700_SERV_ONS, 5 HR, Third Pty PurReq (C).", "Items altında <b>Edit</b> → <b>Price Details</b> → <b>Add</b> → <b>PMP0</b> seçilir.", "Yeni satıra Price: <b>55 EUR</b> → <b>Apply</b>.", "Status: <b>Released</b> → <b>Save</b>.", "<b>Transaction History</b>: Purchase Requisition görüntülenir.", "<b>Navigate to Home</b>."],
+   info:"Harici hizmet için <b>Purchase Requisition</b>, sipariş onaylandığında otomatik olarak oluşturulur."},
+  {num:"2",title:"Create Purchase Order from Purchase Requisition",app:"Create Purchase Order – Advanced",
+   path:["Supporting Processes","Procurement","Create Purchase Order – Advanced"],
+   fields:[],
+   steps:["FLP → <b>Supporting Processes</b> → <b>Procurement</b> → <b>Create Purchase Order – Advanced</b>.", "<b>Document Overview On</b> → sol dropdown: <b>My purchase requisitions</b>.", "Purchase Requisition işaretlenir → <b>Adopt</b>.", "<b>Save</b> → <b>Navigate to Home</b>.", "<b>Manage Service Orders</b>: Service Order bulunur → <b>Transaction History</b>'de Purchase Order görüntülenir.", "<b>Navigate to Home</b>."],
+   info:"Varsayılan brüt fiyat olan 90 EUR'yu görüntülemek için <b>Conditions</b>'ı seçin. <b>Service Order</b>'ın PO kalemine atanması, <b>Change Purchase Order Advanced</b> ekranında <b>Account Assignment</b> altında görüntülenebilir."},
+  {num:"3",title:"Create Service Entry Sheet",app:"Manage Service Entry Sheets – Lean Services",
+   path:["Supporting Processes","Procurement","Manage Service Entry Sheets – Lean Services"],
+   fields:[["── Header ──",""],["Name of Service Entry Sheet","External Service GR##"],["Reference Purchase Order","45XXXXXXXX (previously created PO number)"],["── Item ──",""],["Performance Period","Today's date"],["Stated Quantity","5 (HR)"]],
+   steps:["FLP → <b>Supporting Processes</b> → <b>Procurement</b> → <b>Manage Service Entry Sheets – Lean Services</b>.", "<b>Create</b>: Name ve Reference Purchase Order girilir → <b>Create</b>.", "Items: <b>Add</b> → <b>Item from Purchase Order</b> → PO Item işaretlenir → <b>Add</b>.", "Item: Performance Period (bugün) ve Stated Quantity 5 HR → <b>Apply</b>.", "<b>Create</b> → <b>Send for Approval</b>.", "<b>Process Flow</b> ve <b>Approval Details</b> görüntülenir.", "<b>Manage Service Orders</b>: Service Order → <b>Transaction History</b>'de Service Entry Sheet görüntülenir.", "<b>Navigate to Home</b>."],
+   warn:"Fiyat uyarlamasına ilişkin bir uyarı görüntülenebilir. PO kalemi atamada sorun yaşarsanız, uygulamayı yenilemek için <b>F5</b> tuşunu kullanın."},
+  {num:"4",title:"Create Supplier Invoice",app:"Create Supplier Invoice",
+   path:["Supporting Processes","Procurement","Create Supplier Invoice"],
+   fields:[["── Basic Data ──",""],["Invoice Date","Today's date"],["Invoicing Party","10300001"],["Company Code","1010"],["── Purchasing Document References ──",""],["Purchase Order / Scheduling Agreement","45XXXXXXXX (previously created PO number)"]],
+   steps:["FLP → <b>Supporting Processes</b> → <b>Procurement</b> → <b>Create Supplier Invoice</b>.", "Basic Data girilir.", "Purchasing Document References: PO numarası atanır.", "En üste kaydırılır → Balance doğrulanır (örn. 495.00 EUR).", "Gross Invoice Amount girilir (örn. +495.00) → <b>Check</b> → Balance sıfır olmalı.", "<b>Simulate</b> → <b>Post</b> → <b>Navigate to Home</b>."]}
+]},
+{id:7,title:"Explore Service with Advanced Execution",
+ app:"Manage Service Orders (Advanced Exec.) / Change Maintenance Order / Post Goods Movement / Overall Completion Confirmation (IW42) / Create Resource-Related Billing Request (DP92) / Create Billing Documents",
+ sc:"Service with Advanced Execution keşfedilir. MSO1 tipi Service Order oluşturulur, Maintenance Order otomatik üretilir, malzeme ve zaman teyitleri yapılır, kaynak tabanlı faturalama gerçekleştirilir.",
+ tasks:[
+  {num:"1",title:"Create Service Order with Advanced Execution (MSO1)",app:"Manage Service Orders",
+   path:["Service with Advanced Execution","Orders & Confirmations","Manage Service Orders"],
+   fields:[["── Header ──",""],["Transaction Type","MSO1"],["Description","Service Adv. Exec. GR## - Electrolyzer"],["Sold-To Party","C700-C##"],["Technical Object (Equipment ID)","EL-1##"],["Service Employee Group","SRV_PMSV_DE"]],
+   steps:["FLP → <b>Service with Advanced Execution</b> → <b>Orders & Confirmations</b> → <b>Manage Service Orders</b>.", "<b>Create</b> → Transaction Type <b>MSO1</b>; Description, Sold-To Party <b>C700-C##</b>, Equipment <b>EL-1##</b> girilir → Enter.", "Service Employee Group: <b>SRV_PMSV_DE</b> seçilir."]},
+  {num:"2",title:"Maintain Execution Order Item Data",app:"Manage Service Orders – Items",
+   path:[],
+   fields:[["── Item ──",""],["Product ID","P700_MAINT_SERV_01"],["Quantity","1"]],
+   steps:["<b>Items</b> seçilir.", "<b>Product ID</b>: P700_MAINT_SERV_01, <b>Quantity</b>: 1 atanır."]},
+  {num:"3",title:"Check Billing Data",app:"Item Edit – Billing",
+   path:[],
+   fields:[["── Billing ──",""],["Bill. Relevance","Itemized Billing"],["DIP Profile","YCS00001"]],
+   steps:["Actions sütununda <b>Edit</b> seçilir.", "<b>Billing</b>: veriler görüntülenir, gerekirse değiştirilir.", "<b>Apply</b>."]},
+  {num:"4",title:"Release Service Order and Display Maintenance Order",app:"Manage Service Orders",
+   path:[],fields:[],
+   steps:["<b>Service Order Details</b>: Status → <b>Released</b> → <b>Save</b>.", "<b>Items</b> → <b>Item No. 10</b> → <b>Maintenance Order</b>.", "<b>Maintenance Order Details</b>: maintenance order ID seçilir.", "<b>Costs</b>: iç işçilik maliyetleri görüntülenir.", "<b>Back</b> ile Service Order'a dönülür."]},
+  {num:"5",title:"Display Costs via Service Order with Advanced Execution",app:"Manage Service Orders",
+   path:[],fields:[],
+   steps:["<b>Planned Cost and Revenue</b> seçilir.", "<b>Navigate to Home</b>."],
+   info:"Maliyetler yalnızca <b>Service Order</b>'ın <b>Advanced Execution</b> ile onaylanmasından sonra görüntülenir. Gelirler ise yalnızca kaynak tabanlı faturalamadan sonra görünür hale gelir. Önceden görüntülenen bakım siparişi maliyetleri <b>Ongoing Planned Cost</b> olarak görünür."},
+  {num:"6",title:"Release Maintenance Order",app:"Change Maintenance Order",
+   path:["Service with Advanced Execution","Orders & Confirmations","Change Maintenance Order"],
+   fields:[["── Maintenance Order ──",""],["Order Number","(previously generated MO number)"]],
+   steps:["FLP → <b>Service with Advanced Execution</b> → <b>Orders & Confirmations</b> → <b>Change Maintenance Order</b>.", "Maintenance Order numarası girilir → Enter.", "<b>Release</b> → <b>Save</b> → <b>Navigate to Home</b>."]},
+  {num:"7",title:"Book Goods Issue to Maintenance Order",app:"Post Goods Movement",
+   path:["Supporting Processes","Procurement","Post Goods Movement"],
+   fields:[["── Goods Issue / Other ──",""],["Material","P700-HB-100"],["Quantity","1"],["Unit of entry","PC"],["Movement Type","261"],["Plant","1040"],["Storage Location","101A"],["Order","4000XXX (maintenance order number)"],["Item OK","X (set indicator)"]],
+   steps:["FLP → <b>Supporting Processes</b> → <b>Procurement</b> → <b>Post Goods Movement</b>.", "Üst satır dropdown: <b>Goods Issue</b> ve <b>Other</b> seçilir.", "<b>Open detail data</b> → veriler girilir.", "<b>Post</b> → <b>Navigate to Home</b>."],
+   info:"Alternatif olarak <b>SAP GUI</b> işlem kodu <b>MIGO</b>'yu kullanabilirsiniz."},
+  {num:"8",title:"Book Time Confirmations to Maintenance Order",app:"Overall Completion Confirmation (IW42)",
+   path:["Service with Advanced Execution","Orders & Confirmations","Overall Completion Confirmation (IW42)"],
+   fields:[["── Confirmation ──",""],["Maintenance Order Number","(previously created MO number)"],["Final Conf.","Set for every Maintenance Order operation"]],
+   steps:["FLP → <b>Service with Advanced Execution</b> → <b>Orders & Confirmations</b> → <b>Overall Completion Confirmation (IW42)</b>.", "MO numarası girilir → Enter → popup onaylanır.", "<b>Time confirmation</b>: her operasyon için <b>Final Conf.</b> işaretlenir → <b>Save</b>.", "<b>Navigate to Home</b>."],
+   info:"Alternatif olarak <b>SAP GUI</b> işlem kodlarından <b>IW48</b> veya <b>IW42</b>'yi kullanabilirsiniz."},
+  {num:"9",title:"Create Resource-Related Billing Request (DP92)",app:"Create Resource-Related Billing Request - Service Order (DP92)",
+   path:["Service with Advanced Execution","Resource-Related Billing","Create Resource-Related Billing Request - Service Order (DP92)"],
+   fields:[["── Selection ──",""],["Service Order","8000000XXX (Service Order with Execution Order Item)"],["ServiceOrder Item","10"],["── Sales Tab ──",""],["Billing Block","(blank — scroll to bottom of dropdown)"],["Order Reason","Good service"]],
+   steps:["FLP → <b>Service with Advanced Execution</b> → <b>Resource-Related Billing</b> → <b>Create Resource-Related Billing Request - Service Order (DP92)</b>.", "Service Order numarası ve Item <b>10</b> girilir → Enter.", "<b>Billing request</b> → popup: <b>Create billing request</b> onaylanır.", "<b>Sales</b> sekmesi → yukarı kaydır.", "<b>Billing Block</b>: blank (dropdown'da en alta kaydır) → <b>Order Reason</b>: <b>Good service</b>.", "<b>Save</b> → <b>Navigate to Home</b>."],
+   info:"Kalem listesi: <b>P700_MAINT_SERV_01</b> = orijinal net değer (yalnızca istatistiksel); <b>P700-HB-100 / SM_REPAIR_01</b> = kaynakla ilişkili kalemler (faturalama açısından geçerli). <b>Expenses</b> ve <b>Sales Price</b> görünümleri arasında geçiş yapabilirsiniz."},
+  {num:"10",title:"Create Invoice",app:"Create Billing Documents",
+   path:["Supporting Processes","Service Billing","Create Billing Documents"],
+   fields:[["── Selection ──",""],["Sold-to Party","C700-C## (delete entry)"],["Billing Date","Today"]],
+   steps:["FLP → <b>Supporting Processes</b> → <b>Service Billing</b> → <b>Create Billing Documents</b>.", "Veriler girilir → <b>Go</b>.", "Debit Memo Request işaretlenir → <b>Create Billing Documents</b>.", "Items'a kaydır → Net Values görüntülenir → <b>Save</b>.", "<b>Post Billing Documents</b> → Journal Entry oluşturulur.", "<b>Navigate to Home</b>."]}
+]},
+{id:8,title:"Optional: Explore the Integration to Sales",
+ app:"Sales Professional / Search Leads / Manage Opportunities",
+ sc:"SAP S/4HANA Service – Sales entegrasyonu değerlendirilir. Task → Lead → Opportunity → Sales Quotation → Sales Order akışı Sales Professional uygulaması üzerinden işlenir.",
+ tasks:[
+  {num:"1",title:"Create a Task",app:"Sales Professional",
+   path:["Supporting Processes","Interaction Center","Sales Professional"],
+   fields:[["── Task ──",""],["Account","C700-C00"],["Contact","Michael Fischer"],["Employee Responsible","Ms. Marketing S4700–00"],["Description","Call customer: Asset optimization GR##"],["Due Date","Friday in two week's time"],["Start Date","Today's date"],["── Organizational Data ──",""],["Sales Organizational Unit","SD_ORG_DE"],["Distribution Channel","10"],["Division","00"]],
+   steps:["FLP → <b>Supporting Processes</b> → <b>Interaction Center</b> → <b>Sales Professional</b> başlatılır.", "<b>Create</b> → <b>Task</b>.", "Veriler girilir (Account, Contact, Employee Responsible, Description, Due Date, Start Date).", "<b>Organizational Data</b>: SD_ORG_DE, Channel 10, Division 00.", "<b>Save</b>."],
+   info:"Bu egzersiz, müşteriye özgü <b>Sales Professional - Launch Sales Professional</b> tile'ına dayanmaktadır. Alternatif olarak standart <b>Business Role SAP_BR_CUSTOMER_SALES_MGR</b> kullanılabilir. Varsayılan <b>Employee Responsible</b> olarak <b>Service S47000-00</b> gelir; gerektiğinde manuel olarak değiştirin."},
+  {num:"2",title:"Create Follow-Up Lead",app:"Sales Professional – Create Follow-Up",
+   path:[],
+   fields:[["── Lead ──",""],["Description","Potential: Asset optimization GR##"],["Start Date","Today's date"],["End Date","Friday in two week's time"],["Employee Responsible","Ms. Marketing S4700–00"],["Qualification Level","Hot"],["Priority","High"],["Group","Top 100 Customers"]],
+   steps:["<b>Edit</b> → Task Status: <b>Completed</b> → <b>Save</b>.", "<b>Create Follow-Up</b> → <b>Lead</b>; veriler girilir → <b>Save</b>.", "<b>Notes</b>: 'Check the potential for Customer On-Site activities'.", "<b>Back</b> → <b>Save</b>.", "<b>Leads</b> → <b>Home</b>."]},
+  {num:"3",title:"Process a Lead – Distribute and Set In Process",app:"Search Leads",
+   path:[],
+   fields:[["── Search ──",""],["Status","Open"],["── Distribute ──",""],["Last Name","S4700–00"],["First Name","Sales"]],
+   steps:["<b>Search Leads</b> → Status: <b>Open</b> → <b>Search</b>.", "Lead seçilir → <b>Distribute</b> → <b>Manual Employee Selection</b>.", "Lead işaretlenir → <b>Change Recipient</b>.", "Arama: Last Name <b>S4700–00</b>, First Name <b>Sales</b> → <b>Search</b> → seçilir → Enter.", "<b>Save</b> → <b>Back</b>.", "<b>Edit</b> → Status: <b>In Process</b> → <b>Save</b>."]},
+  {num:"4",title:"Create an Opportunity",app:"Sales Professional – Create Follow-Up",
+   path:[],
+   fields:[["── Opportunity Details ──",""],["Closing Date","Friday in two week's time"],["Sales Stage","Qualification"],["Status","In Process"],["Expected Sales Volume","5000"],["── Item ──",""],["Product ID","P700_SERV_ONS"],["Quantity","70"],["Status","In Process"]],
+   steps:["Lead'in sağ üst köşesinde <b>Create Follow-Up</b> → <b>Opportunity – Sales Methodology</b>.", "Opportunity Details ve Item verileri girilir → <b>Save</b>."]},
+  {num:"5",title:"Complete Opportunity and Create Sales Quotation",app:"Sales Professional – Opportunity",
+   path:[],
+   fields:[["── Opportunity Update ──",""],["Sales Stage","Quotation"],["Status","In Process"],["── Sales Quotation ──",""],["External Reference","RXXXXX (R + Opportunity number)"],["Valid to","Friday in two week's time"]],
+   steps:["<b>Edit</b> → Sales Stage: <b>Quotation</b>, Status: <b>In Process</b> → <b>Save</b>.", "<b>Create Follow-Up</b> → <b>Sales Quotation — Quotation</b>; item işaretlenir → <b>Choose</b>.", "Sales Quotation Details: External Reference ve Valid to girilir → <b>Save</b>."]},
+  {num:"6",title:"Create Follow-Up Sales Order",app:"Sales Professional – Create Follow-Up",
+   path:[],fields:[],
+   steps:["<b>Create Follow-Up</b> → <b>Sales Order — Standard Order</b>.", "Item işaretlenir → <b>Choose</b> → <b>Save</b>."]}
+]}
+]},
+{unit:8,title:"Planning and Performing In-House Repairs",ex:[{id:9,title:"Plan and Perform In-House Repairs",
+ app:"Manage Service Quotations / Manage Repair Objects / Manage Service Orders / Release for Billing / Create Billing Documents",
+ sc:"Müşteri elektrolizör arızası bildirmektedir. Temel akış: Service Quotation → In-House Repair (Repair Object EL-1##) → Service Order → Confirmation → Billing → Completed. Opsiyonel olarak gelişmiş iade yönetimi (Advanced Returns Management) ve Requote da ele alınır.",
+ tasks:[
+  {num:"1",title:"Create Service Quotation",app:"Manage Service Quotations",
+   path:["In-House Service","In-House Repair","Manage Service Quotations"],
+   fields:[["── Quotation Header ──",""],["Transaction Type","SRVQ Order Quotation"],["Sold-To Party","C700–C##"],["Description","IHR electrolyzer - simplified GR##"],["Service Employee Group","SRV_BO_DE"],["── Items ──",""],["Product 1","P700_SERV_ONS – 3 HR – Service Item"],["Product 2","P700–HE-100 – 1 PC – Service Spare Item – Higher-Level: 10"]],
+   steps:["FLP → <b>In-House Service</b> → <b>In-House Repair</b>.", "<b>Manage Service Quotations</b> → <b>Create</b>.", "Header ve Item verileri girilir → <b>Save</b>."]},
+  {num:"2",title:"Create In-House Repair – Assign Repair Object EL-1##",app:"Manage Service Quotations",
+   path:[],
+   fields:[["── Repair Object ──",""],["Equipment ID","EL-1##"]],
+   steps:["<b>Edit</b> → <b>Repair Objects (In-House Repair)</b> seçilir.", "<b>Equipment ID EL-1##</b> atanır → <b>Save</b>.", "<b>Navigate to Home</b>.", "<b>In-House Service</b> → <b>In-House Repair</b> → <b>Manage Repair Objects</b>.", "<b>EL-1##</b> Serial Number linkine tıklanır → Manage Repair Object Details.", "<b>Transaction History</b>: önceden oluşturulan işlemler görüntülenir."],
+   info:"<b>Repair Objects (In-House Repair)</b>'i görüntülemek için <b>More → Personalize</b> yolunu izleyin."},
+  {num:"3",title:"Process Service Quotation – Send and Accept",app:"Manage Repair Objects",
+   path:[],fields:[],
+   steps:["Service Quotation linkine tıklanır → <b>Display Service Quotation</b>.", "<b>More</b> → <b>Send to Customer</b>.", "<b>More</b> → <b>Accept</b>.", "<b>Navigate to Home</b>."],
+   info:"Otomatik oluşturulan <b>Service Order</b>'ı görüntülemek için <b>Transaction History</b> seçeneğini tıklayın."},
+  {num:"4",title:"Plan Service Order – Check and Release",app:"Manage Service Orders",
+   path:["In-House Service","In-House Repair","Manage Service Orders"],
+   fields:[["── Search ──",""],["Sold-To Party","C700-C##"]],
+   steps:["FLP → <b>In-House Service</b> → <b>In-House Repair</b> → <b>Manage Service Orders</b>.", "Sold-To Party: <b>C700-C##</b> → <b>Search</b>.", "Service Order seçilir → Status: <b>Released</b> → <b>Save</b>."]},
+  {num:"5",title:"Perform Service (Repair) and Create Service Confirmation",app:"Manage Service Orders – Create Follow-Up",
+   path:[],
+   fields:[["── Confirmation ──",""],["Items","Select All"],["Final Service Confirmation","set flag"],["Status","Completed"]],
+   steps:["<b>Create Follow-Up</b> → <b>Service Confirmation</b>.", "Follow-Up dialog: <b>Select All</b> → <b>Choose</b>.", "<b>Service Confirmation Details</b>: Status → <b>Completed</b>.", "<b>Final Confirmation</b> checkbox işaretlenir → <b>Save</b>.", "Opsiyonel: <b>Transaction History</b> → Service Order Status: Completed doğrulanır.", "<b>Navigate to Home</b>."]},
+  {num:"6",title:"Release for Billing",app:"Release for Billing",
+   path:["In-House Service","In-House Repair","Release for Billing"],
+   fields:[["── Search ──",""],["Sold-To Party","C700-C##"]],
+   steps:["FLP → <b>In-House Service</b> → <b>In-House Repair</b> → <b>Release for Billing</b>.", "Sold-To Party: <b>C700-C##</b> → <b>Search</b>.", "Tüm 3 item seçilir → <b>Release for Billing</b> → <b>Navigate to Home</b>."]},
+  {num:"7",title:"Optional: Create Billing Document",app:"Create Billing Documents",
+   path:["Supporting Processes","Service Billing","Create Billing Documents"],
+   fields:[["── Selection ──",""],["Sold-To Party","C700-C##"]],
+   steps:["FLP → <b>Supporting Processes</b> → <b>Service Billing</b> → <b>Create Billing Documents</b>.", "Sold-To Party: <b>C700-C##</b> → <b>Go</b>.", "İki item seçilir → <b>Create Billing Documents</b> → <b>Save</b>.", "<b>Navigate to Home</b>."]},
+  {num:"8",title:"Complete Service – Set Repair Object to Completed",app:"Manage Repair Objects",
+   path:["In-House Service","In-House Repair","Manage Repair Objects"],
+   fields:[],
+   steps:["FLP → <b>In-House Service</b> → <b>In-House Repair</b> → <b>Manage Repair Objects</b>.", "Serial Number <b>EL-1##</b> satırı seçilir.", "<b>Set Repair Object to Completed</b>."]},
+  {num:"Opt. 1",title:"Optional (ARM): Create Service Quotation – Diagnosis",app:"Manage Service Quotations",
+   path:["In-House Service","In-House Repair","Manage Service Quotations"],
+   fields:[["── Quotation Header ──",""],["Transaction Type","SRVQ Order Quotation"],["Sold-To Party","C700–C##"],["Description","Defective electrolyzer - Diagnosis GR##"],["── Item ──",""],["Product ID","P700_SERV_DIAG"],["Quantity","1"],["Item Category","Service (FixedPrice)"],["Service Employee Group","SRV_BO_DE"]],
+   steps:["FLP → <b>In-House Service</b> → <b>In-House Repair</b> → <b>Manage Service Quotations</b> → <b>Create</b>.", "Header ve Item verileri girilir → <b>Save</b>."]},
+  {num:"Opt. 2",title:"Optional (ARM): Create In-House Repair with Repair Object",app:"Manage Service Quotations",
+   path:[],
+   fields:[["── Repair Object ──",""],["Equipment ID","EL-1##"]],
+   steps:["<b>Edit</b> → <b>Repair Objects (In-House Repair)</b>.", "<b>Equipment ID EL-1##</b> → <b>Save</b>."]},
+  {num:"Opt. 3",title:"Optional (ARM): Send and Accept Service Quotation",app:"Manage Service Quotations",
+   path:[],fields:[],
+   steps:["<b>More</b> → <b>Send to Customer</b>.", "<b>More</b> → <b>Accept</b>.", "<b>Navigate to Home</b>."]},
+  {num:"Opt. 4",title:"Optional (ARM): Create Returns Order for EL-1##",app:"Manage Repair Objects",
+   path:["In-House Service","In-House Repair","Manage Repair Objects"],
+   fields:[["── Inspection ──",""],["Inspection Code","0002"]],
+   steps:["<b>Manage Repair Objects</b> → Serial Number <b>EL-1##</b> seçilir.", "<b>Decide</b> sekmesi → <b>Create Returns Order</b>.", "<b>Transaction History</b> → Returns Order → <b>Display Customer Return</b>.", "Returns screen: <b>Returns Overview</b>. Delivery document numarası not edilir.", "Returns Delivery satırında Document Number linkine tıklanır.", "<b>Display ↔ Change</b>: Item 10'a kaydır → <b>Picked Qty 1</b> girilir.", "<b>Post Goods Receipt</b>.", "<b>Navigate to Home</b>.", "<b>Enter Inspection Results - From Warehouse</b> uygulaması başlatılır.", "Delivery numarası girilir → <b>Execute</b>.", "<b>Inspection Code 0002</b> girilir → Enter → <b>Save and Confirm</b>.", "<b>Navigate to Home</b>."],
+   warn:"<b>Save Inspection Results</b> butonunu kullanmayın; bunun yerine <b>Save and Confirm</b> butonunu kullanın. Aksi takdirde ilerleyen adımlarda <b>Outbound Delivery</b>'ye ekleme sırasında sorunlar ortaya çıkar."},
+  {num:"Opt. 5",title:"Optional (ARM): Plan Service Order – Diagnosis",app:"Manage Service Orders",
+   path:["In-House Service","In-House Repair","Manage Service Orders"],
+   fields:[["── Search ──",""],["Sold-To Party","C700-C##"]],
+   steps:["<b>Manage Service Orders</b> → C700-C## → <b>Search</b>.", "Service Order seçilir → <b>Edit</b> → Status: <b>Released</b> → <b>Save</b>."]},
+  {num:"Opt. 6",title:"Optional (ARM): Create Service Confirmation – Diagnosis",app:"Manage Service Orders – Create Follow-Up",
+   path:[],
+   fields:[["── Confirmation ──",""],["Final Confirmation","DO NOT set"],["Status","Completed"]],
+   steps:["<b>Create Follow-Up</b> → <b>Service Confirmation</b>.", "Follow-Up dialog: diagnosis item seçilir → <b>Choose</b>.", "<b>Service Confirmation Details</b>: Status → <b>Completed</b> → <b>Save</b>.", "<b>Final Confirmation</b> checkbox işaretlenmez."],
+   warn:"Bu aşamada <b>Final Confirmation</b> onay kutusunu işaretlemeyin."},
+  {num:"Opt. 7",title:"Optional (ARM): Create Requote and Add New Items",app:"Manage Repair Objects / Manage Service Quotations",
+   path:[],
+   fields:[["── New Items ──",""],["Product 1","P700_SERV_INH – 3 – Service Item"],["Product 2","P700-HE-100 – C700–C## – Service Spare Item – Higher-Level: 20"]],
+   steps:["<b>Transaction History</b> → Service Order Quotation seçilir.", "<b>More</b> → <b>Requote</b>.", "<b>Items</b> → <b>Add</b>: yeni item'lar girilir → <b>Save</b>.", "<b>More</b> → <b>Send to Customer</b>.", "<b>More</b> → <b>Accept</b>.", "<b>Transaction History</b> → Service Order seçilir.", "<b>Edit</b> → Items: diagnosis item P700_SERV_DIAG için Status → <b>Completed</b>.", "<b>Service Order Details</b>: Status → <b>Released</b> → <b>Save</b>."]},
+  {num:"Opt. 8",title:"Optional (ARM): Perform Service (Repair) and Create Confirmation",app:"Manage Service Orders – Create Follow-Up",
+   path:[],
+   fields:[["── Confirmation ──",""],["Items","Select All"],["Final Service Confirmation","set flag"],["Status","Completed"]],
+   steps:["<b>Create Follow-Up</b> → <b>Service Confirmation</b>.", "<b>Select All</b> → <b>Choose</b>.", "Status → <b>Completed</b>; <b>Final Confirmation</b> işaretlenir → <b>Save</b>.", "Opsiyonel: <b>Transaction History</b> → Service Order Status: Completed.", "<b>Navigate to Home</b>."]},
+  {num:"Opt. 9",title:"Optional (ARM): Release for Billing",app:"Release for Billing",
+   path:["In-House Service","In-House Repair","Release for Billing"],
+   fields:[["── Search ──",""],["Sold-To Party","C700-C##"]],
+   steps:["<b>Release for Billing</b> → C700-C## → <b>Search</b>.", "Tüm item'lar seçilir → <b>Release for Billing</b> → <b>Navigate to Home</b>."]},
+  {num:"Opt. 10",title:"Optional (ARM): Create Billing Document",app:"Create Billing Documents",
+   path:["Supporting Processes","Service Billing","Create Billing Documents"],
+   fields:[["── Selection ──",""],["Sold-To Party","C700-C##"]],
+   steps:["<b>Create Billing Documents</b> → C700-C## → <b>Go</b>.", "İki item (BDR for diagnosis + BDR for repair) seçilir → <b>Create Billing Documents</b> → <b>Save</b>.", "<b>Navigate to Home</b>."]},
+  {num:"Opt. 11",title:"Optional (ARM): Return to Customer – Outbound Delivery",app:"Manage Repair Objects",
+   path:["In-House Service","In-House Repair","Manage Repair Objects"],
+   fields:[["── Outbound Delivery ──",""],["Picking Quantity","1"]],
+   steps:["<b>Manage Repair Objects</b> → Serial Number <b>EL-1##</b> seçilir.", "<b>Decide</b> sekmesi → <b>Create Outbound Delivery</b>.", "<b>Transaction History</b> → 'Delivery w/o Ref.' → <b>Pick Outbound Delivery</b>.", "Picking Quantity: <b>1</b> → Enter → <b>Save</b>.", "<b>Post GI</b> → <b>Navigate to Home</b>."]},
+  {num:"Opt. 12",title:"Optional (ARM): Complete Service",app:"Manage Repair Objects",
+   path:["In-House Service","In-House Repair","Manage Repair Objects"],
+   fields:[],
+   steps:["<b>Manage Repair Objects</b> → Serial Number <b>EL-1##</b> seçilir.", "<b>Set Repair Object to Completed</b>."]}
+]
+}]},
+{unit:9,title:"Working with Service Contracts",ex:[{id:10,title:"Create and Process Service Contracts",
+ app:"Manage Service Contracts / SAP GUI (CRMS4_BIL_BDR_GEN, VF04) / Manage Service Orders",
+ sc:"Müşteri North Sea Energy – H2 Power, H2 Energy Solutions ile Service Contract kurar. SC oluşturulur, fatura kesilir, kontrata bağlı Service Order açılır, Ad-hoc Billing kullanılır. Opsiyonel olarak otomatik yenileme (automatic renewal) ve fiyat denetimi yapılır.",
+ tasks:[
+  {num:"1",title:"Create a Service Contract",app:"Manage Service Contracts",
+   path:["Service Master Data","Service Contracts","Manage Service Contracts"],
+   fields:[["── General Data ──",""],["Transaction Type","SC"],["Description","Service and Repair (GR##)"],["Contract Start","01.01. of current year"],["Contract End","31.12. of current year + 5 years"],["Sold-To-Party","C700–C## (F4 help)"],["── Item ──",""],["Product ID","P700_SERV_INSP_C"],["Quantity","1"],["── Object List ──",""],["Equipment ID","EL-1##"],["── Price Agreement 1 ──",""],["Condition Type","DSC1 (MatlDisc.inSrvc.Cntr)"],["Access Doc.Cat./ID/ItmNo.","Doc/Material (010)"],["Product","P700_SERV_ONS"],["Condition Amount","-10"],["── Price Agreement 2 ──",""],["Product","P700-HC-100"],["Condition Amount","-50"],["── Status ──",""],["Status","Released"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Service Contracts</b> → <b>Manage Service Contracts</b>.", "<b>Create</b> → Transaction Type: <b>SC</b>.", "General Data girilir.", "Items: <b>P700_SERV_INSP_C</b>, Qty: 1.", "Item satırında <b>Edit</b> → <b>Object List</b> → <b>Equipment ID EL-1##</b>.", "<b>Price Agreement</b> → <b>Add</b> → Condition Type <b>DSC1</b>, Access <b>Doc/Material (010)</b> → <b>OK</b> → Product <b>P700_SERV_ONS</b>, Amount <b>-10</b> → <b>OK</b>.", "İkinci Price Agreement: Add → DSC1, 010 → OK → Product <b>P700-HC-100</b>, Amount <b>-50</b> → <b>OK</b> → <b>Apply</b>.", "Service Contract Details: Status → <b>Released</b> → <b>Save</b> → <b>Navigate to Home</b>."]},
+  {num:"2",title:"Bill a Service Contract",app:"SAP GUI (CRMS4_BIL_BDR_GEN / VF04) / Manage Service Contracts",
+   path:[],
+   fields:[["── CRMS4_BIL_BDR_GEN ──",""],["BDR Creation Horizon (in Days)","21"],["Sold-to Party","C700-C##"],["── VF04 ──",""],["Billing Date to","Last day of current month"],["Sold-to Party","C700-C##"],["Delivery-Related","no flag"],["Billing Document Requests","flag"]],
+   steps:["SAP GUI giriş: user <b>S47000-##</b>, password <b>Welcome1</b>.", "T-Code: <b>CRMS4_BIL_BDR_GEN</b> → Enter → veriler girilir → <b>Execute (F8)</b> → <b>Back (F3)</b>.", "T-Code: <b>VF04</b> → Enter → veriler girilir → <b>Display Billing List (F8)</b> → <b>Save</b>.", "FLP → <b>Manage Service Contracts</b> → Sold-To Party: C700-C## → <b>Search</b>.", "Service Contract ID linki → Items: <b>Edit</b> → <b>Billing Plan</b>: Billing Status değişimi görüntülenir.", "<b>Navigate to Home</b>."]},
+  {num:"3",title:"Create Service Order Related to Service Contract",app:"Manage Service Orders",
+   path:["Service Order Management","Manage Service Orders","Manage Service Orders"],
+   fields:[["── Service Order Header ──",""],["Transaction Type","SRVO"],["Sold-To Party","C700-C##"],["Equipment","EL-1##"],["Description","Replace H2-connection - cont (GR##)"],["Service Employee Group","SRV_TECH_DE"],["── Item 1 ──",""],["Product ID","P700_SERV_ONS"],["Quantity","1"],["Unit","HR"],["Item Category","Service Item"],["── Item 2 ──",""],["Higher-Level Item","10"],["Product ID","P700-HC-100"],["Quantity","1"],["Unit","PC"],["Item Category","Service Part"]],
+   steps:["FLP → <b>Manage Service Orders</b> → <b>Create</b> → Transaction Type <b>SRVO</b>.", "Header: Sold-To Party C700-C##, Equipment EL-1## → Enter.", "Service Employee Group: SRV_TECH_DE; Description girilir.", "Items: <b>P700_SERV_ONS</b>, 1 HR, Service Item → Enter → popup'ta Service Contract Item seçilir.", "<b>Price Details</b>: indirimli fiyat doğrulanır.", "Items: Higher-Level: 10, <b>P700-HC-100</b>, 1 PC, Service Part → Enter → popup'ta Service Contract Item seçilir.", "<b>Price Details</b>: indirim doğrulanır.", "<b>Save</b> → <b>Navigate to Home</b>."],
+   info:"<b>SAP S/4HANA Service OP 2023</b>'ten itibaren fiyatlandırma, <b>Create/Display/Change/Search Service Order</b> Fiori uygulamaları üzerinden izlenebilmektedir."},
+  {num:"4",title:"Use Ad-hoc Billing for Service Contracts",app:"Manage Service Contracts",
+   path:[],
+   fields:[["── New Item ──",""],["Product ID","P700_SERV_ONS_C"],["Quantity","1"],["Item Category","SC Itm (Ad-hoc Bill)"],["── Billing Plan ──",""],["Billing Date","Today's date"],["Billing Value","200"],["Description","Adapt system control"]],
+   steps:["<b>Manage Service Contracts</b> → C700-C## → <b>Search</b> → Service Contract seçilir → <b>Edit</b>.", "Items: <b>P700_SERV_ONS_C</b>, Qty: 1, Item Category: <b>SC Itm (Ad-hoc Bill)</b>. Popup varsa onaylanır.", "Item satırında <b>Edit</b> → <b>Billing Plan</b> → <b>Insert</b> → Billing Date, Billing Value (200), Description girilir.", "<b>Back</b> → <b>Save</b>.", "Item <b>Edit</b> → <b>Billing Plan</b>: Ad-hoc layout görüntülenir.", "<b>Apply</b> → <b>Save</b>.", "Service Contract Details: Status → <b>Released</b> → <b>Save</b>."]},
+  {num:"5",title:"Optional: Use Price Check for Automatic Renewal",app:"Manage Service Contracts / SAP GUI (CRMS4_SC_AUTO_RENEW) / Manage Situation Types",
+   path:[],
+   fields:[["── New Item ──",""],["Product ID","P700_SERV_ONS_C"],["Quantity","1"],["Item Category","SC Itm (Pri. Adptn.)"],["── Service Contract Item Details ──",""],["Contract Start","01.01. of current year"],["Contract End","Last day of current month"],["Enable (Automatic Renewal)","x"],["Renewal Period","4 Week"],["Contract Extension","1 Year"],["End of Auto Renewal","31.12. of next year"],["Price Calculation Basis","Last Billing Request Line Price (Cumulative)"],["Price Change Ratio","2"],["Notification Before Renewal Period","4 Week"],["Status","Released"]],
+   steps:["<b>Manage Service Contracts</b> → Service Contract seçilir → <b>Edit</b>.", "Items: <b>P700_SERV_ONS_C</b>, Qty: 1, Item Category: <b>SC Itm (Pri. Adptn.)</b>.", "Item <b>Edit</b> → Service Contract Item Details girilir.", "Enter → <b>Define Prices</b> → Price Calculation Basis, Price Change Ratio, Notification Period girilir → <b>Apply</b> → <b>Apply</b> → <b>Save</b>.", "SAP GUI: T-Code <b>CRMS4_SC_AUTO_RENEW</b> → <b>Execute</b>.", "FLP → <b>Service Master Data</b> → <b>Service Contracts</b> → <b>Manage Situation Types</b>.", "<b>Situation Types</b> → <b>Price Check for Automatic Renewal</b> → <b>Trigger Now</b> → <b>OK</b>.", "Anchor Object Key linkine tıklanır → Service Contract Item görüntülenir.", "Items → Situations sütunu → 'There is at least one situation' → popup: <b>Automatic Renewal Due Soon</b>.", "<b>Navigate to Home</b>."],
+   info:"Süresi dolmak üzere olan <b>Service Contract Items</b>'ı alternatif olarak <b>My Situations</b> SAP Fiori uygulamasıyla görüntüleyebilirsiniz."}
+]
+}]},
+{unit:10,title:"Working with Recurring Service",ex:[
+{id:11,title:"Manage Service Order Templates and Task Lists",
+ app:"Manage Service Order Templates / Display Task List / Find Maintenance Task List",
+ sc:"H2 Energy Solutions, müşterileri için tekrarlayan servisler sunmak ister. Service Order Template oluşturulur ve Task List incelenir. Bakım stratejisi, operasyon varyantları ve harici operasyon oluşturma yöntemi değerlendirilir.",
+ tasks:[
+  {num:"Task 1.1",title:"Create a Service Order Template",app:"Manage Service Order Templates",
+   path:["Recurring Service","Service Order Templates & Maintenance Plans for Service","Manage Service Order Templates"],
+   fields:[["── Header ──",""],["Transaction Type","SRVT"],["Service Organizational Unit","SRV_ORG_DE"],["Service Employee Group","SRV_TECH_DE"],["Description","Electrolyzer: Regular Service (GR##)"],["Employee Responsible","Mr. Service S47000–##"],["Valid From","01.01. of current year"],["Valid To","31.12. of current year + 5 years"],["Reference Object","EL-1##"],["── Items ──",""],["Product 1","P700_SERV_ONS – 5 HR"],["Product 2","P700–HC-100 – 1 PC – Higher-Level: 10"],["── Status ──",""],["Status","Released"]],
+   steps:["FLP → <b>Recurring Service</b> → <b>Service Order Templates & Maintenance Plans for Service</b> → <b>Manage Service Order Templates</b>.", "<b>Create</b> → Transaction Type <b>SRVT (Order Template)</b>.", "Sekmelerin mevcut olduğu kontrol edilir: Organizational Data, Parties Involved, Reference Objects.", "<b>Organizational Data</b>: <b>SRV_ORG_DE</b>.", "<b>Parties Involved</b>: Service Employee Group <b>SRV_TECH_DE</b>.", "Service Order Template Details: Description, Employee Responsible, Valid From/To.", "<b>Reference Objects</b> → <b>Edit List</b> → <b>EL-1##</b>.", "Items eklenir → Status: <b>Released</b> → <b>Save</b>."],
+   info:"Sekmeler mevcut değilse <b>Personalize</b>'ı seçin ve <b>Organizational Data</b>, <b>Parties Involved</b> ile <b>Reference Objects</b> bölümleri için işaretleri etkinleştirin."},
+  {num:"Task 2.1",title:"Display General Maintenance Task List T-PMSVEN / GC 2",app:"Display Task List",
+   path:["Recurring Service","Recurring Service with Advanced Execution","Display Task List"],
+   fields:[["── Task List ──",""],["Task List Type","General Maintenance Task List"],["Task List Group","T-PMSVEN"],["Group Counter","2"]],
+   steps:["FLP → <b>Recurring Service</b> → <b>Recurring Service with Advanced Execution</b> → <b>Display Task List</b>.", "Task List Type: <b>General Maintenance Task List</b>; Group: <b>T-PMSVEN</b>; Group Counter: <b>2</b> → <b>Continue</b>."]},
+  {num:"Task 2.2",title:"Display Operation List – Multiple Variants",app:"Display Task List",
+   path:[],fields:[],
+   steps:["<b>Operation Data</b> seçilir.", "<b>Current Variant</b> butonu ile Internal / External / Object / Costs / Standard variant'lar arasında geçiş yapılır."],
+   result:"Variant'lar, operasyon listesine farklı bakış açıları sunar. Kişisel variant'lar kaydedilebilir ve varsayılan bir variant ayarlanabilir."},
+  {num:"Task 2.3",title:"Create Externally Processed Operations in Task List",app:"Display Task List",
+   path:[],fields:[],steps:[],
+   result:"Harici işlem için bir operasyonda kontrol anahtarı (<b>PM02, PM03</b>) kullanın. Kontrol anahtarları, görev listesi atandığında bakım siparişi operasyonlarına kopyalanır. Görev listesi hiçbir tedarik adımını tetikleyemez."},
+  {num:"Task 2.4",title:"Display Maintenance Strategy and Packages",app:"Find Maintenance Task List",
+   path:["Recurring Service","Recurring Service with Advanced Execution","Find Maintenance Task List"],
+   fields:[],
+   steps:["FLP → <b>Recurring Service</b> → <b>Recurring Service with Advanced Execution</b> → <b>Find Maintenance Task List</b>.", "<b>General Data</b>: Maintenance Strategy <b>A</b> görüntülenir.", "<b>Maintenance Packages</b>: task list operasyonlarına atanan paketler.", "<b>Navigate to Home</b>."]},
+  {num:"Task 2.5",title:"Optional: Find All Task Lists for Planning Plant 1040",app:"Find Maintenance Task List",
+   path:["Recurring Service","Recurring Service with Advanced Execution","Find Maintenance Task List"],
+   fields:[["── Selection ──",""],["Planning Plant","1040"]],
+   steps:["FLP → <b>Find Maintenance Task List</b>.", "<b>Planning Plant</b>: <b>1040</b> → <b>Go</b>.", "Hyperlink seçildiğinde navigasyon seçenekleri görünür: Display Task List, Display Maintenance Task List Operation.", "<b>Navigate to Home</b>."]}
+]},
+{id:12,title:"Create Maintenance Plans",
+ app:"Create Maintenance Plan / Maintenance Strategies / Display Task List / Add strategy-controlled plan",
+ sc:"Tekrarlayan servis için Maintenance Plans oluşturulur. Task 1: Single Cycle Plan (Service Order). Task 2 (Opsiyonel): Strategy Plan ile ileri düzey bakım planlaması.",
+ tasks:[
+  {num:"Task 1.1",title:"Create Single Cycle Maintenance Plan for Service Order",app:"Create Maintenance Plan",
+   path:["Recurring Service","Service Order Templates & Maintenance Plans for Service","Create Maintenance Plan"],
+   fields:[["── Plan Type ──",""],["Maintenance Plan For","Service Order"],["Maintenance Plan Type","Single Cycle (Time-Based)"],["── Item Data ──",""],["Item Description","Electrolyzer: Regular Service (GR##)"],["Technical Object","EL-1##"],["Service Contract","900000XXXX (your Service Contract number)"],["Service Contract Item","100"],["Service Order Template","800000XXXX (your Service Order Template number)"],["Service Call Object","Service Order"],["── Planning Data ──",""],["Start Date for Scheduling","01.01. of current year"],["End Date for Scheduling","31.12. of current year + 5 years"],["Scheduling Period","1 YR"],["Cycle/Unit","6 MON"]],
+   steps:["FLP → <b>Recurring Service</b> → <b>Service Order Templates & Maintenance Plans for Service</b> → <b>Create Maintenance Plan</b>.", "<b>Maintenance Plan For</b>: Service Order; <b>Maintenance Plan Type</b>: Single Cycle (Time-Based) → <b>Continue</b>.", "Item-specific veriler girilir.", "<b>Planning Data</b>: planlama verileri girilir → <b>Save</b> → <b>Navigate to Home</b>."]},
+  {num:"Task 2.1",title:"Optional: Check Maintenance Strategy A",app:"Maintenance Strategies",
+   path:["Recurring Service","Recurring Service with Advanced Execution","Maintenance Strategies"],
+   fields:[],
+   steps:["FLP → <b>Recurring Service</b> → <b>Recurring Service with Advanced Execution</b> → <b>Maintenance Strategies</b>.", "<b>A</b> seçilir.", "<b>Packages</b> klasörüne çift tıklanır → maintenance packages kontrol edilir.", "<b>Back</b> → header kontrol edilir.", "<b>Navigate to Home</b>."]},
+  {num:"Task 2.2",title:"Optional: Check Task List T-PMSVEN / GC 2 – Maintenance Cycles",app:"Display Task List",
+   path:["Recurring Service","Recurring Service with Advanced Execution","Display Task List"],
+   fields:[["── Task List ──",""],["Task List Type","General Maintenance Task List"],["Task List Group EN","T-PMSVEN"],["Group Counter","2"]],
+   steps:["FLP → <b>Display Task List</b>.", "Veriler girilir → <b>Continue</b>.", "<b>Maintenance Packages</b> seçilir.", "<b>Navigate to Home</b>."],
+   result:"Her operasyon için belirli bakım paketlerinin etkinleştirildiği bir operasyon listesi görüntülenir."},
+  {num:"Task 2.3",title:"Optional: Create Maintenance Plan as Strategy Plan",app:"Add strategy-controlled plan",
+   path:["Recurring Service","Recurring Service with Advanced Execution","Add strategy-controlled plan"],
+   fields:[["── Strategy Plan ──",""],["Maint. plan cat.","Maintenance Service Order"],["Strategy","A"],["MaintPlan Text","Preventive Service - Strategy A (GR00)"],["Equipment","EL-100"],["Srvc. Contract","9000000030"],["Srvc. Contract Position","100"],["Srvc. Ord. Type","MSO1"],["Srvc. Priority","Medium"],["Typ / Task LstGrp / GrpCr","A / T-PMSVEN / 2"],["Scheduling period","1 yr"],["Start of cycle","Today's date – 1 month (e.g., 20th March if today is 20th April)"]],
+   steps:["FLP → <b>Recurring Service</b> → <b>Recurring Service with Advanced Execution</b> → <b>Add strategy-controlled plan</b>.", "<b>Maint. plan cat.</b>: Maintenance Service Order.", "<b>Strategy</b>: <b>A</b> → Enter.", "Veriler girilir → Enter.", "<b>Select task list</b> → <b>Execute</b> → <b>A/T-PMSVEN/2</b> seçilir → <b>Choose</b>.", "<b>Maintenance plan scheduling parameters</b> → yukarı kaydır.", "Scheduling period: <b>1 yr</b>; Start of cycle: <b>bugün - 1 ay</b>.", "<b>Save</b> → <b>Navigate to Home</b>."]}
+]},
+{id:13,title:"Schedule Maintenance Plans",
+ app:"Schedule Maintenance Plan Service / Find Maintenance Plans Service / Schedule Maintenance Plan (IP10)",
+ sc:"Maintenance Plan zamanlaması yapılır. Task 1: Single Cycle Plan çizelgelenir ve oluşan Service Order görüntülenir. Task 2 (Opsiyonel): Strategy Plan zamanlanır, Maintenance Order ve bağlı Service Order görüntülenir.",
+ tasks:[
+  {num:"Task 1.1",title:"Schedule Single Cycle Maintenance Plan",app:"Schedule Maintenance Plan Service",
+   path:["Recurring Service","Service Order Templates & Maintenance Plans for Service","Schedule Maintenance Plan Service"],
+   fields:[["── Selection ──",""],["Maintenance Plan Number","(your Single Cycle Plan number)"],["Cycle Start Date","First of the current month"]],
+   steps:["FLP → <b>Recurring Service</b> → <b>Service Order Templates & Maintenance Plans for Service</b> → <b>Schedule Maintenance Plan Service</b>.", "Maintenance Plan numarası girilir → <b>Execute</b>.", "<b>Start</b> → cari ayın ilk günü girilir → <b>Continue</b>.", "<b>Save</b> → <b>Navigate to Home</b>."]},
+  {num:"Task 1.2",title:"Display Generated Service Order",app:"Find Maintenance Plans Service",
+   path:["Recurring Service","Service Order Templates & Maintenance Plans for Service","Find Maintenance Plans Service"],
+   fields:[["── Search ──",""],["Maint. plan cat.","Service Order"]],
+   steps:["FLP → <b>Find Maintenance Plans Service</b>.", "Maint. plan cat.: <b>Service Order</b> → <b>Go</b>.", "<b>Electrolyzer: Regular Service (GR##)</b> linki → <b>Display Maintenance Plan</b>.", "<b>Maintenance Calls</b>: Call Status <b>New Start; Called</b> seçilir.", "<b>Display Call Object</b>.", "<b>Navigate to Home</b>."]},
+  {num:"Task 2.1",title:"Optional: Schedule Maintenance Plan for Preventive Service",app:"Schedule Maintenance Plan (IP10)",
+   path:["Recurring Service","Recurring Service with Advanced Execution","Schedule Maintenance Plan (IP10)"],
+   fields:[["── Selection ──",""],["Strategy Plan Number","(your Strategy Plan number)"]],
+   steps:["FLP → <b>Recurring Service</b> → <b>Recurring Service with Advanced Execution</b> → <b>Schedule Maintenance Plan (IP10)</b>.", "Strategy Plan numarası girilir → Enter.", "<b>Start</b> → <b>Continue</b>.", "Pop-Up: <b>Continue</b>.", "<b>Save</b>."]},
+  {num:"Task 2.2",title:"Optional: Display Generated Maintenance Order",app:"Schedule Maintenance Plan (IP10)",
+   path:[],fields:[],
+   steps:["Enter → Call Number 1 için radio button → <b>Display call object</b>.", "<b>HeaderData</b>: Service area'da otomatik oluşan Service Order ID görüntülenir.", "<b>Operations</b>: A/T-PMSVEN/2 maintenance packages'a göre operasyonlar.", "<b>Costs</b>: iç işçilik maliyetleri.", "<b>Header Data</b>'ya dön."]},
+  {num:"Task 2.3",title:"Optional: Display Service Order with Execution Order Item",app:"Manage Service Orders",
+   path:[],
+   fields:[["── Alternative Selection ──",""],["Sold-To Party","C700-C00"],["Service Order Type","Service Order with Advanced Execution"]],
+   steps:["Maintenance Order header'daki <b>Service Order ID</b> linkine tıklanır.", "Alternatif: <b>Navigate to Home</b> → <b>Manage Service Orders</b> → Sold-To Party: C700-C00, Service Order Type: Service Order with Advanced Execution → <b>Search</b>.", "Service Order ID seçilir.", "<b>Service Order Details</b>: P700_MAINT_SERV_01 fiyatı görüntülenir.", "<b>Planned Cost and Revenue</b>: iç işçilik maliyetleri görüntülenir.", "<b>Navigate to Home</b>."],
+   info:"<b>Planned Cost</b> ve gelir, bakım siparişi maliyetlerine eşlenir. Gelirler yalnızca faturalamadan sonra görüntülenir."}
+]}
+]},
+{unit:11,title:"Exploring Analytics in SAP S/4HANA Service",ex:[{id:14,title:"Explore Analytics in SAP S/4HANA Service",
+ app:"Service Analytics for Logistics / Service Analytics for Accounting / Event-Based Revenue Recognition",
+ sc:"SAP S/4HANA Service'deki analitik imkânlar incelenir. Hesap, teknik nesne, servis dokümanları, kontrat ve muhasebe verileri çeşitli Fiori uygulamalarıyla analiz edilir.",
+ tasks:[
+  {num:"1",title:"Display Accounts with Account ID C700*",app:"Search Accounts",
+   path:["Service Analytics","Service Analytics for Logistics","Search Accounts (Corporate or Individual Accounts)"],
+   fields:[["── Search ──",""],["Account ID","C700*"]],
+   steps:["FLP → <b>Service Analytics</b> → <b>Service Analytics for Logistics</b> → <b>Search Accounts (Corporate or Individual Accounts)</b>.", "Account ID: <b>C700*</b> → <b>Search</b>.", "<b>Navigate to Home</b>."]},
+  {num:"2",title:"Display Equipment Assigned to Maintenance Plant 1040",app:"Find Technical Object",
+   path:["Service Analytics","Service Analytics for Logistics","Find Technical Object"],
+   fields:[["── Selection ──",""],["Technical Object Type","Equipment"],["Maintenance Plant","1040"]],
+   steps:["FLP → <b>Service Analytics for Logistics</b> → <b>Find Technical Object</b>.", "Kriterler girilir → sonuçlar görüntülenir.", "<b>Navigate to Home</b>."]},
+  {num:"3",title:"Analyze Service Processing Documents",app:"Service Management Overview / Service Order Issues - Analyze Issues",
+   path:["Service Analytics","Service Analytics for Logistics"],
+   fields:[],
+   steps:["FLP → <b>Service Analytics for Logistics</b> → <b>Service Management Overview</b>.", "<b>Incomplete Service Orders</b>: Service Order Analysis görüntülenir → <b>Back</b>.", "<b>Navigate to Home</b>.", "FLP → <b>Service Analytics for Logistics</b> → <b>Service Order Issues - Analyze Issues</b>.", "Dropdown: <b>Service Orders</b>.", "Dropdown: <b>Issues</b> → <b>No Confirmations</b> bar chart → <b>Service Orders</b>.", "<b>Navigate to Home</b>."]},
+  {num:"4",title:"Display Service Contracts for Sold-To Party C700*",app:"Manage Service Contracts (Analytics)",
+   path:["Service Analytics","Service Analytics for Logistics","Manage Service Contracts"],
+   fields:[["── Search ──",""],["Sold-To Party","C700*"]],
+   steps:["FLP → <b>Service Analytics for Logistics</b> → <b>Manage Service Contracts</b>.", "Sold-To Party: <b>C700*</b> → sonuçlar görüntülenir.", "Aşağı kaydır → <b>Net Value</b> görüntülenir.", "<b>Navigate to Home</b>."],
+   info:"Seçim kriterlerini düzenlemek için <b>Adapt Filters</b> seçeneğini kullanın."},
+  {num:"5",title:"Display Service Actuals",app:"Service Actuals",
+   path:["Service Analytics","Service Analytics for Accounting","Service Actuals"],
+   fields:[["── Selection ──",""],["Fiscal Year of Ledger","Current year (e.g., 2025)"],["Key Date","Today's date"],["Ledger","0L"],["Company Code","1010"]],
+   steps:["FLP → <b>Service Analytics</b> → <b>Service Analytics for Accounting</b> → <b>Service Actuals</b>.", "Kriterler girilir → <b>Go</b>.", "Service Actuals Company Code Currency olarak görüntülenir.", "Opsiyonel: Navigation Panel → <b>Filter Service Doc. Type</b> → <b>SRVO</b> seçilir.", "Opsiyonel: sonuçta yalnızca Service Orders için Service Actuals görünür.", "<b>Navigate to Home</b>."],
+   info:"<b>G/L Account</b> ve diğer bilgileri <b>Service Doc. Type</b>'ın yanında görüntülemek için alttaki kaydırma işlevini kullanın. Huni simgesini görüntülemek için <b>Dimensions</b>'ın yanındaki dişli simgesine tıklayın → <b>Show Filter</b>."},
+  {num:"6",title:"Display Event-Based Revenue Recognition for Service Order",app:"Event-Based Revenue Recognition - Service Documents",
+   path:["Service Analytics","Service Analytics for Accounting","Event-Based Revenue Recognition - Service Documents"],
+   fields:[["── Search ──",""],["Service Document","8000000XX (System cooling partially failed GR##)"]],
+   steps:["FLP → <b>Service Analytics for Accounting</b> → <b>Event-Based Revenue Recognition – Service Documents</b>.", "Service Document numarası ile arama yapılır.", "<b>Service Document Item 10</b>: Billed Revenue ve Actual Cost görüntülenir.", "<b>Service Document Item 20</b>: Service Part detayları görüntülenir.", "<b>Navigate to Home</b>."],
+   info:"<b>Actual Cost</b> değeri 0 ise maliyetleri <b>SAP GUI</b> işlemi <b>CAT7</b> üzerinden aktarın: <b>Service Order</b> numarasını girin → <b>Execute (F8)</b>."}
+]}
+]}
+];
+
+function path(a){if(!a||!a.length)return'';return'<div class="pr">'+a.map((p,i)=>`<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`).join('')+'</div>';}
+function tbl(f){if(!f||!f.length)return'';const rows=f.map(([a,b])=>{if(a.startsWith('──'))return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;return`<tr><td>${a}</td><td>${b}</td></tr>`;}).join('');return`<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>`;}
+function steps(s){if(!s||!s.length)return'';return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';}
+function task(t){const body=path(t.path)+(t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+( t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+tbl(t.fields)+steps(t.steps)+(t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');return`<div class="task"><div class="thdiv" onclick="togTask(this)"><span class="tn">${t.num}</span><span class="tt">${t.title}</span>${t.app?`<span class="ab">${t.app}</span>`:''}<span class="task-chev">›</span></div><div class="task-body">${body}</div></div>`;}
+function card(e,uid){let h=`<div class="card" id="ex${e.id}" data-u="${uid}"><div class="ch" onclick="toggle(this)"><span class="exn">${e.id}</span><div class="cl"><div class="ct">${e.title}</div><div class="ca">${e.app}</div></div><div class="cr"><span class="sb">${e.tasks.length} Adım</span><span class="chev">›</span></div></div><div class="cb">`;if(e.sc)h+=`<div class="scenario">${e.sc}</div>`;e.tasks.forEach(t=>h+=task(t));h+=`</div></div>`;return h;}
+function unit(u){const uid=`u${u.unit}`;const colors={2:'#a855f7',3:'#60a5fa',4:'#f59e0b',5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8',10:'#06b6d4',11:'#fb7185'};const c=colors[u.unit]||'#60a5fa';let h=`<div class="ug collapsed ${uid}" id="${uid}"><div class="uh" onclick="togUnit(this)"><span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">Unit ${u.unit}</span><span class="utitle">${u.title}</span><span class="uc">${u.ex.length} egzersiz</span><span class="uchev">›</span></div><div class="ug-body">`;u.ex.forEach(e=>h+=card(e,uid));return h+'</div></div>';}
+function toggle(h){h.parentElement.classList.toggle('open');}
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+function togTask(hdr){hdr.parentElement.classList.toggle('open');}
+function run(){const q=term.toLowerCase().trim();let vis=0;document.querySelectorAll('.ug').forEach(ug=>{const uid=ug.id;const uMatch=filterU==='all'||filterU===uid;let uVis=false;ug.querySelectorAll('.card').forEach(card=>{if(!uMatch){card.classList.add('hid');return;}const raw=card.querySelector('.ch').textContent+card.querySelector('.cb').innerHTML;const m=!q||raw.toLowerCase().includes(q);if(m){card.classList.remove('hid');vis++;uVis=true;}else{card.classList.add('hid');}});ug.classList.toggle('hid',!uVis||!uMatch);});cnt.textContent=vis||(!q&&filterU==='all'?TOTAL:vis);nores.style.display=(vis===0&&(q||filterU!=='all'))?'block':'none';clr.style.display=q?'inline':'none';}
+const app=document.getElementById('app');const frow=document.getElementById('frow');const cnt=document.getElementById('cnt');const nores=document.getElementById('nores');const srch=document.getElementById('search');const clr=document.getElementById('clr');const xpb=document.getElementById('xpb');const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);cnt.textContent=TOTAL;let term='',filterU='all',allOpen=false;
+D.forEach(u=>{app.innerHTML+=unit(u);const b=document.createElement('button');b.className='fb';b.dataset.u=`u${u.unit}`;b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;frow.appendChild(b);});
+srch.addEventListener('input',e=>{term=e.target.value;run();});
+srch.addEventListener('keydown',e=>{if(e.key==='Escape'){term='';srch.value='';run();}});
+clr.addEventListener('click',()=>{term='';srch.value='';run();srch.focus();});
+frow.addEventListener('click',e=>{const b=e.target.closest('.fb');if(!b)return;filterU=b.dataset.u;document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));b.classList.add('on');run();});
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+xpb.addEventListener('click',()=>{allOpen=!allOpen;document.querySelectorAll('.card:not(.hid)').forEach(c=>c.classList.toggle('open',allOpen));xpb.textContent=allOpen?'Tümünü Kapat':'Tümünü Aç';xpb.classList.toggle('active',allOpen);});
+</script>
+</body>
+</html>

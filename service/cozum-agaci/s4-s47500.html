@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S47500 – Configuring Service Processing in SAP S/4HANA Service</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="u2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="u3"].on{background:rgba(96,165,250,.15);color:#60a5fa;border-color:rgba(96,165,250,.4);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u5"].on{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.opt-badge{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:20px;background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid var(--ybd);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.prereq{font-size:12px;color:var(--td);border-left:3px solid var(--border);padding:6px 11px;margin:10px 0 8px;background:var(--bg3);border-radius:0 5px 5px 0;}
+.prereq b{color:var(--tm);}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+b{color:var(--text);font-weight:500;}
+@media(max-width:600px){
+  #toolbar{padding:8px 14px 9px;}
+  #search-row{grid-template-columns:1fr auto;}
+  #sctr{display:none;}
+  main{padding:18px 12px 60px;}
+  header{padding:14px 16px 12px;}
+  #homebtn{top:14px;right:16px;}
+}
+.uh{cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug-body{}
+.ug.collapsed .ug-body{display:none;}
+</style>
+</head>
+<body>
+<header>
+  <div class="meta">
+    <span class="cid">S47500 · 2506</span>
+    <h1 style="font-size:17px;font-weight:600;">Configuring Service Processing in SAP S/4HANA Service</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Egzersiz: <span class="n">20</span></div>
+    <div class="st">Ünite: <span class="n">5</span></div>
+    <div class="st">Süre: <span class="n">5s 00dk</span></div>
+    <div class="st">Sistem: <span class="n">T41 · Client 400 · S47500-##</span></div>
+  </div>
+  <button id="homebtn" onclick="location.href='index.html'">🏠 Home</button>
+</header>
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.4;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Egzersiz, T-Code, IMG yolu ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">20</b> / 20 egzersiz</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+<script>
+const D=[
+{unit:1,title:"Introducing Service Processing in SAP S/4HANA",ex:[
+{id:1,title:"Optional: Execute a Typical On-Site Service Process in SAP S/4HANA",
+ app:"Create Service Request / Manage Service Orders / Manage Service Quotations / Release for Billing / VF04",
+ optional:true,prereq:[],
+ sc:"C700-C## müşterisi EL-1## sistem soğutma arızasını bildirir. End-to-end servis akışı: Service Request → Service Quotation → Service Order (P700-SC-100 ekleme) → Service Confirmation → Release for Billing → Billing Document.",
+ tasks:[
+  {num:"1",title:"Create Service Request – System Cooling Failed ##",app:"Create Service Request",
+   path:["Space: Service Processing","Service Requests","Create Service Request"],
+   fields:[["── Logon ──",""],["System","T41 / Client 400"],["User","S47500-##"],["Password","Welcome1"],["── Service Request ──",""],["Description","System cooling failed ##"],["Customer","C700-C##"],["Service Employee Group","ICNT_1SUP_DE"],["Reporter/Person","Michael Fischer GR##"],["Employee Responsible","Mr. Service S47500-##"],["Category 1","Complaint"],["Impact","High"],["Priority","High"],["Equipment ID","EL-1##"],["Notes (new)","Temperature rise: 30 K"]],
+   steps:["FLP → Space <b>Service Processing</b> → <b>Service Requests</b> → <b>Create Service Request</b>.", "Description: <b>System cooling failed ##</b>; Customer: <b>C700-C##</b> → Enter.", "Popup: Service Employee Group → <b>ICNT_1SUP_DE</b>.", "Reporter: <b>Michael Fischer GR##</b>; Employee Responsible: <b>Mr. Service S47500-##</b>.", "Category 1: <b>Complaint</b>; Impact: <b>High</b>; Priority: <b>High</b>.", "Reference Objects → Equipment ID: <b>EL-1##</b>.", "Notes → <b>New</b>: Temperature rise: 30 K → <b>Apply</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."]},
+  {num:"2",title:"Create Service Quotation from Service Request (P700_SERV_ONS, 3 HR, 2 Weeks)",app:"Manage Service Requests / Manage Service Quotations",
+   path:["Space: Service Processing","Service Requests","Manage Service Requests"],
+   fields:[["── Quotation ──",""],["Valid To","Today + 2 weeks"],["Product ID","P700_SERV_ONS"],["Quantity","3"],["Unit","HR"]],
+   steps:["FLP → <b>Manage Service Requests</b>; Posting Date: <b>This week</b> → <b>Search</b>.", "Service request işaretlenir → <b>Create Follow-Up</b> → <b>Service Order/Quot. – Order Quotation</b>.", "Quotation Valid To → bugün + 2 hafta.", "Items: Product <b>P700_SERV_ONS</b>, Qty <b>3</b>, HR → Enter → <b>Save</b>. Belge numarası not edilir → <b>Home</b>.", "<b>Manage Service Quotations</b>: Posting Date This week, Status Open → <b>Search</b>.", "Quotation numarası seçilir → Items → <b>Edit List</b> → <b>Release All Items</b> → <b>Save</b>.", "<b>Accept</b> → <b>Transaction History</b>: Service Order entry görülür → <b>Home</b>."]},
+  {num:"3",title:"Plan Service Order – Add P700-SC-100 (1 PC) and Release",app:"Manage Service Orders",
+   path:["Space: Service Processing","Service Orders","Manage Service Orders"],
+   fields:[["── 2nd Item ──",""],["Product ID","P700-SC-100"],["Quantity","1"],["Item Category","Sales Item (auto)"],["── Status ──",""],["Status","Released"]],
+   steps:["FLP → <b>Manage Service Orders</b>; Posting Date: This week → <b>Search</b>.", "Service order <b>System cooling failed ##</b> seçilir → belge numarası not edilir.", "<b>Items</b> → <b>Edit List</b>; 2. satır: Product <b>P700-SC-100</b>, Qty <b>1</b> → Enter.", "<b>Service Order Details</b> → <b>Edit</b> → Status: <b>Released</b> → <b>Save</b>. Ekranda kal."]},
+  {num:"4",title:"Create Service Confirmation – Exec. Employee S47500-##, Status Completed",app:"Create Follow-Up",
+   path:[],
+   fields:[["── Confirmation ──",""],["Exec. Service Employee","Technician S47500-## (or S4700-00)"],["Status","Completed"]],
+   steps:["<b>Edit</b> → <b>Create Follow-Up</b> → popup: <b>Service Confirmation - Confirmation</b>.", "Next popup: ilk item seçilir → <b>Choose</b>.", "<b>Parties Involved</b>: Exec. Service Employee → <b>Technician S47500-##</b> (yoksa S4700-00).", "<b>Service Confirmation Details</b> → Status: <b>Completed</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."]},
+  {num:"5",title:"Complete Service Order and Release for Billing",app:"Manage Service Orders / Release for Billing",
+   path:[],
+   fields:[["── Status ──",""],["Status","Completed"]],
+   steps:["<b>Manage Service Orders</b>: service order → <b>Edit</b> → Status: <b>Completed</b> → <b>Save</b> → <b>Home</b>.", "<b>Release for Billing</b>: Created On → <b>Today's date</b> → <b>Search</b>.", "Service confirmation item seçilir → <b>Release for Billing</b> → <b>Home</b>."]},
+  {num:"6",title:"Create Billing Document via VF04",app:"Create Billing Documents - VF04",
+   path:["Space: Billing","Billing Documents","Create Billing Documents - VF04"],
+   fields:[["── Selection ──",""],["Billing Date to","Last day of current month"],["Sold-To Party","C700-C##"],["Documents to Be Selected","Billing Document Requests flag"]],
+   steps:["FLP → Space <b>Billing</b> → <b>Billing Documents</b> → <b>Create Billing Documents - VF04</b>.", "Billing Date to: last day of current month; Sold-To Party: <b>C700-C##</b>.", "<b>Billing Document Requests</b> flag → <b>Display Billing List</b>.", "Item seçilir → <b>Individual Billing Document</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."]}
+]},
+{id:2,title:"Copy a Service Product",
+ app:"SAP GUI (SPRO) / Manage Product Master Data (SAP Fiori)",
+ optional:false,prereq:[],
+ sc:"Item category group ZS## (Item CatGr ##) oluşturulur. P700_SERV_ONS kopyalanarak P700_SERV_ONS_## oluşturulur; ZS## atanır. Material type SERV konfigürasyonu incelenir.",
+ tasks:[
+  {num:"1",title:"Create Item Category Group ZS## (Item CatGr ##) – Verify SCNP",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Category Group"],
+   fields:[["── Existing ──",""],["SCNP","Service Cntrct Prod. (service contract item category group)"],["── New Entry ──",""],["ItCGr","ZS##"],["Description","Item CatGr ##"]],
+   steps:["SAP GUI → T-Code: <b>SPRO</b> → <b>SAP Reference IMG</b>.", "Navigate: <b>Service → Transactions → Basic Settings → Define Item Category Group</b>.", "<b>IMG - Activity</b> icon.", "Listede <b>SCNP (Service Cntrct Prod.)</b> görülür.", "<b>New Entries</b>: ItCGr <b>ZS##</b>, Description <b>Item CatGr ##</b> → Enter → <b>Save</b> → <b>Exit</b>."],
+   info:"Customizing isteği gelirse: sistem numara önerirse <b>Continue</b>, önermezse <b>Create Request</b> → Short Description: Group ##, <b>Save</b> ve <b>Continue</b>. Kurs boyunca bu yöntemi kullan."},
+  {num:"2",title:"Copy P700_SERV_ONS → P700_SERV_ONS_## via Manage Product Master Data; Assign ZS##",app:"Manage Product Master Data",
+   path:["Space: Master Data","Service Products","Manage Product Master Data"],
+   fields:[["── Copy ──",""],["Source Product","P700_SERV_ONS"],["New Product Number","P700_SERV_ONS_##"],["Product Type","Services (SERV)"],["Description","Service Onsite - Standard ##"],["── Distribution Chain 1010/10 / Plant 1040 ──",""],["Item Category Group","ZS## (Item CatGr ##)"]],
+   steps:["FLP → Space <b>Master Data</b> → <b>Service Products</b> → <b>Manage Product Master Data</b>.", "Product: <b>P700_SERV_ONS</b> → <b>Go</b> → seçilir → <b>Copy</b> → <b>OK</b>.", "Product Number: <b>P700_SERV_ONS_##</b>; type: <b>Services (SERV)</b> doğrulanır.", "Description: <b>Service Onsite - Standard ##</b> → <b>OK</b>.", "<b>Distribution Chains</b>: chain <b>1010,10</b> / plant <b>1040</b> → <b>></b> icon.", "Item Category Group (under Grouping Terms) → <b>ZS## (Item CatGr ##)</b> → <b>Apply</b> → <b>Create</b> → <b>Home</b>."]},
+  {num:"3",title:"Check Configuration of Material Type SERV in Customizing",app:"SAP GUI – SPRO",
+   path:["Logistics General","Material Master","Basic Settings","Material Types","Define Attributes of Material Types"],
+   fields:[["── SERV ──",""],["Product Type Group","2 (Service)"],["User Departments","Accounting, Classification, Purchasing, Basic Data, Sales"],["Qty/value updating","In no valuation area"]],
+   steps:["SAP GUI → T-Code: <b>/NSPRO</b> → <b>SAP Reference IMG</b>.", "Navigate: <b>Logistics General → Material Master → Basic Settings → Material Types → Define Attributes of Material Types</b>.", "<b>IMG - Activity</b>: Position... → Material type: <b>SERV</b> → Enter.", "<b>SERV (Services)</b> seçilir → <b>Details</b>: alanlar kontrol edilir → <b>Exit</b>."],
+   result:"<b>Product Type Group</b>: 2 (Service). User departments: Accounting, Classification, Purchasing, Basic Data, Sales. Miktar/değer güncellemesi: hiçbir değerleme alanında yok."}
+]}
+]},
+{unit:2,title:"Learning the General Configuration of Service Processing",ex:[
+{id:3,title:"Configure a Transaction Type in SAP S/4HANA Service",
+ app:"SAP GUI (SPRO) / Create Service Order (SAP Fiori)",
+ optional:false,prereq:["Copy a Service Product"],
+ sc:"SRVO kopyalanarak ZT## (Service Order ##) oluşturulur. Leading business transaction category, doc pricing procedure, confirmation TT, contract/text/partner determination ve number range incelenir. FLP'de item category hatası doğrulanır.",
+ tasks:[
+  {num:"1",title:"Copy Transaction Type SRVO to ZT## (Service Order ##)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types"],
+   fields:[["── Copy ──",""],["Source","SRVO (Service Order)"],["Transaction Type","ZT##"],["Description","Service Order ##"]],
+   steps:["SAP GUI → T-Code: <b>SPRO</b> → <b>SAP Reference IMG</b>.", "Navigate: <b>Service → Transactions → Basic Settings → Define Transaction Types</b>.", "<b>IMG - Activity</b>: <b>Position...</b> → <b>SRVO</b> → Enter.", "<b>SRVO (Service Order)</b> seçilir → <b>Copy As...</b>.", "Transaction Type: <b>ZT##</b>; description: <b>Service Order ##</b> → Enter → <b>Continue</b> → <b>Save</b>. Ekranda kal."],
+   info:"Customizing isteği gelirse: <b>Continue</b> / <b>Create Request</b> (Short Description: Group ##), <b>Save</b> ve <b>Continue</b>."},
+  {num:"2",title:"Check Leading Business Transaction Category and Additional Categories",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["<b>ZT## (Service Order ##)</b> seçilir → <b>Details</b>: <b>Leading Transaction Category</b> kontrol edilir.", "Sol tarafta <b>Assignment of Business Transaction Categories</b> klasörüne çift tıklanır."],
+   result:"<b>Leading Transaction Category</b>: Service Order/Quot. (BUS2000116). Ek kategoriler: Sales (BUS2000115) ve Business Activity (BUS2000126)."},
+  {num:"3",title:"Check Document Pricing Procedure for ZT## (Sales BUS2000115)",app:"SAP GUI – SPRO",
+   path:[],fields:[["── Result ──",""],["Doc. Pric.Proc.","Service Order (S1)"]],
+   steps:["<b>Sales (BUS2000115)</b> seçilir → sol tarafta <b>Customizing header</b> klasörüne çift tıklanır.", "<b>Doc. Pric.Proc.</b> alanı not edilir → <b>Back</b>."]},
+  {num:"4",title:"Check Transaction Type Used for Service Confirmation (Trans.Type Confirm.)",app:"SAP GUI – SPRO",
+   path:[],fields:[["── Result ──",""],["Trans.Type Confirm.","SRVC (Service Confirmation)"]],
+   steps:["<b>ZT## (Service Order ##)</b> seçilir → <b>Assignment of Business Transaction Categories</b>.", "<b>Service Order/Quot. (BUS2000116)</b> → <b>Customizing header</b>: <b>Trans.Type Confirm.</b> alanı not edilir.", "<b>Definition of transaction types</b> klasörüne çift tıklanır."]},
+  {num:"5",title:"Check Contract Determination, Text/Partner Procedure, Number Range",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── ZT## Details ──",""],["Contract Determ.","(check)"],["Text Det. Procedure","(check)"],["Partner Determ.Proc.","(check)"],["Int.No.Range No","(check)"]],
+   steps:["<b>ZT## (Service Order ##)</b> seçilir → <b>Details</b>.", "Contract Determ, Text Det. Procedure, Partner Determ.Proc. ve Int.No.Range No alanları not edilir → <b>Exit</b>."]},
+  {num:"6",title:"Test ZT## on SAP Fiori – Item Category Determination Error Expected",app:"Create Service Order",
+   path:["Space: Service Processing","Service Orders","Create Service Order"],
+   fields:[["── Test ──",""],["Transaction Type","ZT## (Service Order ##)"],["Sold-To Party","C700-C##"],["Service Employee Group","ICNT_1SUP_DE"],["Contact","Michael Fischer"],["Product ID","P700_SERV_ONS_##"]],
+   steps:["FLP → <b>Create Service Order</b>.", "Popup: <b>ZT##</b> seçilir. Sold-To Party: <b>C700-C##</b> → Enter → <b>ICNT_1SUP_DE</b>.", "Contact: <b>Michael Fischer</b>; Items: Product <b>P700_SERV_ONS_##</b>.", "Hata mesajları görünür → sol altta kırmızı <b>Detail</b> icon → mesajlar incelenir.", "<b>Cancel</b> → <b>Discard</b> → <b>Home</b>."],
+   result:"Hata: item category determination yapılamıyor — Customizing henüz tam yapılandırılmadı. Bu aşamada beklenen bir hata."}
+]},
+{id:4,title:"Configure an Item Category in SAP S/4HANA Service",
+ app:"SAP GUI (SPRO)",
+ optional:false,prereq:[],
+ sc:"SRVP kopyalanarak ZI## (Service Item ##) oluşturulur. Object type, billing/pricing/quotation relevance (BUS2000115), confirmation/costing relevance (BUS2000116), text/partner/date/action profile incelenir.",
+ tasks:[
+  {num:"1",title:"Copy Item Category SRVP to ZI## (Service Item ##)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Categories"],
+   fields:[["── Copy ──",""],["Source","SRVP (Service Item)"],["Item Category","ZI##"],["Description","Service Item ##"]],
+   steps:["Navigate: <b>Service → Transactions → Basic Settings → Define Item Categories</b>.", "<b>IMG - Activity</b>: Position <b>SRVP</b> → <b>Copy As...</b>.", "Item Category: <b>ZI##</b>; description: <b>Service Item ##</b> → Enter → <b>Continue</b> → <b>Save</b>. Ekranda kal."]},
+  {num:"2",title:"Check Object Type and Status Object Type for ZI##",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["<b>ZI##</b> seçilir → <b>Details</b>: Object Type ve Status Object Type kontrol edilir."],
+   result:"<b>Object Type</b>: Service Product Item (BUS2000140). <b>Status Object Type</b>: boş."},
+  {num:"3",title:"Check Business Transaction Categories for ZI##",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["Sol tarafta <b>Assignment of Business Transaction Categories</b> klasörüne çift tıklanır."],
+   result:"<b>ZI##</b>, Sales (BUS2000115) ve Service Order/Quot. (BUS2000116) kategorileri için ayarlanmış."},
+  {num:"4",title:"Check Billing Relevance, Pricing and Quotation Relevance (BUS2000115)",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["<b>Sales (BUS2000115)</b> seçilir → <b>Customizing Item</b> klasörüne çift tıklanır.", "<b>Bill. Relevance</b>, <b>Pricing-rel.</b> flag ve <b>Relevance for Quotation</b> alanları not edilir.", "<b>Assignment of Business Transaction Categories</b> klasörüne tekrar çift tıklanır."],
+   result:"<b>Bill. Relevance</b>: Fatura için ilgisiz. <b>Pricing-rel.</b>: ayarlı (fiyatlandırma için ilgili). <b>Relevance for Quotation</b>: 0 Is a Sales / Service Trn. (servis order kalemi, teklif kalemi DEĞİL).",
+   warn:"Yeni <b>ZI##</b> item category için <b>Relevance for Quotation</b> değerini '2 Is a Quotation' olarak DEĞİŞTİRME."},
+  {num:"5",title:"Check Confirmation and Costing Relevance (BUS2000116)",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["<b>Service Order/Quot. (BUS2000116)</b> seçilir → <b>Customizing Item</b> klasörüne çift tıklanır.", "<b>Confirmation Relevance</b> ve <b>Relevant for Actual Cost Posting</b> kontrol edilir.", "<b>Definition of Item Categories</b> klasörüne çift tıklanır."],
+   result:"<b>Confirmation Relevance</b>: Relevant (X). <b>Relevant for Actual Cost Posting</b>: işaretli."},
+  {num:"6",title:"Check Text Det. Proc., PartnerDetProc, Date Profile, Action Profile",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["<b>ZI## (Service Item ##)</b> seçilir → <b>Details</b>.", "Text Det. Proc., PartnerDetProc, Date Profile, Action Profile not edilir → <b>Exit</b>. Popup'ları Yes ile kapat."],
+   info:"Bu profillerin işlevselliği sonraki bir derste ele alınacaktır."}
+]},
+{id:5,title:"Configure Item Category Determination",
+ app:"SAP GUI (SPRO) / Create Service Order (SAP Fiori)",
+ optional:false,
+ prereq:["Copy a Service Product","Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service"],
+ sc:"ZT##+ZS## → ZI## determination kurulur (alt: SRVP). SRVR/SRVQ/SRVC için ZS## kopyalanır. SRVO'nun tüm entryleri ZT##'e kopyalanır. Test: ZT## order'da P700_SERV_ONS_## için ZI## determine edilmeli.",
+ tasks:[
+  {num:"1",title:"Enable Show Keys in SAP GUI Dropdown Lists",app:"SAP GUI – Customize Local Layout",
+   path:[],fields:[],
+   steps:["SAP GUI'da herhangi bir ekranda icon bar sağında <b>Customize Local Layout</b> icon seçilir.", "<b>Options</b> → <b>Interaction Design</b> → <b>Visualization 1</b>.", "<b>Show keys within dropdown lists</b> ve <b>Sort by key within dropdown lists</b> flag → <b>Apply</b> → <b>OK</b>."]},
+  {num:"2",title:"New Entry: ZT## + ZS## → ZI## (Manual Alt: SRVP)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Category Determination"],
+   fields:[["── New Entry ──",""],["Transaction Type","ZT##"],["Item Cat. Group","ZS##"],["Item Category","ZI##"],["AltrntveItemCty (1st)","SRVP"]],
+   steps:["Navigate: <b>Service → Transactions → Basic Settings → Define Item Category Determination</b>.", "<b>IMG - Activity</b>: <b>New Entry</b>: Trans. Type <b>ZT##</b>, Item Cat. Group <b>ZS##</b> (other determination fields boş).", "Item Category: <b>ZI##</b>; AltrntveItemCty: <b>SRVP</b> → Enter → <b>Save</b>.", "<b>Exit</b> → transactiona tekrar gir."]},
+  {num:"3",title:"Copy SRVR/SRVQ/SRVC + SRVP Entries to ZS## for Each Transaction Type",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── For each ──",""],["Transaction Types","SRVR, SRVQ, SRVC"],["Source ItCGr","SRVP"],["Target ItCGr","ZS##"]],
+   steps:["<b>Position...</b>: Trans. Type <b>SRVR</b>, Item Cat. Group <b>SRVP</b> → entry seçilir → <b>Copy As...</b> → ItCGr: <b>ZS##</b> → Enter (2 kez).", "Aynı işlemi <b>SRVQ</b> ve <b>SRVC</b> için tekrarlayın.", "<b>Save</b> → <b>Exit</b>."]},
+  {num:"4",title:"Copy All SRVO Entries to ZT## (New Source Transaction Type)",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["<b>Position</b>: Trans. Type <b>SRVO</b> → <b>Continue</b>.", "SRVO olan tüm entries seçilir → <b>Copy As...</b> → her entry için Trans. Type: <b>ZT##</b> → Enter.", "<b>Save</b> → <b>Exit</b>."]},
+  {num:"5",title:"Test: Create ZT## Service Order with P700_SERV_ONS_## (1 HR)",app:"Create Service Order",
+   path:["Space: Service Processing","Service Orders","Create Service Order"],
+   fields:[["── Service Order ──",""],["Transaction Type","ZT## (Service Order ##)"],["Sold-To Party","C700-C##"],["Service Employee Group","ICNT_1SUP-DE"],["Description","Unit 2 Service Order 1 ##"],["Product ID","P700_SERV_ONS_##"],["Quantity","1"]],
+   steps:["FLP → <b>Create Service Order</b> → Popup: <b>ZT##</b>.", "Sold-To Party: <b>C700-C##</b> → Enter → Popup: <b>ICNT_1SUP-DE</b>.", "Description: <b>Unit 2 Service Order 1 ##</b>; Items: Product <b>P700_SERV_ONS_##</b>, Qty <b>1</b> → Enter.", "Item category: <b>Service Item ## (ZI##)</b> determine edilmeli.", "<b>Save</b>. Belge numarası not edilir → <b>Home</b>."],
+   result:"<b>ZI##</b> (Service Item ##) item category doğru belirlendi. Manuel alternatif: <b>SRVP</b> (Service Item). Hata mesajları görünmeye devam eder — beklenen, daha fazla yapılandırma gerekli.",
+   info:"Service order kaydedilebilir ve belge numarası atanır. 'Account determination procedure cannot be determined' gibi hata mesajları bu aşamada beklenmektedir."}
+]},
+{id:6,title:"Configure Copying Control for Business Transactions",
+ app:"SAP GUI (SPRO) / Create Service Quotation / Manage Service Quotations (SAP Fiori)",
+ optional:false,
+ prereq:["Copy a Service Product","Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service","Configure Item Category Determination"],
+ sc:"Transaction level: SC→ZT##, SRVO→ZT##, SRVQ→ZT## kopyalanır. Item level: SCN→ZI##, SRVP→ZI##, SRQP→ZI## kopyalanır. Item Category Determination when Copying: SRVP→ZI## kopyalanır. Test: SRVQ quotation → ZT## order dönüştürme.",
+ tasks:[
+  {num:"1",title:"Copy SC → SRVO Copying Control to SC → ZT## (Transaction Level)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Copying Control for Transaction Types"],
+   fields:[["── Find ──",""],["Srce Trans. Type","SC"],["Tgt Trans. Type","SRVO"],["── New Target ──",""],["New Tgt Trans. Type","ZT##"]],
+   steps:["Navigate: <b>Service → Transactions → Basic Settings → Copying Control for Business Transactions → Define Copying Control for Transaction Types</b>.", "<b>IMG - Activity</b>: Position Srce: <b>SC</b>, Tgt: <b>SRVO</b> → Enter.", "Copy item no. flag, Complete Reference, Copy Price Agreement alanları incelenir.", "SC→SRVO satırı seçilir → <b>Copy As...</b> → Tgt Trans. Type: <b>ZT##</b> → Enter → <b>Save</b>. Ekranda kal."]},
+  {num:"2",title:"Copy All SRVO Source Entries to ZT## (4 Entries)",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["Position: Srce Trans. Type <b>SRVO</b> → <b>Continue</b>.", "SRVO olan 4 entry seçilir → <b>Copy As...</b> → her entry: Source trans. → <b>ZT##</b> → Enter → <b>Save</b>. Ekranda kal."]},
+  {num:"3",title:"New Entry: Source SRVQ → Target ZT## (Transaction Level)",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── New Entry ──",""],["Source trans.","SRVQ"],["Tgt Trans. Type","ZT##"]],
+   steps:["<b>New Entries</b>: Source trans. <b>SRVQ</b>, Tgt Trans. Type <b>ZT##</b> → <b>Save</b> → <b>Exit</b>."]},
+  {num:"4",title:"Copy SCN → SRVP Item Category Copying Control to SCN → ZI## (Item Level)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Copying Control for Item Categories"],
+   fields:[["── Find ──",""],["Source Item Cat.","SCN"],["Target item cat.","SRVP"],["── New Target ──",""],["New Target item cat.","ZI##"]],
+   steps:["Navigate: <b>...Define Copying Control for Item Categories</b>.", "<b>IMG - Activity</b>: Position Source <b>SCN</b>, Target <b>SRVP</b>.", "SCN→SRVP satırı seçilir → <b>Copy As...</b> → Target item cat.: <b>ZI##</b> → Enter → <b>Save</b>. Ekranda kal."]},
+  {num:"5",title:"Copy All SRVP Source Entries to ZI## (3 Entries)",app:"SAP GUI – SPRO",
+   path:[],fields:[],
+   steps:["Position: Source Item Cat. <b>SRVP</b> → <b>Continue</b>.", "SRVP olan 3 entry seçilir → <b>Copy As...</b> → her entry: Source Item Cat. → <b>ZI##</b> → Entry → <b>Save</b>."]},
+  {num:"6",title:"New Entry: SRQP → ZI## with Copy Conditions A",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── New Entry ──",""],["Source Item Cat.","SRQP"],["Target item cat.","ZI##"],["Copy conditions","A Copy conditions, redetermine scales"]],
+   steps:["<b>New Entries</b>: Source <b>SRQP</b>, Target <b>ZI##</b>.", "Copy conditions → <b>A Copy conditions, redetermine scales</b> → <b>Save</b> → <b>Exit</b>."]},
+  {num:"7",title:"Define Item Category Determination when Copying – SRVP → ZI##",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Item Category Determination when Copying"],
+   fields:[["── Copy ──",""],["Source Item Cat.","SRVP (2 entries)"],["New Source Item Cat.","ZI##"]],
+   steps:["Navigate: <b>...Define Item Category Determination when Copying</b>.", "<b>IMG - Activity</b>: Position Source <b>SRVP</b>.", "SRVP olan 2 entry seçilir → <b>Copy As...</b> → her entry: Source Item Cat. → <b>ZI##</b> → Enter → <b>Save</b> → <b>Exit</b>."],
+   info:"Bu 2 satır, normal ve onarım servis onayındaki hedef item categoryleri belirler."},
+  {num:"8",title:"Test: Create SRVQ Quotation with P700_SERV_ONS_## (1 HR) + Manual Price 100 EUR",app:"Create Service Quotation",
+   path:["Space: Service Processing","Service Order Quotations","Create Service Quotation"],
+   fields:[["── Quotation ──",""],["Transaction Type","SRVQ (Order Quotation)"],["Description","Unit 2 Test ZI##"],["Sold-To Party","C700-C##"],["Service Employee Group","ICNT_1SUP-DE"],["Product ID","P700_SERV_ONS_##"],["Quantity","1"],["Manual Price","100 EUR"]],
+   steps:["FLP → <b>Create Service Quotation</b> → Popup: <b>SRVQ (Order Quotation)</b>.", "Description: <b>Unit 2 Test ZI##</b>; Sold-To Party: <b>C700-C##</b> → Enter → <b>ICNT_1SUP-DE</b>.", "Items: Product <b>P700_SERV_ONS_##</b>, Qty <b>1</b>. Item category: <b>SRQP (Service Item)</b>.", "Item 10 <b>Edit</b> → <b>Price Details</b>: <b>Insert</b> → Manual Price → <b>100 EUR</b>.", "<b>Apply</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."]},
+  {num:"9",title:"Convert SRVQ Quotation to ZT## Service Order – Verify ZI## and 100 EUR Copied",app:"Manage Service Quotations",
+   path:["Space: Service Processing","Service Order Quotations","Manage Service Quotations"],
+   fields:[["── Follow-Up ──",""],["Follow-Up Type","Service Order ## (ZT##)"],["Product","P700_SERV_ONS_##"],["Item Category","Service Item ## (ZI##)"],["Price Copied","100 EUR"]],
+   steps:["FLP → <b>Manage Service Quotations</b>: Sold-To Party <b>C700-C##</b> → <b>Search</b>.", "Önceki quotation seçilir → <b>Create Follow-Up</b>.", "Popup: <b>Service Order ##</b> (ZT##) → Follow-Up - Select Items: <b>P700_SERV_ONS_##</b> → <b>Choose</b>.", "Items: Item Category → <b>Service Item ##</b> (ZI##); price 100 EUR kopyalanmış.", "<b>Save</b>. Belge numarası not edilir → <b>Home</b>."],
+   result:"<b>ZI##</b> (Service Item ##) item category doğru belirlendi. Servis sipariş teklifinden 100 EUR kopyalandı. Yapılandırma doğru çalışıyor.",
+   info:"Uyarı mesajlarını görmezden gel — <b>ZT##</b> ve <b>ZI##</b> için daha fazla yapılandırma sonraki egzersizlerde eklenecektir."}
+]},
+{id:7,title:"Configure the Integration with Controlling",
+ app:"SAP GUI (SPRO / KP26 / KP27 / KO03) / Create Service Order (SAP Fiori)",
+ optional:false,
+ prereq:["Copy a Service Product","Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service","Configure Item Category Determination"],
+ sc:"Item-based accounting aktivasyonu kontrol edilir. ZT##/ZI## CO'ya replicate edilir. ZC## controlling scenario oluşturulur (PC02 eklenir). Activity type 11 (45 EUR/H), cost center 4100 doğrulanır. ZT## service order testi: planned costs 225 EUR, revenue 500 EUR.",
+ tasks:[
+  {num:"1",title:"Check Item-Based Accounting Activation",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Enable Item-Based Accounting for Service"],
+   fields:[],
+   steps:["SAP GUI → T-Code: <b>SPRO</b> → <b>SAP Reference IMG</b>.", "Navigate: <b>Service → Transactions → Settings for Service Transactions → Integration → Enable Item-Based Accounting for Service</b>.", "Durum kontrol edilir → <b>Exit</b>."],
+   result:"Eğitim sisteminde item-based accounting etkin. Maliyet toplayıcı olarak internal (SAPS) order kullanılmıyor."},
+  {num:"2",title:"Replicate ZT## and ZI## to Controlling",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Replicate Service Characteristics Relevant to Controlling"],
+   fields:[["── Flags ──",""],["Transaction Types","✓"],["Item Categories","✓"]],
+   steps:["Navigate: <b>...Replicate Service Characteristics Relevant to Controlling</b>.", "<b>IMG - Activity</b>: Transaction Types ve Item Categories flag → <b>Execute</b> → <b>Exit</b> (2 kez)."]},
+  {num:"3",title:"Check SAPS Order Type – Number Range 500000-599999, Settlement Prof. 90",app:"SAP GUI – SPRO",
+   path:["Controlling","Internal Orders","Order Master Data","Define Order Types"],
+   fields:[["── SAPS ──",""],["Number range interval","500000–599999"],["Settlement prof.","90 (Not for settlement)"]],
+   steps:["Navigate: <b>Controlling → Internal Orders → Order Master Data → Define Order Types</b>.", "<b>IMG - Activity</b>: Position <b>SAPS</b> → Details: alanlar not edilir → <b>Exit</b>."]},
+  {num:"4",title:"Copy Controlling Scenario SAPCRM to ZC## – Add Costing Variant PC02",app:"SAP GUI – SPRO",
+   path:["Integration with Other SAP Components","Customer Relationship Management","Settings for Service Processing","Controlling Integration","Settings for Single-Object Controlling","Create and Change Controlling Scenario"],
+   fields:[["── SAPCRM ──",""],["Settlement Profile","YB0020 (Overhead costs)"],["── New ZC## ──",""],["Controlling Scenario","ZC##"],["Description","Controlling ##"],["Costing Variant","PC02 (Internal Order)"]],
+   steps:["Navigate: <b>Integration with Other SAP Components → CRM → Settings for Service Processing → Controlling Integration → Settings for Single-Object Controlling → Create and Change Controlling Scenario</b>.", "<b>IMG - Activity</b>: SAPCRM details → Settlement Profile: <b>YB0020</b>.", "<b>Copy As...</b>: Controlling Scenario → <b>ZC##</b>, description → <b>Controlling ##</b> → Enter.", "Costing Variant: <b>PC02 (Internal Order)</b> → <b>Save</b> → <b>Exit</b>."]},
+  {num:"5",title:"Check Default Cost Center Assignment – Cost Center 4100 for All Service Orgs",app:"SAP GUI – SPRO",
+   path:["Service","Master Data","Organizational Management","Cross-Application Assignment of Organizational Units","Assign Cost Centers to Service Organizational Units"],
+   fields:[["── Result ──",""],["Cost Center","4100 (Service) for all orgs/teams"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: cost center 4100 görülür → <b>Exit</b>."]},
+  {num:"6",title:"Assign Activity Type 11 (Personnel Hours) to Item Category ZI##",app:"SAP GUI – SPRO",
+   path:["Integration with Other SAP Components","CRM","Settings for Service Processing","Time Sheet Integration","Define Derivation of Attendance Type, Activity Type and Cost Element"],
+   fields:[["── Copy SVCP → ZI## ──",""],["Source","SVCP"],["Target","ZI##"],["Activity Type","11 (Personnel Hours)"]],
+   steps:["Navigate path → <b>IMG - Activity</b>.", "ZI## için entry var mı kontrol et. Yoksa: SVCP seçilir → <b>Copy As...</b> → Item Cat.: <b>ZI##</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"7",title:"Check Costing Variant PC02 – Activity Type Valuation: Plan Price Average",app:"SAP GUI – SPRO",
+   path:["Controlling","Internal Orders","Planning","Manual Planning","Define Costing Variants"],
+   fields:[["── PC02 ──",""],["ActivityTypes valuation","2 Plan Price as Average of All Fiscal Year Periods"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: PC02 Details → <b>Valuation Variant</b> → <b>ActivityTypes/Processes</b> sekmesi → <b>Exit</b> (2 kez)."]},
+  {num:"8",title:"Add Controlling Scenario ZC## for ZT## (Copy Existing Entry, Today's Date)",app:"SAP GUI – SPRO",
+   path:["Integration with Other SAP Components","CRM","Settings for Service Processing","Controlling Integration","Establish Controlling Type, Controlling Level, and Controlling Scenarios"],
+   fields:[["── Existing Entry (27-11-2019 / *) ──",""],["Controlling Type","Single-Object Controlling (S)"],["Controlling Level","Transaction (1)"],["Controlling Scenario","SAPCRM"],["── New Entry ──",""],["CRM Trans. Type","ZT##"],["Valid-From Date","Today's date"],["Valid-From Time","Current time + 2 min (CET)"],["Controlling Scenario (new)","ZC## (Controlling ##)"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: 27-11-2019 entry incelenir. Controlling Scenario klasörü → SAPCRM görülür.", "<b>Back</b>; 27-11-2019 entry seçilir → <b>Copy As...</b>: CRM Trans. Type → <b>ZT##</b>; Valid-From Date → bugün; time → 2 dk sonra → Enter.", "Popup: <b>copy all</b>.", "Yeni entry seçilir → <b>Controlling Scenario</b> klasörüne çift tıkla → <b>ZC## (Controlling ##)</b> → <b>Save</b> → <b>Exit</b>."],
+   info:"Sistem saat dilimi muhtemelen CET'tir. Yerel saatini dönüştürmek için gerekirse <b>Other Time Zone</b> ikonunu kullan."},
+  {num:"9",title:"Check Controlling Area A000, Substitution Rule ZSERV01 – Profit Center T-S4700",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── Result ──",""],["Company Code 1010","→ Controlling Area A000"],["Substitution (A000)","ZSERV01 (Determination for Service)"],["Profit Center","T-S4700 (constant)"],["Rule ZRULE01","Sales org 1010 or 1710"]],
+   steps:["Navigate: <b>Enterprise Structure → Assignment → Controlling → Assign company code to controlling area</b>: A000 → 1010 kontrol.", "Navigate: <b>...Settings for Profit Center Accounting → Assign Substitution Rules for CRM Processes</b>: ZSERV01.", "Navigate: <b>...Define Substitution Rules for CRM Processes</b>: ZSERV01 → Step 001 → Substitutions: T-S4700; Rules → ZRULE01: sales org 1010/1710 → <b>Exit</b>."]},
+  {num:"10",title:"Check/Maintain Activity Type 11 Valuation Price – 45 EUR/H (KP27/KP26)",app:"SAP GUI – KP27 / KP26",
+   path:[],
+   fields:[["── KP27 ──",""],["Controlling Area","A000"],["Version","0"],["From Period","1"],["To Period","12"],["Fiscal year","Current year"],["Cost Center","4100"],["Activity Type","11"],["Price (Fixed)","45 EUR / 1 H"]],
+   steps:["Command field: <b>/OKP27</b>. Popup: <b>A000</b> → Continue.", "Alanlar girilir → <b>Period Screen</b>: 45 EUR/H kontrol edilir.", "Yoksa: <b>KP26</b> ile aynı alanlar → <b>Overview Screen</b> → Price (Fixed): <b>45</b> → <b>Save</b> → <b>Exit</b>."]},
+  {num:"11",title:"Test: ZT## Service Order 5H P700_SERV_ONS_## – Release, Check Planned Costs/Revenue",app:"Create Service Order",
+   path:["Space: Service Processing","Service Orders","Create Service Order"],
+   fields:[["── Service Order ──",""],["Transaction Type","ZT## (Service Order ##)"],["Description","Controlling ##"],["Sold-To Party","C700-C##"],["Service Employee Group","ICNT_1SUP-DE"],["Product ID","P700_SERV_ONS_##"],["Quantity","5"],["Manual Price","100 EUR/H"]],
+   steps:["FLP → <b>Create Service Order</b> → ZT##.", "Description: <b>Controlling ##</b>; Sold-To Party: <b>C700-C##</b> → Enter → ICNT_1SUP-DE.", "Items: Product <b>P700_SERV_ONS_##</b>, Qty <b>5</b> → Enter. Popup (service contract): <b>No Assignment</b>.", "Item Edit → <b>Price Details</b>: Insert → Manual Price → <b>100</b> → Apply.", "Items → <b>Release All Items</b> → <b>Save</b>. Belge numarası not edilir.", "<b>Planned Cost and Revenue</b>: costs 225 EUR, revenue 500 EUR → <b>Home</b>."],
+   result:"Planlanan maliyet: 225 EUR (45 EUR × 5 H). Planlanan gelir: 500 EUR (100 EUR × 5 H). Yapılandırma doğru."},
+  {num:"12",title:"Optional (Only If Item-Based Accounting NOT Active): Check Internal Order KO03",app:"SAP GUI – KO03",
+   path:[],
+   fields:[["── KO03 ──",""],["Order","(internal order number)"]],
+   steps:["Command field: <b>/NKO03</b> → Enter.", "Internal order numarası → Enter → <b>Extras</b> → <b>Cost Analysis</b>: 225 EUR → <b>Exit</b> (2 kez)."],
+   info:"Yalnızca item-based accounting KULLANILMIYORSA geçerlidir. Gerçek maliyetler, onay + CATS zaman çizelgesi transferi yapıldığında gönderilir."}
+]},
+{id:8,title:"Configure the Integration with the Cross-Application Time Sheet (CATS)",
+ app:"SAP GUI (SPRO / SNRO / PPOME / KP26)",
+ optional:false,
+ prereq:["Configure an Item Category in SAP S/4HANA Service","Configure the Integration with Controlling"],
+ sc:"CATS data entry profile S4H_CRM incelenir (weekly, no approval, master cost center). Number range CATS_S4KEY, activity type 11 → ZI## kopyası. Cost element 61008000 (expense). SRV_TECH_DE cost center 4100. Valuation price 45 EUR doğrulanır.",
+ tasks:[
+  {num:"1",title:"Check CATS Data Entry Profile Assignment – S4H_CRM for Service Scenarios",app:"SAP GUI – SPRO",
+   path:["Integration with Other SAP Components","CRM","Settings for Service Processing","Time Sheet Integration","Assign Data Entry Profile"],
+   fields:[["── Result ──",""],["Profile","S4H_CRM (Timesheet Profile for Internal Service Employees)"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: S4H_CRM görülür → <b>Exit</b>."]},
+  {num:"2",title:"Check S4H_CRM Profile – Period Type, Approval, Cost Posting",app:"SAP GUI – SPRO",
+   path:["Cross-Application Components","Time Sheet","Specific Settings for CATS regular","CATS regular","Record Working Time","Set Up Data Entry Profiles"],
+   fields:[["── S4H_CRM Settings ──",""],["Period type","2 (Weekly) – 1 week"],["Approval","Without approval procedure"],["Cost accounting variant","Assignment of personnel costs to master cost center"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: S4H_CRM seçilir → <b>Details</b>: alanlar kontrol edilir → <b>Exit</b>."]},
+  {num:"3",title:"Check Number Range for CATS_S4KEY – Range 01: 1 to 999999999",app:"SAP GUI – SNRO",
+   path:[],
+   fields:[["── CATS_S4KEY ──",""],["Object Name","CATS_S4KEY"],["Number Range 01","From: 00000000000000000001 / To: 00000000000999999999"]],
+   steps:["Yeni SAP GUI session: T-Code <b>SNRO</b> → Object Name: <b>CATS_S4KEY</b> → <b>Display</b>.", "<b>Interval Editing</b> → <b>Display intervals</b>: range 01 kontrol edilir → <b>Exit</b> (3 kez)."]},
+  {num:"4",title:"Check Activity Type 11 for SRVP; Copy to ZI## if Missing",app:"SAP GUI – SPRO",
+   path:["Integration with Other SAP Components","CRM","Settings for Service Processing","Time Sheet Integration","Define Derivation of Attendance Type, Activity Type and Cost Element"],
+   fields:[["── SRVP ──",""],["Activity Type","11 (PERSONNEL HOURS)"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: SRVP → activity type <b>11 (PERSONNEL HOURS)</b>.", "ZI## için entry yoksa: SRVP seçilir → <b>Copy As...</b> → Item Cat.: <b>ZI##</b> → Enter → <b>Save</b>. Ekranda kal."]},
+  {num:"5",title:"Check Cost Element for Expense Item Category SRVE",app:"SAP GUI – SPRO",
+   path:[],fields:[["── SRVE ──",""],["Cost Element","61008000"]],
+   steps:["Tabloda <b>SRVE (Expense)</b> entry: cost element <b>61008000</b> → <b>Exit</b>."]},
+  {num:"6",title:"Check Master Cost Center for SRV_TECH_DE in PPOME – Cost Center 4100",app:"SAP GUI – PPOME",
+   path:[],
+   fields:[["── PPOME ──",""],["Search","Organizational unit / Service Technician DE"],["Master cost center","4100 (Service)"]],
+   steps:["Command field: <b>/NPPOME</b> → Enter.", "Find By: Organizational unit → Search Term → With name: <b>Service Technician DE</b> → Enter.", "Hit list: <b>Service Technician DE</b> çift tıklanır → <b>Account Assignment</b> sekmesi: Master cost center <b>4100</b> → <b>Exit</b>."]},
+  {num:"7",title:"Check Valuation Price 45 EUR for Activity Type 11 (KP26)",app:"SAP GUI – KP26",
+   path:[],
+   fields:[["── KP26 ──",""],["Controlling Area","A000"],["Version","0"],["From/To Period","1 / 12"],["Fiscal year","Current year"],["Cost Center","4100"],["Activity Type","11"]],
+   steps:["Command field: <b>KP26</b> → Enter. Popup: A000 → Enter.", "Alanlar girilir → <b>Overview Screen</b>: Price (Fixed) <b>45 EUR / 1 H</b> kontrol edilir → <b>Exit</b>."],
+   info:"'Configure the Integration with Controlling' adımında zaten yapıldıysa bu adımı atla."}
+]},
+{id:9,title:"Configure Pricing for Service Transactions",
+ app:"SAP GUI (SPRO / VK11) / Create Service Order (SAP Fiori)",
+ optional:false,
+ prereq:["Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service"],
+ sc:"Doc pricing procedure ## (Group ##) oluşturulur; S1 → ## olarak ZT##'e atanır. Z10J01 Service Order 1 (DE) pricing procedure ZT## için belirlenir. PPR0 (100 EUR), SST1 (10 EUR weekend), SST2 (5% public holiday) condition records VK11 ile oluşturulur ve test edilir.",
+ tasks:[
+  {num:"1",title:"Find Customizing Documentation for Pricing Configuration",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Pricing","Configure Pricing"],
+   fields:[],
+   steps:["Navigate: <b>Service → Basic Functions → Pricing</b>.", "<b>Configure Pricing</b> yanındaki IMG activity documentation icon → dökümantasyonu oku → popup kapat."]},
+  {num:"2",title:"Create Document Pricing Procedure ## (Service ##) – Check S1/S2/S3/S5",app:"SAP GUI – SPRO",
+   path:["Sales and Distribution","Basic Functions","Pricing","Pricing Control","Define And Assign Pricing Procedures","Set Document Pricing Procedures"],
+   fields:[["── Existing ──",""],["S1","Service Order"],["S2","Solution Quotation"],["S3","Service Contract"],["S5","Subscription Order"],["── New Entry ──",""],["DoPr","##"],["Description","Service ##"]],
+   steps:["Navigate: <b>Sales and Distribution → Basic Functions → Pricing → Pricing Control → Define And Assign Pricing Procedures</b>.", "<b>IMG - Activity</b>: popup → <b>Set Document Pricing Procedures</b>.", "Position: <b>S1</b>: mevcut entries incelenir. <b>New Entries</b>: DoPr <b>##</b>, description <b>Service ##</b> → <b>Save</b> → <b>Exit</b>."]},
+  {num:"3",title:"Replace S1 with ## as Doc Pricing Procedure for ZT## (BUS2000115)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types"],
+   fields:[["── Change ──",""],["Transaction Type","ZT##"],["New Doc. Pric.Proc.","## (Service ##)"]],
+   steps:["Navigate: <b>Service → Transactions → Basic Settings → Define Transaction Types</b>.", "<b>IMG - Activity</b>: Position <b>ZT##</b> → <b>Assignment of Business Transaction Categories</b>.", "<b>Sales (BUS2000115)</b> → <b>Customizing header</b>: Doc. Pric.Proc. → <b>##</b> → <b>Save</b> → <b>Exit</b>."]},
+  {num:"4",title:"Assign Z10J01 as Pricing Procedure for ## (Sales Area 1010/10/00)",app:"SAP GUI – SPRO",
+   path:["Sales and Distribution","Basic Functions","Pricing","Pricing Control","Define And Assign Pricing Procedures","Set Pricing Procedure Determination"],
+   fields:[["── Find S1 Entries ──",""],["Sales Org.","1010"],["Distr. Channel","10"],["Division","00"],["DocPricingProc.","S1"],["── Copy to ## ──",""],["New DocPricingProc.","##"]],
+   steps:["Navigate → popup → <b>Set Pricing Procedure Determination</b>.", "Position: Org. 1010, Channel 10, Div. 00, DocPricingProc. <b>S1</b> → 2 satır görünür.", "Her satır seçilir → <b>Copy As...</b> → DocPricingProc. → <b>##</b> → Enter → <b>Save</b> → <b>Exit</b>."],
+   result:"Müşteri fiyatlandırma prosedürü 1 ve 01 için: <b>Z10J01</b> Service Order 1 (DE) fiyatlandırma prosedürü belirlendi."},
+  {num:"5",title:"Check Condition Types in Z10J01 – PPR0 (Step 20), PMP0 (90), SST2 (104)",app:"SAP GUI – SPRO",
+   path:["Sales and Distribution","Basic Functions","Pricing","Pricing Control","Define And Assign Pricing Procedures","Set Pricing Procedures"],
+   fields:[["── Z10J01 Steps ──",""],["Step 20","PPR0 (Price)"],["Step 90","PMP0 (Manual Price)"],["Step 104","SST2 (Service Type (%))"]],
+   steps:["Navigate → popup → <b>Set Pricing Procedures</b>.", "Position: Procedure <b>Z10J01</b> → seçilir → <b>Procedures - Control Data</b>: steps kontrol edilir → <b>Exit</b>; popup kapat."]},
+  {num:"6",title:"Verify Pricing-rel. Flag for ZI## (BUS2000115 → Customizing Item)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Categories"],
+   fields:[["── ZI## ──",""],["Pricing-rel.","flag set"]],
+   steps:["Navigate → IMG - Activity: Position <b>ZI##</b> → <b>Assignment of BTC</b> → <b>BUS2000115 Sales</b> → <b>Customizing Item</b>: Pricing-rel. flag kontrol edilir → <b>Exit</b>."]},
+  {num:"7",title:"Check Number Range Object CRM_KNUMV – Range 01: 000000001 to 999999999",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Pricing","Define Number Ranges for Pricing Documents"],
+   fields:[["── CRM_KNUMV ──",""],["Number Range 01","From: 000000001 / To: 999999999"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: CRM_KNUMV → <b>Display intervals</b>: range 01 → <b>Exit</b>."]},
+  {num:"8",title:"Check KONV Number Range 03 – From 2000000000 to 2999999999",app:"SAP GUI – SNRO",
+   path:[],
+   fields:[["── KONV ──",""],["Object Name","KONV"],["Interval 03","From: 2000000000 / To: 2999999999"]],
+   steps:["SAP Easy Access: T-Code <b>SNRO</b> → Object Name: <b>KONV</b> → <b>Display</b>.", "<b>Interval Editing</b> → <b>Display intervals</b>: interval 03 kontrol edilir → <b>Exit</b> (3 kez)."]},
+  {num:"9",title:"Create Condition Records – PPR0 (100 EUR), SST1 (10 EUR Weekend), SST2 (5% Holiday)",app:"SAP GUI – VK11",
+   path:[],
+   fields:[["── PPR0 (Price) ──",""],["Sales Org. / Distr. Channel","1010 / 10"],["Material","P700_SERV_ONS_##"],["Amount","100 EUR/HR"],["── SST1 (Service Type Abs) ──",""],["Customer / Material","C700-C## / P700_SERV_ONS_##"],["Serv. Type","0001 Weekend"],["Amount","10 EUR"],["── SST2 (Service Type %) ──",""],["Customer / Material","C700-C## / P700_SERV_ONS_##"],["Serv. Type","0002 Public Holiday"],["Amount","5 %"]],
+   steps:["T-Code: <b>VK11</b>; Condition Type <b>PPR0</b> → Enter → <b>Material with release status</b> → <b>Choose</b>.", "Sales Org. 1010, Channel 10. Material: <b>P700_SERV_ONS_##</b>, Amount: <b>100</b> → Enter → <b>Save</b> → <b>Back</b>.", "Condition Type <b>SST1</b> → Customer: <b>C700-C##</b>, Material: <b>P700_SERV_ONS_##</b>, Serv. Type: <b>0001 Weekend</b>, Amount: <b>10</b> → Enter → <b>Save</b> → <b>Back</b>.", "Condition Type <b>SST2</b> → Customer: <b>C700-C##</b>, Material: <b>P700_SERV_ONS_##</b>, Serv. Type: <b>0002 Public Holiday</b>, Amount: <b>5</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"10",title:"Test Pricing: ZT## Order 3H P700_SERV_ONS_## – Weekend and Public Holiday",app:"Create Service Order",
+   path:["Space: Service Processing","Service Orders","Create Service Order"],
+   fields:[["── Service Order ──",""],["Transaction Type","ZT##"],["Description","Pricing ##"],["Sold-To Party","C700-C##"],["Product ID","P700_SERV_ONS_##"],["Quantity","3"]],
+   steps:["FLP → <b>Create Service Order</b> → ZT##. Description: <b>Pricing ##</b>; Sold-To Party: <b>C700-C##</b> → Enter → ICNT_1SUP-DE.", "Items: Product <b>P700_SERV_ONS_##</b>, Qty <b>3</b> → Enter.", "Item Edit → <b>Price Details</b>: 100 EUR görülür.", "Service Type → <b>Weekend</b>: 10 EUR/H surcharge eklendi.", "Service Type → <b>Public Holiday</b>: 10 EUR yerine 5% surcharge.", "<b>Apply</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."],
+   result:"Hafta sonu: 100 EUR taban + 10 EUR/H mutlak ek ücret (SST1). Resmi tatil: 100 EUR taban + %5 ek ücret (SST2)."}
+]},
+{id:10,title:"Configure Other Basic Settings for Business Transactions",
+ app:"SAP GUI (SPRO) / Create Service Order (SAP Fiori)",
+ optional:false,
+ prereq:["Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service"],
+ sc:"5 Task: Partner Processing (ZP## oluştur, ZI##'e ata) → Text Management (SRV00002/SRVITEM1 inceleme) → Date Management (ZRULE## 5 gün, ZDATE##, ZT##'e ata, test) → Actions (SERVICE_ORDER_ITEM_SLA, Define Conditions) → Status Management (IHRP/REPI/REPA2002).",
+ tasks:[
+  {num:"T1.1",title:"Task 1: Check Partner Det. Proc. 00000006 for ZT## and 00000007 for ZI##",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types / Define Item Categories"],
+   fields:[["── ZT## ──",""],["Partner Determ.Proc.","00000006 (SAP Service Header)"],["── ZI## ──",""],["PartnerDetProc","00000007 (SAP Service Item)"]],
+   steps:["<b>Define Transaction Types</b>: Position ZT## → Details: Partner Determ.Proc. kontrol → <b>Exit</b>.", "<b>Define Item Categories</b>: Position ZI## → Details: PartnerDetProc kontrol → <b>Exit</b>."]},
+  {num:"T1.2",title:"Task 1: Compare Partner Functions in Procs 00000006 vs 00000007",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Partner Processing","Define Partner Determination Procedure in Service"],
+   fields:[["── 00000006 ──",""],["7 functions incl.","00000015 Contact Person (CRM)"],["── 00000007 ──",""],["7 functions incl.","00000052 Exec. Service Employee (CRM)"]],
+   steps:["Navigate: <b>Service → Basic Functions → Partner Processing → Define Partner Determination Procedure in Service</b>.", "<b>IMG - Activity</b>: 00000006 → <b>Partner Functions in Procedure</b>: 7 functions, 00000015 görülür.", "<b>Partner Determination Procedures</b> tekrar → 00000007 → <b>Partner Functions in Procedure</b>: 7 functions, 00000052 görülür → <b>Back</b> → <b>Exit</b>."]},
+  {num:"T1.3",title:"Task 1: Check Function Category 0025 for 00000052; Copy 00000007 to ZP##; Assign to ZI##",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Partner Processing","Define Partner Functions / Define Partner Determination Procedure in Service"],
+   fields:[["── 00000052 ──",""],["Function Category","0025 Serv. Employee/Serv. Provider"],["── New ZP## ──",""],["Procedure","ZP##"],["Description","Service Item Group ##"]],
+   steps:["Navigate: <b>...Define Partner Functions</b>: 00000052 → Function Category <b>0025</b> kontrol → <b>Exit</b>.", "Navigate: <b>...Define Partner Determination Procedure in Service</b>: 00000007 seçilir → <b>Copy as...</b>.", "Procedure: <b>ZP##</b>, Description: <b>Service Item Group ##</b> → Enter → <b>copy all</b> → <b>Save</b> → <b>Exit</b>.", "Navigate: <b>Define Item Categories</b>: ZI## → Details → PartnerDetProc: <b>ZP##</b> → <b>Save</b> → <b>Exit</b>."],
+   result:"00000052 Exec. Service Employee için <b>Function Category</b>: 0025 Serv. Employee/Serv. Provider."},
+  {num:"T2.1",title:"Task 2: Text Management – Check SRV00002 for ZT## and SRVITEM1 for ZI##",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Text Management","Define Text Determination Procedure"],
+   fields:[["── ZT## ──",""],["Text Det. Procedure","SRV00002 (SAP - Service [Default])"],["Text Object","CRM_ORDERH (Transaction Header)"],["── ZI## ──",""],["Text Det.Proc.","SRVITEM1 (SAP Service Order Item)"],["Text Object","CRM_ORDERI (Operation data)"]],
+   steps:["ZT## ve ZI## text procedures → Define Transaction Types ve Define Item Categories'den kontrol et.", "Navigate: <b>...Define Text Determination Procedure</b>.", "<b>IMG - Activity</b>: CRM_ORDERH → SRV00002 → Definition of Procedure incelenir.", "CRM_ORDERI → SRVITEM1 → Definition of Procedure: 0002 (Item text) var → <b>Exit</b>."]},
+  {num:"T3.1",title:"Task 3: Date Management – Copy SRV0002 to ZRULE## (5 Days), Copy SRV_HEADER01 to ZDATE##",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Date Management"],
+   fields:[["── ZT## Date Profile ──",""],["SRV_HEADER01","SAP Default Service Activity Header"],["── ZI## Date Profile ──",""],["SRV_SLA_ITEM","SAP Default SLA Data for Item"],["── New Date Rule ──",""],["Date Rule","ZRULE##"],["Description","Start + 5 Days ##"],["Duration","5 (replace 3)"],["── New Date Profile ──",""],["Date Profile","ZDATE##"],["Description","Date Profile Group ##"]],
+   steps:["<b>Define Transaction Types</b>: ZT## → Date Profile: <b>SRV_HEADER01</b>. <b>Define Item Categories</b>: ZI## → Date Profile: <b>SRV_SLA_ITEM</b>.", "Navigate: <b>...Define Date Types, Duration Types and Date Rules for Service Transactions</b>.", "<b>IMG - Activity</b>: Date Rules klasörü → SRV0002 seçilir → <b>Copy As...</b>: ZRULE##, <b>Start + 5 Days ##</b> → Enter.", "ZRULE## → Details → Standard → <b>Change</b>: duration=&quot;3&quot; timeunit=&quot;DAY&quot; satırında değer <b>3</b> → <b>5</b> olarak değiştirilir → <b>Save</b> → <b>Exit</b> (3 kez).", "Navigate: <b>...Define Date Profile for Service Transactions</b>.", "SRV_HEADER01 seçilir → <b>Copy As...</b>: <b>ZDATE##</b>, <b>Date Profile Group ##</b> → Enter → <b>copy all</b> → <b>Save</b>.", "ZDATE## → <b>Date rules</b> → <b>New Entries</b>: <b>ZRULE##</b> → <b>Save</b> → Exit ve tekrar gir (yenileme için).", "ZDATE## → <b>Date Types</b> → <b>SRV_CUST_END (Requested End)</b> → Details: Date Rule → <b>ZRULE##</b> → <b>Save</b> → <b>Exit</b>."],
+   info:"Yeni date rule kaydedildikten sonra, <b>Date Types</b> yapılandırmasında seçilebilir olması için transaction'dan çık ve yeniden gir."},
+  {num:"T3.2",title:"Task 3: Assign ZDATE## to ZT## and Test – Requested End = Today + 5 Days",app:"SAP GUI – SPRO / Create Service Order",
+   path:["Service","Basic Functions","Date Management","Assign Date Profile to Transaction Type"],
+   fields:[["── Assignment ──",""],["Transaction Type","ZT##"],["Date Prof.","ZDATE##"]],
+   steps:["Navigate: <b>...Assign Date Profile to Transaction Type</b>: Position ZT## → Date Prof.: <b>ZDATE##</b> → <b>Save</b> → <b>Exit</b>.", "FLP → <b>Create Service Order</b> → ZT##: henüz veri girmeden <b>Requested End</b> alanı kontrol edilir: bugün + 5 gün.", "<b>Home</b>. Popup'ları OK ile kapat."],
+   result:"<b>Requested End</b> = bugün + 5 gün. <b>ZRULE##</b> (Start + 5 Days ##) doğru çalışıyor.",
+   info:"Tarih güncellenmezse: SAP Fiori launchpad'den çıkış yapıp tekrar giriş yap."},
+  {num:"T4.1",title:"Task 4: Check Action Profiles; Analyze SERVICE_ORDER_ITEM_SLA and Define Conditions",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Actions","Actions in Transaction","Change Actions and Conditions"],
+   fields:[["── ZT## ──",""],["Action Profile","(empty — no action profile on header level)"],["── ZI## ──",""],["Action Profile","SERVICE_ORDER_ITEM_SLA (SAP Standard Monitoring SLA Deadlines + PSL)"],["── Profile ──",""],["Date Profile","SRV_SLA_ITEM"],["Action _SLA_START","Processing Type: smart forms mail"]],
+   steps:["<b>Define Transaction Types</b>: ZT## Details → Action Profile: empty → <b>Exit</b>.", "<b>Define Item Categories</b>: ZI## Details → Action Profile: <b>SERVICE_ORDER_ITEM_SLA</b> → <b>Exit</b>.", "Navigate: <b>...Define Action Profiles and Actions</b>.", "<b>IMG - Activity</b>: SERVICE_ORDER_ITEM_SLA → Details; <b>Action Definition</b>: _START → <b>Processing Types</b>: smart forms mail → <b>Exit</b>.", "Navigate: <b>...Define Conditions</b>: IMG documentation icon → oku → kapat."]},
+  {num:"T5.1",title:"Task 5: Status Management – IHRP/REPA (no profile), IHRI (empty), REPI → REPA2002",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Status Management","Define Status Profile for User Status"],
+   fields:[["── IHRP / REPA ──",""],["User status profile","NO profile (empty)"],["── IHRI ──",""],["Status Profile","Empty"],["── REPI ──",""],["Status Profile","REPA2002 (Repair Object Status)"],["── REPA2002 ──",""],["User statuses","E0001 to E0014"],["QUOT","Lowest status no.: 20 — needs CHCK (status 20) first"]],
+   steps:["<b>Define Transaction Types</b>: IHRP Details → Status Profile: empty. REPA Details → Status Profile: empty → <b>Exit</b>.", "<b>Define Item Categories</b>: IHRI Details → Status Profile: empty. REPI Details → Status Profile: <b>REPA2002</b> → <b>Exit</b>.", "Navigate: <b>...Define Status Profile for User Status</b>.", "<b>IMG - Activity</b>: Position REPA2002 → Details: E0001–E0014. QUOT: Lowest status no. 20 → CHCK (status 20) set edilmeli → <b>Exit</b>."],
+   result:"SAP S/4HANA 2023 FPS02'den itibaren: in-house repair (IHRI) için kullanıcı durumları değil, sistem durumları kullanılır. REPI hâlâ eski <b>REPA2002</b>'yi kullanmaktadır."}
+]}
+]},
+{unit:3,title:"Configuring an On-Site Service Process",ex:[
+{id:11,title:"Define Service and Response Profiles",
+ app:"SAP GUI (CRMD_SERV_SLA / SPRO) / Change Material (SAP Fiori)",
+ optional:false,prereq:["Copy a Service Product"],
+ sc:"7X24 → ZSERV## (exceptions K, holiday calendar 02 Germany-Hamburg). STANDARD → ZRESP## (delete Medium priority). ZSLA## oluşturulur: access seq. 1 = Reference Objects (Product). P700_SERV_ONS_## güncellenir. Test: profiles hala manuel; ZSLA## sonraki egzersizde atanacak.",
+ tasks:[
+  {num:"1",title:"Analyze Service Profile 7X24 – Daily Periodic, All Days, 00:00–24:00 CET",app:"SAP GUI – CRMD_SERV_SLA",
+   path:["SAP Easy Access","Service","Service Processes","Maintain Availability and Response Times"],
+   fields:[["── 7X24 ──",""],["Rule","D daily periodic"],["All Days Are Working Days","radio button set"],["Working times","All 1 days, 00:00–24:00 CET"],["Exceptions","0 no exceptions"]],
+   steps:["SAP Easy Access → <b>Service → Service Processes → Maintain Availability and Response Times</b> (veya T-Code: <b>CRMD_SERV_SLA</b>).", "<b>7X24 (Mo-Su: 0-24h)</b> seçilir → <b>Availability Time</b> icon.", "Popup: rule, All Days flag ve working times incelenir → popup kapatılır."]},
+  {num:"2",title:"Copy 7X24 to ZSERV## – Exceptions K, Holiday Calendar 02 Germany-Hamburg",app:"SAP GUI – CRMD_SERV_SLA",
+   path:[],
+   fields:[["── New ZSERV## ──",""],["Serv Prof.","ZSERV##"],["Description","Serv ##"],["Exceptions","K not on non-working days"],["Holiday calendar","02 Germany (Hamburg)"]],
+   steps:["<b>Display → Change</b> ile change mode.", "<b>7X24 (Mo-Su: 0-24h)</b> seçilir → <b>Copy As...</b>: Serv Prof. → <b>ZSERV##</b>, Description → <b>Serv ##</b> → Enter.", "<b>Availability Time</b>: Exceptions → <b>K not on non-working days</b>; Holiday calendar radio button → <b>02 Germany (Hamburg)</b>.", "<b>Copy</b> → <b>Save</b>. Ekranda kal."]},
+  {num:"3",title:"Analyze STANDARD Response Profile – Priority High: 4H First Reaction, 8H Service End",app:"SAP GUI – CRMD_SERV_SLA",
+   path:[],
+   fields:[["── STANDARD ──",""],["Indicator","Priority"],["Priority High (3) – First Reaction","SRV_RF_DURA: 4 hours"],["Priority High (3) – Service End","SRV_RR_DURA: 8 hours"]],
+   steps:["<b>Response Profile</b> klasörüne çift tıklanır.", "<b>STANDARD (Standard Level Response Time)</b> → Details icon: Priority flag görülür.", "<b>Indicators for Response Times</b>: priority 3 (High) → <b>Response Times</b>: SRV_RF_DURA 4h, SRV_RR_DURA 8h → <b>Back</b> (3 kez)."]},
+  {num:"4",title:"Copy STANDARD to ZRESP## – Delete 5 Medium Priority",app:"SAP GUI – CRMD_SERV_SLA",
+   path:[],
+   fields:[["── New ZRESP## ──",""],["Response Prof.","ZRESP##"],["Description","Resp ##"],["Deleted","5 Medium priority entry"]],
+   steps:["<b>STANDARD</b> seçilir → <b>Copy As...</b>: Response Prof. → <b>ZRESP##</b>, Description → <b>Resp ##</b> → Enter → <b>copy all</b> → Continue.", "<b>ZRESP##</b> → <b>Indicators for Response Times</b>: <b>5 Medium</b> seçilir → <b>Delete</b> → popup: all entries → Continue.", "<b>Save</b> → <b>Exit</b>."]},
+  {num:"5",title:"Check SLA Determination Procedure Z0000001 for SRVR Transaction Type",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types"],
+   fields:[["── SRVR ──",""],["SLA Prof. Det. Proc.","Z0000001 (Service Request SLA Determination)"]],
+   steps:["Navigate: <b>...Define Transaction Types</b>.", "Position <b>SRVR</b> → <b>SRVR (Service Request)</b> → <b>Assignment of Business Transaction Categories</b>.", "<b>BUS2000116 Service Order/Quot.</b> → <b>Customizing header</b>: SLA Prof. Det. Proc. kontrol edilir → <b>Exit</b>."]},
+  {num:"6",title:"Analyze Access Sequence in Z0000001 – Note: SLA Profiles NOT Auto-Copied from Product",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Requests","Define SLA Determination Procedures for Service Transactions"],
+   fields:[],
+   steps:["Navigate: <b>...Define SLA Determination Procedures for Service Transactions</b>.", "<b>IMG - Activity</b>: <b>Z0000001 (Service Request SLA Determination)</b> → <b>Access Sequence</b>: sequence incelenir → <b>Back</b>."],
+   info:"<b>Z0000001</b> için servis/yanıt profilleri servis ürününden servis talebine OTOMATİK kopyalanmaz. Manuel seçim mümkündür. Sonraki adımda oluşturulan <b>ZSLA##</b> ise üründen otomatik kopyalanır."},
+  {num:"7",title:"Copy Z0000001 to ZSLA## – Add Access Seq. 1: 07 Reference Objects (Product)",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── New ZSLA## ──",""],["SLA Det. Proc.","ZSLA##"],["Description","Service Request SLA Determination ##"],["── New Access Sequence ──",""],["Access Seq","1"],["SLA Source","07 Reference Objects (Product)"]],
+   steps:["<b>Z0000001</b> seçilir → <b>Copy As...</b>: SLA Det. Proc. → <b>ZSLA##</b> → Enter → <b>copy all</b> → description: <b>Service Request SLA Determination ##</b>.", "<b>ZSLA##</b> → <b>Access Sequence</b>: <b>New Entries</b>: Access Seq <b>1</b>; SLA Source → <b>07 Reference Objects (Product)</b> → Enter → <b>Save</b> → <b>Back</b> → <b>Exit</b>."]},
+  {num:"8",title:"Add ZSERV## and ZRESP## to Service Product P700_SERV_ONS_## via Change Material",app:"Change Material",
+   path:["Space: Master Data","Service Products","Change Material"],
+   fields:[["── Sales: General/Plant Data ──",""],["Material","P700_SERV_ONS_##"],["View","Sales: General/Plant Data"],["Service Profile","ZSERV##"],["Response Prof.","ZRESP##"]],
+   steps:["FLP → Space <b>Master Data</b> → <b>Service Products</b> → <b>Change Material</b>.", "Material: <b>P700_SERV_ONS_##</b> → <b>Select View(s)</b>: <b>Sales: General/Plant Data</b> → Continue.", "Plant belirtme → Continue.", "Service Profile → <b>ZSERV##</b>; Response Prof. → <b>ZRESP##</b> → <b>Save</b> → <b>Home</b>."]},
+  {num:"9",title:"Test: Create Service Request with P700_SERV_ONS_## – Verify Manual SLA Selection",app:"Create Service Request",
+   path:["Space: Service Processing","Service Requests","Create Service Request"],
+   fields:[["── Test ──",""],["Customer","C700-C##"],["Service Employee Group","ICNT_1SUP-DE"],["Reporter","Michael Fischer"],["Product ID (Reference Objects)","P700_SERV_ONS_##"]],
+   steps:["FLP → <b>Create Service Request</b>.", "Customer: <b>C700-C##</b> → Enter → ICNT_1SUP-DE; Reporter: <b>Michael Fischer</b>.", "Reference Objects: Product ID → <b>P700_SERV_ONS_##</b> → Enter.", "<b>Service Level Agreements</b>: profiles görülür — ZSERV##/ZRESP## NOT otomatik seçilmez (ZSLA## henüz SRVR'a atanmadı).", "Possible values listelerinde ZSERV## ve ZRESP## manuell seçilebilir.", "Bu service request kaydedilmez → <b>Home</b>. Popup'ları OK ile kapat."],
+   info:"<b>ZSLA##</b>, sonraki egzersizde (Configure Service Requests) atanacak. Bundan sonra profiller otomatik olarak önerilecektir."}
+]},
+{id:12,title:"Configure Service Requests",
+ app:"SAP GUI (SPRO) / Create Service Request / Manage Service Quotations (SAP Fiori)",
+ optional:false,
+ prereq:["Copy a Service Product","Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service","Define Service and Response Profiles"],
+ sc:"SRVR → ZR## kopyalanır; ZSLA## atanır. Item category determination (ZR##+SRVP/ZS## → SRQI). Copying control: ZR##→ZT## (TT level), SRQI→ZI## (item level). Checklist SAP00001, log types CH/ST. Test: ZR## service request, ZSERV##/ZRESP## otomatik önermeli.",
+ tasks:[
+  {num:"1",title:"Copy SRVR to ZR## and Assign ZSLA## as SLA Determination Procedure",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types"],
+   fields:[["── Copy ──",""],["Source","SRVR (Service Request)"],["Target","ZR##"],["Description","Service Request ##"],["── SLA ──",""],["SLA Prof. Det. Proc.","ZSLA##"]],
+   steps:["Navigate: <b>...Define Transaction Types</b>.", "Position <b>SRVR</b> → <b>Copy As...</b>: Transaction Type <b>ZR##</b>, description <b>Service Request ##</b> → Enter → Continue.", "<b>ZR##</b> seçilir → <b>Assignment of Business Transaction Categories</b>.", "<b>Service Order/Quot. (BUS2000116)</b> → <b>Customizing header</b>: SLA Prof. Det. Proc. → <b>ZSLA##</b> → <b>Save</b>."]},
+  {num:"2",title:"Item Category Determination: ZR##+SRVP → SRQI and ZR##+ZS## → SRQI",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Category Determination"],
+   fields:[["── Entry 1 ──",""],["Transaction Type","ZR##"],["Item Cat. Group","SRVP"],["Item Category","SRQI"],["── Entry 2 ──",""],["Transaction Type","ZR##"],["Item Cat. Group","ZS##"],["Item Category","SRQI"]],
+   steps:["Navigate: <b>...Define Item Category Determination</b>.", "<b>IMG - Activity</b>: <b>New Entries</b>: ZR##/SRVP/blank/blank → Item Category: <b>SRQI</b> → Back.", "<b>New Entries</b>: ZR##/ZS##/blank/blank → Item Category: <b>SRQI</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"3",title:"Copying Control: ZR## → ZT## (Transaction Level, from SRVR→SRVO)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Copying Control for Transaction Types"],
+   fields:[["── Copy ──",""],["Source SRVR → SRVO","→ ZR## → ZT##"]],
+   steps:["Navigate: <b>...Define Copying Control for Transaction Types</b>.", "Position Source <b>SRVR</b>, Tgt <b>SRVO</b>: satır seçilir → <b>Copy As...</b>: Source → <b>ZR##</b>, Tgt → <b>ZT##</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"4",title:"Copying Control: SRQI → ZI## (Item Level, from SRQI→SRVP)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Copying Control for Item Categories"],
+   fields:[["── Copy ──",""],["Source SRQI → SRVP","→ SRQI → ZI##"]],
+   steps:["Navigate: <b>...Define Copying Control for Item Categories</b>.", "Position Source <b>SRQI</b>, Target <b>SRVP</b>: satır seçilir → <b>Copy As...</b>: Target → <b>ZI##</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"5",title:"Check Checklist Profile SAP00001 and Checklist 00000001 for ZR##",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Checklist Settings","Define Checklist Profiles"],
+   fields:[["── ZR## ──",""],["Chkl. Prof","SAP00001 (SAP Checklist Profile)"],["Checklist","00000001 (SAP Default Checklist)"],["Steps","SRQM_CHKLST_BP (SAP Checklist Step Partner)"]],
+   steps:["Navigate: <b>...Checklist Settings → Define Checklist Profiles</b>.", "<b>IMG - Activity</b>: <b>Assign Checklist Profiles to Trans. Types</b>: Position ZR## → SAP00001 görülür.", "<b>Define Checklist Profiles</b>: SAP00001 → <b>Assign Checklists</b>: 00000001.", "<b>Define Simple Checklists</b>: 00000001 → <b>Assign Steps</b>: SRQM_CHKLST_BP her iki adımda → <b>Exit</b>."]},
+  {num:"6",title:"Check Log Types CH and ST for SRQI – Processing Log",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Requests","Settings for Processing Log","Assign Log Types to Item Categories"],
+   fields:[["── SRQI ──",""],["CH","Changed Fields"],["ST","Status Changes"]],
+   steps:["Navigate path → <b>IMG - Activity</b>: SRQI → CH ve ST kontrol edilir → <b>Exit</b>."]},
+  {num:"7",title:"Test: Create ZR## Service Request – ZSERV##/ZRESP## Auto-Proposed",app:"Create Service Request",
+   path:["Space: Service Processing","Service Requests","Create Service Request"],
+   fields:[["── ZR## Service Request ──",""],["Transaction Type","ZR## (Service Request ##)"],["Description","Test System Cooling Failure ##"],["Customer","C700-C##"],["Service Employee Group","ICNT_1SUP-DE"],["Reporter","Michael Fischer"],["Priority","High"],["Product ID (Reference Objects)","P700_SERV_ONS_##"]],
+   steps:["FLP → <b>Create Service Request</b>.", "Popup: <b>ZR## (Service Request ##)</b>.", "Description: <b>Test System Cooling Failure ##</b>; Customer: <b>C700-C##</b> → Enter → ICNT_1SUP-DE; Reporter: <b>Michael Fischer</b>.", "Priority: <b>High</b>.", "Reference Objects: Product ID → <b>P700_SERV_ONS_##</b> → Enter.", "<b>Service Level Agreements</b>: ZSERV## ve ZRESP## otomatik seçilmeli (ZSLA## artık kullanılıyor).", "<b>Save</b>. Belge numarası not edilir. Ekranda kal."],
+   result:"Servis profili <b>ZSERV##</b> ve yanıt profili <b>ZRESP##</b> otomatik seçildi — <b>ZSLA##</b> (Service Request SLA Determination ##) artık kullanımda.",
+   info:"Transaction type popup görünmezse: SAP Fiori launchpad'den çıkış yapıp tekrar giriş yap."},
+  {num:"8",title:"Convert ZR## Service Request to ZT## Service Order – Verify ZI##",app:"Create Follow-Up",
+   path:[],
+   fields:[["── Follow-Up ──",""],["Target","Service Order ## (ZT##)"],["Product ID","P700_SERV_ONS_##"],["Quantity","3"],["Item Category","Service Item ## (ZI##)"]],
+   steps:["<b>Create Follow-Up</b> → popup: <b>Service Order ##</b> (ZT##).", "Items: Product <b>P700_SERV_ONS_##</b>, Qty <b>3</b> → Enter. Item Category: <b>Service Item ##</b> (ZI##).", "Pricing yoksa: Edit → Price Details → Insert → Manual Price → 100 EUR → Back.", "Items → <b>Release All Items</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."],
+   result:"<b>ZR##</b> servis talebi artık <b>ZT##</b> servis siparişine dönüştürülebilir. <b>ZI##</b> (Service Item ##) item category doğru belirlendi."}
+]},
+{id:13,title:"Optional: Configure and Work with Service Order Templates",
+ app:"SAP GUI (SPRO) / Create Service Order Template / Manage Service Orders (SAP Fiori)",
+ optional:true,
+ prereq:["Copy a Service Product","Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service"],
+ sc:"SRVT (Service Order Template) konfigürasyonu, SRV_TEMPLATE date profile incelenir. ZS## için SRVT item cat det. kurulur. SRVT→ZT## copying control eklenir. SRTP→ZI## item level ve 'when copying' kurulur. Warranty check profile ZSERVICE01 incelenir.",
+ tasks:[
+  {num:"1",title:"Check SRVT (Service Order Template) – Doc Pricing Proc S1, Number Range, SRV_TEMPLATE",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types"],
+   fields:[["── SRVT ──",""],["Doc. Pric.Proc. (BUS2000115)","S1 Service Order"],["Number Range Object","CRM_SERVIC (CRM Service Process)"],["Int.No.Range No","01"],["Date Profile","SRV_TEMPLATE (SAP Service Template)"]],
+   steps:["Navigate: <b>...Define Transaction Types</b>: Position SRVT.", "SRVT → <b>Assignment of Business Transaction Categories</b> → <b>BUS2000115 Sales</b> → <b>Customizing header</b>: Doc.Pric.Proc. <b>S1</b>.", "<b>Definition of transaction types</b>: SRVT Details: number range object <b>CRM_SERVIC</b>, int.number range <b>01</b>, Date Profile <b>SRV_TEMPLATE</b>."]},
+  {num:"2",title:"Check Date Types and Rules in SRV_TEMPLATE",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── Date Types ──",""],["BILL_DATE / INVCR_DATE / VALIDFROM / VALIDTO",""],["── Date Rules ──",""],["SRV0001","Valid from + 12 Months"],["SRV_0005","Unrestricted Date"],["TODAY","Today's Date"]],
+   steps:["SRV_TEMPLATE Details → <b>Date Types</b> klasörüne çift tıklanır.", "<b>Date rules</b> klasörüne çift tıklanır: SRV0001, SRV_0005, TODAY kontrol edilir → <b>Exit</b> (2 kez)."]},
+  {num:"3",title:"Item Category Determination: SRVT + ZS## → SRTP",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Category Determination"],
+   fields:[["── New Entry ──",""],["Transaction Type","SRVT"],["Item Cat. Group","ZS##"],["Item Category","SRTP"]],
+   steps:["Navigate: <b>...Define Item Category Determination</b>: <b>New Entries</b>: SRVT / ZS## / SRTP → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"4",title:"Copying Control: SRVT → ZT## (Copy from SRVT → SRVO)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Copying Control for Transaction Types"],
+   fields:[["── Copy ──",""],["Source SRVT → SRVO","→ SRVT → ZT##"]],
+   steps:["Navigate: <b>...Define Copying Control for Transaction Types</b>.", "Position Srce <b>SRVT</b>: SRVO target satırı seçilir → <b>Copy As...</b>: Tgt → <b>ZT##</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"5",title:"Copying Control Item Level: SRTP → ZI## (Copy from SRTP → SRVP)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Copying Control for Item Categories"],
+   fields:[["── Copy ──",""],["Source SRTP → SRVP","→ SRTP → ZI##"]],
+   steps:["Navigate: <b>...Define Copying Control for Item Categories</b>.", "Position Source <b>SRTP</b>, Target <b>SRVP</b>: satır seçilir → <b>Copy As...</b>: Target → <b>ZI##</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"6",title:"Define Item Category Determination when Copying: SRTP → ZT## → ZI##",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Item Category Determination when Copying"],
+   fields:[["── New Entry ──",""],["Source Item Cat.","SRTP"],["Tgt Trans. Type","ZT##"],["Target item cat.","ZI##"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: <b>New Entries</b>: Source SRTP, Tgt Trans. Type ZT##, Target item cat. ZI## → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"7",title:"Test: Create SRVT Template, Release, Create ZT## Follow-Up – ZI## Determined",app:"Create Service Order Template",
+   path:["Space: Service Processing","Service Orders","Create Service Order Template"],
+   fields:[["── Template ──",""],["Transaction Type","SRVT (Order Template)"],["Service Employee Group","ICNT_1SUP-DE"],["Org. Data","Service Organizational Unit: SRV_ORG_DE"],["Description","Template Group ##"],["Product ID","P700_SERV_ONS_##"],["Quantity","5"]],
+   steps:["FLP → <b>Create Service Order Template</b> → SRVT.", "Service Employee Group: <b>ICNT_1SUP-DE</b>; Org. Data tab: <b>SRV_ORG_DE</b>.", "Description: <b>Template Group ##</b>; Items: Product <b>P700_SERV_ONS_##</b>, Qty <b>5</b>: item category Service Item.", "<b>Save</b> → Edit → Status: <b>Released</b> → <b>Save</b>.", "<b>Create Follow-Up</b> → <b>Service Order ##</b> (ZT##) → items seçilir → <b>Choose</b>.", "Sold-To Party: <b>C700-C##</b> → Enter: Item Category → <b>Service Item ##</b> (ZI##) ✓.", "<b>Save</b>. Belge numarası not edilir → <b>Home</b>."]},
+  {num:"8",title:"Check Warranty Check Profile ZSERVICE01 – Reference Date: Requested Start Date",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Define Profile for Warranty Check"],
+   fields:[["── ZT## ──",""],["Warranty Check","ZSERVICE01 (Warranty Det. by Requested Start Date)"],["Reference Date","SRV_CUST_BEG Requested Start Date"]],
+   steps:["<b>Define Transaction Types</b>: ZT## → <b>Assignment of BTC</b> → BUS2000116 → <b>Customizing header</b>: Warranty Check alanı görülür.", "Navigate: <b>...Define Profile for Warranty Check</b>: ZSERVICE01 → Details: Reference Date <b>SRV_CUST_BEG</b> → <b>Exit</b>."]}
+]},
+{id:14,title:"Optional: Configure the Integration with Logistics",
+ app:"SAP GUI (SPRO) / Manage Service Orders (SAP Fiori)",
+ optional:true,
+ prereq:["Copy a Service Product","Configure a Transaction Type in SAP S/4HANA Service","Configure an Item Category in SAP S/4HANA Service","Configure Item Category Determination"],
+ sc:"ZM## (SRVM kopyası) ve ZE## (SPRM kopyası) item categories oluşturulur. CO'ya replicate edilir. ZT##+NORM → ZM##(alt: ZE##). Logistics scenario: ZM## → RSRV Reservation; ZE## → PREQ Purchase Requisition. Plant 1040/101A. Test: P700-SC-100 item 20 = ZM##, item 30 = ZE##.",
+ tasks:[
+  {num:"1",title:"Create ZM## (Service Part ##) and ZE## (Ext. Proc. ##) by Copying SRVM and SPRM",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Categories"],
+   fields:[["── ZM## (from SRVM) ──",""],["Item Category","ZM##"],["Description","Service Part ##"],["── ZE## (from SPRM) ──",""],["Item Category","ZE##"],["Description","Ext. Proc. ##"]],
+   steps:["Navigate: <b>...Define Item Categories</b>: Position <b>SRVM</b> → <b>Copy As...</b>: ZM##, <b>Service Part ##</b> → Enter.", "Position <b>SPRM</b> → <b>Copy As...</b>: ZE##, <b>Ext. Proc. ##</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"2",title:"Replicate ZM## and ZE## to Controlling",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Replicate Service Characteristics Relevant to Controlling"],
+   fields:[["── Flag ──",""],["Item Categories","✓"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: Item Categories flag → <b>Execute</b> → <b>Exit</b> (2 kez)."]},
+  {num:"3",title:"Item Category Determination: ZT##+NORM → ZM## (Alt: ZE##)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Category Determination"],
+   fields:[["── Change ──",""],["ZT## + NORM","Item Cat.: ZM## / Alt. IC 1: ZE##"]],
+   steps:["Navigate: <b>...Define Item Category Determination</b>: Position ZT##/NORM: Item Cat. → <b>ZM##</b>, Alt. IC 1 → <b>ZE##</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"4",title:"Copying Control for ZM## (from SRVM, 3 entries) and ZE## (from SPRM, 2 entries)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Copying Control for Item Categories"],
+   fields:[],
+   steps:["Navigate: <b>...Define Copying Control for Item Categories</b>.", "Position <b>SRVM</b>: 3 entry → <b>Copy As...</b>: SRVM → <b>ZM##</b> → <b>Save</b>.", "Position <b>SPRM</b>: 2 entry → <b>Copy As...</b>: SPRM → <b>ZE##</b> → <b>Save</b> → <b>Exit</b>."]},
+  {num:"5",title:"Define Logistics Scenario – ZM##: RSRV Reservation; ZE##: PREQ Purchase Requisition",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Logistics Integration","Organizational Management (Legacy)","Define Logistics Scenario for the Procurement of Materials and Services"],
+   fields:[["── ZM## ──",""],["Trans. Type / Item Cat. / Srv Org / Org Unit","ZT## / ZM## / * / *"],["Logi.Scen.","RSRV Reservation"],["── ZE## ──",""],["Trans. Type / Item Cat. / Srv Org / Org Unit","ZT## / ZE## / * / *"],["Logi.Scen.","PREQ Purchase Requisition"],["Copy PRC.","✓"]],
+   steps:["Navigate path: <b>IMG - Activity</b>.", "<b>New Entries</b>: ZT##/ZM##/*/*: Logi.Scen. <b>RSRV Reservation</b> → Entry → Back.", "<b>New Entries</b>: ZT##/ZE##/*/*: Logi.Scen. <b>PREQ Purchase Requisition</b>; Copy PRC. flag → Entry → Back → <b>Save</b> → <b>Exit</b>."]},
+  {num:"6",title:"Check Plant 1040 / Storage Location 101A for Reservations",app:"SAP GUI – SPRO",
+   path:["Service","Master Data","Organizational Management","Cross-Application Assignment of Organizational Units","Assign Plant and Storage Location to Service Organizational Units"],
+   fields:[["── Result ──",""],["Plant","1040"],["Storage Location","101A"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: Plant 1040, SLoc 101A kontrol edilir → <b>Exit</b>."]},
+  {num:"7",title:"Check Document Type NB and Pricing Procedure A10001 for External Procurement",app:"SAP GUI – SPRO",
+   path:["Integration with Other SAP Components","CRM","Settings for Service Processing","Logistics Integration","Set Purchasing Document Types for CRM Logistics Integration"],
+   fields:[["── Result ──",""],["Document Type","NB (Purchase Requisition)"],["Pricing Procedure (Schema)","A10001 Service/Materials (DE)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: NB ve A10001 kontrol edilir → <b>Exit</b>."]},
+  {num:"8",title:"Item Category Determination when Copying – ZM## (from SRVM/SRVC) and ZE## (from SPRM/SRVC)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Copying Control for Business Transactions","Define Item Category Determination when Copying"],
+   fields:[],
+   steps:["Navigate path: <b>IMG - Activity</b>.", "Position Source <b>SRVM</b>: SRVC entry → <b>Copy As...</b>: Source → <b>ZM##</b> → Enter.", "Position Source <b>SPRM</b>: SRVC entry → <b>Copy As...</b>: Source → <b>ZE##</b> → Entry → <b>Save</b> → <b>Exit</b>."]},
+  {num:"9",title:"Test: Add P700-SC-100 (Item 20) to ZT## Service Order – ZM## Determined",app:"Manage Service Orders",
+   path:["Space: Service Processing","Service Orders","Manage Service Orders"],
+   fields:[["── Item 20 ──",""],["Product ID","P700-SC-100"],["Quantity","1"],["Item Category","Service Part ## (ZM##)"]],
+   steps:["FLP → <b>Manage Service Orders</b>: Configure Service Requests egzersizindeki ZT## service order aranır → seçilir.", "<b>Edit</b> → <b>Items</b> → <b>Edit list</b>: Item 20: Product <b>P700-SC-100</b>, Qty <b>1</b> → Enter: Item Category <b>Service Part ##</b> (ZM##) ✓."]},
+  {num:"10",title:"Add P700-SC-100 (Item 30) as Ext. Proc. ## (ZE##) – Release All and Save",app:"Manage Service Orders",
+   path:[],
+   fields:[["── Item 30 ──",""],["Product ID","P700-SC-100"],["Quantity","1"],["Item Category","Ext. Proc. ## (ZE##)"]],
+   steps:["Item 30: Product <b>P700-SC-100</b>, Qty <b>1</b> → Enter → Item Category: <b>Ext. Proc. ##</b>.", "<b>Release All Items</b> → <b>Save</b> → <b>Home</b>."]},
+  {num:"11",title:"Check Transaction History – Material Reservation and Purchase Requisition",app:"Manage Service Orders / SAP GUI MB23",
+   path:[],fields:[],
+   steps:["FLP → <b>Manage Service Orders</b>: Posting Date This week → <b>Search</b> → service order → <b>Transaction History</b>.", "Reservation ve Purchase Requisition belge numaraları not edilir.", "PO numarasına tıklanır: Valuation sekmesinde valuation price → <b>Home</b>.", "SAP GUI: <b>/NMB23</b>: Reservation numarası → Enter: Plant 1040, SLoc 101A → <b>Exit</b>."],
+   result:"Kalemler plant 1040, storage location 101A'dan rezerve edildi. Internal order görünmüyor (item-based accounting etkin)."}
+]},
+{id:15,title:"Optional: Perform a Stock Transfer of a Spare Part to Van Stock Based on a Service Order",
+ app:"SAP GUI (SU01 / SPRO / ME23N) / My Purchase Orders Due for Delivery / Pick Outbound Delivery / Post Goods Movement / Manage Service Orders (SAP Fiori)",
+ optional:true,prereq:[],
+ sc:"SAP_BR_SHIPPING_SPECIALIST rolü atanır. Mona Granger (50001500) → SLoc 101V (van). ZUD/1040 → delivery type NL. SRVO service order: P700_SERV_ONS (item 10), P700-SC-100 SPRS (item 20) + Mona Granger. Stock transfer delivery, goods issue, goods receipt (101V). Service confirmation.",
+ tasks:[
+  {num:"1",title:"Assign SAP_BR_SHIPPING_SPECIALIST Role to S47500-##",app:"SAP GUI – SU01",
+   path:[],
+   fields:[["── SU01 ──",""],["User","S47500-##"],["Role","SAP_BR_SHIPPING_SPECIALIST"]],
+   steps:["SAP GUI: T-Code <b>SU01</b>; User: <b>S47500-##</b> → <b>Change</b> → <b>Roles</b> sekmesi: <b>SAP_BR_SHIPPING_SPECIALIST</b> → Enter → <b>Save</b> → <b>Exit</b>."]},
+  {num:"2",title:"Check Mona Granger (50001500) → Storage Location 101V (Van) in Plant 1040",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Logistics Integration","Organizational Management (Legacy)","Assign Plant and Storage Location to Service Organizational Units"],
+   fields:[["── Result ──",""],["Service Employee","50001500 (Mona Granger)"],["Plant","1040"],["Storage Location","101V (Van Stock 1040)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: Service org. 50001457, employee 50001500 → Plant 1040, SLoc 101V kontrol edilir → <b>Exit</b>."]},
+  {num:"3",title:"Check Delivery Type NL for ZUD Document Type / Plant 1040",app:"SAP GUI – SPRO",
+   path:["Materials Management","Purchasing","Purchase Order","Set up Stock Transport Order","Configure Delivery Type & Availability Check Procedure by Plant"],
+   fields:[["── ZUD / 1040 ──",""],["Delivery Type","NL (IntPlant Stock Dely)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: Position Document Type <b>ZUD</b>, Plant <b>1040</b>: NL delivery type kontrol edilir → <b>Exit</b>."]},
+  {num:"4",title:"Check ZUD Purchase Order Type for SRVO + SPRS Combination",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Logistics Integration","Set Purchasing Doc. Types for Transaction Type, Item Cat."],
+   fields:[["── Result ──",""],["Category F PO + SRVO/SPRS","ZUD StockTranspOrderDel"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVO/SPRS → ZUD kontrol edilir → <b>Exit</b>."]},
+  {num:"5",title:"Check Logistics Sub-Scenario 03 Stock Transfer Item for SRVO + SPRS",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Logistics Integration","Organizational Management (Legacy)","Define Logistics Scenario for Procurement of Materials and Services"],
+   fields:[["── SRVO/SPRS ──",""],["Logistics Scenario","ORDR Purchase Order"],["Sub Scenario","03 Stock Transfer Item"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVO/SPRS → ORDR/03 kontrol edilir → <b>Exit</b>."]},
+  {num:"6",title:"Check Logistics Scenario P for SRVC + SVCS – Material Withdrawal",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Service Transactions","Integration","Logistics Integration","Organizational Management (Legacy)","Define Logistics Scenario for Material Withdrawal"],
+   fields:[["── SRVC/SVCS ──",""],["Logistics Scenario","P Plant / Storage Location"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVC/SVCS → P Plant/Storage Location kontrol edilir → <b>Exit</b>."]},
+  {num:"7",title:"Create SRVO Service Order – P700_SERV_ONS + P700-SC-100 SPRS with Mona Granger",app:"Create Service Order",
+   path:["Space: Service Processing","Service Orders","Create Service Order"],
+   fields:[["── Header ──",""],["Transaction Type","SRVO Service Order"],["Description","Stock Transfer ##"],["Sold-To Party","C700-C07"],["Service Employee Group","SRV_TECH_DE"],["── Item 10 ──",""],["Product ID","P700_SERV_ONS"],["Quantity","1"],["── Item 20 ──",""],["Product ID","P700-SC-100"],["Quantity","1"],["Item Category","StockTransf ServPart (SPRS)"],["Exec. Service Employee","Mona Granger (Last Name: Granger)"]],
+   steps:["FLP → <b>Create Service Order</b> → SRVO.", "Description: <b>Stock Transfer ##</b>; Sold-To Party: <b>C700-C07</b> → Enter → SRV_TECH_DE.", "Items: Line 1 → P700_SERV_ONS, Qty 1; Line 2 → <b>P700-SC-100</b>, Qty 1 → Enter.", "Item 20 category → <b>StockTransf ServPart</b>.", "Item 20 Edit icon → Personalize → Parties Involved: Exec. Service Employee → <b>Granger</b> arama → seç.", "<b>Back</b> → Items → <b>Release All Items</b> → <b>Save</b>. Ekranda kal."]},
+  {num:"8",title:"Check Stock Transport Order – ZUD Document Type and NL Delivery Type",app:"Transaction History / SAP GUI ME23N",
+   path:[],
+   fields:[["── Result ──",""],["PO Document Type","ZUD StockTranspOrderDel"],["Delivery Type","NL"]],
+   steps:["<b>Transaction History</b>: PO numarası not edilir → <b>Home</b>.", "SAP GUI: T-Code <b>/OME23N</b> → <b>Other Purchase Order</b> → PO numarası → <b>Other Document</b>: ZUD kontrol. Item 10 → <b>Shipping</b>: NL kontrol → FLP'e dön."]},
+  {num:"9",title:"Create Stock Transport Delivery via My Purchase Orders Due for Delivery",app:"My Purchase Orders Due for Delivery",
+   path:["Space: Shipping","My Purchase Orders Due for Delivery"],
+   fields:[["── Selection ──",""],["Deliv. Creation Date to","Today + 3 weeks"],["Purchasing Document","(stock transport order number)"]],
+   steps:["FLP → Space <b>Shipping</b> → <b>My Purchase Orders Due for Delivery</b>.", "to: → bugün + 3 hafta; <b>Purchase Orders</b>: PO numarası → <b>Execute</b>.", "Satır → <b>Background</b> → <b>Log for delivery creation</b> → <b>Documents</b>: SD Document numarası not edilir → <b>Home</b>."]},
+  {num:"10",title:"Pick Outbound Delivery and Post Goods Issue (Movement Type 601)",app:"Pick Outbound Delivery",
+   path:[],
+   fields:[["── Pick ──",""],["Delivery","(outbound delivery number)"],["Picking Quantity","1"]],
+   steps:["FLP: Search → <b>Pick Outbound Delivery</b>.", "Delivery: outbound delivery numarası → Enter; Picking Quantity: <b>1</b> → <b>GI Ready</b> → <b>Post GI</b> → <b>Home</b>."],
+   info:"101A/1040'ta yetersiz stok nedeniyle goods issue başarısız olursa: <b>Post Goods Movement</b> uygulaması → Goods Receipt - Other (movement type 501), miktar 100, SLoc 101A, plant 1040. Ardından goods issue'yi tekrar dene."},
+  {num:"11",title:"Post Goods Receipt for Stock Transport Order into Van Stock 101V",app:"Post Goods Movement",
+   path:[],
+   fields:[["── GR ──",""],["Type","Goods Receipt - Purchase Order (101)"],["Reference","Stock transport order number"],["Storage Location","101V (Van Stock)"]],
+   steps:["FLP: Search → <b>Post Goods Movement</b>.", "<b>Goods Receipt - Purchase Order</b>; PO numarası → Enter. Where: plant 1040, SLoc <b>101V</b>.", "<b>Item OK</b> flag → <b>Post</b> → <b>Home</b>."]},
+  {num:"12",title:"Create Service Confirmation – Mona Granger Both Items, Status Completed",app:"Manage Service Orders – Create Follow-Up",
+   path:["Space: Service Processing","Service Orders","Manage Service Orders"],
+   fields:[["── Confirmation ──",""],["Exec. Service Employee (both items)","Mona Granger"],["Status","Completed"]],
+   steps:["FLP → <b>Manage Service Orders</b>: service order numarası → <b>Search</b> → seçilir.", "<b>Create Follow-Up</b> → <b>Service Confirmation / Confirmation</b>. Her iki item seçilir → <b>Choose</b>.", "Her item için: <b>Personalize</b> → Parties Involved: Exec. Service Employee → <b>Mona Granger</b> (Last Name: Granger).", "Status: <b>Completed</b> → <b>Save</b>.", "<b>Transaction History</b>: material document — movement type 291 from SLoc 101V → <b>Home</b>."]}
+]},
+{id:16,title:"Configure Service Confirmations",
+ app:"SAP GUI (SPRO) / Manage Service Orders / Release for Billing (SAP Fiori)",
+ optional:false,
+ prereq:["Configure a Transaction Type in SAP S/4HANA Service","Configure Service Requests","Configure Copying Control For Business Transactions"],
+ sc:"SRVC/SVCM logistics scenario (Plant/Storage Location) incelenir. SRVC BDR: BSVC/SVCB, CS01 item category. ZT## service order için confirmation oluşturulur, status Completed, release for billing yapılır.",
+ tasks:[
+  {num:"1",title:"Check Logistics Scenario P for SRVC + SVCM – Plant / Storage Location",app:"SAP GUI – SPRO",
+   path:["Integration with Other SAP Components","CRM","Settings for Service Processing","Logistics Integration","Create and Change Logistics Scenario for Material Withdrawal"],
+   fields:[["── SRVC/SVCM ──",""],["Logistics Scenario","P Plant / Storage Location"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVC/SVCM → P Plant/Storage Location kontrol edilir → <b>Exit</b>."]},
+  {num:"2",title:"Check SRVC BDR: BSVC Sales Doc Type, SVCB Billing Type, CS01 for SPRC",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Billing","Assign Service Transaction Types to Billing Document Request Types"],
+   fields:[["── SRVC ──",""],["Sales Document Type","BSVC (Service Confirm eBDR)"],["Billing Type","SVCB (Cust. Mgmt Service Conf. BDR)"],["Item Category Mapping SPRC","CS01 (Service Item eBDR)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVC satırı: BSVC, SVCB. SRVC → <b>Item Category Mapping</b>: SPRC → CS01 → <b>Exit</b>."]},
+  {num:"3",title:"Create Service Confirmation for ZT## Service Order (from Configure Service Requests)",app:"Manage Service Orders – Create Follow-Up",
+   path:["Space: Service Processing","Service Orders","Manage Service Orders"],
+   fields:[["── Confirmation ──",""],["Items","All EXCEPT purchase requisition items"],["Exec. Service Employee","Technician S47500-## or S4700-00"],["Status","Completed"]],
+   steps:["FLP → <b>Manage Service Orders</b>: Configure Service Requests'teki ZT## service order → seçilir.", "<b>Create Follow-Up</b> → popup: <b>Service Confirmation - Confirmation</b>.", "Next popup: purchase requisition item HARİÇ tüm items → <b>Choose</b>.", "<b>Parties Involved</b>: Exec. Service Employee → <b>Technician S47500-##</b> (yoksa S4700-00).", "<b>Service Confirmation Details</b>: Status → <b>Completed</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."]},
+  {num:"4",title:"Optional: Verify Material Reservation Completed (If Logistics Exercise Done)",app:"Manage Service Orders / SAP GUI MB23",
+   path:[],fields:[],
+   steps:["<b>Manage Service Orders</b>: Posting Date This week → service order → <b>Transaction History</b>: reservation numarası.", "SAP GUI: <b>/NMB23</b>: reservation numarası → Enter: Completed flag set → <b>Exit</b>."]},
+  {num:"5",title:"Complete ZT## Service Order and Release for Billing",app:"Manage Service Orders / Release for Billing",
+   path:[],
+   fields:[["── Status ──",""],["Status","Completed"]],
+   steps:["ZT## service order → <b>Edit</b> → Status: <b>Completed</b> → <b>Save</b> → <b>Home</b>.", "<b>Release for Billing</b>: Created On → Today → <b>Search</b>. Service confirmation item → <b>Release for Billing</b> → <b>Home</b>."]}
+]},
+{id:17,title:"Configure Service Billing",
+ app:"SAP GUI (SPRO) / Create Billing Documents - VF04 (SAP Fiori)",
+ optional:false,
+ prereq:["Configure a Transaction Type in SAP S/4HANA Service","Configure Service Requests","Configure Service Confirmations"],
+ sc:"Billing konfigürasyonu incelenir: SVCM billing relevance D (Billing on Completion). SRVC BDR: BSVC/SVCB/CS01. ZT## için SRVO entry kopyalanır. SVCB→F2 copying control: CS01. ZT## service order için billing document oluşturulur.",
+ tasks:[
+  {num:"1",title:"Open Billing Configuration Documentation",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Billing","Configure Billing"],
+   fields:[],
+   steps:["Navigate: <b>Service → Basic Functions → Billing → Configure Billing</b>: IMG documentation icon → oku → kapat."]},
+  {num:"2",title:"Check Billing Relevance D (Billing on Completion) for SVCM (BUS2000115)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Categories"],
+   fields:[["── SVCM ──",""],["Bill. Relevance","Billing on Completion (D)"]],
+   steps:["Navigate: <b>...Define Item Categories</b>: <b>SVCM (Service Part)</b> → <b>Assignment of BTC</b> → Sales (BUS2000115) → <b>Customizing Item</b>: Bill. Relevance kontrol → <b>Exit</b>."]},
+  {num:"3",title:"Check SRVC Sales Doc Type BSVC and Billing Type SVCB for BDR",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Billing","Assign Service Transaction Types to Billing Document Request Types"],
+   fields:[["── SRVC ──",""],["Sales Document Type","BSVC (Service Confirm eBDR)"],["Billing Type","SVCB (Cust. Mgmt Service Conf. BDR)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVC satırı: BSVC, SVCB kontrol. Ekranda kal."]},
+  {num:"4",title:"Check CS01 as Sales Item Category for SVCM in SRVC BDR",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── SVCM → CS01 ──",""],["Sales Item Category","CS01 (Service Item eBDR)"]],
+   steps:["<b>SRVC (Service Confirmation)</b> → <b>Item Category Mapping</b>: SVCM → CS01 kontrol. <b>Process Type Mapping</b>. Ekranda kal."]},
+  {num:"5",title:"Add ZT## to BDR Types – Copy from SRVO Entry",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── Copy ──",""],["Source","SRVO (Service Order)"],["New Transaction Type","ZT##"],["Item Cat. Mapping","SFOE, SFOM, SFOS → CS01"]],
+   steps:["<b>SRVO (Service Order)</b> seçilir → <b>Copy As...</b>: Transaction Type → <b>ZT##</b> → Enter → <b>copy all</b> → popup kapat.", "ZT## → <b>Item Category Mapping</b>: SFOE, SFOM, SFOS → CS01 kontrol → <b>Save</b> → <b>Exit</b>."]},
+  {num:"6",title:"Check Copying Control SVCB → F2 – Source Sales Item Category CS01",app:"SAP GUI – SPRO",
+   path:["Sales and Distribution","Billing","Billing Documents","Copying Control for Billing Documents","Maintain Copying Control for Billing Documents"],
+   fields:[["── SVCB → F2 ──",""],["Source Billing Type","SVCB"],["Target Billing Type","F2 (Invoice)"],["Source Sales Item Category","CS01 (Service Item eBDR)"]],
+   steps:["Navigate path: <b>Maintain Copying Control for Billing Documents</b> → <b>Define Copying Control for Billing Document to Billing Document</b>.", "Position: Billing Type <b>F2</b> (top), <b>SVCB</b> (bottom) → entry seçilir → <b>Details</b>.", "<b>Item</b> klasörüne çift tıklanır: source item category <b>CS01</b> görülür → <b>Exit</b>; popup kapat."]},
+  {num:"7",title:"Create Billing Document for ZT## Service Order – Invoice Customer",app:"Create Billing Documents - VF04",
+   path:["Space: Billing","Billing Documents","Create Billing Documents - VF04"],
+   fields:[["── Selection ──",""],["Billing Date to","Last day of current month"],["Sold-To Party","C700-C##"],["Documents to Be Selected","Billing Document Requests flag"]],
+   steps:["FLP → Space <b>Billing</b> → <b>Billing Documents</b> → <b>Create Billing Documents - VF04</b>.", "Billing Date to: last day; Sold-To Party: <b>C700-C##</b>; <b>Billing Document Requests</b> flag → <b>Display Billing List</b>.", "Entry seçilir → <b>Individual Billing Document</b>: service confirmation items görülür → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."]}
+]}
+]},
+{unit:4,title:"Configuring In-House Repair",ex:[
+{id:18,title:"Optional: Process an In-House Repair",
+ app:"Manage In-House Repairs / Manage Repair Objects / VA03 / Enter Inspection Results / Manage Service Orders / Release for Billing / VF04 (SAP Fiori)",
+ optional:true,prereq:[],
+ sc:"C700-C## → EL-1## onarım talebi. IHR 2.0 (SAP S/4HANA 2023 FPS02) süreci: Precheck → Returns Order → GR (101A) → Inspection 003 Damaged → Service Order (P700_SERV_INH 3H) → Confirmation (Technician S4700-##) → Release → Billing → Outbound Delivery → Completed.",
+ tasks:[
+  {num:"1",title:"Create In-House Repair – C700-C##, Sales Org. Unit 50001454, Equipment EL-1##",app:"Manage In-House Repairs",
+   path:["Space: In-House Repair Processing","In-House Repair","Manage In-House Repairs"],
+   fields:[["── Header ──",""],["Sold-To Party","C700-C##"],["Division","00"],["Sales Org. Unit","50001454"],["── Repair Object ──",""],["Equipment","EL-1##"]],
+   steps:["FLP → Space <b>In-House Repair Processing</b> → <b>In-House Repair</b> → <b>Manage In-House Repairs</b>.", "<b>Create</b>: Sold-To Party <b>C700-C##</b> → ilk entry seçilir. Sales Org. Unit: <b>50001454</b>; Division: <b>00</b> → <b>Create</b>. IHR numarası not edilir.", "<b>Repair Objects</b> → <b>Add</b> → <b>Equipment</b>. Current Customer: boş.", "Search field: <b>EL-1##</b> → Enter → seç → <b>Add</b> → <b>Confirm</b>. Status: Precheck: Decision Pending."],
+   info:"SAP S/4HANA 2023 FPS02 ile tanıtılan In-House Repair 2.0 temel alınmaktadır. SAP S/4HANA 2023 FPS02'den önceki sistemlerde kullanılamaz."},
+  {num:"2",title:"Precheck – Decide: Create Returns Order for EL-1##",app:"Manage In-House Repairs",
+   path:[],
+   fields:[["── Precheck ──",""],["Action","Create Returns Order"]],
+   steps:["<b>Repair Objects</b>: item 10 (EL-1##) seçilir → <b>Decide</b>.", "<b>Create Returns Order</b> seçilir. Returns order numarası not edilir → <b>Home</b>."]},
+  {num:"3",title:"Verify Returns Order in Manage Repair Objects – Transaction History",app:"Manage Repair Objects",
+   path:["Space: In-House Repair Processing","In-House Repair","Manage Repair Objects"],
+   fields:[["── Search ──",""],["Equipment","EL-1##"]],
+   steps:["FLP → <b>Manage Repair Objects</b>: Equipment <b>EL-1##</b> → <b>Go</b>.", "Repair object detayına git → <b>Transaction History</b>: returns order numarası görülür → <b>Home</b>."]},
+  {num:"4",title:"Process Returns Delivery – Post Goods Receipt (Picking Qty 1, SLoc 101A)",app:"Display Sales Orders - VA03",
+   path:["Space: In-House Repair Processing","In-House Repair","Display Sales Orders - VA03"],
+   fields:[["── Returns Delivery ──",""],["Picked Qty","1"],["SLoc","101A"]],
+   steps:["FLP → <b>Display Sales Orders - VA03</b>: returns order numarası → <b>Continue</b>.", "<b>Returns</b> sekmesi → <b>Returns Overview</b>: returns delivery numarası not edilir.", "Delivery numarasına tıklanır → <b>Display ↔ Change</b>.", "<b>Picking</b> sekmesi: Picked Qty <b>1</b>; SLoc <b>101A</b> → <b>Post Goods Receipt</b> → <b>Refresh</b> → <b>Home</b>."]},
+  {num:"5",title:"Enter Inspection Results – 003 Damaged, Follow-Up: 0027 Continue In-House Repair",app:"Enter Inspection Results - From Warehouse",
+   path:["Space: In-House Repair Processing","In-House Repair","Enter Inspection Results - From Warehouse"],
+   fields:[["── Inspection ──",""],["Delivery","(returns delivery number)"],["Inspection Code","003 (Damaged)"],["Follow-Up Activity","0027 (Continue In-House Repair (Service))"]],
+   steps:["FLP → <b>Enter Inspection Results - From Warehouse</b>.", "Delivery: returns delivery numarası → <b>Execute</b>.", "Inspection Code: <b>003 (Damaged)</b>; Follow-Up Activity: <b>0027 (Continue In-House Repair (Service))</b>.", "<b>Save and Confirm</b> → <b>Home</b>."]},
+  {num:"6",title:"Start Repair Process – Decide: Create Service Order",app:"Manage In-House Repairs",
+   path:[],fields:[],
+   steps:["FLP → <b>Manage In-House Repairs</b> → EL-1## repair object.", "<b>Repair Objects</b>: item seçilir → <b>Decide</b> → <b>Create Service Order</b>.", "Status icons: 1 object in Repair → <b>Home</b>."]},
+  {num:"7",title:"Set Service Order Status to In Process and Assign SRV_TECH_DE",app:"Manage Service Orders",
+   path:["Space: Service Processing","Service Orders","Manage Service Orders"],
+   fields:[["── Search ──",""],["Equipment is","EL-1##"],["── Update ──",""],["Status","In Process"],["Partners","Bill-To Party, Payer, Ship-To Party: C700-C##"],["Partner Function","Service Employee Group: SRV_TECH_DE"]],
+   steps:["FLP → <b>Manage Service Orders</b>: Equipment is <b>EL-1##</b> → <b>Search</b>.", "En güncel service order seçilir → <b>Edit</b> → Status: <b>In Process</b>.", "<b>Parties Involved</b> (Personalize ile ekle): Bill-To, Payer, Ship-To → C700-C## kontrol.", "<b>Insert</b>: Partner Function → <b>Service Employee Group</b>; Name: <b>SRV_TECH_DE</b> → <b>Save</b> → <b>Home</b>."]},
+  {num:"8",title:"Plan Repair Work – Add P700_SERV_INH 3H, Release All Items",app:"Manage Service Orders",
+   path:[],
+   fields:[["── Item ──",""],["Product ID","P700_SERV_INH (Service Inhouse - Standard)"],["Quantity","3"]],
+   steps:["FLP → <b>Manage Service Orders</b>: service order ID → <b>Search</b> → seçilir → <b>Edit</b>.", "<b>Items</b> → <b>Edit List</b>: Product <b>P700_SERV_INH</b>, Qty <b>3</b> → Enter.", "<b>Release All Items</b> → <b>Save</b>. Ekranda kal."]},
+  {num:"9",title:"Create Service Confirmation – Technician S4700-##, Status Completed",app:"Create Follow-Up",
+   path:[],
+   fields:[["── Confirmation ──",""],["Exec. Service Employee","Technician S4700-## (or S4700-00)"],["Status","Completed"]],
+   steps:["<b>Create Follow-Up</b> → popup: <b>Service Confirmation - Confirmation</b>.", "Next popup: proposed item seçilir → <b>Choose</b>.", "Executing Service Employee → <b>Technician S4700-##</b> (yoksa S4700-00).", "Status: <b>Completed</b> → <b>Save</b>. Confirmation numarası not edilir → <b>Back</b>.", "Service order: <b>Edit</b> → Status: <b>Completed</b> → <b>Save</b> → <b>Home</b>."]},
+  {num:"10",title:"Release Service Order for Billing (Sold-To Party C700-C##)",app:"Release for Billing",
+   path:["Space: Service Processing","Service Orders","Release for Billing"],
+   fields:[["── Selection ──",""],["Sold-To Party","C700-C##"]],
+   steps:["FLP → <b>Release for Billing</b>: Sold-To Party <b>C700-C##</b> → <b>Go</b>.", "Confirmation for repair satırı seçilir → <b>Release for Billing</b> → <b>Home</b>."]},
+  {num:"11",title:"Find BDR Number in Manage Repair Objects – Transaction History",app:"Manage Repair Objects",
+   path:[],
+   fields:[["── Search ──",""],["Equipment","EL-1##"]],
+   steps:["FLP → <b>Manage Repair Objects</b>: Equipment <b>EL-1##</b> → <b>Go</b>.", "Repair object detayına git → <b>Transaction History</b>: BDR numarası not edilir → <b>Home</b>."]},
+  {num:"12",title:"Create Billing Document for BDR via VF04",app:"Create Billing Documents - VF04",
+   path:["Space: Billing","Billing Documents","Create Billing Documents - VF04"],
+   fields:[["── Selection ──",""],["Sold-To Party","C700-C##"],["Billing Document Requests","✓ (flag)"],["Delivery-Related","deselect"]],
+   steps:["FLP → <b>Create Billing Documents - VF04</b>.", "Sold-To Party: <b>C700-C##</b>; Billing Document Requests flag; Delivery-Related seçilmez → <b>Display Billing List</b>.", "BDR satırı seçilir → <b>Individual Billing Document</b> → <b>Save</b>. Belge numarası not edilir → <b>Home</b>."]},
+  {num:"13",title:"Create Outbound Delivery and Set Repair Object to Completed",app:"Manage Repair Objects",
+   path:[],fields:[],
+   steps:["FLP → <b>Manage Repair Objects</b>: EL-1##.", "<b>Decide</b> → <b>Create Outbound Delivery</b> → <b>Transaction History</b>: outbound delivery görülür.", "<b>Decide</b> → <b>Set Repair Object to Completed</b> → <b>Transaction History</b>: IHR Completed → <b>Home</b>."]}
+]},
+{id:19,title:"Configure an In-House Repair Process",
+ app:"SAP GUI (SPRO)",
+ optional:false,prereq:[],
+ sc:"IHRP+NORM → IHRI item category determination. IHRI action profile: REPA2022 (Create Service Order, Create Outbound Delivery, Create Returns Order). Number ranges: IHRP, SRVO, SRVC. Process profile REPA2 için IHRP. ZCAR returns order type. ARM configuration.",
+ tasks:[
+  {num:"1",title:"Item Category Determination: IHRP + NORM → IHRI",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Category Determination"],
+   fields:[["── Result ──",""],["IHRP + NORM","→ IHRI (IHR Item)"]],
+   steps:["Navigate: <b>...Define Item Category Determination</b>.", "<b>IMG - Activity</b>: Position IHRP / NORM → IHRI kontrol edilir → <b>Exit</b>."]},
+  {num:"2",title:"Action Profile for IHRI – REPA2022 Actions for In-House Repair Items",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Categories"],
+   fields:[["── IHRI ──",""],["Action Profile","REPA2022 Actions for In-House Repair Items"]],
+   steps:["Navigate: <b>...Define Item Categories</b>: Position <b>IHRI</b> → Details: Action Profile kontrol edilir → <b>Exit</b>."]},
+  {num:"3",title:"Review Actions in REPA2022 – Order Create, Outbound Del, Returns Order",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Actions","Actions in Transaction","Change Actions and Conditions","Define Action Profiles and Actions"],
+   fields:[["── REPA2022 Actions ──",""],["REPA2022_ORDER_CREATE","Create Service Order"],["REPA2022_OUTBOUND_DEL_CREATE","Create Outbound Delivery"],["REPA2022_RETURNS_ORDER_CREATE","Create Returns Order"]],
+   steps:["Navigate path.", "Position <b>REPA2022</b>: <b>Action Definition</b> klasörüne çift tıklanır. Actions incelenir. Ekranda kal."]},
+  {num:"4",title:"Check Manual Trigger Control for REPA2022_ORDER_CREATE",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── REPA2022_ORDER_CREATE ──",""],["Processed At","3 Immediate Processing"],["Flags","Executable in Dialog + Display in Toolbox"]],
+   steps:["<b>REPA2022_ORDER_CREATE</b> seçilir → <b>Details</b>: Processed At, Executable in Dialog, Display in Toolbox → <b>Exit</b>."]},
+  {num:"5",title:"Check Number Ranges for IHRP, SRVO (Service), and SRVC (Confirmation)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Number Ranges"],
+   fields:[["── Number Ranges ──",""],["IHRP","Number Ranges for In-House Repairs"],["SRVO","Number Ranges for Service Transactions"],["SRVC","Number Ranges for Service Confirmations"]],
+   steps:["Navigate: <b>...Define Number Ranges</b>: <b>IMG - Activity</b>: popup.", "<b>Number Ranges for In-House Repairs</b> → <b>Display intervals</b> → <b>Exit</b>.", "<b>Number Ranges for Service Transactions</b> → <b>Display intervals</b> → <b>Exit</b>.", "<b>Number Ranges for Service Confirmations</b> → <b>Display intervals</b> → <b>Exit</b>; popup kapat."]},
+  {num:"6",title:"Check Internal Number Range 01 for SRVO Transaction Type",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types"],
+   fields:[["── SRVO ──",""],["Int.No.Range No","01"]],
+   steps:["Navigate: <b>...Define Transaction Types</b>: Position <b>SRVO</b> → Details: Int.No.Range No kontrol edilir → <b>Exit</b>."]},
+  {num:"7",title:"Check IHR Follow-Up Transaction Type from SRVO/SRVQ – IHRP",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for In-House Repair","Specify Transaction Types for IHR as Service Order/Quotation Follow-Up"],
+   fields:[["── Result ──",""],["SRVO / SRVQ follow-up","IHRP (In-House Repair)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVO/SRVQ → IHRP kontrol edilir → <b>Exit</b>."]},
+  {num:"8",title:"Check SRVC BDR Sales Doc Type BSVC, Billing Type SVCB, All Items → CS01",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Billing","Assign Service Transaction Types to Billing Document Request Types"],
+   fields:[["── SRVC ──",""],["Sales Document Type","BSVC (Service Confirm eBDR)"],["Billing Type","SVCB (Cust. Mgmt Service Conf. BDR)"],["All item categories","→ CS01 (Service Item eBDR)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SRVC: BSVC, SVCB. SRVC → <b>Item Category Mapping</b>: all → CS01 → <b>Exit</b>."]},
+  {num:"9",title:"Check Process Profile REPA2 for IHRP – Assign Process Steps and Status Mapping",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for In-House Repair","Define Profile for Process Step Overview"],
+   fields:[["── IHRP ──",""],["Process Profile","REPA2 (In-House Repair)"],["S2_PRECHECK","Assign Status to Process Step folder: empty (vs legacy REPA_WQD)"]],
+   steps:["<b>Define Transaction Types</b>: IHRP Details → Process Profile: <b>REPA2</b> → <b>Exit</b>.", "Navigate: <b>...Settings for In-House Repair → Define Profile for Process Step Overview</b>.", "<b>IMG - Activity</b>: <b>Assign Process Steps to Profile</b>: REPA2 sort sequence.", "<b>S2_PRECHECK</b> → <b>Assign Status to Process Step</b>: empty (legacy REPA_WQD had user status links) → <b>Exit</b>."]},
+  {num:"10",title:"Find ARM Integration Documentation – Integrate In-House Repair with Customer Returns",app:"SAP GUI – SPRO",
+   path:["Service","In-House Repair","Integrate In-House Repair with Customer Returns"],
+   fields:[],
+   steps:["Navigate path: configuration documentation açılır → içerik incelenir → ana menüye dön."]},
+  {num:"11",title:"Check Returns Order Type ZCAR for IHRP (vs RE2 for REPA)",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for In-House Repair","Specify Settings for Returns Orders as Follow-Up"],
+   fields:[["── IHRP ──",""],["Returns Order Type","ZCAR"],["── REPA (legacy) ──",""],["Returns Order Type","RE2"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: IHRP → ZCAR; REPA → RE2 kontrol edilir → <b>Exit</b>."]},
+  {num:"12",title:"Navigate to Advanced Returns Management (ARM) Configuration",app:"SAP GUI – SPRO",
+   path:["Sales and Distribution","Sales","Advanced Returns Management"],
+   fields:[],
+   steps:["Navigate: <b>Sales and Distribution → Sales → Advanced Returns Management</b>.", "Kapsamlı konfigürasyon listesi incelenir → <b>Exit</b> (2 kez)."],
+   result:"<b>ARM</b> yapılandırması şu yolda bulunur: SAP Customizing Implementation Guide → Sales and Distribution → Sales → Advanced Returns Management."}
+]}
+]},
+{unit:5,title:"Configuring Service Contracts",ex:[
+{id:20,title:"Configure Service Contracts",
+ app:"SAP GUI (SPRO)",
+ optional:false,prereq:[],
+ sc:"SC (Service Contract) transaction type detaylıca incelenir: partner det. SCH10001, date profile CONT002, cancellation procedure 0001 (rules 0002 ve 0001), number range CRM_SVCONT/01, doc pricing procedure S3 (BUS2000115), SLA determination IT000001 (BUS2000116). SCN/SCNA/SCNB item categories, billing plan types 02/01, BDR: BSC/SVTB.",
+ tasks:[
+  {num:"1",title:"Check SC Transaction Type – Partner Det., Date Profile, Cancellation, Number Range, Doc Pricing, SLA",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Transaction Types"],
+   fields:[["── SC Details ──",""],["Partner Determ.Proc.","SCH10001 (Service Contract (Header))"],["Date Profile","CONT002 (Date Profile for Service Contracts)"],["Cancellation Proced.","0001 (Standard Cancellation)"],["No.Range Object","CRM_SVCONT"],["Int.No.Range No","01"],["Doc. Pric.Proc. (BUS2000115)","S3 (Service Contract)"],["SLA Prof. Det. Proc. (BUS2000116)","IT000001 (IT SLA Determination Procedure)"]],
+   steps:["Navigate: <b>...Define Transaction Types</b>: Position <b>SC</b> → Details.", "Partner Determ.Proc., Date Profile, Cancellation Proced., No.Range Object, Int.No.Range No not edilir.", "<b>Assignment of BTC</b> → <b>BUS2000115 Sales</b> → <b>Customizing header</b>: Doc. Pric.Proc. → <b>S3</b>.", "<b>Assignment of BTC</b> → <b>BUS2000116 Service Order/Quot.</b> → <b>Customizing header</b>: SLA Prof. Det. Proc. → <b>IT000001</b>.", "<b>Exit</b>."]},
+  {num:"2",title:"Check Cancellation Procedure 0001 – Rules 0002 and 0001",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Settings for Contracts","Cancellation","Define Cancellation Procedure"],
+   fields:[["── 0001 Rules ──",""],["Rule 0002","3 months to End of Year"],["Rule 0001","Desired date up to 2 wk after start date"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: <b>0001 (Standard Cancellation)</b> → <b>Assign rules to cancellation procedure</b>.", "Popup onaylanır: rules 0002 ve 0001 görülür → <b>Exit</b>."],
+   info:"İptal kuralları şu yolda tanımlanır: Service → Transactions → Settings for Contracts → Cancellation → Define Cancellation Rules."},
+  {num:"3",title:"Check Item Category Determination for SC – SCN Default, Manual Alternatives",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Category Determination"],
+   fields:[["── SC Determination ──",""],["Default","SCN (Service Contract) for LEIS, SCNP, SRVP item cat. groups"],["Manual Alternatives","SCNC (Value/Qty Contract), SCNA (SC Itm (Pri. Adptn.)), SCNB (SC Itm (Ad-hoc Bil))"]],
+   steps:["Navigate: <b>...Define Item Category Determination</b>: Position SC: entries incelenir → <b>Exit</b>."]},
+  {num:"4",title:"Check Price Adaptation Flag for SCNA in BUS2000112 Service Contract",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Define Item Categories"],
+   fields:[["── SCNA ──",""],["Business Transaction Category","BUS2000112 Service Contract"],["Price Adaptation","✓ (flag set)"]],
+   steps:["Navigate: <b>...Define Item Categories</b>: Position <b>SCNA</b> → <b>Assignment of BTC</b>.", "<b>BUS2000112 Service Contract</b> → <b>Customizing Item</b>: Price Adaptation flag kontrol edilir → <b>Exit</b>."]},
+  {num:"5",title:"Check Billing Plan Types – SC+SCN: 02 Periodic, SC+SCNB: 01 Ad-hoc",app:"SAP GUI – SPRO",
+   path:["Service","Transactions","Basic Settings","Billing Plan","Assign Billing Plan Type to Item Category"],
+   fields:[["── SC + SCN ──",""],["Billing Plan Type","02 (Periodic Billing)"],["── SC + SCNB ──",""],["Billing Plan Type","01 (Ad-hoc Billing)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SC+SCN → 02; SC+SCNB → 01 kontrol edilir → <b>Exit</b>."]},
+  {num:"6",title:"Check Sales Order Type BSC and Billing Type SVTB for SC BDR",app:"SAP GUI – SPRO",
+   path:["Service","Basic Functions","Billing","Assign Service Transaction Types to Billing Document Request Types"],
+   fields:[["── SC ──",""],["Sales Document Type","BSC (Service Contract BDR)"],["Billing Type","SVTB (Cust. Mgmt Service Contract BDR)"]],
+   steps:["Navigate path: <b>IMG - Activity</b>: SC satırı: BSC ve SVTB kontrol edilir → <b>Exit</b>."],
+   result:"<b>Sales Order Type</b>: BSC (Service Contract BDR). <b>Billing Type</b> for BDR: SVTB (Cust. Mgmt Service Contract BDR)."}
+]}
+]}
+];
+
+// ─── Render Functions ───────────────────────────────────────────────
+function path(a){if(!a||!a.length)return'';return'<div class="pr">'+a.map((p,i)=>`<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`).join('')+'</div>';}
+function tbl(f){if(!f||!f.length)return'';const rows=f.map(([a,b])=>{if(a.startsWith('──'))return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;return`<tr><td>${a}</td><td>${b}</td></tr>`;}).join('');return`<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>`;}
+function steps(s){if(!s||!s.length)return'';return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';}
+function task(t){const body=path(t.path)+(t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+( t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+tbl(t.fields)+steps(t.steps)+(t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');return`<div class="task"><div class="thdiv" onclick="togTask(this)"><span class="tn">${t.num}</span><span class="tt">${t.title}</span>${t.app?`<span class="ab">${t.app}</span>`:''}<span class="task-chev">›</span></div><div class="task-body">${body}</div></div>`;}
+function prereqBlock(arr){if(!arr||!arr.length)return'';return'<div class="prereq"><b>Ön Koşul Egzersizler:</b> '+arr.join(' · ')+'</div>';}
+function card(e,uid){let badge=e.optional?'<span class="opt-badge">OPTİONEL</span>':'';let h=`<div class="card" id="ex${e.id}" data-u="${uid}"><div class="ch" onclick="toggle(this)"><span class="exn">${e.id}</span><div class="cl"><div class="ct">${e.title}</div><div class="ca">${e.app}</div></div><div class="cr">${badge}<span class="sb">${e.tasks.length} Adım</span><span class="chev">›</span></div></div><div class="cb">`;if(e.prereq&&e.prereq.length)h+=prereqBlock(e.prereq);if(e.sc)h+=`<div class="scenario">${e.sc}</div>`;e.tasks.forEach(t=>h+=task(t));h+=`</div></div>`;return h;}
+function unit(u){const uid=`u${u.unit}`;const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',5:'#22c55e'};const c=colors[u.unit]||'#60a5fa';let h=`<div class="ug collapsed ${uid}" id="${uid}"><div class="uh" onclick="togUnit(this)"><span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">Unit ${u.unit}</span><span class="utitle">${u.title}</span><span class="uc">${u.ex.length} egzersiz</span><span class="uchev">›</span></div><div class="ug-body">`;u.ex.forEach(e=>h+=card(e,uid));return h+'</div></div>';}
+function toggle(h){h.parentElement.classList.toggle('open');}
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+function togTask(hdr){hdr.parentElement.classList.toggle('open');}
+function run(){const q=term.toLowerCase().trim();let vis=0;document.querySelectorAll('.ug').forEach(ug=>{const uid=ug.id;const uMatch=filterU==='all'||filterU===uid;let uVis=false;ug.querySelectorAll('.card').forEach(card=>{if(!uMatch){card.classList.add('hid');return;}const raw=card.querySelector('.ch').textContent+card.querySelector('.cb').innerHTML;const m=!q||raw.toLowerCase().includes(q);if(m){card.classList.remove('hid');vis++;uVis=true;}else{card.classList.add('hid');}});ug.classList.toggle('hid',!uVis||!uMatch);});cnt.textContent=vis||(!q&&filterU==='all'?TOTAL:vis);nores.style.display=(vis===0&&(q||filterU!=='all'))?'block':'none';clr.style.display=q?'inline':'none';}
+
+// ─── Init ────────────────────────────────────────────────────────────
+const app=document.getElementById('app');const frow=document.getElementById('frow');const cnt=document.getElementById('cnt');const nores=document.getElementById('nores');const srch=document.getElementById('search');const clr=document.getElementById('clr');const xpb=document.getElementById('xpb');const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);cnt.textContent=TOTAL;let term='',filterU='all',allOpen=false;
+D.forEach(u=>{app.innerHTML+=unit(u);const b=document.createElement('button');b.className='fb';b.dataset.u=`u${u.unit}`;b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;frow.appendChild(b);});
+srch.addEventListener('input',e=>{term=e.target.value;run();});
+srch.addEventListener('keydown',e=>{if(e.key==='Escape'){term='';srch.value='';run();}});
+clr.addEventListener('click',()=>{term='';srch.value='';run();srch.focus();});
+frow.addEventListener('click',e=>{const b=e.target.closest('.fb');if(!b)return;filterU=b.dataset.u;document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));b.classList.add('on');run();});
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+xpb.addEventListener('click',()=>{allOpen=!allOpen;document.querySelectorAll('.card:not(.hid)').forEach(c=>c.classList.toggle('open',allOpen));xpb.textContent=allOpen?'Tümünü Kapat':'Tümünü Aç';xpb.classList.toggle('active',allOpen);});
+</script>
+</body>
+</html>

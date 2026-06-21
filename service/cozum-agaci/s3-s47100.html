@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>S47100 – Configuring Org. and Master Data in SAP S/4HANA Service</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="u2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="u3"].on{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.4);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u5"].on{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+b{color:var(--text);font-weight:500;}
+@media(max-width:600px){
+  #toolbar{padding:8px 14px 9px;}
+  #search-row{grid-template-columns:1fr auto;}
+  #sctr{display:none;}
+  main{padding:18px 12px 60px;}
+  header{padding:14px 16px 12px;}
+  #homebtn{top:14px;right:16px;}
+}
+.uh{cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug-body{}
+.ug.collapsed .ug-body{display:none;}
+
+/* ── ARAMA SONUÇ PANELİ ── */
+#sr-panel{max-width:1100px;margin:0 auto;padding:18px 22px 60px;display:none;}
+.sr-bar{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:6px;margin-bottom:14px;font-family:var(--mono);font-size:11px;}
+.sr-count{color:var(--tm);}
+.sr-count b{color:var(--bl);}
+.sr-close{background:none;border:none;color:var(--td);cursor:pointer;
+  font-family:var(--mono);font-size:11px;padding:2px 6px;border-radius:3px;
+  transition:color .15s;}
+.sr-close:hover{color:var(--text);}
+.sr-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  margin-bottom:10px;padding:14px 17px;transition:border-color .18s;}
+.sr-card:hover{border-color:var(--bh);}
+.sr-bc{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.sr-unit{font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.06em;padding:2px 8px;border-radius:3px;border:1px solid;
+  text-transform:uppercase;}
+.sr-sep{color:var(--td);font-size:11px;}
+.sr-exn{font-family:var(--mono);font-size:11px;color:var(--tm);}
+.sr-tn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--bl);
+  background:var(--bbg);border:1px solid var(--bbd);padding:1px 6px;border-radius:3px;}
+.sr-th{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.sr-tt{font-size:14px;font-weight:600;flex:1;}
+.sr-ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;
+  background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;}
+.sr-sc{font-style:italic;color:var(--tm);font-size:12.5px;border-left:3px solid var(--bbd);
+  padding:7px 11px;margin-bottom:10px;background:var(--bbg);border-radius:0 5px 5px 0;}
+.sr-path{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:0 0 9px;}
+.sr-pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);
+  padding:3px 9px;border:1px solid var(--border);}
+.sr-pc:first-child{border-radius:4px 0 0 4px;}
+.sr-pc:last-child{border-radius:0 4px 4px 0;}
+.sr-pc:only-child{border-radius:4px;}
+.sr-pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  height:25px;display:flex;align-items:center;}
+</style>
+</head>
+<body>
+<header>
+  <div class="meta">
+    <span class="cid">S47100 · 2506</span>
+    <h1 style="font-size:17px;font-weight:600;">Configuring Org. and Master Data in SAP S/4HANA Service</h1>
+  </div>
+  <div class="sub">EXERCISES AND SOLUTIONS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Egzersiz: <span class="n">16</span></div>
+    <div class="st">Ünite: <span class="n">5</span></div>
+    <div class="st">Süre: <span class="n">5s 00dk</span></div>
+    <div class="st">Sistem: <span class="n">T41 · S47100-## / S47000-##</span></div>
+  </div>
+  <button id="homebtn" onclick="location.href='index.html'">🏠 Home</button>
+</header>
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg style="position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.4;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Egzersiz, T-Code, adım ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">16</b> / 16 egzersiz</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+<script>
+const D=[
+{unit:1,title:"Creating Organizational Data",ex:[
+{id:1,title:"Create the Organizational Model: Organizational Units and Positions",
+ app:"Manage Organizations (SAP Fiori) / SAP GUI (PPOME)",
+ sc:"H2 Energy Solutions proje ekibi, Organizational Management aracılığıyla organizasyon yapısını oluşturur. Sales & Service 1010 altında Service Organization GR## ve alt birimler oluşturulur; pozisyon ve maliyet merkezi atanır.",
+ tasks:[
+  {num:"1",title:"Log On to SAP Fiori Launchpad and Switch to Spaces and Pages",app:"SAP Fiori Launchpad",
+   path:["Start (Windows Icon, bottom-left)","S4HANA T41 Fiori Launchpad"],
+   fields:[["── Logon Data ──",""],["User","S47000–##"],["Password","Welcome1"],["Language","EN"]],
+   steps:["<b>Start</b> (sol alt Windows simgesi) → <b>S4HANA T41 Fiori Launchpad</b>.","Giriş bilgileri girilir → <b>Log On</b>.","<b>Profile</b> of Service S47000-## → <b>Settings</b>.","<b>Spaces and Pages</b>: Use Spaces ve Show my Home göstergelerinin işaretli olduğu doğrulanır → <b>Save</b>."]},
+  {num:"2",title:"Create Subordinate Org. Unit – Service Organization GR##",app:"Manage Organizations",
+   path:["Organization","Organizational Management","Manage Organizations"],
+   fields:[["── Search ──",""],["Description","Sales & Service 1010"],["── New Org. Unit ──",""],["Description","Service Organization DE GR##"],["Code","SRV_ORG_DE##"],["Allow Org. Unit to be Determined: Service","x (set flag)"],["Functions: Service Organization","x (set flag)"]],
+   steps:["FLP → <b>Organization</b> → <b>Organizational Management</b> → <b>Manage Organizations</b>.","Description: <b>Sales & Service 1010</b> → <b>Search</b>.","Result List: <b>Sales & Service 1010</b> seçilir.","Entry <b>Sales & Service 1010</b> seçilir → <b>Create</b> → <b>Organizational Unit</b>.","<b>Organizational Unit Details</b>'e kaydırılır; veriler girilir → <b>Save</b>."],
+   info:"Bu kursta <b>##</b> karakterleri grup numarası için yer tutucudur. Egzersiz adımlarında ## gördüğünüzde kendi grup numaranizi yazın."},
+  {num:"3",title:"Assign Attributes to Service Organization GR## – Scenario Service",app:"Manage Organizations",
+   path:[],
+   fields:[["── Attributes (Scenario: Service) ──",""],["Country","DE"],["Postal Code (Scenario: Service) – from","00000"],["Postal Code (Scenario: Service) – to","99999"],["R/3 maintenance planning plant","1040"]],
+   steps:["Yeni oluşturulan Org. Unit'in solundaki boş alanı seçilerek işaretlenir.","<b>Attributes</b> bölümüne kaydırılır → <b>Edit List</b>.","Country: <b>DE</b>, Postal Code: <b>00000–99999</b>, R/3 maintenance planning plant: <b>1040</b> girilir → <b>Save</b>."]},
+  {num:"4",title:"Create Org. Unit – Service Management GR## (Service Team)",app:"Manage Organizations",
+   path:[],
+   fields:[["── New Org. Unit ──",""],["Description","Service Management GR##"],["Code","SRV_DE_MA_##"],["Allow Org. Unit to be Determined: Service","x (set flag)"],["Functions: Service Team","x (set flag)"]],
+   steps:["<b>Service Organization DE GR##</b> seçilir → <b>Create</b> → <b>Organizational Unit</b>.","<b>Organizational Unit Details</b>: veriler girilir → <b>Save</b>."]},
+  {num:"5",title:"Create Org. Unit – Service Master Data Center GR##",app:"Manage Organizations",
+   path:[],
+   fields:[["── New Org. Unit ──",""],["Description","Service Master Data Center GR##"],["Code","SRV_DE_MC_##"]],
+   steps:["<b>Service Management GR##</b> seçilir → <b>Create</b> → <b>Organizational Unit</b>.","Veriler girilir → <b>Save</b>."]},
+  {num:"6",title:"Create Position – Service Master Data Specialist GR##",app:"Manage Organizations",
+   path:[],
+   fields:[["── Position ──",""],["Description","Service Master Data Specialist GR##"],["Code","SRVS_DE_##"],["Business Role","Service Professional"]],
+   steps:["<b>Service Master Data Center GR##</b> seçilir → <b>Create</b> → <b>Position</b>.", "<b>Position Details</b>'e kaydırılır; veriler girilir → <b>Save</b> → <b>Navigate to Home</b>."] },
+  {num:"7",title:"Assign Master Cost Center 4100 – via SAP GUI (PPOME)",app:"SAP GUI – PPOME",
+   path:[],
+   fields:[["── SAP GUI ──",""],["T-Code","PPOME"],["Path","Company → Company Code 1010 → Sales & Service → Service Organization DE GR##"],["── Account Assignment ──",""],["Master cost center","4100"]],
+   steps:["SAP GUI giriş: user <b>S47000-##</b>, password <b>Welcome1</b>.","T-Code: <b>PPOME</b> → Enter.","Sol üstte <b>Structure Search</b> seçilir.","Sol altta Company yapısı genişletilir: <b>Company → Company Code 1010 → Sales & Service → Service Organization DE GR##</b>.","<b>Service Organization DE GR##</b>'ye çift tıklanır → <b>Account Assignment</b> sekmesi.","<b>Master cost center 4100</b> girilir → <b>Save</b>.","Org yapısı genişletilir → <b>Service Master Data Center GR##</b>'ye çift tıklanır.","Sağ üst alanda <b>Staff assignments (structure)</b>: <b>Column Configuration</b> → <b>ID</b> flag → <b>Continue</b>: pozisyon ID görüntülenir.","<b>Exit</b>."],
+   info:"Tüm alt <b>Organizational Unit</b>'ler ve pozisyonlar, <b>Master Cost Center</b> atamasını üst birimden otomatik olarak devralır. Sonraki adımlar için <b>SAP GUI</b> oturumunu kapatmayın.",
+   warn:"<b>Master cost center</b>, SAP Fiori üzerinden değil, yalnızca <b>SAP GUI (PPOME)</b> ile atanabilir."}
+]},
+{id:2,title:"Check Organizational Levels in Service with Advanced Execution",
+ app:"SAP GUI – IMG (SPRO / SAP Reference IMG)",
+ sc:"Plant 1040 parametreleri incelenir. Bakım planlaması için gerekli ayarlar, Maintenance Planning Plant ve Maintenance Plant ilişkisi ve Planner Group P## ataması doğrulanır.",
+ tasks:[
+  {num:"1",title:"Identify Setting Required for Maintenance Order Planning in a Plant",app:"SAP GUI – Display IMG",
+   path:["SAP Menu","Tools","Customizing","IMG","Execute Project"],
+   fields:[["── IMG Path ──",""],["Path","SAP Customizing Implementation Guide → Enterprise Structure → Definition → Plant Maintenance → Maintain maintenance planning plant"]],
+   steps:["SAP Easy Access: <b>SAP Menu</b> → <b>Tools</b> → <b>Customizing</b> → <b>IMG</b> → <b>Execute Project</b>.","<b>SAP Reference IMG</b> seçilir.","IMG path takip edilir."],
+   result:"Tesis, bakım planlama tesisi olarak tanımlanmalıdır: <b>SAP Customizing Implementation Guide → Enterprise Structure → Definition → Plant Maintenance → Maintain maintenance planning plant</b>.",
+   info:"Sonraki egzersiz adımları için <b>Display IMG</b> ekranında kalın."},
+  {num:"2",title:"Identify Requirement for Supervision from a Different Planning Plant",app:"SAP GUI – Display IMG",
+   path:[],
+   fields:[["── IMG Path ──",""],["Path","SAP Customizing Implementation Guide → Enterprise Structure → Assignment → Plant Maintenance → Assign maintenance planning plant to maintenance plant"]],
+   steps:["IMG path takip edilir: <b>Enterprise Structure → Assignment → Plant Maintenance → Assign maintenance planning plant to maintenance plant</b>."],
+   result:"Bakım tesisi, bir bakım planlama tesisine atanmalıdır. <b>Maintenance Plant 1040</b>, <b>Maintenance Planning Plant 1040</b>'a atanmıştır.",
+   info:"Bakım tesisinin, ortak tesis parametreleri ve ayarları dışında ek bir gereksinimi yoktur."},
+  {num:"3",title:"Check and Assign Maintenance Planner Group P## to Plant 1040",app:"SAP GUI – Define Planner Groups",
+   path:[],
+   fields:[["── IMG Path ──",""],["Path","Plant Maintenance and Customer Service → Master Data → Technical Objects → General Data → Define Planner Groups"],["── Copy From ──",""],["Maintenance Planning Plant","1040"],["Planner Group","P00"],["── New Entry ──",""],["Planner Group","P##"]],
+   steps:["IMG path: <b>Plant Maintenance and Customer Service → Master Data in PM → Technical Objects → General Data → Define Planner Groups</b>.","Planner Group <b>P##</b>'nin Maintenance Planning Plant <b>1040</b>'a atanmış olup olmadığı kontrol edilir.","Atanmamışsa: P00 ile Maintenance Planning Plant 1040 satırı seçilir → <b>Copy As...</b>.","Planner Group <b>P00</b> → <b>P##</b> olarak değiştirilir → <b>Save</b>."]}
+]}
+]},
+{unit:2,title:"Creating Master Data for Organizational Elements",ex:[
+{id:3,title:"Create a User, an Employee Master, and an Internal Business Partner",
+ app:"SAP GUI (SU01 / PA40 / PPOME) / Manage Organizations / Maintain Business Partner",
+ sc:"Kullanıcı S47100-## kopyalanarak oluşturulur. Employee master ve Business Partner oluşturulur ve Org. Management'a bağlanır. İç Business Partner otomatik üretimi doğrulanır.",
+ tasks:[
+  {num:"Task 1.1",title:"Create User S47100-## by Copying S47100-999",app:"SAP GUI – SU01",
+   path:[],
+   fields:[["── T-Code: SU01 ──",""],["Source User","S47100-999"],["Target User","S47100-##"],["── Logon Data ──",""],["User Type","S Service"],["New Password","Welcome1"],["Repeat Password","Welcome1"]],
+   steps:["SAP GUI: user <b>S47000-##</b>, password <b>Welcome1</b>.","T-Code: <b>SU01</b> → Enter.","User: <b>S47100-999</b> → <b>Copy</b>.","Popup <b>Copy Users</b>: <b>To</b> field → <b>S47100-##</b> → <b>Copy</b>.","<b>Logon Data</b> sekmesi: User Type → <b>S Service</b>.","New Password ve Repeat Password: <b>Welcome1</b> → <b>Save</b>.","<b>System</b> → <b>Log Off</b>."],
+   info:"Bundan sonraki tüm egzersizlerde yeni oluşturduğunuz kullanıcı <b>S47100-##</b>'yi kullanın."},
+  {num:"Task 1.2",title:"Log On with S47100-## and Display Assigned Roles",app:"SAP GUI – SU01",
+   path:[],
+   fields:[["── T-Code: SU01 ──",""],["User","S47100-##"],["Action","Display"]],
+   steps:["SAP GUI: user <b>S47100-##</b>, password <b>Welcome1</b>.","T-Code: <b>SU01</b> → Enter.","User: <b>S47100-##</b> → <b>Display</b>.","<b>Roles</b> sekmesi: atanmış standart ve müşteri rolleri görüntülenir → <b>Exit</b>."],
+   info:"Sonraki egzersizler için <b>SAP GUI</b> oturumunu açık bırakın."},
+  {num:"Task 2.1",title:"Create Personnel Master Record Including Business Partner",app:"SAP GUI – PA40",
+   path:[],
+   fields:[["── T-Code: PA40 ──",""],["Personnel no.","1000## (your choice)"],["Action","Hiring"],["── Create Actions ──",""],["Start","Today's date"],["Reason for Action","01"],["Position","5000XXX (Service Master Data Specialist GR## – previously created)"],["Personnel area","1010"],["Employee group","1"],["Employee subgroup","Y1"],["── Personal Data ──",""],["Title","Mr. (your choice)"],["Last Name","S47100-##"],["First Name","Master Data Specialist GR##"],["Gender","Male (your choice)"],["Birth date","01.06.2000 (your choice)"],["Nationality","DE German (your choice)"],["── Org. Assignment ──",""],["Org. key","10100000004100"],["── Addresses ──",""],["City","(required — enter a value)"],["── Communication ──",""],["System ID","S47100-##"]],
+   steps:["SAP GUI (with user <b>S47100-##</b>) → T-Code: <b>PA40</b> → Enter.","Personnel no.: <b>1000##</b>, Action: <b>Hiring</b> → <b>Execute</b>.","<b>Create Actions</b>: Start (today), Reason: 01, Position: (Service Master Data Specialist GR##), Personnel area: 1010, Employee group: 1, Employee subgroup: Y1 → <b>Save</b>.","<b>Create Personal data</b>: veriler girilir → <b>Save</b>.","<b>Create Organizational assignment</b>: Org. key <b>10100000004100</b> → <b>Save</b>.","Popup <b>Delimit Vacancy</b>: <b>Cancel</b>.","<b>Create Addresses</b>: adres girilir (City zorunlu) → <b>Save</b>.","<b>Create Communication</b>: System ID <b>S47100-##</b> → <b>Save</b>."],
+   info:"<b>S47100-##</b>, önceki adımda oluşturduğunuz <b>SAP User</b>'u temsil eder.",
+   warn:"<b>Create Addresses</b> ekranında <b>City</b> alanına mutlaka bir değer girilmesi gerekir."},
+  {num:"Task 2.2",title:"Assign Employee S47100-## to Position Service Master Data Specialist GR##",app:"Manage Organizations",
+   path:["Organization","Organizational Management","Manage Organizations"],
+   fields:[["── Search ──",""],["Description","Sales & Service 1010"],["── Assignment ──",""],["Last Name (search)","S47100-##"]],
+   steps:["FLP (<b>S47000-##</b> ile) → <b>Organization</b> → <b>Organizational Management</b> → <b>Manage Organizations</b>.","Description: <b>Sales & Service 1010</b> → <b>Search</b> → Result List entry seçilir.","Daha önce oluşturulan Organizational Structure genişletilir; <b>Position Service Master Data Specialist GR##</b> seçilir → <b>Employee</b>.","Popup <b>Assign Employee</b>: Last Name <b>S47100-##</b> → <b>Search</b>.","Result List'ten entry seçilir → <b>Save</b>."]},
+  {num:"Task 3.1",title:"Log On with S47100-## to SAP Fiori Launchpad",app:"SAP Fiori Launchpad",
+   path:[],
+   fields:[["── Logon ──",""],["User","S47100-##"],["Password","Welcome1"],["Language","EN"]],
+   steps:["FLP'de sağ üst: <b>Profile of Service S47000-##</b> → <b>Sign Out</b> → popup: <b>OK</b>.","S47100-## ile giriş yapılır → <b>Log On</b>.","<b>Profile</b> → <b>Settings</b> → <b>Spaces and Pages</b>: Use Spaces, Show my Home işaretlenir → <b>Save</b>."],
+   info:"Bu adım yalnızca daha önce <b>S47000-##</b> ile çıkış yapılmadıysa ve <b>S47100-##</b> ile giriş yapılmadıysa geçerlidir."},
+  {num:"Task 3.2",title:"Display Internal Business Partner – Master Data Specialist GR## S47100-##",app:"Maintain Business Partner",
+   path:["Organization","Organization & People","Maintain Business Partner"],
+   fields:[["── Search (By Name) ──",""],["Find Business Partner","By Name"],["Name 1/last Name","S47100–##"],["Name 2/First Name","Master Data Specialist GR##"]],
+   steps:["FLP → <b>Organization</b> → <b>Organization & People</b> → <b>Maintain Business Partner</b>.","Dropdown: <b>Find Business Partner</b> → <b>By Name</b>; kriterler girilir → <b>Start</b>.","Business Partner numarasına çift tıklanır.","<b>Identification</b>: bağlı Employee ID görüntülenir.","<b>Back</b>."]}
+]},
+{id:4,title:"Create an External Business Partner",
+ app:"SAP GUI – BP",
+ sc:"Harici Business Partner C7100-C## oluşturulur. Müşteri rolleri (FLCU01, CRM000, FLCU00) atanır, satış alanı, fatura ve uzlaşma hesabı girilir. Contact Person Laura Schmitt ## oluşturulup Customer'a atanır.",
+ tasks:[
+  {num:"1",title:"Create External Business Partner C7100-C##",app:"SAP GUI – BP (Create Organization)",
+   path:[],
+   fields:[["── General Data ──",""],["Business Partner","C7100-C##"],["Title","Company"],["Name","Baltic Sea Energy - H2 Power - ##"],["Search Term 1","C7100-C##"],["Street/House Number","An der Katenwisch/10"],["Postal Code/City","18147 / Rostock"],["Country/Reg.","DE/MV"],["Language","EN"],["── BP Role: FLCU01 ──",""],["Ext. Customer No.","C7100-C##"],["── Sales Area ──",""],["Sales Org.","1010"],["Distr. Channel","10"],["Division","00"],["── Orders Tab ──",""],["Sales District","DE0002"],["Price Group","02"],["Cust.Pric.Procedure","01"],["── Shipping Tab ──",""],["Shipping Conditions","01"],["── Billing Tab ──",""],["Incoterms","EXW"],["Terms of Payment","0001"],["Tax Classific.","1"],["── BP Role: FLCU00 ──",""],["Company Code","1010"],["Reconciliation Account","12100000"]],
+   steps:["SAP GUI: T-Code <b>BP</b> → Enter.","<b>Create Organization</b>: veriler girilir → <b>Save</b>.","<b>Switch Between Display and Change (F6)</b> → dropdown: BP role <b>FLCU01</b>.","<b>Customer: General Data</b> sekmesi → Ext. Customer No.: <b>C7100-C##</b>.","<b>Sales and Distribution</b>: Sales Org. 1010, Distr. Channel 10, Division 00 → Enter.","<b>Orders</b> sekmesi: Sales District, Price Group, Cust.Pric.Procedure girilir.","<b>Shipping</b> sekmesi: Shipping Conditions <b>01</b>.","<b>Billing</b> sekmesi: Incoterms, Terms of Payment, Tax Classific. → <b>Save</b>.","<b>General Data</b> → dropdown: BP role <b>CRM000 Sold-to Party</b> → <b>Save</b>.","Dropdown: BP role <b>FLCU00 FI Customer</b> → <b>Company Code</b>.","Company Code <b>1010</b> → Enter; Reconciliation Account <b>12100000</b> → <b>Save</b> → F3."]},
+  {num:"2",title:"Create Contact Person Laura Schmitt ## and Assign to C7100-C##",app:"SAP GUI – BP (Create Person)",
+   path:[],
+   fields:[["── Person ──",""],["Title","0001 Ms."],["First Name","Laura"],["Last Name","Schmitt ##"],["── Addit. Fields ──",""],["Correspondence lang.","EN"],["Language","EN"],["── BP Role: BUP001 ──",""],["BP Role","BUP001 Contact Person"],["── Relationship ──",""],["Relationship Cat.","TBUR001 Is Contact Person For"],["Relationship to BP","C7100-C##"]],
+   steps:["T-Code <b>BP</b> → Enter.","<b>Create Person</b>: Title, First Name, Last Name girilir; adres girilir → <b>Save</b>.","<b>Switch Between Display and Change</b> (F6): change mode'a geçilir.","<b>Addit. Fields</b>: Correspondence lang. EN, Language EN girilir; aşağı kaydırılır.","Dropdown: BP role <b>BUP001 Contact Person</b> → <b>Save</b>.","<b>Relationships</b>: Relationship Cat. dropdown → <b>TBUR001 Is Contact Person For</b>.","<b>Relationship to BP</b>: <b>C7100-C##</b> → Enter.","Popup <b>Contact Person Rel.ship Create: General Data</b>: <b>Continue</b> → <b>Save</b>."]}
+]},
+{id:5,title:"Create Master Data for Service with Advanced Execution",
+ app:"SAP GUI – Create Work Center",
+ sc:"Service with Advanced Execution senaryosu için Maintenance Work Center S-ADEX## oluşturulur. Kapasite, çizelgeleme ve maliyet verileri girilir.",
+ tasks:[
+  {num:"1",title:"Create Maintenance Work Center S-ADEX## in Plant 1040",app:"SAP GUI – Work Center Create",
+   path:["SAP Menu","Logistics","Plant Maintenance","Maintenance Processing","Environment","Work Centers","Work Center","Create"],
+   fields:[["── Initial Screen ──",""],["Plant","1040"],["Work Center","S-ADEX##"],["Work Center Category","0005"],["── Basic Data Tab ──",""],["Object description","Service - Advanced Execution — GR##"],["Person responsible","001"],["Usage","004"],["Standard value key","SAP0"],["── Default Values Tab ──",""],["Control Key","PM01"],["── Capacities Tab ──",""],["Capacity category","002"],["Other formula","SAP008"],["── Capacity Header ──",""],["Capacity Responsible","A"],["Factory Calendar","01"],["Active Version","1"],["Capacity Base Unit","H"],["Start","07:00:00"],["End","17:00:00"],["Length of breaks","01:00:00"],["Capacity utilization","60"],["No. of indiv. cap.","4"],["── Scheduling Tab ──",""],["Capacity category","002"],["Int. Proc. Duration","SAP004"],["── Costing Tab ──",""],["Cost Center","4300"],["ActType Int. Proc.","1410"],["Formula key (Int. Proc.)","SAP008"]],
+   steps:["SAP Easy Access: <b>SAP Menu</b> → <b>Logistics</b> → <b>Plant Maintenance</b> → <b>Maintenance Processing</b> → <b>Environment</b> → <b>Work Centers</b> → <b>Work Center</b> → <b>Create</b>.","Initial Screen: Plant <b>1040</b>, Work Center <b>S-ADEX##</b>, Category <b>0005</b> → Enter.","<b>Basic Data</b> sekmesi: veriler girilir.","<b>Default Values</b> sekmesi: Control Key <b>PM01</b>.","<b>Capacities</b> sekmesi: Category <b>002</b>, Formula <b>SAP008</b>.","<b>Capacity</b> butonu → <b>Change Work Center Capacity: Header</b>: tüm kapasite verileri girilir → <b>Back</b>.","<b>Scheduling</b> sekmesi: Category <b>002</b>, Int. Proc. Duration <b>SAP004</b>.","<b>Costing</b> sekmesi: Cost Center <b>4300</b>, ActType <b>1410</b>, Formula key <b>SAP008</b>.","<b>Save</b> → Exit."]}
+]}
+]},
+{unit:3,title:"Creating Products and Product Bundles",ex:[
+{id:6,title:"Create a Service Product",
+ app:"SAP GUI (MM01) / Manage Prices - Sales (SAP Fiori)",
+ sc:"Servis ürünü P700_SERV_ONS_## kopyalanarak oluşturulur ve PPR0 koşul kaydı eklenir. Yapısal ürün P700-EL-100-## (FERT) kopyalanarak ayrı kaydedilir.",
+ tasks:[
+  {num:"Task 1.1",title:"Create Service Product P700_SERV_ONS_## by Copying P700_SERV_ONS",app:"SAP GUI – MM01",
+   path:[],
+   fields:[["── MM01 ──",""],["Material","P700_SERV_ONS_##"],["Industry","M Mechanical Engineering"],["Material Type","SERV Services"],["Copy from Material","P700_SERV_ONS"],["── Org. Levels (both cols) ──",""],["Plant","1040"],["Sales Organization","1010"],["Distribution Channel","10"],["── Sales: sales org. 1 ──",""],["Tax classification","1 (check)"],["── Sales: sales org. 2 ──",""],["Item Category Group","SRVP (check)"],["── Sales: General/Plant ──",""],["Work Duration unit","HR"]],
+   steps:["SAP GUI (S47100-##) → T-Code: <b>MM01</b> → Enter.","Veriler girilir; <b>Copy from Material</b>: <b>P700_SERV_ONS</b> → Enter.","Popup <b>Select View(s)</b>: <b>Select All</b> → <b>Org. Levels</b>: Plant, Sales Org., Distr. Channel her iki sütuna girilir → <b>Continue</b>.","<b>Sales: sales org. 1</b>: Tax classification <b>1</b> kontrol edilir.","<b>Sales: sales org. 2</b>: Item Category Group <b>SRVP</b> kontrol edilir.","<b>Sales: General/Plant</b>: Work Duration unit → <b>HR</b>.","<b>Save</b>."],
+   info:"Servis ürününü <b>SAP GUI</b> yerine alternatif olarak <b>SAP Fiori launchpad</b> üzerinden de oluşturabilirsiniz."},
+  {num:"Task 1.2",title:"Create Condition for P700_SERV_ONS_## by Copying from P700_SERV_ONS",app:"Manage Prices - Sales",
+   path:["Service Master Data","Products","Manage Prices - Sales"],
+   fields:[["── Search ──",""],["Condition Type","PPR0"],["Product","P700_SERV_ONS"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Products</b> → <b>Manage Prices - Sales</b>.","Condition Type <b>PPR0</b>, Product <b>P700_SERV_ONS</b> → <b>Go</b>.","Valid From <b>01.02.2021</b> satırı seçilir → <b>Copy</b>.","<b>Product</b> sütununa <b>P700_SERV_ONS_##</b> girilir → <b>Save</b>."],
+   info:"Seçim kriteri olarak alan ekleyip çıkarmak için <b>Adapt Filters</b> seçeneğini kullanabilirsiniz."},
+  {num:"Task 2.1",title:"Create Service Product P700-EL-100-## by Copying P700-EL-100",app:"SAP GUI – MM01",
+   path:[],
+   fields:[["── MM01 ──",""],["Material","P700-EL-100-##"],["Industry","M Mechanical Engineering"],["Material Type","FERT Finished Product"],["Copy from Material","P700-EL-100"],["── Org. Levels (both cols) ──",""],["Plant","1040"],["Storage Location","101A"],["Sales Organization","1010"],["Distribution Channel","10"],["── Sales: sales org. 1 ──",""],["Tax classification","1 (check/assign)"],["── Sales: sales org. 2 ──",""],["Item Category Group","NORM (check/assign)"],["── Sales: General/Plant ──",""],["Profit Center","YB110"],["── Accounting 1 ──",""],["Standard Price","26500 (check/assign)"]],
+   steps:["T-Code: <b>MM01</b> → Enter.","Veriler girilir; Copy from Material: <b>P700-EL-100</b> → Enter.","Popup <b>Select View(s)</b>: Basic Data 1, Basic Data 2, Sales Org Data 1/2, General/Plant, General Plant / Storage 1/2, Accounting 1/2.","<b>Org. Levels</b>: Plant 1040, Storage Location 101A, Sales Org. 1010, Distr. Channel 10 → <b>Continue</b>.","Her sekmeyi Enter ile geç. Sales org. 1: Tax classification <b>1</b>; Sales org. 2: Item Category Group <b>NORM</b>; General/Plant: Profit Center <b>YB110</b>; Accounting 1: Standard Price <b>26500</b>.","Popup <b>Last data screen reached</b>: <b>Yes</b> → Save."]},
+  {num:"Task 2.2",title:"Create Condition Record for P700-EL-100-## by Copying from P700-EL-100",app:"Manage Prices - Sales",
+   path:["Service Master Data","Products","Manage Prices - Sales"],
+   fields:[["── Search ──",""],["Condition Type","PPR0"],["Product","P700-EL-100"]],
+   steps:["FLP → <b>Manage Prices - Sales</b>.","Condition Type <b>PPR0</b>, Product <b>P700-EL-100</b> → <b>Go</b>.","Mevcut Condition Record satırı seçilir → <b>Copy</b>.","<b>Product</b> sütununa <b>P700-EL-100-##</b> girilir → <b>Save</b>."]}
+]},
+{id:7,title:"Create a Product Bundle",
+ app:"SAP GUI (MM01) / Manage Prices - Sales / Manage Product Bundles (SAP Fiori)",
+ sc:"Bundle product INST_BUNDLE_## kopyalanarak oluşturulur, PPR0 koşul kaydı eklenir. Manage Product Bundles'da gruplar (Service, Contract, Component) ve ürünler atanır.",
+ tasks:[
+  {num:"1",title:"Create Bundle Product INST_BUNDLE_## by Copying P700_INST_BUNDLE",app:"SAP GUI – MM01",
+   path:[],
+   fields:[["── MM01 ──",""],["Material","INST_BUNDLE_##"],["Industry","M Mechanical Engineering"],["Material Type","BUND Bundle Product"],["Copy from Material","P700_INST_BUNDLE"],["── Org. Levels (both cols) ──",""],["Plant","1040"],["Sales Organization","1010"],["Distribution Channel","10"],["── Basic data 1 ──",""],["Material Group","007"],["── Sales: sales org. 1 ──",""],["Tax classification","1 (check)"],["── Sales: sales org. 2 ──",""],["Item Category Group","SRVP (check)"]],
+   steps:["T-Code: <b>MM01</b> → Enter; veriler girilir → <b>Continue</b>.","Popup: <b>Select All</b> → <b>Org. Levels</b>: Plant 1040, Sales Org. 1010, Distr. Channel 10 → <b>Continue</b>.","<b>Basic data 1</b>: Material Group <b>007</b>.","Sales org. 1: Tax classification 1; Sales org. 2: Item Category Group SRVP kontrol edilir → <b>Save</b>."]},
+  {num:"2",title:"Create Condition for INST_BUNDLE_## by Copying from P700_INST_BUNDLE",app:"Manage Prices - Sales",
+   path:["Service Master Data","Products","Manage Prices - Sales"],
+   fields:[["── Search ──",""],["Condition Type","PPR0"],["Product","P700_INST_BUNDLE"]],
+   steps:["FLP → <b>Manage Prices - Sales</b>; Condition Type <b>PPR0</b>, Product <b>P700_INST_BUNDLE</b> → <b>Go</b>.","Satır seçilir → <b>Copy</b>.","Product: <b>INST_BUNDLE_##</b> → <b>Save</b>."]},
+  {num:"3",title:"Create Product Bundle Structure in Manage Product Bundles",app:"Manage Product Bundles",
+   path:["Service Master Data","Products","Manage Product Bundles"],
+   fields:[["── Product Bundle ──",""],["Product Bundle ID","INST_BUNDLE_##"],["── Groups ──",""],["Group 1","Service"],["Group 2","Contract"],["Group 3","Component"],["── Component Products ──",""],["P700-EL-100-##","Electrolysis Stack ##"],["P700-HB-100","Hydrogen Blower"],["P700-HC-100 (optional)","Hydrogen Connection"],["── Contract Products ──",""],["P700_SERV_ONS_C","Service Onsite - Contract"],["P700_SERV_INSP_C (optional)","Service Inspection - Contract"],["── Service Products ──",""],["P700_SERV_ONS_##","Service Onsite - Standard ##"],["P700_SERV_INH (optional)","Service Inhouse - Standard"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Products</b> → <b>Manage Product Bundles</b>.","<b>New</b> → Product Bundle ID: <b>INST_BUNDLE_##</b> → Enter.","<b>Add Group</b> → <b>Service</b> seçilir. Tekrarla → <b>Contract</b>. Tekrarla → <b>Component</b> → <b>Save</b>.","<b>Component</b> seçilir → <b>Edit</b> → <b>Add Products to Group</b>.","Popup: Product <b>P700-*</b> → <b>Search</b> → P700-EL-100-##, P700-HB-100, P700-HC-100 seçilir → <b>Choose</b>.","<b>Contract</b> ve <b>Service</b> grupları için aynı işlem tekrarlanır → <b>Save</b>."],
+   info:"Bir gruba atanan ürünlerin isteğe bağlı olarak işaretlenebilmesi için <b>Optional</b> flag'ini kullanabilirsiniz."}
+]}
+]},
+{unit:4,title:"Configuring and Creating Technical Assets",ex:[
+{id:8,title:"Configure and Create Functional Locations",
+ app:"SAP GUI (IMG / IL04 / IH01 / IL02) / Find Technical Object (SAP Fiori)",
+ sc:"Functional Location için Structure Indicator SRV## oluşturulur (4 level, 8-4-2-2 karakter, dash separator). IL04 ile hiyerarşi kurulur, kopyalanır ve SAP Fiori ile görüntülenir.",
+ tasks:[
+  {num:"Task 1.1",title:"Create Structure Indicator SRV## in Customizing",app:"SAP GUI – Display IMG",
+   path:["SAP GUI – SPRO","Plant Maintenance and Customer Service","Master Data in PM","Technical Objects","Functional Locations","Create Structure Indicator for Reference Locations/Functional Locations"],
+   fields:[["── New Entry ──",""],["StrIndicator","SRV##"],["StructIndText","Service GR##"],["Edit mask","XXXXXXXX-XXXX-NN-NN"],["HierLevels","1   2   3   4"]],
+   steps:["SAP Easy Access: <b>SAP Menu</b> → <b>Tools</b> → <b>Customizing</b> → <b>IMG</b> → <b>Execute Project</b> → <b>SAP Reference IMG</b>.","IMG: <b>Plant Maintenance and Customer Service → Master Data → Technical Objects → Functional Locations → Create Structure Indicator</b>.","<b>New Entries</b>: StrIndicator <b>SRV##</b>, Text <b>Service GR##</b>, Edit mask <b>XXXXXXXX-XXXX-NN-NN</b>, HierLevels: 1 2 3 4 → <b>Save</b>."],
+   info:"<b>Prompt for customizing request</b> pop-up'u gelirse: <b>Create Request (F8)</b>, kısa açıklama girip <b>Save (Enter)</b>, ardından <b>Continue</b>. Bu rutini kurs boyunca kullanın.",
+   warn:"Hiyerarşi: 4 seviye. Level 1: 8 alfanumerik (X). Level 2: 4 alfanumerik (X). Level 3: 2 numerik (N). Level 4: 2 numerik (N). Ayıraç: tire (-)."},
+  {num:"Task 2.1",title:"Create Functional Location Hierarchy with Transaction IL04",app:"SAP GUI – IL04",
+   path:[],
+   fields:[["── IL04 ──",""],["Structure Indicator","SRV##"],["Functional Location Category","E"],["── Functional Locations ──",""],["C7100C##","Baltic Sea Power - Customer C## (Plant: 1040, Planner: P00, WorkCtr: T-PMSV00/1040)"],["C7100C##-PROD","H2 Production"],["C7100C##-PROD-01","Sub-Area 01"],["C7100C##-PROD-01-01","Function 01"],["C7100C##-LOHC","LOHC Storage"],["C7100C##-RELE","H2 Release"]],
+   steps:["T-Code: <b>IL04</b> → Enter.","Structure Indicator: <b>SRV##</b> → Enter; Category: <b>E</b>.","Sol sütuna Functional Location ID, sağ sütuna Description girilir (tüm entries için).","İlk satırdaki Functional Location ID'ye çift tıklanır → master record açılır.","<b>Location</b> sekmesi: Maintenance Plant <b>1040</b> → Enter.","<b>Organization</b> sekmesi: Planner Group <b>P00</b>, Main Work Center <b>T-PMSV00/1040</b> → <b>Save</b>.","Tekrar Save → giriş ekranına dönülür → tüm entries için Save."],
+   info:"Yalnızca üst seviye node için girdi yapmanız yeterlidir. Alt seviyeler, kaydetme sonrasında üst seviyedeki değlerleri otomatik olarak devralır."},
+  {num:"Task 3.1",title:"Display Functional Location Structure C7100C##",app:"SAP GUI – IH01",
+   path:[],
+   fields:[["── IH01 ──",""],["Functional Location","C7100C##"]],
+   steps:["T-Code: <b>IH01</b> → Functional Location: <b>C7100C##</b> → Execute.", "<b>Expand whole</b> ile hiyerarşi genişletilir, seviyeler kontrol edilir."] },
+  {num:"Task 3.2",title:"Determine Structure Indicator of C7100C##",app:"SAP GUI – IH01",
+   path:[],fields:[],
+   steps:["C7100C##'ye çift tıklanır → <b>Structure</b> sekmesi."],
+   result:"<b>StrIndicator</b> alanında <b>SRV##</b> görüntülenir."},
+  {num:"Task 3.3",title:"Create C7100C##-PROD-02 Using C7100C##-PROD-01 as Template",app:"SAP GUI – IL04",
+   path:[],
+   fields:[["── IL04 ──",""],["Structure Indicator","SRV##"],["Functional Location Category","E"],["── Copy Reference ──",""],["Functional Location","C7100C##-PROD-01"],["New FunctLocStruct.","C7100C##-PROD-02"],["── Descriptions ──",""],["C7100C##-PROD-02","Sub-Area 2"],["C7100C##-PROD-02-01","Function 1"]],
+   steps:["T-Code: <b>IL04</b>; Structure Indicator: <b>SRV##</b>, Category: <b>E</b>.","<b>Copy reference</b> seçilir.","Dialog: Functional Location <b>C7100C##-PROD-01</b>, New FunctLocStruct. <b>C7100C##-PROD-02</b> → <b>Continue</b>.","Açılan listede description'lar güncellenir → <b>Save</b>."]},
+  {num:"Task 3.4",title:"Display C7100C## Hierarchy – 5 Levels Below",app:"SAP GUI – IH01",
+   path:[],
+   fields:[["── IH01 ──",""],["Functional Location","C7100C##"],["Display Levels Below","5"]],
+   steps:["T-Code: <b>IH01</b>; Functional Location: <b>C7100C##</b>; Display Levels Below: <b>5</b> → Execute."]},
+  {num:"Task 4.1",title:"Log On to SAP Fiori Launchpad (S47100-##) and Display C7100C##",app:"Find Technical Object",
+   path:["Service Master Data","Technical Objects","Find Technical Object"],
+   fields:[["── Logon ──",""],["User","S47100-##"],["Password","Welcome1"],["── Search ──",""],["Maintenance Plant","1040"],["Technical Object","C7100C##*"]],
+   steps:["FLP → user <b>S47100-##</b> ile giriş.","<b>Service Master Data</b> → <b>Technical Objects</b> → <b>Find Technical Object</b>.","Maintenance Plant: <b>1040</b>; Technical Object: <b>C7100C##*</b> → <b>Go</b>."]},
+  {num:"Task 4.2",title:"Create Selection Variant V## as Default",app:"Find Technical Object",
+   path:[],fields:[],
+   steps:["<b>Standard *</b> butonu (sol üst, Select Variant) → <b>Save As</b> → variant adı: <b>V##</b>.","<b>Set as Default</b> ve <b>Apply Automatically</b> checkbox'ları işaretlenir → <b>Save</b>.","<b>Go</b>."]},
+  {num:"Task 4.3",title:"Define Links – Asset Viewer, Change/Display/Create Technical Object",app:"Find Technical Object",
+   path:[],fields:[],
+   steps:["<b>H2 Production – C7100C##-PROD</b> hyperlink seçilir → <b>More Links</b>.", "Asset Viewer, Change Technical Object, Display Technical Object, Create Technical Object checkbox'ları → <b>OK</b>."]},
+  {num:"Task 4.4",title:"Display Subordinate Structure of C7100C##-PROD via Asset Viewer",app:"Find Technical Object – Asset Viewer",
+   path:[],fields:[],
+   steps:["<b>Asset Viewer</b> hyperlink seçilir.","Sol tarafta <b>C7100C##-PROD</b> hiyerarşisi görüntülenir; genişletilir.","<b>Navigate to Home</b>."]}
+]},
+{id:9,title:"Transfer Data",
+ app:"SAP GUI (IH01 / IL02 / IH06)",
+ sc:"Functional Location yapısında veri transferi incelenir. Planner Group P## güncellenir, tüm alt yapıya kopyalandığı doğrulanır. C7100C##-PROD-02 bireysel bakıma alınır; S-ADEX## work center hariç tüm yapıya uygulanır.",
+ tasks:[
+  {num:"Task 1.1",title:"Determine Main Work Center and Planner Group of C7100C##",app:"SAP GUI – IH01",
+   path:[],fields:[["── IH01 ──",""],["Functional Location","C7100C##"]],
+   steps:["T-Code: <b>IH01</b> → Functional Location: <b>C7100C##</b> → Execute.","<b>C7100C##</b> seçilir → <b>Display Object Master Record</b> → <b>Display → Change</b>.","<b>Organization</b> sekmesi."],
+   result:"Ana iş merkezi: <b>T-PMSV00</b> · Planlayıcı grubu: <b>P00</b>"},
+  {num:"Task 1.2",title:"Change Planner Group to P## and Verify Data Transfer",app:"SAP GUI – IL02 / IH06",
+   path:[],fields:[["── Change ──",""],["Planner group","P##"]],
+   steps:["<b>Planner group</b> alanına <b>P##</b> girilir → <b>Save</b>."],
+   result:"Sistem mesajı: <b>Data copied to xx FunctLoc(s) and yy piece(s) of equip.</b>"},
+  {num:"Task 1.3",title:"Verify Planner Group Transfer to Subordinate Functional Locations",app:"SAP GUI – IH06",
+   path:[],fields:[["── IH06 ──",""],["Functional Location","C7100C##*"]],
+   steps:["T-Code: <b>IH06</b> → Functional Location: <b>C7100C##*</b> → Execute.","Menü: <b>Settings</b> → <b>Layouts</b> → <b>Current</b>.","<b>Change Layout</b>: <b>Maint. Planner Group</b>, Column Set'ten Displayed Columns listesine taşınır → <b>Adopt</b>.","<b>Update</b>: Planner Group'un tüm yapıda değiştiği görüntülenir."]},
+  {num:"Task 2.1",title:"Check Main Work Center of C7100C## and Set C7100C##-PROD-02 to Individual Maintenance",app:"SAP GUI – IL02",
+   path:[],
+   fields:[["── IH01/Organization Tab ──",""],["Main Work Center","T-PMSV00"],["── IL02: C7100C##-PROD-02 ──",""],["Action","Set to IndivMaintenance"]],
+   steps:["<b>Display Functional Location: Master Data</b> ekranında <b>Organization</b> sekmesi."],
+   result:"Ana iş merkezi: <b>T-PMSV00</b>"},
+  {num:"Task 2.2",title:"Set C7100C##-PROD-02 to Individual Maintenance (Not Affected by Transfer)",app:"SAP GUI – IL02",
+   path:[],fields:[["── IL02 ──",""],["Functional Location","C7100C##-PROD-02"]],
+   steps:["T-Code: <b>IL02</b> → Functional Location: <b>C7100C##-PROD-02</b> → Enter.","<b>Organization</b> sekmesi: <b>Main WorkCtr</b> alanına cursor.","Menü: <b>Edit</b> → <b>Data origin</b>.","Popup <b>Data Origin: Change</b>: <b>IndivMaintenance</b> → <b>Continue</b> → <b>Save</b>."]},
+  {num:"Task 2.3",title:"Assign Work Center S-ADEX## to C7100C## Structure",app:"SAP GUI – IL02",
+   path:[],fields:[["── IL02 ──",""],["Functional Location","C7100C##"],["Main WorkCtr","S-ADEX##"]],
+   steps:["T-Code: <b>IL02</b> → Functional Location: <b>C7100C##</b> → Enter.","<b>Organization</b> sekmesi: <b>Main WorkCtr</b> → <b>S-ADEX##</b> → <b>Save</b>."]},
+  {num:"Task 2.4",title:"Verify Work Center Change – Except C7100C##-PROD-02 Area",app:"SAP GUI – IH06",
+   path:[],fields:[["── IH06 ──",""],["Functional Location","C7100C##*"]],
+   steps:["T-Code: <b>IH06</b> → Functional Location: <b>C7100C##*</b> → Execute.","<b>Current...</b> → Change Layout: <b>Main Work Center</b>, Displayed Columns listesine taşınır → <b>Continue</b>.","<b>Update</b>: S-ADEX## tüm yapıda görünür; C7100C##-PROD-02 ve C7100C##-PROD-02-01 hariç."],
+   result:"<b>S-ADEX##</b>, yapıdaki tüm functional location'larda görüntülenir; <b>C7100C##-PROD-02</b> ve <b>C7100C##-PROD-02-01</b> hariç."}
+]},
+{id:10,title:"Configure and Create Equipment - Define Equipment Category",
+ app:"SAP GUI – IMG (SPRO)",
+ sc:"Yeni Equipment Category oluşturulur (Customer equipment, Energy system units GR##). Change documents, number range, view profile ve partner determination gibi ayarlar yapılır.",
+ tasks:[
+  {num:"1",title:"Create New Equipment Category in Customizing",app:"SAP GUI – SPRO",
+   path:["SPRO","Plant Maintenance and Customer Service","Master Data in PM","Technical Objects","Equipment","Equipment Categories","Maintain Equipment Category"],
+   fields:[["── New Equipment Category ──",""],["C","(check for free characters — e.g. A or 1)"],["R","S Customer equipment"],["Equipment CatDesc.","Energy system units GR##"]],
+   steps:["T-Code: <b>SPRO</b> → IMG path takip edilir.","<b>New Entries</b>: C (serbest karakter), R: <b>S Customer equipment</b>, Description: <b>Energy system units GR##</b> → <b>Save</b>."],
+   info:"<b>C</b> alanı tek karakterdir. Önce mevcut kategorileri kontrol edin. Gerekirse diğer katılımcılarla koordinasyon sağlayın (örn. kullanılmayan <b>A</b> veya <b>1</b>)."},
+  {num:"2",title:"Allow Change Documents for New Equipment Category",app:"SAP GUI – SPRO",
+   path:[],fields:[["── Object info ──",""],["C checkbox","✓ (set)"],["Object info field","SM"]],
+   steps:["<b>Change View 'EquipCategories': Overview</b>: yeni equipment category için <b>C</b> checkbox işaretlenir; <b>Object info</b> alanına <b>SM</b> girilir → <b>Save</b>."]},
+  {num:"3",title:"Assign Equipment Category to Number Range – Asset Management / Service",app:"SAP GUI – SPRO",
+   path:[],fields:[["── Number Ranges ──",""],["Number Range Group","Asset Management / Service"]],
+   steps:["IMG: <b>Equipment Categories → Define Number Ranges for Equipment Categories</b>.","<b>Change Groups</b> (blue pen symbol).","Yeni equipment category tek tıklanır → <b>Assign Element to Group</b>.","Dialog: <b>Asset Management / Service</b> → <b>Copy</b> → doğrulama yapılır → <b>Save</b>."]},
+  {num:"4",title:"Create View Profile – Service Equipment GR##",app:"SAP GUI – SPRO",
+   path:[],
+   fields:[["── Profile ──",""],["Screen group","Screen group equipment data"],["Profile (first field)","GR##"],["Profile (second field)","Service Equipment GR##"],["── Views (Tab/Subscreen) ──",""],["General (0010)","General data (005), Reference data (010), Manufacturer data (015), Address (025)"],["Organization (0030)","Account assignment (030), Responsibilities (035), Customer/vendor data (050), Location data (020)"],["Structure (0050)","Structuring (040), Equipment (045), Standard class Subscreen (097)"],["Additional data 1 (0060)","Partners (100), Warranty (110), Documents Subscreen (122)"],["Tab title (tab 60)","Partners / Warranties / Documents"]],
+   steps:["IMG: <b>General Data → Set View Profiles for Technical Objects</b>.","<b>New Entries</b>: Screen group → <b>Screen group equipment data</b>; Profile: <b>GR##</b>, <b>Service Equipment GR##</b> → Enter.","Entry seçilir → <b>Activity and layout of views</b>'e çift tıklanır.","<b>New Entries</b>: tablodaki view verileri girilir (Tab active checkbox işaretli).","Tab 60 seçilir → <b>Icons and texts of views</b>'e çift tıklanır → <b>New Entries</b>: Tab title <b>Partners / Warranties / Documents</b> → <b>Save</b>."]},
+  {num:"5",title:"Assign New View Profile to Equipment Category",app:"SAP GUI – SPRO",
+   path:[],fields:[["── View profile ──",""],["View profile","GR##"]],
+   steps:["IMG: <b>Equipment Categories → Maintain Equipment Category</b>.", "<b>View profile</b> alanına: <b>GR##</b> → <b>Save</b>."]},
+  {num:"6",title:"Add Sales Data View and Check Additional Business Views",app:"SAP GUI – SPRO",
+   path:[],fields:[["── Additional Business Views ──",""],["Sales data (flag S)","✓ (set)"]],
+   steps:["IMG: <b>Equipment Categories → Define Additional Business Views for Equipment Categories</b>.","Yeni equipment category seçilir → <b>S</b> sütunu flag → <b>Save</b>.","<b>Selection of Editing Options</b> tablosunda sağa kaydırılır."],
+   result:"Ek düzenleme görünümleri: <b>Production Resources and Tools</b>, <b>Configuration</b> ve <b>Serial data</b>."},
+  {num:"7",title:"Allow Equipment Category to be Installed at a Functional Location",app:"SAP GUI – SPRO",
+   path:[],fields:[["── Installation ──",""],["Inst. at FunctLoc. checkbox","✓ (set)"]],
+   steps:["IMG: <b>Equipment → Equipment Usage Period → Define Installation at Functional Location</b>.", "<b>Inst. at FunctLoc.</b> checkbox: yeni equipment category için işaretlenir → <b>Save</b>."]},
+  {num:"8",title:"Define Usage History Update for Equipment Category",app:"SAP GUI – SPRO",
+   path:[],fields:[["── Usage History ──",""],["Time seg. checkbox","✓ (set)"]],
+   steps:["IMG: <b>Equipment Usage Period → Usage History Update</b>.", "<b>Time seg.</b> checkbox: yeni equipment category için işaretlenir → <b>Save</b>."]}
+]},
+{id:11,title:"Create and Install a Piece of Equipment",
+ app:"SAP GUI (IE01 / IE02 / IH01)",
+ sc:"Yeni equipment master EL-5## oluşturulur (önceki exercise'de yaratılan category kullanılır). C7100C##-PROD-01-01'e kurulur ve yapıda doğrulanır.",
+ tasks:[
+  {num:"1",title:"Create Equipment Master Record EL-5##",app:"SAP GUI – IE01",
+   path:[],
+   fields:[["── IE01 ──",""],["Equipment","EL-5##"],["Equipment category","(newly created category)"],["── General Data ──",""],["Description","Electrolyzer GR##"],["Manufacturer","H2 Energy Solutions"],["Model number","H2-2050"],["Constr.yr/mth","2024/10"],["ManufPartNo.","12345-6##"],["── Location ──",""],["MaintPlant","1040"],["── Organization ──",""],["Main WorkCtr","T-PMSV00 / 1040"]],
+   steps:["T-Code: <b>IE01</b> → Equipment: <b>EL-5##</b>, Equipment category: (yeni category) → Enter.","Tablodaki tüm veriler farklı sekmelerde girilir.","<b>Save</b>."],
+   info:"Bu alanları bulmak için farklı sekmelere geçmeniz gerekebilir. <b>Customizing</b>'de <b>Equipment master record</b>'a atanabilen teknik nesne türleri tanımlanabilir."},
+  {num:"2",title:"Install Equipment EL-5## at Functional Location C7100C##-PROD-01-01",app:"SAP GUI – IE02",
+   path:[],
+   fields:[["── IE02 ──",""],["Equipment","EL-5##"],["── Change Install Location ──",""],["Functional loc.","C7100C##-PROD-01-01"],["Data Transfer","InstallLoc. (whole)"]],
+   steps:["T-Code: <b>IE02</b> → Equipment: <b>EL-5##</b> → Enter.","Menü: <b>Structure</b> → <b>Change InstallLoc.</b>.","Dialog <b>Change Equipment Installation Location</b>: Functional loc. <b>C7100C##-PROD-01-01</b> → <b>Inst. w. DataTransfer</b>.","<b>Data Transfer: Install Equipment</b>: <b>InstallLoc. (whole)</b>: tüm veriler kopyalanır.","F3 → Dialog: <b>Confirm</b>.","Status alanında <b>INST</b> görünür → <b>Save</b>."],
+   info:"Kurulumdan sonra <b>Main Work Center</b>, Functional Location'dan devralınarak T-PMSV00'dan <b>S-ADEX##</b>'e otomatik olarak değişir.",
+   result:"<b>Status</b> alanında <b>INST</b> görüntülenir; ekipmanın başarıyla kurulduğunu gösterir."},
+  {num:"3",title:"Verify Equipment EL-5## in Functional Location Structure",app:"SAP GUI – IH01",
+   path:[],
+   fields:[["── IH01 ──",""],["Functional Location","C7100C##-PROD-01-01"],["Equipment installed checkbox","✓ (activate)"]],
+   steps:["T-Code: <b>IH01</b> → Functional Location: <b>C7100C##-PROD-01-01</b> → checkbox <b>Equipment installed</b> işaretlenir → Execute."],
+   result:"<b>EL-5##</b> ekipmanı, <b>C7100C##-PROD-01-01D</b> altında görüntülenir."}
+]},
+{id:12,title:"Use Partner and Warranty",
+ app:"SAP GUI (IMG / IE02 / BGM3)",
+ sc:"Partner determination procedure SV görüntülenir ve equipment category'ye atanır. EL-5##'e Sold-To Party C7100-C## ve sorumlu kullanıcı S47100-## atanır. Master warranty 1 incelenir ve EL-5##'e atanır.",
+ tasks:[
+  {num:"Task 1.1",title:"Display Partner Determination Procedure SV in Customizing",app:"SAP GUI – IMG",
+   path:[],
+   fields:[["── IMG Path ──",""],["Path","Plant Maintenance and Customer Service → Master Data → Basic Settings → Partners → Define Partner Determination Procedure and Partner Function"]],
+   steps:["IMG path takip edilir.","<b>Maintain: Partner Determination</b>: <b>Cust. Service</b> → <b>Change Partner</b>.","<b>Change View 'Partner Determination Procedures'</b>: <b>SV</b> yanındaki kutu seçilir → <b>Functions in Determination Procedure</b>'ye çift tıklanır."]},
+  {num:"Task 1.2",title:"Assign Partner Determination Procedure SV to Equipment Category",app:"SAP GUI – IMG",
+   path:[],
+   fields:[["── IMG Path ──",""],["Path","PM and Customer Service → Master Data → Technical Objects → Equipment → Assign Partner Determination Procedure to Equipment Category"],["── Assignment ──",""],["PartDetPrc","SV"],["Cust.","SP"]],
+   steps:["IMG path takip edilir.", "<b>Change View 'PartDetermProf./Functions for EQSE/EQUI/EQUZ Stock Removal'</b>: önceki exercise'de oluşturulan equipment category'ye PartDetPrc <b>SV</b>, Cust. <b>SP</b> atanır → <b>Save</b>."]},
+  {num:"Task 1.3",title:"Assign Partners to Equipment EL-5##",app:"SAP GUI – IE02",
+   path:[],
+   fields:[["── IE02: Partners ──",""],["SP Sold-To Party","C7100-C##"],["VW Person responsible","S47100-## (search by Last Name)"]],
+   steps:["T-Code: <b>IE02</b> → Equipment: <b>EL-5##</b> → Enter.","Menü: <b>Goto</b> → <b>Partners</b>.","<b>Funct</b> dropdown: <b>SP Sold-To Party</b> → Partner: <b>C7100-C##</b>.","<b>Funct</b> dropdown: <b>VW Person respons.</b>; Partner alanı: Last Name <b>S47100-##</b> arama → atanır.","F3 → <b>Save</b>."]},
+  {num:"Task 2.1",title:"Check Master Warranty 1",app:"SAP GUI – BGM3",
+   path:[],
+   fields:[["── BGM3 ──",""],["Warranty","1"]],
+   steps:["T-Code: <b>BGM3</b> → Warranty: <b>1</b>.", "Header information ve item kontrol edilir. Item'da Warranty_Time counter ve 5 yıl süre (sağa kaydırarak) görüntülenir."]},
+  {num:"Task 2.2",title:"Assign Master Warranty 1 to Equipment EL-5##",app:"SAP GUI – IE02",
+   path:[],
+   fields:[["── Partners / Warranties / Documents Tab ──",""],["Master warranty","1"],["Begin guarantee date","First of current month"]],
+   steps:["T-Code: <b>IE02</b> → Equipment: <b>EL-5##</b>.","<b>Partners / Warranties / Documents</b> sekmesine git.","<b>Customer Warranty</b> subscreen: Master warranty <b>1</b>; begin date: cari ayın ilk günü → Enter → <b>Save</b>."]}
+]},
+{id:13,title:"Configure and Create Serial Numbers",
+ app:"SAP GUI (MM02 / IE02 / MIGO) / Display Material Serial Number (SAP Fiori)",
+ sc:"EL-5## ekipmanı MM perspective'den seriyalize edilir. SM1 serial number profili P700-EL-100-##'e atanır. Mal girişi ile otomatik seri numara oluşturulur ve SAP Fiori'de görüntülenir.",
+ tasks:[
+  {num:"Task 1.1",title:"Assign Serial Number Profile SM1 to Material P700-EL-100-##",app:"SAP GUI – MM02",
+   path:[],
+   fields:[["── MM02 ──",""],["Material","P700-EL-100-##"],["View","Sales: General/Plant Data"],["Plant","1040"],["Serial Number Profile","SM1"]],
+   steps:["T-Code: <b>MM02</b> → Material <b>P700-EL-100-##</b> → <b>Select View(s)</b>: <b>Sales: General/Plant Data</b>.","<b>Org. Levels</b>: Plant <b>1040</b> → <b>Continue</b>.","Serial Number Profile: <b>SM1</b> → <b>Save</b>."]},
+  {num:"Task 1.2",title:"Add Serial Data View to EL-5## and Assign Serial Number EL-5##",app:"SAP GUI – IE02",
+   path:[],
+   fields:[["── IE02 ──",""],["Equipment","EL-5##"],["── View Selection ──",""],["View","Serial numbers"],["── SerData Tab ──",""],["Material","P700-EL-100-##"],["Serial Number","EL-5##"]],
+   steps:["T-Code: <b>IE02</b> → Equipment: <b>EL-5##</b> → Enter.","Menü: <b>Edit</b> → <b>View selection</b> → <b>Serial numbers</b> → <b>Back</b>.","<b>SerData</b> sekmesi: Material <b>P700-EL-100-##</b> → Enter; Serial Number: <b>EL-5##</b> → Enter → <b>Save</b>."],
+   info:"Malzeme master kaydında atanan <b>Serialization Level</b> gereği, ekipman numarası ile seri numarasının senkron tutulması zorunludur."},
+  {num:"Task 2.1",title:"Book Goods Receipt for P700-EL-100-## – Create Serial Nos Automatically",app:"SAP GUI – MIGO",
+   path:[],
+   fields:[["── MIGO ──",""],["Action","Goods Receipt / Other"],["── Material Tab ──",""],["Material","P700-EL-100-##"],["── Quantity Tab ──",""],["Qty in Unit of Entry","5"],["── Where Tab ──",""],["Movement Type","501"],["Plant","1040"],["Storage Location","101A"],["── Serial Numbers Tab ──",""],["Auto-Create Serial Numbers","✓ (check)"]],
+   steps:["T-Code: <b>MIGO</b>.","Üst dropdown: <b>Goods Receipt</b>, ikinci dropdown: <b>Other</b>.","<b>Material</b> sekmesi: Material <b>P700-EL-100-##</b>.","<b>Quantity</b> sekmesi: Qty <b>5</b>.","<b>Where</b> sekmesi: Movement Type <b>501</b>, Plant <b>1040</b>, Storage Location <b>101A</b> → Enter.","<b>Serial Numbers</b> sekmesi: <b>Auto-Create Serial Numbers</b> checkbox → <b>Save</b>."],
+   info:"Split valuation (bölünmüş değleme) içeren malzeme kullanmak mümkündür; ancak bu senaryo <b>P700-EL-100-##</b> için kurulmamıştır."},
+  {num:"Task 3.1",title:"Display Serial Number List of Material P700-EL-100-##",app:"Display Material Serial Number",
+   path:["Service Master Data","Serial Numbers","Display Material Serial Number"],
+   fields:[["── Selection ──",""],["Material","P700-EL-100-##"],["Serial Number","(leave empty)"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Serial Numbers</b> → <b>Display Material Serial Number</b>.", "Material: <b>P700-EL-100-##</b>; Serial Number: boş bırakılır → Enter (birkaç kez)."] ,
+   result:"Seri numara listesi görüntülenir."},
+  {num:"Task 3.2",title:"Display Detail of One Created Serial Number",app:"Display Material Serial Number",
+   path:[],fields:[],
+   steps:["Listeden System Status <b>ESTO</b> olan bir serial number seçilir → <b>Choose</b>.","<b>Stock information</b> alanındaki alanlar kontrol edilir.","<b>History</b>: serial number geçmişi görüntülenir."]}
+]},
+{id:14,title:"Configure and Create Bills of Material",
+ app:"SAP GUI (CS01 / CS03 / IE02 / IH03) / Maintain Bill Of Material / Asset Viewer (SAP Fiori)",
+ sc:"Mevcut BOM P700-EL-100 incelenir. Yeni Material BOM P700-EL-100-## oluşturulur ve EL-5##'e atanır. SAP Fiori ile BOM ve Asset Viewer doğrulaması yapılır.",
+ tasks:[
+  {num:"Task 1.1",title:"Display Material BOM P700-EL-100 – Check for Assemblies",app:"SAP GUI – CS03",
+   path:[],
+   fields:[["── CS03 ──",""],["Material","P700-EL-100"],["Plant","1040"],["BOM Usage","4"]],
+   steps:["T-Code: <b>CS03</b>: Material <b>P700-EL-100</b>, Plant <b>1040</b>, BOM Usage <b>4</b> → Enter.", "<b>Asm</b> (= Assembly) sütunu kontrol edilir."] ,
+   result:"<b>Asm</b> sütununda flag işaretli değil — alt BOM tanımlanmamıştır.",
+   info:"Hiçbir flag işaretli değilse alt BOM tanımlanmamış demektir."},
+  {num:"Task 2.1",title:"Create Material BOM for P700-EL-100-##",app:"SAP GUI – CS01",
+   path:[],
+   fields:[["── CS01 ──",""],["Material","P700-EL-100-##"],["Plant","1040"],["BOM Usage","4"],["── Components ──",""],["N – P700-PS-100","Power Supply – Qty: 1"],["L – P700-SC–100","System cooling – Qty: 1"],["L – P700-HC–100","Hydrogen Connection – Qty: 1"],["N – P700-IE–100","Ion Exchanger – Qty: 1"],["L – P700-ES-100","Electrolysis Stack – Qty: 1"]],
+   steps:["T-Code: <b>CS01</b>: Material <b>P700-EL-100-##</b>, Plant <b>1040</b>, BOM Usage <b>4</b> → Enter.", "BOM components tabloya girilir (ICt + Component + Quantity). Component description zorunlu değil → <b>Save</b>."],
+   info:"Alternatif olarak, <b>P700-EL-100</b> malzeme BOM'unun parçalarını kopyalayarak da yeni BOM oluşturabilirsiniz."},
+  {num:"Task 2.2",title:"Assign Material BOM P700-EL-100-## to Equipment EL-5##",app:"SAP GUI – IE02",
+   path:[],
+   fields:[["── IE02 – Structure Tab ──",""],["Equipment","EL-5##"],["ConstType","P700-EL-100-##"]],
+   steps:["T-Code: <b>IE02</b> → Equipment: <b>EL-5##</b> → Enter.","<b>Structure</b> sekmesi: <b>ConstType</b> → <b>P700-EL-100-##</b> → <b>Save</b>.","T-Code: <b>IH03</b> → Equipment: <b>EL-5##</b>; checkbox <b>BOM explosion</b> → Execute: P700-EL-100-## EL-5## altında görüntülenir."]},
+  {num:"Task 3.1",title:"Display BOM P700-EL-100-## via Maintain Bill Of Material",app:"Maintain Bill Of Material",
+   path:["Service Master Data","Bill of Materials","Maintain Bill Of Material"],
+   fields:[["── Selection ──",""],["Plant","1040"],["BOM Usage","Plant Maintenance"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Bill of Materials</b> → <b>Maintain Bill Of Material</b>.","Plant <b>1040</b>, BOM Usage <b>Plant Maintenance</b> → <b>Go</b>.","<b>Electrolyzer (P700-EL-100-##)</b> seçilir.","Components, Header Attributes gibi detaylar görüntülenir → <b>Navigate to Home</b>."]},
+  {num:"Task 3.2",title:"Check Material BOM in Object Structure via Asset Viewer",app:"Find Technical Object – Asset Viewer",
+   path:["Service Master Data","Technical Objects","Find Technical Object"],
+   fields:[["── Selection ──",""],["Technical Object Type","Equipment"],["Technical Object","EL-5##"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Technical Objects</b> → <b>Find Technical Object</b>.","Technical Object Type: <b>Equipment</b>, Technical Object: <b>EL-5##</b> → <b>Go</b>.","<b>Electrolyzer (EL-5##)</b> hyperlink → <b>Asset Viewer</b>.","Yapı genişletilir → <b>P700-EL-100-##</b> için radio button → Material BOM görüntülenir.","Sağ taraftaki tabloda yapı genişletilir."]}
+]},
+{id:15,title:"Set Up Product Proposal",
+ app:"SAP GUI (CS01) / Manage Service Orders (SAP Fiori)",
+ sc:"P700-EL-100-## için BOM Usage S ile yeni BOM oluşturulur. Service Order'da Product Proposal kullanılarak yedek parça ataması yapılır.",
+ tasks:[
+  {num:"1",title:"Create Material BOM for P700-EL-100-## with BOM Usage S",app:"SAP GUI – CS01",
+   path:[],
+   fields:[["── CS01 ──",""],["Material","P700-EL-100-##"],["Plant","1040"],["BOM Usage","S"]],
+   steps:["T-Code: <b>CS01</b>: Material <b>P700-EL-100-##</b>, Plant <b>1040</b>, BOM Usage <b>S</b>.","<b>Copy From... (F7)</b>: popup'ta Material <b>P700-EL-100-##</b>, Plant <b>1040</b>, BOM Usage <b>4</b> → <b>Continue (Enter)</b>.","<b>Select All</b> → <b>Copy (F5)</b> → <b>Save</b>."]},
+  {num:"2",title:"Understand BOM Usage S – Product Proposal Usage",app:"SAP GUI",
+   path:[],fields:[],steps:[],
+   result:"<b>BOM Usage S</b> kalemleri, <b>Service Orders</b>, <b>Service Order Templates</b> ve <b>Repair Orders</b> üzerinden <b>Product Proposal</b> olarak erişilebilir."},
+  {num:"3",title:"Optional: Create Service Order and Assign Spare Parts via Product Proposal",app:"Manage Service Orders",
+   path:["Service Order Management","Service Orders & Confirmations","Manage Service Orders"],
+   fields:[["── Service Order ──",""],["Transaction Type","SRVO"],["Description","Replace spare parts GR##"],["Sold-To Party","C7100–C##"],["Service Organization","Service Organization GR##"],["Service Employee Group","SRV_DE_MA_##"],["Employee Responsible","S47100-## Master Data Specialist GR##"],["Impact","High"],["Urgency","High"],["Subject: Category 1","Complaint"],["Subject: Category 2","Product"],["Equipment ID","EL-5##"],["── Items ──",""],["P700_SERV_ONS_##","3 HR"],["P700–ES-100 (Product Proposal)","1 PC – Higher-Level: 10"],["P700–HC-100 (Product Proposal)","1 PC – Higher-Level: 10"]],
+   steps:["FLP → <b>Service Order Management</b> → <b>Manage Service Orders</b> → <b>Create</b> → <b>SRVO</b>.","Description, Equipment ID <b>EL-5##</b> → Enter → popup: <b>Service Organization GR##</b> → popup: <b>SRV_DE_MA_##</b>.","Items: <b>P700_SERV_ONS_##</b>, 3 HR atanır.","<b>Product Proposal</b>: popup'ta <b>P700-ES-100</b> ve <b>P700-HC-100</b> seçilir → <b>Choose</b>.","<b>Save</b>."]}
+]}
+]},
+{unit:5,title:"Configuring and Creating Measuring Points and Counters",ex:[
+{id:16,title:"Configure and Create Measuring Points and Counters",
+ app:"Create Measuring Point / Create Measurement Document for Technical Object (SAP Fiori)",
+ sc:"EL-5## ekipmanı için işletim saatlerini izleyen bir Counter oluşturulur. T_PM01 karakteristiği, MSR-01 Code Group ve 999999 overflow reading kullanılır. Ölçüm belgesi oluşturulur.",
+ tasks:[
+  {num:"1",title:"Create Counter for Operating Hours – Equipment EL-5##",app:"Create Measuring Point",
+   path:["Service Master Data","Measuring Points","Create Measuring Point"],
+   fields:[["── Measuring Point ──",""],["Measuring point/Counter","Counter"],["Reference Object Type","Technical Object"],["Technical Object","EL-5##"],["── Counter Data ──",""],["Description","Operating hours"],["Measuring Point Category","B"],["Characteristic (F4)","T_PM01 (Operating Hours)"],["CntrOverReadg","999999"],["Code Group","MSR-01"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Measuring Points</b> → <b>Create Measuring Point</b>.","<b>Counter</b> seçilir; Reference Object Type: <b>Technical Object</b>; Technical Object: <b>EL-5##</b> → <b>Continue</b>.","Description: <b>Operating hours</b>; Category: <b>B</b>.","<b>Characteristic</b> alanı: F4 help → Characteristic Group <b>T_PM</b> → <b>Go</b> → <b>T_PM01 (Operating Hours)</b> seçilir.","Overflow Reading: <b>999999</b> → <b>Save</b>."],
+   info:"<b>Annual Estimate</b>, yalnızca bu sayacın performansa dayalı bakım planlamalarında kullanılması durumunda gereklidir."},
+  {num:"2",title:"Create Measurement Document for the New Counter",app:"Create Measurement Document for Technical Object",
+   path:["Service Master Data","Measuring Points","Create Measurement Document for Technical Object"],
+   fields:[["── Basis ──",""],["Basis for Measurement Reading","Reference Object"],["Reference Object Type","Technical Object"],["Technical Object","EL-5##"],["── Counter Reading ──",""],["Measuring Point","(new number)"],["Reading","50"],["Unit","hrs"]],
+   steps:["FLP → <b>Service Master Data</b> → <b>Measuring Points</b> → <b>Create Measurement Document for Technical Object</b>.","Basis: <b>Reference Object</b>; Reference Object Type: <b>Technical Object</b>; Technical Object: <b>EL-5##</b> → <b>Continue</b>.","Counter reading: Reading <b>50</b>, Unit <b>hrs</b> → <b>Save</b>.","<b>Navigate to Home</b>."]}
+]}
+]}
+];
+
+/* ── ARAMA SONUÇ PANELİ ── */
+var srPanel=document.createElement('div');
+srPanel.id='sr-panel';
+document.getElementById('app').parentNode.insertBefore(
+  srPanel, document.getElementById('app')
+);
+
+function escRe(s){return s.replace(/[.+?^${}()|[\]\\]/g,'\\$&');}
+
+function hlStr(s,re){
+  if(!s||!re)return s||'';
+  re.lastIndex=0;
+  return String(s).replace(re,function(m){return'<mark>'+m+'</mark>';});
+}
+
+function clearSearch(){
+  document.getElementById('search').value='';
+  run();
+  document.getElementById('search').focus();
+}
+
+function buildSearchPanel(q,re,unitFilter){
+  srPanel.innerHTML='';
+  if(!q)return;
+  var results=[];
+  D.forEach(function(unit){
+    var uid='u'+unit.unit;
+    if(unitFilter!=='all'&&unitFilter!==uid)return;
+    unit.ex.forEach(function(ex){
+      ex.tasks.forEach(function(t){
+        var fieldsTxt=(t.fields||[]).map(function(f){return f[0]+' '+f[1];}).join(' ');
+        var stepsTxt=(t.steps||[]).join(' ').replace(/<[^>]+>/g,' ');
+        var txt=[ex.title,ex.app||'',ex.sc||'',t.title,t.app||'',
+                 fieldsTxt,stepsTxt,t.warn||'',t.info||'',t.result||''].join(' ');
+        if(txt.toLowerCase().indexOf(q)>=0)
+          results.push({unit:unit,ex:ex,task:t,uid:uid});
+      });
+    });
+  });
+  if(!results.length)return;
+  var bar=document.createElement('div');
+  bar.className='sr-bar';
+  bar.innerHTML='<span class="sr-count"><b>'+results.length+'</b> görev bulundu</span>'+
+    '<button class="sr-close" onclick="clearSearch()">✕ Aramayı Temizle</button>';
+  srPanel.appendChild(bar);
+  var COLORS={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',
+              5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8'};
+  results.forEach(function(r){
+    var t=r.task,ex=r.ex,u=r.unit;
+    var c=COLORS[u.unit]||'#60a5fa';
+    var div=document.createElement('div');
+    div.className='sr-card';
+    var bc='<div class="sr-bc">'+
+      '<span class="sr-unit" style="color:'+c+';border-color:'+c+'40;background:'+c+'12">'+
+        'U'+u.unit+' · '+u.title+
+      '</span>'+
+      '<span class="sr-sep">›</span>'+
+      '<span class="sr-exn">EX '+ex.id+' · '+hlStr(ex.title,re)+'</span>'+
+      '<span class="sr-sep">›</span>'+
+      '<span class="sr-tn">'+t.num+'</span>'+
+    '</div>';
+    var th='<div class="sr-th">'+
+      '<span class="sr-tt">'+hlStr(t.title,re)+'</span>'+
+      (t.app?'<span class="sr-ab">'+hlStr(t.app,re)+'</span>':'')+
+    '</div>';
+    var sc=ex.sc?'<div class="sr-sc">'+hlStr(ex.sc,re)+'</div>':'';
+    var ph='';
+    if(t.path&&t.path.length){
+      ph='<div class="sr-path">'+t.path.map(function(p,i){
+        return'<span class="sr-pc">'+hlStr(p,re)+'</span>'+
+          (i<t.path.length-1?'<span class="sr-pa">›</span>':'');
+      }).join('')+'</div>';
+    }
+    var fh='';
+    if(t.fields&&t.fields.length){
+      var rows=t.fields.map(function(f){
+        if(f[0].startsWith('──'))
+          return'<tr class="fvt-sec"><td colspan="2">'+f[0]+'</td></tr>';
+        return'<tr><td>'+hlStr(f[0],re)+'</td><td>'+hlStr(f[1],re)+'</td></tr>';
+      }).join('');
+      fh='<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead>'+
+         '<tbody>'+rows+'</tbody></table>';
+    }
+    var sh='';
+    if(t.steps&&t.steps.length){
+      sh='<ol class="sl">'+t.steps.map(function(s){
+        return'<li><span></span>'+hlStr(s,re)+'</li>';
+      }).join('')+'</ol>';
+    }
+    div.innerHTML=bc+th+sc+ph+
+      (t.warn?'<div class="box warn"><span class="bi">⚠</span><div>'+hlStr(t.warn,re)+'</div></div>':'')+
+      (t.info?'<div class="box info"><span class="bi">ℹ</span><div>'+hlStr(t.info,re)+'</div></div>':'')+
+      fh+sh+
+      (t.result?'<div class="box result"><span class="bi">✓</span><div>'+hlStr(t.result,re)+'</div></div>':'');
+    srPanel.appendChild(div);
+  });
+}
+
+function run(){
+  var raw=document.getElementById('search').value.trim();
+  var q=raw.toLowerCase();
+  var re=raw?new RegExp(escRe(raw),'gi'):null;
+  document.getElementById('clr').style.display=raw?'block':'none';
+  if(raw){
+    document.getElementById('app').style.display='none';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='none';
+    buildSearchPanel(q,re,filterU);
+    srPanel.style.display='block';
+    var cnt=srPanel.querySelectorAll('.sr-card').length;
+    document.getElementById('cnt').textContent=String(cnt);
+    if(!cnt){srPanel.style.display='none';document.getElementById('nores').style.display='block';}
+  } else {
+    document.getElementById('app').style.display='';
+    srPanel.style.display='none';
+    srPanel.innerHTML='';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='';
+    var shown=0;
+    document.querySelectorAll('.ug').forEach(function(ug){
+      var badge=ug.querySelector('.ubadge');
+      var uNum=badge?badge.textContent.replace(/[^0-9]/g,''):'';
+      var ok=(filterU==='all'||filterU===('u'+uNum)||filterU===uNum);
+      ug.classList.toggle('hid',!ok);
+      if(ok){ug.querySelectorAll('.card').forEach(function(c){c.classList.remove('hid');shown++;});}
+    });
+    document.getElementById('cnt').textContent=String(shown);
+  }
+}
+
+function path(a){if(!a||!a.length)return'';return'<div class="pr">'+a.map((p,i)=>`<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`).join('')+'</div>';}
+function tbl(f){if(!f||!f.length)return'';const rows=f.map(([a,b])=>{if(a.startsWith('──'))return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;return`<tr><td>${a}</td><td>${b}</td></tr>`;}).join('');return`<table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table>`;}
+function steps(s){if(!s||!s.length)return'';return'<ol class="sl">'+s.map(x=>`<li><span></span>${x}</li>`).join('')+'</ol>';}
+function task(t){const body=path(t.path)+(t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+( t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+tbl(t.fields)+steps(t.steps)+(t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');return`<div class="task"><div class="thdiv" onclick="togTask(this)"><span class="tn">${t.num}</span><span class="tt">${t.title}</span>${t.app?`<span class="ab">${t.app}</span>`:''}<span class="task-chev">›</span></div><div class="task-body">${body}</div></div>`;}
+function card(e,uid){let h=`<div class="card" id="ex${e.id}" data-u="${uid}"><div class="ch" onclick="toggle(this)"><span class="exn">${e.id}</span><div class="cl"><div class="ct">${e.title}</div><div class="ca">${e.app}</div></div><div class="cr"><span class="sb">${e.tasks.length} Adım</span><span class="chev">›</span></div></div><div class="cb">`;if(e.sc)h+=`<div class="scenario">${e.sc}</div>`;e.tasks.forEach(t=>h+=task(t));h+=`</div></div>`;return h;}
+function unit(u){const uid=`u${u.unit}`;const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',5:'#22c55e'};const c=colors[u.unit]||'#60a5fa';let h=`<div class="ug collapsed ${uid}" id="${uid}"><div class="uh" onclick="togUnit(this)"><span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">Unit ${u.unit}</span><span class="utitle">${u.title}</span><span class="uc">${u.ex.length} egzersiz</span><span class="uchev">›</span></div><div class="ug-body">`;u.ex.forEach(e=>h+=card(e,uid));return h+'</div></div>';}
+function toggle(h){h.parentElement.classList.toggle('open');}
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+function togTask(hdr){hdr.parentElement.classList.toggle('open');}
+/* run() defined above with search panel support */
+const app=document.getElementById('app');const frow=document.getElementById('frow');const cnt=document.getElementById('cnt');const nores=document.getElementById('nores');const srch=document.getElementById('search');const clr=document.getElementById('clr');const xpb=document.getElementById('xpb');const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);cnt.textContent=TOTAL;let term='',filterU='all',allOpen=false;
+D.forEach(u=>{app.innerHTML+=unit(u);const b=document.createElement('button');b.className='fb';b.dataset.u=`u${u.unit}`;b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;frow.appendChild(b);});
+srch.addEventListener('input',e=>{term=e.target.value;run();});
+srch.addEventListener('keydown',e=>{if(e.key==='Escape'){term='';srch.value='';run();}});
+clr.addEventListener('click',()=>{term='';srch.value='';run();srch.focus();});
+frow.addEventListener('click',e=>{const b=e.target.closest('.fb');if(!b)return;filterU=b.dataset.u;document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));b.classList.add('on');run();});
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+xpb.addEventListener('click',()=>{allOpen=!allOpen;document.querySelectorAll('.card:not(.hid)').forEach(c=>c.classList.toggle('open',allOpen));xpb.textContent=allOpen?'Tümünü Kapat':'Tümünü Aç';xpb.classList.toggle('active',allOpen);});
+</script>
+</body>
+</html>
