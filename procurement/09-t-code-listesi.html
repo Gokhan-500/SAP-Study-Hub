@@ -133,7 +133,7 @@ footer{max-width:1180px;margin:0 auto;padding:18px 16px 40px;color:var(--muted);
   #toc{display:none}
   #toc-toggle{display:flex !important;align-items:center;justify-content:center}
   #toc-overlay,#toc-mobile{display:block}
-  .tctable thead th{top:0}
+  .tctable thead th{top:var(--toolbar-h,0)}
   .tctable .th-tc{width:120px}
 }
 
@@ -2084,7 +2084,7 @@ function setToolbarHeight(){
   const h = document.getElementById('toolbar').offsetHeight;
   document.documentElement.style.setProperty('--toolbar-h', h + 'px');
 }
-setToolbarHeight();
+document.addEventListener('DOMContentLoaded', setToolbarHeight);
 window.addEventListener('resize', setToolbarHeight);
 
 const sections = Array.from(document.querySelectorAll('.section-card'));
