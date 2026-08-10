@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C_TS452 · Çözüm Ağacı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug-body{}
+.ug.collapsed .ug-body{display:none;}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+
+/* ── YATAY KAYDIRMA (taşan tablo/adım) ── */
+.fvt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:7px 0 11px;
+  scrollbar-width:thin;scrollbar-color:var(--bh) transparent;}
+.fvt-wrap::-webkit-scrollbar{height:7px;}
+.fvt-wrap::-webkit-scrollbar-thumb{background:var(--bh);border-radius:4px;}
+.fvt-wrap::-webkit-scrollbar-track{background:transparent;}
+.fvt-wrap .fvt{margin:0;min-width:max-content;}
+/* Adım metni: taşarsa yatay kaydır, kelimeleri zorla kırma */
+.sl li .stx{min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--bh) transparent;padding-bottom:1px;}
+.sl li .stx::-webkit-scrollbar{height:6px;}
+.sl li .stx::-webkit-scrollbar-thumb{background:var(--bh);border-radius:4px;}
+.sl li .stx::-webkit-scrollbar-track{background:transparent;}
+/* Uzun IMG yolu / → içeren terimler kelime kelime kırılmasın */
+.cptok.path,.cptok.nowrap,b.nowrap{white-space:nowrap;}
+
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+
+.sl{list-style:none;counter-reset:s;margin:7px 0;}
+.sl li{counter-increment:s;display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li::before{content:counter(s);font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;}
+.sl2{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--td);margin:11px 0 5px;}
+
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+.dv{height:1px;background:var(--border);margin:13px 0;}
+b{color:var(--text);font-weight:500;}
+
+.fb[data-u="u1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+
+/* ── KOPYALANABİLİR HÜCRE / APP ── */
+.cpy{cursor:pointer;position:relative;transition:background .12s,color .12s;}
+.cpy:hover{background:rgba(96,165,250,.14)!important;color:var(--bl)!important;}
+.cpy:active{background:rgba(96,165,250,.28)!important;}
+td.cpy::after{content:"⧉";font-size:10px;color:var(--td);margin-left:7px;opacity:0;transition:opacity .12s;vertical-align:middle;}
+td.cpy:hover::after{opacity:.75;}
+.ab.cpy:hover{border-color:var(--bl);}
+/* Adımlar içindeki kopyalanabilir terimler */
+.cptok{cursor:pointer;color:var(--bl);border-radius:2px;padding:0 1px;
+  transition:background .12s;}
+.cptok:hover{background:rgba(96,165,250,.16);}
+.cptok:active{background:rgba(96,165,250,.3);}
+#cpy-toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--green);color:#04220f;font-family:var(--mono);font-size:12px;font-weight:600;
+  padding:8px 16px;border-radius:6px;opacity:0;pointer-events:none;z-index:9999;
+  transition:opacity .18s,transform .18s;box-shadow:0 4px 18px rgba(0,0,0,.4);white-space:nowrap;}
+#cpy-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+#sr-panel{max-width:1100px;margin:0 auto;padding:18px 22px 60px;display:none;}
+.sr-bar{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:6px;margin-bottom:14px;font-family:var(--mono);font-size:11px;}
+.sr-count{color:var(--tm);}
+.sr-count b{color:var(--bl);}
+.sr-close{background:none;border:none;color:var(--td);cursor:pointer;
+  font-family:var(--mono);font-size:11px;padding:2px 6px;border-radius:3px;
+  transition:color .15s;}
+.sr-close:hover{color:var(--text);}
+.sr-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  margin-bottom:10px;padding:14px 17px;transition:border-color .18s;}
+.sr-card:hover{border-color:var(--bh);}
+.sr-bc{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.sr-unit{font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.06em;padding:2px 8px;border-radius:3px;border:1px solid;
+  text-transform:uppercase;}
+.sr-sep{color:var(--td);font-size:11px;}
+.sr-exn{font-family:var(--mono);font-size:11px;color:var(--tm);}
+.sr-tn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--bl);
+  background:var(--bbg);border:1px solid var(--bbd);padding:1px 6px;border-radius:3px;}
+.sr-th{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.sr-tt{font-size:14px;font-weight:600;flex:1;}
+.sr-ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;
+  background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;}
+.sr-sc{font-style:italic;color:var(--tm);font-size:12.5px;border-left:3px solid var(--bbd);
+  padding:7px 11px;margin-bottom:10px;background:var(--bbg);border-radius:0 5px 5px 0;}
+.sr-path{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:0 0 9px;}
+.sr-pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);
+  padding:3px 9px;border:1px solid var(--border);}
+.sr-pc:first-child{border-radius:4px 0 0 4px;}
+.sr-pc:last-child{border-radius:0 4px 4px 0;}
+.sr-pc:only-child{border-radius:4px;}
+.sr-pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  height:25px;display:flex;align-items:center;}
+
+@media(max-width:600px){
+  #toolbar{padding:8px 14px 9px;}
+  #search-row{grid-template-columns:1fr auto;}
+  #sctr{display:none;}
+  main{padding:18px 12px 60px;}
+  header{padding:14px 16px 12px;}
+  #homebtn{top:14px;right:16px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="meta">
+    <span class="cid">C_TS452 · VER 2601</span>
+    <h1>SAP S/4HANA Cloud Private Edition — Sourcing and Procurement</h1>
+  </div>
+  <div class="sub">SAP CERTIFICATION TASKS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Egzersiz: <span class="n">5</span></div>
+    <div class="st">Ünite: <span class="n">1</span></div>
+    <div class="st">Toplam Görev: <span class="n">38</span></div>
+    <div class="st">Sistem: <span class="n">T41 · S4HANA T41 Launchpad</span></div>
+  </div>
+  <button id="homebtn" onclick="location.href='../../index.html'">🏠 Home</button>
+</header>
+
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--td);pointer-events:none;">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input id="search" type="text" placeholder="Egzersiz, app, adım ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">5</b> / 5 egzersiz</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+
+<div id="cpy-toast">✓ kopyalandı</div>
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen egzersiz bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+
+<script>
+/* ── KOPYALAMA (clipboard) ── */
+function cpyAttr(s){
+  // <b> etiketlerini ve HTML'i temizle, çift tırnak ve & kaçışla
+  var t=String(s==null?'':s).replace(/<[^>]+>/g,'');
+  return t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+var _cpyTimer=null;
+function _toast(msg){
+  var el=document.getElementById('cpy-toast');
+  if(!el)return;
+  el.textContent='✓ kopyalandı: '+msg;
+  el.classList.add('show');
+  if(_cpyTimer)clearTimeout(_cpyTimer);
+  _cpyTimer=setTimeout(function(){el.classList.remove('show');},1400);
+}
+function copyVal(el){
+  var raw=el.getAttribute('data-cpy')||el.textContent||'';
+  // HTML entity çöz
+  var ta=document.createElement('textarea');
+  ta.innerHTML=raw;
+  var txt=ta.value;
+  function done(){
+    var short=txt.length>32?txt.slice(0,32)+'…':txt;
+    _toast(short);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(function(){_fallbackCopy(txt);done();});
+  }else{_fallbackCopy(txt);done();}
+}
+function _fallbackCopy(txt){
+  var t=document.createElement('textarea');
+  t.value=txt;t.style.position='fixed';t.style.opacity='0';
+  document.body.appendChild(t);t.focus();t.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(t);
+}
+
+const D=[{unit:1, title:"System-based Assessment", ex:[{id:1, title:"Configuration and Master Data", app:"Customizing (IMG) / Manage Supplier & Product Master Data", sc:"Lexontive GmbH için satın alma sürecini test etmek üzere <b>Customizing</b>'de yeni bir <b>plant</b> (Y0##) ve <b>Purchasing Organization</b> (P0##) tanımlıyorsunuz. Ardından yeni bir batarya için <b>product master</b> ve <b>supplier</b> oluşturup, purchasing info record üzerinden talep-sipariş sürecini test ediyorsunuz.", tasks:[{num:"1", title:"Create New Plant (Copy CT00 / 1010)", app:"Customizing (IMG)", path:["IMG", "Enterprise Structure", "Definition", "Logistics-General", "Copy, delete, check plant"], fields:[["── Copy Plant ──", ""], ["Copy From", "CT00 (if available, else 1010)"], ["Target Plant", "Y0##"], ["Copy Dependent Assignments", "Yes (all)"], ["── Address / Data ──", ""], ["Country", "DE (Germany)"], ["Description", "CERT Y0##"], ["Postal Code", "69226"], ["City", "Nussloch"], ["House Number", "Y0##"], ["── Storage Locations ──", ""], ["Assigned Storage Locations", "101A, 101C"]], steps:["Bu görevi <b>back-end</b> sisteminde yapın. Customizing'de <b class=\"nowrap\">Enterprise Structure → Definition → Logistics-General → Copy, delete, check plant</b> yolunu açın.", "<b>Select Activity</b> penceresinde <b>Copy, delete, check plant</b>'e çift tıklayın.", "<b class=\"nowrap\">Organizational object → Copy org. object</b> seçin.", "Referans plant olarak <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"CT00\">CT00</b>'dan (mevcut değilse <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>) hedef plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y0##\">Y0##</b>'a kopyalayın, <b>Continue</b> ile onaylayın ve tüm bağımlı atamaların kopyalanmasını kabul edin.", "<b class=\"nowrap\">Enterprise Structure → Definition → Logistics-General → Define Plant</b> yolundan plant adres verilerini düzenleyin: ülke <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"DE\">DE</b>, açıklama <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"CERT Y0##\">CERT Y0##</b>, posta kodu <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"69226\">69226</b>, şehir <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Nussloch\">Nussloch</b>, ev no <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y0##\">Y0##</b>.", "<b>Storage Location</b> atamalarını kontrol edin — <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101A\">101A</b> ve <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b> plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y0##\">Y0##</b>'a atanmış olmalı."], warn:"Referans plant olarak öncelikle <b>CT00</b> kullanın; sadece mevcut değilse <b>1010</b>. Plant <b>1010</b> diğer egzersizleri etkileyeceğinden onun üzerinde değişiklik yapmayın.", info:"Kopyalama fonksiyonu, 300'den fazla plant'a bağlı tabloyu otomatik kopyalar. <b>Copy Plant</b> kullanılmazsa bu tabloların tümü manuel bakımda tutulmalıdır.", result:"Yeni plant <b>Y0##</b> (CERT Y0##), <b>101A</b> ve <b>101C</b> storage location'ları atanmış olarak oluşturuldu."}, {num:"2", title:"Create Purchasing Organization", app:"Customizing (IMG)", path:["IMG", "Enterprise Structure", "Definition", "Materials Management", "Maintain purchasing organization"], fields:[["── Definition ──", ""], ["Purchasing Organization", "P0##"], ["Description", "CERT P0##"], ["── Assignment ──", ""], ["Assign to Plant", "Y0## (plant-specific)"]], steps:["<b class=\"nowrap\">Enterprise Structure → Definition → Materials Management → Maintain purchasing organization</b> yolunda <b>New Entries</b> ile <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"P0##\">P0##</b>'ı oluşturun, açıklama <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"CERT P0##\">CERT P0##</b> girin ve kaydedin.", "<b class=\"nowrap\">Enterprise Structure → Assignment → Materials Management → Assign purchasing organization to plant</b> yolunda <b>New Entries</b> ile <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"P0##\">P0##</b>'ı plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y0##\">Y0##</b>'a atayın (plant-specific).", "Kaydedin."], warn:null, info:"Purchasing organization'ın plant-specific olması, yalnızca atandığı plant için satın alma yapabileceği anlamına gelir. Gerekirse <b>Assign purch. organization to reference purch. organization</b> yolundan merkezi organizasyona (ör. C100) referans atanarak onun sözleşmeleri de kullanılabilir.", result:"<b>P0##</b> purchasing organization'ı oluşturuldu ve plant <b>Y0##</b>'a atandı."}, {num:"3", title:"Create Product Master Record", app:"Create Material", path:["Fiori Launchpad", "Material Master", "Create Material"], fields:[["── Header ──", ""], ["Material", "T-RC##"], ["Product Type", "ROH"], ["Product Group", "00103"], ["Division", "00"], ["Description (EN)", "Battery GR##"], ["Description (DE)", "Batterie GR##"], ["── Views to Maintain ──", ""], ["Views", "Purchasing, Storage, Accounting"], ["── Purchasing View ──", ""], ["Purchasing Group", "Z##"], ["Purchasing Value Key", "1"], ["── General Plant Data / Storage ──", ""], ["Plant", "Y0##"], ["Storage Location", "101C"], ["Storage Bin", "GR##"], ["── Accounting View ──", ""], ["Price Control", "V (Moving Average Price)"], ["Valuation Class", "3000"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Material\">Create Material</b> uygulamasını (Product Master tile grubu) açın, malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC##\">T-RC##</b>, malzeme tipi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"ROH\">ROH</b> girin.", "<b class=\"nowrap\">Continue → Select View(s)</b> ile <b>Purchasing</b>, <b>General Plant Data/Storage 1</b> ve <b>Accounting 1</b> görünümlerini seçin.", "<b>Org. Levels</b> ile plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y0##\">Y0##</b>, storage location <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b> girin.", "<b>Basic Data</b>: product group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"00103\">00103</b>, division <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"00\">00</b>; açıklamayı EN <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Battery GR##\">Battery GR##</b>, ek dil DE <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Batterie GR##\">Batterie GR##</b> girin.", "<b>Purchasing</b>: purchasing group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Z##\">Z##</b>, purchasing value key <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1\">1</b> girin.", "<b>Storage</b>: storage bin <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"GR##\">GR##</b> girin.", "<b>Accounting</b>: price control <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"V\">V</b> (moving average price), valuation class <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"3000\">3000</b> girin ve <b>Save</b> edin."], warn:"Başlangıçta yalnızca satın alma süreci için gerekli görünümleri (Purchasing, Storage, Accounting) oluşturun.", info:null, result:"Ham madde <b>T-RC##</b> (Battery GR##), moving average price (<b>V</b>) ile değerlenecek şekilde plant <b>Y0##</b>'da oluşturuldu."}, {num:"4", title:"Create Supplier", app:"Manage Supplier Master Data", path:["Fiori Launchpad", "Supplier and BP", "Manage Supplier Master Data"], fields:[["── General / Address (Category: Organization) ──", ""], ["Business Partner", "SP-C##"], ["Grouping", "BPAB"], ["Search Term", "CTS452-##"], ["Street", "Goethestrasse"], ["House Number", "C##"], ["Postal Code", "69226"], ["City", "Nussloch"], ["Region", "08"], ["Country", "DE (Germany)"], ["Language", "German"], ["── Roles ──", ""], ["Role 1", "FLVN00 (BP FI Vendor)"], ["Role 2", "FLVN01 (BP Supplier)"], ["── Purchasing Organization Data (P0##) ──", ""], ["Purchasing Organization", "P0##"], ["Purchasing Group", "Z##"], ["Order Currency", "EUR"], ["Planned Delivery Time", "15"], ["Incoterms", "FH"], ["GR-Based Invoice Verification", "X"], ["── Company Code Data (1010) ──", ""], ["Company Code", "1010"], ["Reconciliation Account", "21100000"], ["Payment Terms", "0001"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Supplier Master Data\">Manage Supplier Master Data</b> uygulamasını (Supplier and BP tile grubu) açın; <b class=\"nowrap\">Create → Organization</b> seçin.", "<b>Create Organization</b> ekranında adres verilerini girin: grouping <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"BPAB\">BPAB</b>, arama terimi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"CTS452-##\">CTS452-##</b>, sokak <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Goethestrasse\">Goethestrasse</b>, ev no <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##\">C##</b>, posta kodu <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"69226\">69226</b>, şehir <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Nussloch\">Nussloch</b>, bölge <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"08\">08</b>, ülke <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"DE\">DE</b>, dil <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"German\">German</b>. Aynı ekranda purchasing organization, order currency, company code ve recon. account girin, <b>OK</b>.", "<b>Roles</b> bölümünde <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"FLVN00\">FLVN00</b> ve <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"FLVN01\">FLVN01</b> rollerini ekleyin.", "<b>Purchasing Organizations</b> bölümünde <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"P0##\">P0##</b> için: purchasing group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Z##\">Z##</b>, order currency <b>EUR</b>, planned delivery time <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"15\">15</b>, Incoterms <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"FH\">FH</b>, <b>GR-Based Invoice Verification</b> işaretini aktif edin, <b>Apply</b>.", "<b>Company Codes</b> bölümünde company code <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> için recon. account <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"21100000\">21100000</b>, payment terms <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"0001\">0001</b> girin.", "<b>Create</b> ile kaydedin."], warn:null, info:"<b>GR-Based Invoice Verification</b> aktifse, fatura yalnızca ilgili mal girişi (goods receipt) yapıldıktan sonra doğrulanabilir.", result:"Tedarikçi <b>SP-C##</b>, purchasing organization <b>P0##</b> ve company code <b>1010</b> verileriyle oluşturuldu."}, {num:"5", title:"Maintain Purchasing Info Record", app:"Manage Purchasing Info Records", path:["Fiori Launchpad", "Sources of Supply Management", "Manage Purchasing Info Records"], fields:[["── Header ──", ""], ["Material", "T-RC##"], ["Supplier", "SP-C##"], ["Purchasing Organization", "P0##"], ["Standard Order Quantity", "100"], ["Planned Delivery Time", "10"], ["── Conditions - Current (PB00 Scale) ──", ""], ["Price (< 10 pc)", "500 EUR"], ["Price (> 10 pc)", "450 EUR"], ["── Conditions - As of Next Year (PB00 Scale) ──", ""], ["Price (< 10 pc)", "520 EUR"], ["Price (> 10 pc)", "470 EUR"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Purchasing Info Records\">Manage Purchasing Info Records</b> uygulamasını (Sources of Supply Management tile grubu) açın, <b>Create</b> seçin.", "Malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC##\">T-RC##</b>, tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"SP-C##\">SP-C##</b>, purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"P0##\">P0##</b> girin; standart sipariş miktarı <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100\">100</b>, teslimat süresi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"10\">10</b> gün girin.", "<b>Conditions</b> bölümünde önce <b>Create</b> ile gross price (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"PB00\">PB00</b>) girin: geçerli fiyat <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"500 EUR\">500 EUR</b>; <b>Scales</b> ile 10 adet üzeri <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"450 EUR\">450 EUR</b> ekleyin.", "Gelecek yılın başından geçerli olacak ikinci bir <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"PB00\">PB00</b> condition satırı ekleyin: <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"520 EUR\">520 EUR</b> (10 adete kadar), 10 adet üzeri <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"470 EUR\">470 EUR</b>.", "<b>Apply</b> ve ardından <b>Create</b> ile kaydedin."], warn:null, info:"Fiyat, sizin purchasing organization'ınız (<b>P0##</b>) ile pazarlık edilmiştir; kayıt bu organizasyona özeldir.", result:"Malzeme <b>T-RC##</b> için tedarikçi <b>SP-C##</b>'den kaynak sağlayan, kademeli (<b>PB00</b> scale) fiyatlı purchasing info record oluşturuldu."}, {num:"6", title:"Create Purchase Requisition", app:"Manage Purchase Requisitions - Professional", path:["Fiori Launchpad", "Purchase Requisition Processing", "Manage Purchase Requisitions - Professional"], fields:[["── Item 1 - Stock ──", ""], ["Material", "T-RC##"], ["Plant", "Y0##"], ["Quantity", "50"], ["Account Assignment", "Stock (blank)"], ["── Item 2 - Consumption ──", ""], ["Material", "T-RC##"], ["Plant", "Y0##"], ["Quantity", "5"], ["Account Assignment Category", "K (Cost Center)"], ["Cost Center", "T-ENG##"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Purchase Requisitions - Professional\">Manage Purchase Requisitions - Professional</b> uygulamasını (Purchase Requisition Processing tile grubu) açın, <b>Create</b> seçin.", "<b>Source Determination</b> seçeneğinin işaretini kaldırın.", "<b class=\"nowrap\">Create → Material</b> ile ilk kalemi ekleyin: malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC##\">T-RC##</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y0##\">Y0##</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"50\">50</b> (stok, hesap ataması boş), <b>Apply</b>.", "<b class=\"nowrap\">Create → Material</b> ile ikinci kalemi ekleyin: aynı malzemeden <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"5\">5</b>, account assignment category <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"K\">K</b>, cost center <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-ENG##\">T-ENG##</b>, <b>Apply</b>.", "<b>Create</b> ile talebi kaydedin, belge numarasını not edin."], warn:"Talebi oluşturmadan önce <b>Source Determination</b> seçeneğinin işaretini kaldırın. <b>Limit Items</b> alanına kalem eklemeyin.", info:null, result:"Yeni batarya için 50 pc stok ve 5 pc tüketim (cost center <b>T-ENG##</b>) kalemli purchase requisition oluşturuldu."}, {num:"7", title:"Assign Source of Supply to Purchase Requisition", app:"Process Purchase Requisitions (V2)", path:["Fiori Launchpad", "Purchase Requisition Processing", "Process Purchase Requisitions (V2)"], fields:[["Purchase Requisition", "Created in previous task"], ["Source of Supply", "Info Record (P0##)"], ["Purchasing Organization", "P0##"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Process Purchase Requisitions (V2)\">Process Purchase Requisitions (V2)</b> uygulamasını açın ve oluşturduğunuz talebi bulun.", "İlgili kalem için <b>Assigned Supplier</b> sütununda <b>Assign Source of Supply</b> butonuna basın.", "Açılan pencerede, purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"P0##\">P0##</b> için oluşturduğunuz purchasing info record'u seçip <b>Assign</b> edin, başarı mesajını <b>OK</b> ile onaylayın."], warn:null, info:null, result:"Talep kalemine, purchasing organization <b>P0##</b> için oluşturulan info record kaynak olarak atandı."}, {num:"8", title:"Set Up Flexible Workflow for PO Release", app:"Manage Workflows for Purchase Orders", path:["Fiori Launchpad", "Workflow", "Manage Workflows for Purchase Orders"], fields:[["── Workflow Definition ──", ""], ["Workflow Name", "CERT##"], ["── Step - Release of Purchase Order ──", ""], ["Step Type", "Release of Purchase Order"], ["Assignment By", "User"], ["Approver", "TS450-##"], ["Step to be completed by", "One of the recipients"], ["── Step Condition ──", ""], ["Precondition", "Total net amount of PO is greater than"], ["Amount", "5000 EUR"], ["Purchasing Organization", "P0##"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Workflows for Purchase Orders\">Manage Workflows for Purchase Orders</b> uygulamasını açın ve yeni bir workflow oluşturun, adını <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"CERT##\">CERT##</b> girin.", "<b>New Step</b> ekranında step type olarak <b>Release of Purchase Order</b> seçin.", "<b>Recipients</b> bölümünde <b>Assignment By</b>'ı <b>Role</b>'dan <b>User</b>'a çevirip kullanıcı <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"TS450-##\">TS450-##</b>'ı girin; <b>Step to be completed by</b> için <b>One of the recipients</b> seçin.", "<b>Step Conditions</b> bölümünde <b>Total net amount of purchase order is greater than</b> koşulunu ve <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"5000 EUR\">5000 EUR</b> tutarını, ayrıca purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"P0##\">P0##</b> koşulunu girin.", "<b class=\"nowrap\">Create → Save → Activate</b> ile workflow'u aktive edin."], warn:null, info:"Onay adımı bu workflow'la tetiklenir; oluşturulan sipariş <b>In Approval</b> statüsüne düşer ve onaycı <b>My Inbox</b> uygulamasından onaylar.", result:"<b>CERT##</b> workflow'u oluşturuldu; <b>P0##</b> için 5000 EUR üzeri siparişler onay için <b>TS450-##</b>'a yönlendirilir."}, {num:"9", title:"Convert Purchase Requisition to Purchase Order", app:"Manage Purchase Orders", path:["Fiori Launchpad", "Purchase Order Processing", "Manage Purchase Orders"], fields:[["── General Information ──", ""], ["Purchasing Document Type", "ZNBF (PO f. flex. WF)"], ["Purchasing Organization", "P0##"], ["Plant", "Y0##"]], steps:["Talebi purchase order'a dönüştürmek için ilgili app'te (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Process Purchase Requisitions (V2)\">Process Purchase Requisitions (V2)</b> veya <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Purchase Orders\">Manage Purchase Orders</b>) kalemleri seçip <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Purchase Order\">Create Purchase Order</b> yapın.", "<b>General Information</b> bölümünde purchasing document type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"ZNBF\">ZNBF</b> seçin, purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"P0##\">P0##</b> ve plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y0##\">Y0##</b>'ın doğru aktarıldığını kontrol edin.", "<b>Order</b> ile siparişi kaydedin."], warn:null, info:"Sipariş kaydedildikten sonra <b>Expand Header</b> ile başlık bölümünde siparişin <b>In Approval</b> statüsünde olduğunu görebilirsiniz (değer 5000 EUR üzerindeyse).", result:"Talep, <b>ZNBF</b> belge tipiyle, <b>P0##</b>'dan plant <b>Y0##</b> için purchase order'a dönüştürüldü."}, {num:"10", title:"Release Purchase Order and Process Output", app:"My Inbox / Manage Purchase Orders", path:["Fiori Launchpad", "Inbox", "My Inbox"], fields:[["Approver", "TS450-##"], ["Action", "Approve → Submit"], ["Purchasing Organization", "P0##"]], steps:["Siparişi onaylamak için <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"My Inbox\">My Inbox</b> uygulamasını (Inbox tile grubu) açın.", "Onay bekleyen (oluşturduğunuz) siparişi seçin, <b>Approve</b> ve ardından <b>Submit</b> ile onaylayın.", "<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Purchase Orders\">Manage Purchase Orders</b> uygulamasında siparişin çıktısını (output) işleyin/yazdırın."], warn:null, info:null, result:"Purchase order <b>My Inbox</b> üzerinden onaylandı (release) ve çıktısı işlendi."}]}, {id:2, title:"Procure to Pay Process", app:"Manage Purchase Requisitions / Post Goods Movement / Create Supplier Invoice", sc:"Standart plant <b>1010</b> üzerinde uçtan uca satın alma sürecini test ediyorsunuz: talep oluşturma, siparişe dönüştürme, mal girişi ve fatura (park etme + post) işleme.", tasks:[{num:"1", title:"Create Purchase Requisition", app:"Manage Purchase Requisitions - Professional", path:["Fiori Launchpad", "Purchase Requisition Processing", "Manage Purchase Requisitions - Professional"], fields:[["── Item 1 - Stock ──", ""], ["Material", "T-R1##"], ["Plant", "1010"], ["Quantity", "100"], ["── Item 2 - Consumption ──", ""], ["Material", "T-R1##"], ["Plant", "1010"], ["Quantity", "10"], ["Account Assignment Category", "K (Cost Center)"], ["Cost Center", "T-ENG##"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Purchase Requisitions - Professional\">Manage Purchase Requisitions - Professional</b> uygulamasını açın, <b>Create</b> seçin.", "<b>Source Determination</b> seçeneğinin işaretini kaldırın.", "<b class=\"nowrap\">Create → Material</b>: malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-R1##\">T-R1##</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100\">100</b> (stok), <b>Apply</b>.", "<b class=\"nowrap\">Create → Material</b>: aynı malzemeden <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"10\">10</b>, account assignment category <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"K\">K</b>, cost center <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-ENG##\">T-ENG##</b>, <b>Apply</b>.", "<b>Create</b> ile kaydedin."], warn:"Talebi oluşturmadan önce <b>Source Determination</b> işaretini kaldırın.", info:null, result:"Malzeme <b>T-R1##</b> için 100 pc stok ve 10 pc tüketim kalemli purchase requisition oluşturuldu."}, {num:"2", title:"Assign Source of Supply", app:"Process Purchase Requisitions (V2)", path:["Fiori Launchpad", "Purchase Requisition Processing", "Process Purchase Requisitions (V2)"], fields:[["Purchasing Organization", "101C"], ["Plant", "1010"], ["Source of Supply", "Existing info record"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Process Purchase Requisitions (V2)\">Process Purchase Requisitions (V2)</b> uygulamasında oluşturduğunuz talebi bulun.", "İlgili kalem için <b>Assign Source of Supply</b> butonuna basın.", "Purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> için sistem tarafından önerilen mevcut kaynağı seçip <b>Assign</b> edin."], warn:null, info:null, result:"Talebe, purchasing organization <b>101C</b> için mevcut kaynak (info record) atandı."}, {num:"3", title:"Convert to Purchase Order", app:"Process Purchase Requisitions (V2)", path:["Fiori Launchpad", "Purchase Requisition Processing", "Process Purchase Requisitions (V2)"], fields:[["Document Type", "NB"], ["Purchasing Organization", "101C"], ["Plant", "1010"]], steps:["Atanmış kalemleri seçip <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Purchase Order\">Create Purchase Order</b> yapın.", "Belge tipi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"NB\">NB</b>, purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> olduğunu kontrol edin.", "<b>Order</b> ile siparişi kaydedin."], warn:null, info:null, result:"Talep, <b>NB</b> belge tipiyle purchase order'a dönüştürüldü."}, {num:"4", title:"Process Output", app:"Print Scheduled Purchase Order", path:["Fiori Launchpad", "Purchase Order Processing", "Print Scheduled Purchase Order"], fields:[["Purchasing Document Number", "Your PO number"], ["Purchasing Group", "Z##"], ["Output Channel", "Printout"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Print Scheduled Purchase Order\">Print Scheduled Purchase Order</b> uygulamasını (Purchase Order Processing tile grubu) açın.", "<b>Purchasing Document Number</b> alanına siparişinizin numarasını girip <b>Execute</b> yapın.", "Mesaj başarıyla işlendiyse mesaj listesini görürsünüz; son satır <b>Output item forwarded to output channel Printout</b> şeklinde olur."], warn:null, info:"Çıktı, purchasing group <b>Z##</b> ile bulunan siparişiniz için <b>Print Scheduled Purchase Order</b> app'inde işlenir.", result:"Purchase order mesajı (output), <b>Printout</b> kanalına başarıyla iletildi."}, {num:"5", title:"Post Goods Receipt", app:"Post Goods Movement", path:["Fiori Launchpad", "Warehouse Processing", "Post Goods Movement"], fields:[["── Goods Receipt (Ref: Purchase Order) ──", ""], ["Material", "T-R1##"], ["Plant", "1010"], ["Movement Type", "101"], ["PO Document Type", "NB"], ["Header Text", "C##-GR1"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Post Goods Movement\">Post Goods Movement</b> uygulamasında transaction <b>Goods Receipt</b>, reference <b>Purchase Order</b> seçin (movement type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101\">101</b>).", "Purchase order'ınızı girin; header text alanına <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##-GR1\">C##-GR1</b> yazın.", "Malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-R1##\">T-R1##</b> için <b>Item OK</b> işaretleyip <b>Post</b> ile kaydedin."], warn:"Purchase order'ınızın belge tipinin <b>NB</b> olduğuna dikkat edin.", info:null, result:"Malzeme <b>T-R1##</b> için mal girişi (mvt <b>101</b>), header text <b>C##-GR1</b> ile plant <b>1010</b>'a kaydedildi."}, {num:"6", title:"Park Supplier Invoice", app:"Create Supplier Invoice", path:["Fiori Launchpad", "Supplier Invoice Processing", "Create Supplier Invoice"], fields:[["── Header ──", ""], ["Supplier", "T-SUP01"], ["Reference", "C##-INV1"], ["Gross Invoice Amount", "730,29 EUR (incl. tax)"], ["── Reference Document ──", ""], ["Reference Category", "Purchase Order"], ["Purchase Order", "PO with T-R1## (100 pc + 10 pc)"], ["── Unclarified ──", ""], ["Transportation Cost", "66,-- EUR (incl. tax) — not yet clarified"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Supplier Invoice\">Create Supplier Invoice</b> uygulamasında başlık verilerini girin: brüt tutar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"730,29 EUR\">730,29 EUR</b>, referans <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##-INV1\">C##-INV1</b>, fatura tarihi bugün.", "<b>Purchasing Document References</b>'ta reference category <b>Purchase Order</b> seçip, tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-SUP01\">T-SUP01</b> ve malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-R1##\">T-R1##</b> içeren purchase order'ı girin.", "Önerilen kalemleri kontrol edin; nakliye maliyeti (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"66,-- EUR\">66,-- EUR</b>) netleşmediğinden bakiye (balance) oluşur.", "Nakliye maliyetinin nasıl kaydedileceği belirsiz olduğundan faturayı <b>Park</b> edin (post etmeyin)."], warn:"Nakliye tutarı netleşmediğinden faturayı doğrudan post etmeyin; <b>Park</b> fonksiyonunu kullanın.", info:null, result:"Fatura <b>C##-INV1</b> referansıyla, brüt <b>730,29 EUR</b> tutarında parklandı; nakliye tutarı beklemede."}, {num:"7", title:"Change and Post Parked Invoice", app:"Supplier Invoices List", path:["Fiori Launchpad", "Supplier Invoice Processing", "Supplier Invoices List"], fields:[["Reference", "C##-INV1"], ["Status Filter", "Parked"], ["Transportation Cost (Unplanned Delivery Costs)", "66,-- EUR"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Supplier Invoices List\">Supplier Invoices List</b> uygulamasında status <b>Parked</b> ile filtreleyip parklanmış <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##-INV1\">C##-INV1</b> faturasını açın.", "<b>Edit</b> seçin; <b>Unplanned Delivery Costs</b> sekmesinde nakliye tutarını girin.", "<b>Post</b> ile faturayı nihai olarak kaydedin."], warn:null, info:"Post edildikten sonra fatura, PO geçmişinde <b>VRe</b> (parked) yerine <b>RE-L</b> (posted) olarak görünür.", result:"Parklanmış fatura <b>C##-INV1</b>, nakliye maliyeti eklenerek güncellenip post edildi."}]}, {id:3, title:"Perform a Subcontracting Process", app:"Create Purchase Order - Advanced / Post Goods Movement", sc:"Bir ürün alt yüklenici (subcontractor) tarafından üretildiğinden <b>subcontracting</b> sürecini test ediyorsunuz: SC siparişi, bileşenlerin sağlanması (mvt 541), doğrudan teslimat, mal girişi, ek tüketim (mvt 543) ve tolerans/fatura işleme.", tasks:[{num:"1", title:"Create Subcontracting Purchase Order", app:"Create Purchase Order - Advanced", path:["Fiori Launchpad", "Purchase Order Processing", "Create Purchase Order - Advanced"], fields:[["── Header (Org. Data) ──", ""], ["Supplier", "T-S50A##"], ["Document Type", "NB"], ["Purchasing Organization", "101C"], ["Purchasing Group", "Z##"], ["── Item ──", ""], ["Item Category", "L (Subcontracting)"], ["Material", "T-FL4A##"], ["PO Quantity", "100 PC"], ["Net Price", "1500,-- EUR"], ["Plant", "1010"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Purchase Order - Advanced\">Create Purchase Order - Advanced</b> uygulamasını açın; tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S50A##\">T-S50A##</b> girin.", "Header'da <b>Org. Data</b>: purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b>, purchasing group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Z##\">Z##</b>, belge tipi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"NB\">NB</b>.", "Item overview'da item category (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"I\">I</b> alanı) <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"L\">L</b> (Subcontracting), malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-FL4A##\">T-FL4A##</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100\">100</b>, net fiyat <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1500,-- EUR\">1500,-- EUR</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> girin.", "Item detayında <b>Material Data</b> sekmesinde <b>Components</b>'a bakarak bileşen gereksinimlerini kontrol edin.", "Siparişi kaydedin ve PO numarasını not edin."], warn:null, info:"Subcontracting kaleminin item category'si <b>L</b>'dir; bileşenler siparişin schedule line detaylarında görünür.", result:"Malzeme <b>T-FL4A##</b> için tedarikçi <b>T-S50A##</b>'dan subcontracting purchase order'ı (item cat <b>L</b>, 1500 EUR) oluşturuldu."}, {num:"2", title:"Create PO for Component Direct Delivery", app:"Create Purchase Order - Advanced", path:["Fiori Launchpad", "Purchase Order Processing", "Create Purchase Order - Advanced"], fields:[["── Item ──", ""], ["Material", "T-FL4A1##"], ["Supplier", "T-S52A##"], ["PO Quantity", "200 PC"], ["Net Price", "500,-- EUR"], ["Plant", "1010"], ["── Delivery Address ──", ""], ["Delivery to (SC Supplier)", "T-S50A## (SC Supp indicator set)"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Purchase Order - Advanced\">Create Purchase Order - Advanced</b> uygulamasında tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S52A##\">T-S52A##</b> girin.", "Item overview'da malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-FL4A1##\">T-FL4A1##</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"200\">200</b>, net fiyat <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"500,-- EUR\">500,-- EUR</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> girin.", "Item detayında <b>Delivery Address</b> sekmesinde <b>Supplier</b> alanına alt yüklenici <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S50A##\">T-S50A##</b> girin ve <b>SC Supp</b> göstergesini işaretleyin.", "Siparişi kaydedin ve PO numarasını not edin."], warn:"Bu sipariş için <b>Manage Purchase Orders</b> app'i kullanılamaz — SC tedarikçisi teslimat adresi olarak girilemez. <b>Create Purchase Order - Advanced</b> kullanın.", info:null, result:"Bileşen <b>T-FL4A1##</b> için 200 pc'lik, teslimat adresi alt yüklenici <b>T-S50A##</b> olan doğrudan teslimat siparişi (500 EUR) oluşturuldu."}, {num:"3", title:"Goods Issue for Subcontracting Components", app:"Post Goods Movement", path:["Fiori Launchpad", "Warehouse Processing", "Post Goods Movement"], fields:[["── Transfer Posting to Subcontractor ──", ""], ["Movement Type", "541 (Transfer to SC stock)"], ["Special Stock", "O (Vendor)"], ["Plant", "1010"], ["Storage Location", "101A"], ["── If Stock Deficient - GR Others ──", ""], ["Movement Type", "501"], ["Quantity", "500 PC each"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Post Goods Movement\">Post Goods Movement</b> uygulamasında transaction <b>Transfer Posting</b>, reference <b>Other</b> seçin.", "Movement type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"541\">541</b> (unrestricted-use stock'tan SC stoğuna) girin.", "<b>Transfer Posting</b> sekmesinde bileşen, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>, location <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101A\">101A</b> ve special stock <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"O\">O</b> altında tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S50A##\">T-S50A##</b> girip <b>Post</b> edin.", "Stok yetersizse: transaction <b>Goods Receipt</b> ile movement type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"501\">501</b> kullanarak eksik bileşenler için plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>, location <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101A\">101A</b>'ya <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"500 PC\">500 PC</b> giriş yapın, sonra 541 çıkışını tamamlayın."], warn:"Stok yetersizse önce mal girişi (mvt <b>501</b>) ile stoğu tamamlayın, sonra 541 transferini yapın.", info:"SC stoğuna transfer (mvt <b>541</b>) genelde FI'ye kayıt yaratmaz — sağlanan malzeme hâlâ sizin değerlenmiş stoğunuzun parçasıdır.", result:"Subcontracting bileşenleri için mal çıkışı (mvt <b>541</b>) plant <b>1010</b>, location <b>101A</b>'dan alt yükleniciye yapıldı."}, {num:"4", title:"Post Goods Receipt for Component", app:"Post Goods Movement", path:["Fiori Launchpad", "Warehouse Processing", "Post Goods Movement"], fields:[["── Goods Receipt (Ref: Purchase Order) ──", ""], ["Material", "T-FL4A1##"], ["Supplier", "T-S52A##"], ["Movement Type", "101"]], steps:["Alt yüklenici <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S52A##\">T-S52A##</b>'dan gelen bileşenlerin ulaştığını bildirdiğinde <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Post Goods Movement\">Post Goods Movement</b> uygulamasında transaction <b>Goods Receipt</b>, reference <b>Purchase Order</b> seçin.", "Bileşen <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-FL4A1##\">T-FL4A1##</b> için ilgili purchase order'ı girip mal girişini (mvt <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101\">101</b>) kaydedin."], warn:null, info:null, result:"Bileşen <b>T-FL4A1##</b> için mal girişi (mvt <b>101</b>) kaydedildi."}, {num:"5", title:"Post GR for Product + Subsequent Adjustment", app:"Post Goods Movement", path:["Fiori Launchpad", "Warehouse Processing", "Post Goods Movement"], fields:[["── Goods Receipt for SC Product ──", ""], ["Material", "T-FL4A##"], ["Storage Location", "101A"], ["Movement Type (Product)", "101"], ["Movement Type (Components)", "543 / O"], ["── Subsequent Adjustment ──", ""], ["Component", "T-FL4A1##"], ["Additional Consumption", "2 PC"], ["Movement Type", "543"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Post Goods Movement\">Post Goods Movement</b> uygulamasında ürün <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-FL4A##\">T-FL4A##</b> için mal girişini (mvt <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101\">101</b>) storage location <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101A\">101A</b>'ya kaydedin; bileşenler otomatik <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"543/O\">543/O</b> ile tüketilir.", "Ek tüketim için transaction <b>Subsequent Adjustment</b>, reference <b>Purchase Order</b> seçin (veya <b>Post Subsequent Adjustment</b> app'i).", "SC purchase order numarasını girip <b>Explode BOM</b> yapın; bileşen <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-FL4A1##\">T-FL4A1##</b> için <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"2 PC\">2 PC</b> ek girin (mvt <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"543\">543</b>) ve <b>Post</b> edin."], warn:null, info:"Ürün girişinde bileşenler <b>543/O</b> hareketiyle SC stoğundan tüketilir; ek tüketim de aynı <b>543</b> hareketiyle düzeltilir.", result:"Ürün <b>T-FL4A##</b> için mal girişi (mvt <b>101</b>) kaydedildi; bileşen <b>T-FL4A1##</b>'den 2 pc ek tüketim (mvt <b>543</b>) işlendi."}, {num:"6", title:"Create and Assign Supplier Tolerance Group", app:"Customizing (IMG) / Manage Supplier Master Data", path:["IMG", "Materials Management", "Logistics Invoice Verification", "Invoice Block", "Set Tolerance Limits"], fields:[["── Tolerance Group (Backend T41) ──", ""], ["Company Code", "1010"], ["Tolerance Group", "C##"], ["Positive Variance (Total-Based)", "up to EUR 50 → auto reduction"], ["Total-Based Acceptance", "Not provided"], ["── Assignment ──", ""], ["Assigned to Supplier", "T-S52A##"]], steps:["Bu görevi <b>backend T41</b>'de yapın. Customizing'de <b>Set Tolerance Limits</b> adımında company code <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> için tedarikçiye özel tolerans grubu <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##\">C##</b> oluşturun.", "Grupta, toplam bazlı pozitif sapmaların <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"EUR 50\">EUR 50</b>'ye kadar otomatik olarak faturadan düşülmesini (invoice reduction) tanımlayın; total-based kabul (acceptance) tanımlamayın.", "Tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S52A##\">T-S52A##</b>'nin master kaydında (company code <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>) tolerans grubu <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##\">C##</b>'yi atayın."], warn:null, info:"<b>Invoice Reduction</b>, tanımlı tolerans içindeki sapmaların manuel müdahale olmadan otomatik düzeltilmesini sağlar.", result:"Tolerans grubu <b>C##</b> company code <b>1010</b>'da oluşturuldu ve tedarikçi <b>T-S52A##</b>'ye atandı."}, {num:"7", title:"Post Supplier Invoice for Direct Delivery", app:"Create Supplier Invoice", path:["Fiori Launchpad", "Supplier Invoice Processing", "Create Supplier Invoice"], fields:[["Supplier", "T-S52A##"], ["Reference", "C##-INV2"], ["Gross Invoice Amount", "110.030,-- EUR (incl. tax)"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Supplier Invoice\">Create Supplier Invoice</b> uygulamasında tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S52A##\">T-S52A##</b>'nin doğrudan teslimat purchase order'ını referans alın.", "Referans <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##-INV2\">C##-INV2</b>, brüt tutar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"110.030,-- EUR\">110.030,-- EUR</b> (vergi dahil) girin.", "Faturayı <b>Post</b> edin."], warn:null, info:null, result:"Tedarikçi <b>T-S52A##</b>'den gelen fatura, <b>C##-INV2</b> referansıyla <b>110.030,-- EUR</b> tutarında post edildi."}]}, {id:4, title:"Perform Contract Processing", app:"Create Purchase Contract / Post Goods Movement", sc:"Malzeme grupları için <b>value contract</b> (WK) kullanımını test ediyorsunuz: uyarı levhaları ve elektrik yedek parçaları için sözleşme (item cat M/W) oluşturup, release order ve kalite kontrollü mal girişi (mvt 103/105) işliyorsunuz.", tasks:[{num:"1", title:"Create Value Contract", app:"Create Purchase Contract", path:["Fiori Launchpad", "Purchase Contract Processing", "Create Purchase Contract"], fields:[["── Header ──", ""], ["Supplier", "S520-3##"], ["Contract Type", "WK (Value Contract)"], ["Purchasing Organization", "101C"], ["Purchasing Group", "Z##"], ["Plant", "1010"], ["Validity", "1 year from 1st of actual month"], ["Target Value", "100.000,-- EUR"], ["Discount per Release Order", "10% (RA01)"], ["── Item 10 - Warning Signs ──", ""], ["Item Category (I)", "M (Material unknown)"], ["Short Text", "Warning Signs"], ["Order Unit", "PC"], ["Net Price", "5,-- EUR"], ["Material Group", "WS##"], ["Planned Delivery Time", "10 days"], ["── Item 20 - Electric Spare Parts ──", ""], ["Item Category (I)", "W (Material group)"], ["Short Text", "Spare Parts"], ["Material Group", "ET##"], ["Planned Delivery Time", "5 days"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Purchase Contract\">Create Purchase Contract</b> uygulamasını (Purchase Contract Processing tile grubu) açın.", "Tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"S520-3##\">S520-3##</b>, contract type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"WK\">WK</b> (value contract), purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b>, purchasing group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Z##\">Z##</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> girin ve onaylayın.", "Header'da validity end date <b>bir yıl</b> sonrası, target value <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100.000,-- EUR\">100.000,-- EUR</b> girin; release order başına <b>%10 iskonto</b> (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"RA01\">RA01</b>) tanımlayın.", "Item 10: item category (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"I\">I</b>) <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"M\">M</b> (Material unknown), kısa metin <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Warning Signs\">Warning Signs</b>, order unit <b>PC</b>, net fiyat <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"5\">5</b>, material group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"WS##\">WS##</b>; <b>Additional Data</b>'da planlanan teslimat süresi <b>10 gün</b>.", "Item 20: item category (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"I\">I</b>) <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"W\">W</b> (Material group), kısa metin <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Spare Parts\">Spare Parts</b>, material group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"ET##\">ET##</b>; <b>Additional Data</b>'da teslimat süresi <b>5 gün</b>.", "Sözleşmeyi kaydedin ve numarasını not edin."], warn:"<b>Manage Purchase Contracts</b> app'i item category <b>M</b> ve <b>W</b>'yi desteklemez; bu yüzden <b>Create Purchase Contract</b> app'ini kullanın.", info:"Item category <b>M</b> = malzeme numarası bilinmeyen ama fiyat/birim bilinen kalem; <b>W</b> = malzeme grubu bazlı, farklı fiyat/birimlere sahip kalem.", result:"Tedarikçi <b>S520-3##</b> için 100.000 EUR hedef değerli value contract (<b>WK</b>), item 10 (<b>M</b>/WS##) ve item 20 (<b>W</b>/ET##) ile oluşturuldu."}, {num:"2", title:"Create Contract Release Order", app:"Display Purchase Contract", path:["Fiori Launchpad", "Purchase Contract Processing", "Display Purchase Contract"], fields:[["Plant", "1010"], ["── Item 1 (Ref: Contract Item 10) ──", ""], ["Account Assignment Category", "K (Cost Center)"], ["Material", "B520-5##"], ["PO Quantity", "200"], ["Cost Center", "T-ENG##"], ["── Item 2 (Ref: Contract Item 10) ──", ""], ["Account Assignment Category", "K"], ["Short Text", "Warning Sign 'Wear safety shoes' (no material master)"], ["PO Quantity", "50"], ["Cost Center", "T-ENG##"], ["── Item 3 (Ref: Contract Item 20) ──", ""], ["Account Assignment Category", "K"], ["Short Text", "Electric Fuse 100A"], ["PO Quantity", "50 PAC"], ["Net Price", "99,90 EUR"], ["Cost Center", "T-ENG##"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Display Purchase Contract\">Display Purchase Contract</b> uygulamasında sözleşme numaranızı girip <b>Overview</b> açın.", "<b class=\"nowrap\">Menu → Contract → Follow-On Functions → Contract Release Order</b> seçin; sistem sizi PO işlemine götürür ve sözleşmeniz Document Overview'da görünür.", "Sözleşme item 10'u iki kez, item 20'yi bir kez PO'ya aktarın.", "Item 1: hesap ataması <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"K\">K</b>, malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"B520-5##\">B520-5##</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"200\">200</b>, cost center <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-ENG##\">T-ENG##</b> (item 10 referansı).", "Item 2: hesap ataması <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"K\">K</b>, kısa metin <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Wear safety shoes\">Wear safety shoes</b> (malzeme kaydı yok), miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"50\">50</b>, cost center <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-ENG##\">T-ENG##</b> (item 10 referansı).", "Item 3: hesap ataması <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"K\">K</b>, kısa metin <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Fuse 100A\">Fuse 100A</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"50 PAC\">50 PAC</b>, birim fiyat <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"99,90 EUR\">99,90 EUR</b>, cost center <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-ENG##\">T-ENG##</b> (item 20 referansı).", "Kaydedin ve PO numarasını not edin."], warn:null, info:"Release order, sözleşme görüntüsünden <b class=\"nowrap\">Follow-On Functions → Contract Release Order</b> ile başlatılır; malzeme kaydı olmayan kalemler serbest metin (item cat M) olarak girilir ve hesap ataması gerektirir.", result:"Sözleşmeye referans veren, üç kalemli (item 10 x2, item 20 x1) contract release order plant <b>1010</b> için oluşturuldu."}, {num:"3", title:"Post GR with Quality Inspection Split", app:"Post Goods Movement", path:["Fiori Launchpad", "Warehouse Processing", "Post Goods Movement"], fields:[["── Step 1 - GR Blocked Stock ──", ""], ["Plant", "1010"], ["PO Document Type", "NB"], ["Movement Type (into blocked)", "103"], ["── Step 2 - Release GR Blocked Stock ──", ""], ["Quality Inspection (101C)", "100 pc → mvt 105 + QI"], ["Unrestricted Use", "100 pc → mvt 105"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Post Goods Movement\">Post Goods Movement</b> uygulamasında transaction <b>Goods Receipt</b>, reference <b>Purchase Order</b>, movement type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"103\">103</b> ile mal girişini <b>unvaluated GR blocked stock</b>'a kaydedin (plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>).", "GR blocked stock'u serbest bırakmak için transaction <b>Release GR Blocked Stock</b>, reference <b>Material Document</b> seçin (mvt <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"105\">105</b>).", "<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100 pc\">100 pc</b>'yi kalite kontrol için storage location <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b>'deki <b>quality inspection stock</b>'a alın.", "Kalan <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100 pc\">100 pc</b>'yi <b>unrestricted use stock</b>'a alın."], warn:"Purchase order'ınızın belge tipinin <b>NB</b> olduğuna dikkat edin.", info:"Movement type <b>103</b> = GR blocked stock'a giriş; <b>105</b> = blocked stock'un serbest bırakılması. 103 muhasebe kaydı yaratmaz; 105 ise 101 eşdeğeri kayıt üretir.", result:"Mal girişi önce blocked stock'a (mvt <b>103</b>) alındı; ardından 100 pc kalite kontrol, 100 pc serbest kullanım stoğuna (mvt <b>105</b>) aktarıldı."}, {num:"4", title:"Transfer from Quality Inspection to Unrestricted Use", app:"Post Goods Movement", path:["Fiori Launchpad", "Warehouse Processing", "Post Goods Movement"], fields:[["── Transfer Posting (QI → Unrestricted) ──", ""], ["Material", "B520-5##"], ["Quantity", "100 pc"], ["Movement Type", "321"], ["Header Text", "C##-TR"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Post Goods Movement\">Post Goods Movement</b> uygulamasında transaction <b>Transfer Posting</b>, reference <b>Other</b> seçin ve movement type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"321\">321</b> girin.", "Menüde <b class=\"nowrap\">Settings → Copying Rule Transfer Posting</b> ile 321 için plant/storage location kopyalama kuralını ayarlayın (gerekirse).", "<b>Transfer Posting</b> sekmesinde malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"B520-5##\">B520-5##</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>, From storage location <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b> (quality inspection) → Dest. <b>unrestricted-use</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100 pc\">100 pc</b> girin.", "Belge başlık metni (header text) olarak <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C##-TR\">C##-TR</b> girin ve <b>Post</b> edin."], warn:null, info:"Movement type <b>321</b> = kalite kontrol stoğundan serbest kullanım stoğuna transfer. Birden çok kalem için <b>Copy to New Item</b> fonksiyonu kullanılır.", result:"100 pc <b>B520-5##</b>, header text <b>C##-TR</b> ile kalite kontrolden serbest kullanım stoğuna (mvt <b>321</b>) aktarıldı."}]}, {id:5, title:"Material Requirements Planning", app:"Create Material / Monitor Stock-Requirements List / Manage Manual Reservations", sc:"Plant <b>1010</b>'da yeni bir malzeme için <b>MRP</b> sürecini uçtan uca test ediyorsunuz: malzeme kaydı, MRP'ye uygun info record, rezervasyon, quantity contract, source list ve MRP run sonuçlarını (otomatik kaynak ataması) değerlendiriyorsunuz.", tasks:[{num:"1", title:"Create Raw Material with MRP Data", app:"Create Material", path:["Fiori Launchpad", "Material Master", "Create Material"], fields:[["── Header ──", ""], ["Material", "T-RC5##"], ["Description", "Certification GR##"], ["Material Type", "Raw material (ROH)"], ["── Views / Org. Levels ──", ""], ["Views", "Purchasing, MRP 1, MRP 2, Storage, Accounting"], ["Plant", "1010"], ["Storage Location", "101A"], ["Storage Bin", "C-GR##"], ["── Purchasing / Accounting ──", ""], ["Purchasing Group", "Z##"], ["Valuation Class", "3000"], ["Price Control", "V"], ["── MRP View ──", ""], ["MRP Controller", "0##"], ["MRP Type / Procedure", "V1"], ["Reorder Point", "80"], ["Lot Size Key", "FX"], ["Fixed Lot Size", "200"], ["Planned Delivery Time", "10"], ["Safety Stock", "20"], ["Availability Check", "Y2"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Material\">Create Material</b> uygulamasını açın, malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b>, malzeme tipi <b>Raw material</b> girin, açıklama <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Certification GR##\">Certification GR##</b>.", "<b>Select View(s)</b> ile <b>Purchasing</b>, <b>MRP 1</b>, <b>MRP 2</b>, <b>General Plant Data/Storage 1</b> ve <b>Accounting 1</b> görünümlerini seçin; <b>Org. Levels</b>'da plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>, storage location <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101A\">101A</b>, storage bin <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"C-GR##\">C-GR##</b>.", "<b>Purchasing</b>: purchasing group <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Z##\">Z##</b>. <b>Accounting</b>: price control <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"V\">V</b>, valuation class <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"3000\">3000</b>.", "<b>MRP 1</b>: MRP type/procedure <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"V1\">V1</b>, reorder point <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"80\">80</b>, MRP controller <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"0##\">0##</b>, lot size key <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"FX\">FX</b>, fixed lot size <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"200\">200</b>.", "<b>MRP 2</b>: planned delivery time <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"10\">10</b>, safety stock <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"20\">20</b>; availability check <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Y2\">Y2</b>.", "<b>Save</b> edin."], warn:null, info:null, result:"Malzeme <b>T-RC5##</b> (Certification GR##), planlama için gerekli MRP verileriyle plant <b>1010</b>'da oluşturuldu."}, {num:"2", title:"Create MRP-Relevant Purchasing Info Record", app:"Manage Purchasing Info Records", path:["Fiori Launchpad", "Sources of Supply Management", "Manage Purchasing Info Records"], fields:[["Material", "T-RC5##"], ["Supplier", "S520-1##"], ["Purchasing Organization", "101C"], ["Automatic Sourcing (MRP relevant)", "X"], ["Net Price (PB00)", "10,-- EUR"], ["Standard Order Quantity", "100"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Purchasing Info Records\">Manage Purchasing Info Records</b> uygulamasında <b>Create</b> ile malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b>, tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"S520-1##\">S520-1##</b>, purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b> için kayıt oluşturun.", "<b>Delivery and Quantity</b> bölümünde <b>Automatic Sourcing</b> (MRP relevant) göstergesini işaretleyin.", "Net fiyat (<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"PB00\">PB00</b>) <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"10,-- EUR\">10,-- EUR</b>, standart sipariş miktarı <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"100\">100</b> girin ve kaydedin."], warn:null, info:"<b>Automatic Sourcing</b> işaretli info kayıtları, MRP çalıştırıldığında sistemin otomatik kaynak ataması yapmasını sağlar.", result:"MRP'ye uygun (<b>Automatic Sourcing</b>) purchasing info record, tedarikçi <b>S520-1##</b> için oluşturuldu."}, {num:"3", title:"Post Goods Receipt", app:"Manage Stock", path:["Fiori Launchpad", "Inventory - Material Documents", "Manage Stock"], fields:[["Material", "T-RC5##"], ["Plant", "1010"], ["Storage Location", "101A"], ["Stock Type", "Unrestricted-Use Stock"], ["Stock Change", "Initial Entry"], ["Quantity", "50 PC"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Stock\">Manage Stock</b> uygulamasını açın; plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> ve malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b> girin.", "<b>Std. storage 1 (101A)</b> storage location'a stok ekleyin: stock type <b>Unrestricted-Use Stock</b>, stock change <b>Initial Entry</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"50 PC\">50 PC</b>.", "Doküman ve kayıt tarihi bugün olacak şekilde kaydedin."], warn:null, info:null, result:"50 pc <b>T-RC5##</b> için başlangıç stoğu (Initial Entry) plant <b>1010</b>, location <b>101A</b>'ya kaydedildi."}, {num:"4", title:"Create Reservation", app:"Manage Manual Reservations", path:["Fiori Launchpad", "Process Reservation", "Manage Manual Reservations"], fields:[["Material", "T-RC5##"], ["Account Assignment", "Cost Center T-ENG##"], ["Quantity", "10"], ["Requirement Date", "Today + 2 days"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Manual Reservations\">Manage Manual Reservations</b> uygulamasını (Process Reservation tile grubu) açın, <b>Create</b> seçin.", "Malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b>, cost center <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-ENG##\">T-ENG##</b>, miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"10\">10</b> girin; ihtiyaç tarihi <b>bugün + 2 gün</b>.", "<b>Create</b> ile kaydedin ve rezervasyon numarasını not edin."], warn:null, info:null, result:"10 pc'lik rezervasyon, cost center <b>T-ENG##</b> için bugünden 2 gün sonrasına oluşturuldu."}, {num:"5", title:"Run MRP and Check Result", app:"Monitor Stock/Requirements List (MD04)", path:["Fiori Launchpad", "MRP", "Monitor Stock/Requirements List (MD04)"], fields:[["Plant", "1010"], ["Material", "T-RC5##"], ["Action", "Start MRP Run"], ["Expected Result", "PR with fixed vendor S520-1##"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Monitor Stock/Requirements List (MD04)\">Monitor Stock/Requirements List (MD04)</b> uygulamasında plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b>, malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b> için stok/ihtiyaç listesini açın.", "Sağ alttaki <b>Start MRP Run</b> butonuna basın; MRP run tamamlanana kadar bekleyin.", "Oluşan purchase requisition'ı açın — fixed vendor <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"S520-1##\">S520-1##</b>'e atanmış olmalı."], warn:null, info:"MRP run, <b>Monitor Stock/Requirements List (MD04)</b> veya <b>Monitor Material Coverage - Net and Individual Segments</b> app'inde <b>Start MRP Run</b> ile başlatılabilir.", result:"MRP run sonucunda fixed vendor <b>S520-1##</b>'e atanmış bir purchase requisition oluştu."}, {num:"6", title:"Change and Fix Purchase Requisition", app:"Monitor Stock/Requirements List (MD04)", path:["Fiori Launchpad", "MRP", "Monitor Stock/Requirements List (MD04)"], fields:[["Valuation Price", "10,-- EUR"], ["Delivery Date", "Proposed date + 1 day"], ["Firming (Fixed)", "X"]], steps:["Stok/ihtiyaç listesinde MRP tarafından oluşturulan purchase requisition'ı seçin.", "Item detayında <b>Valuation</b> sekmesinde değerleme fiyatı <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"10,-- EUR\">10,-- EUR</b> girin.", "Teslimat tarihini önerilen tarihten <b>1 gün</b> sonraya kaydırın.", "Değişiklikleri kaydedin; talep otomatik olarak <b>fixed</b> (firming göstergeli) olur."], warn:null, info:null, result:"Purchase requisition, 10 EUR değerleme fiyatı ve +1 gün teslimat tarihiyle güncellenip sabitlendi (firming)."}, {num:"7", title:"Create Quantity Contract", app:"Create Purchase Contract", path:["Fiori Launchpad", "Purchase Contract Processing", "Create Purchase Contract"], fields:[["Contract Type", "MK (Quantity Contract)"], ["Material", "T-RC5##"], ["Supplier", "T-S52A##"], ["Purchasing Organization", "101C"], ["Target Quantity", "5.000 PC"], ["Net Price", "9,50 EUR"], ["Validity", "1 year from 1st of current month"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Create Purchase Contract\">Create Purchase Contract</b> uygulamasında contract type <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"MK\">MK</b> (quantity contract) ile malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b>, tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S52A##\">T-S52A##</b>, purchasing organization <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"101C\">101C</b> girin.", "Hedef miktar <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"5.000 PC\">5.000 PC</b>, net fiyat <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"9,50 EUR\">9,50 EUR</b> girin.", "Geçerlilik süresini içinde bulunulan ayın ilk gününden itibaren <b>1 yıl</b> olarak girip kaydedin."], warn:null, info:null, result:"Malzeme <b>T-RC5##</b> için tedarikçi <b>T-S52A##</b> ile 5.000 pc, 9,50 EUR birim fiyatlı quantity contract (<b>MK</b>) oluşturuldu."}, {num:"8", title:"Create Second Reservation", app:"Manage Manual Reservations", path:["Fiori Launchpad", "Process Reservation", "Manage Manual Reservations"], fields:[["Material", "T-RC5##"], ["Account Assignment", "Cost Center T-ENG##"], ["Quantity", "250"], ["Requirement Date", "A day in first week of next month"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Manual Reservations\">Manage Manual Reservations</b> uygulamasında <b>Create</b> ile malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b> için cost center <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-ENG##\">T-ENG##</b>'ye <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"250\">250</b>'lik ikinci rezervasyonu oluşturun.", "İhtiyaç tarihi olarak gelecek ayın ilk haftasından bir gün seçin ve kaydedin."], warn:null, info:null, result:"250 pc'lik ikinci rezervasyon, gelecek ayın ilk haftası için cost center <b>T-ENG##</b>'ye oluşturuldu."}, {num:"9", title:"Maintain Source List for Contract Assignment", app:"Manage Source Lists / Source List", path:["Fiori Launchpad", "Sources of Supply Management", "Manage Source Lists"], fields:[["Material", "T-RC5##"], ["Plant", "1010"], ["Source", "Contract with T-S52A## (item)"], ["MRP Indicator", "1 (record relevant to MRP)"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Manage Source Lists\">Manage Source Lists</b> uygulamasında malzeme <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b>, plant <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1010\">1010</b> için yeni satır ekleyin.", "Kaynak olarak tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S52A##\">T-S52A##</b> ve oluşturduğunuz <b>quantity contract</b> (ve kalem numarası) girin.", "<b>MRP</b> göstergesini <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"1\">1</b> (kayıt MRP'de kaynak olarak dikkate alınır) olarak ayarlayıp kaydedin."], warn:null, info:"Source list kaydında MRP göstergesi olmadan, MRP run sırasında sözleşme otomatik kaynak olarak atanamaz.", result:"Sözleşme, malzeme <b>T-RC5##</b> için source list'e MRP'ye uygun kaynak olarak eklendi."}, {num:"10", title:"Run MRP and Check Contract Assignment", app:"Monitor Stock/Requirements List (MD04)", path:["Fiori Launchpad", "MRP", "Monitor Stock/Requirements List (MD04)"], fields:[["Plant", "1010"], ["Material", "T-RC5##"], ["Action", "Start MRP Run"], ["Expected Result", "Additional PR assigned to T-S52A## + contract"]], steps:["<b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"Monitor Stock/Requirements List (MD04)\">Monitor Stock/Requirements List (MD04)</b>'te malzemeniz <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-RC5##\">T-RC5##</b> için tekrar <b>Start MRP Run</b> yapın.", "Sonucu kontrol edin — ek bir purchase requisition, tedarikçi <b class=\"cptok\" onclick=\"copyVal(this)\" data-cpy=\"T-S52A##\">T-S52A##</b> ve oluşturduğunuz sözleşmeye atanmış olmalı."], warn:null, info:null, result:"MRP run sonucunda, tedarikçi <b>T-S52A##</b> ve ilgili sözleşmeye atanmış ek bir purchase requisition oluştu."}]}]}];
+
+/* ── ARAMA SONUÇ PANELİ ── */
+var srPanel=document.createElement('div');
+srPanel.id='sr-panel';
+document.getElementById('app').parentNode.insertBefore(
+  srPanel, document.getElementById('app')
+);
+
+function escRe(s){return s.replace(/[.+?^${}()|[\]\\]/g,'\\$&');}
+
+function hlStr(s,re){
+  if(!s||!re)return s||'';
+  re.lastIndex=0;
+  return String(s).replace(re,function(m){return'<mark>'+m+'</mark>';});
+}
+
+function clearSearch(){
+  document.getElementById('search').value='';
+  run();
+  document.getElementById('search').focus();
+}
+
+function buildSearchPanel(q,re,unitFilter){
+  srPanel.innerHTML='';
+  if(!q)return;
+  var results=[];
+  D.forEach(function(unit){
+    var uid='u'+unit.unit;
+    if(unitFilter!=='all'&&unitFilter!==uid)return;
+    unit.ex.forEach(function(ex){
+      ex.tasks.forEach(function(t){
+        var fieldsTxt=(t.fields||[]).map(function(f){return f[0]+' '+f[1];}).join(' ');
+        var stepsTxt=(t.steps||[]).join(' ').replace(/<[^>]+>/g,' ');
+        var txt=[ex.title,ex.app||'',ex.sc||'',t.title,t.app||'',
+                 fieldsTxt,stepsTxt,t.warn||'',t.info||'',t.result||''].join(' ');
+        if(txt.toLowerCase().indexOf(q)>=0)
+          results.push({unit:unit,ex:ex,task:t,uid:uid});
+      });
+    });
+  });
+  if(!results.length)return;
+
+  var bar=document.createElement('div');
+  bar.className='sr-bar';
+  bar.innerHTML='<span class="sr-count"><b>'+results.length+'</b> görev bulundu</span>'+
+    '<button class="sr-close" onclick="clearSearch()">✕ Aramayı Temizle</button>';
+  srPanel.appendChild(bar);
+
+  var COLORS={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',
+              5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8'};
+
+  results.forEach(function(r){
+    var t=r.task,ex=r.ex,u=r.unit;
+    var c=COLORS[u.unit]||'#60a5fa';
+    var div=document.createElement('div');
+    div.className='sr-card';
+
+    var bc='<div class="sr-bc">'+
+      '<span class="sr-unit" style="color:'+c+';border-color:'+c+'40;background:'+c+'12">'+
+        'U'+u.unit+' · '+u.title+
+      '</span>'+
+      '<span class="sr-sep">›</span>'+
+      '<span class="sr-exn">EX '+ex.id+' · '+hlStr(ex.title,re)+'</span>'+
+      '<span class="sr-sep">›</span>'+
+      '<span class="sr-tn">'+t.num+'</span>'+
+    '</div>';
+
+    var th='<div class="sr-th">'+
+      '<span class="sr-tt">'+hlStr(t.title,re)+'</span>'+
+      (t.app?'<span class="sr-ab cpy" onclick="copyVal(this)" data-cpy="'+cpyAttr(t.app)+'">'+hlStr(t.app,re)+'</span>':'')+
+    '</div>';
+
+    var sc=ex.sc?'<div class="sr-sc">'+hlStr(ex.sc,re)+'</div>':'';
+
+    var ph='';
+    if(t.path&&t.path.length){
+      ph='<div class="sr-path">'+t.path.map(function(p,i){
+        return'<span class="sr-pc">'+hlStr(p,re)+'</span>'+
+          (i<t.path.length-1?'<span class="sr-pa">›</span>':'');
+      }).join('')+'</div>';
+    }
+
+    var fh='';
+    if(t.fields&&t.fields.length){
+      var rows=t.fields.map(function(f){
+        if(f[0].startsWith('──'))
+          return'<tr class="fvt-sec"><td colspan="2">'+f[0]+'</td></tr>';
+        return'<tr><td>'+hlStr(f[0],re)+'</td><td class="cpy" onclick="copyVal(this)" data-cpy="'+cpyAttr(f[1])+'">'+hlStr(f[1],re)+'</td></tr>';
+      }).join('');
+      fh='<div class="fvt-wrap"><table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead>'+
+         '<tbody>'+rows+'</tbody></table></div>';
+    }
+
+    var sh='';
+    if(t.steps&&t.steps.length){
+      sh='<ol class="sl">'+t.steps.map(function(s){
+        return'<li><span></span><span class="stx">'+hlStr(s,re)+'</span></li>';
+      }).join('')+'</ol>';
+    }
+
+    div.innerHTML=bc+th+sc+ph+
+      (t.warn?'<div class="box warn"><span class="bi">⚠</span><div>'+hlStr(t.warn,re)+'</div></div>':'')+
+      (t.info?'<div class="box info"><span class="bi">ℹ</span><div>'+hlStr(t.info,re)+'</div></div>':'')+
+      fh+sh+
+      (t.result?'<div class="box result"><span class="bi">✓</span><div>'+hlStr(t.result,re)+'</div></div>':'');
+    srPanel.appendChild(div);
+  });
+}
+
+function path(a){
+  if(!a||!a.length)return'';
+  return'<div class="pr">'+a.map((p,i)=>
+    `<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`
+  ).join('')+'</div>';
+}
+
+function tbl(f){
+  if(!f||!f.length)return'';
+  const rows=f.map(([a,b])=>{
+    if(a.startsWith('──'))
+      return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;
+    return`<tr><td>${a}</td><td class="cpy" onclick="copyVal(this)" data-cpy="${cpyAttr(b)}">${b}</td></tr>`;
+  }).join('');
+  return`<div class="fvt-wrap"><table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function steps(s){
+  if(!s||!s.length)return'';
+  return'<ol class="sl">'+s.map(x=>`<li><span></span><span class="stx">${x}</span></li>`).join('')+'</ol>';
+}
+
+function task(t){
+  const body=
+    path(t.path)+
+    (t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+
+    (t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+
+    tbl(t.fields)+
+    steps(t.steps)+
+    (t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');
+  return`<div class="task">
+    <div class="thdiv" onclick="togTask(this)">
+      <span class="tn">${t.num}</span>
+      <span class="tt">${t.title}</span>
+      ${t.app?`<span class="ab cpy" onclick="event.stopPropagation();copyVal(this)" data-cpy="${cpyAttr(t.app)}">${t.app}</span>`:''}
+      <span class="task-chev">›</span>
+    </div>
+    <div class="task-body">${body}</div>
+  </div>`;
+}
+
+function card(e,uid){
+  let html=`<div class="card" id="ex${e.id}" data-u="${uid}">`;
+  html+=`<div class="ch" onclick="toggle(this)">
+    <span class="exn">${e.id}</span>
+    <div class="cl">
+      <div class="ct">${e.title}</div>
+      <div class="ca">${e.app}</div>
+    </div>
+    <div class="cr"><span class="sb">${e.tasks.length} Adım</span><span class="chev">›</span></div>
+  </div>`;
+  html+=`<div class="cb">`;
+  if(e.sc)html+=`<div class="scenario">${e.sc}</div>`;
+  e.tasks.forEach(t=>html+=task(t));
+  html+=`</div></div>`;
+  return html;
+}
+
+function unit(u){
+  const uid=`u${u.unit}`;
+  const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',
+                5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8'};
+  const c=colors[u.unit]||'#60a5fa';
+  let h=`<div class="ug collapsed ${uid}" id="${uid}">
+    <div class="uh" onclick="togUnit(this)">
+      <span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">
+        Unit ${u.unit}
+      </span>
+      <span class="utitle">${u.title}</span>
+      <span class="uc">${u.ex.length} egzersiz</span>
+      <span class="uchev">›</span>
+    </div>
+    <div class="ug-body">`;
+  u.ex.forEach(e=>h+=card(e,uid));
+  return h+'</div></div>';
+}
+
+function togUnit(uh){
+  uh.closest('.ug').classList.toggle('collapsed');
+}
+
+function toggle(h){
+  h.parentElement.classList.toggle('open');
+}
+
+function togTask(hdr){
+  hdr.parentElement.classList.toggle('open');
+}
+
+function run(){
+  var raw=document.getElementById('search').value.trim();
+  var q=raw.toLowerCase();
+  var re=raw?new RegExp(escRe(raw),'gi'):null;
+  document.getElementById('clr').style.display=raw?'block':'none';
+
+  if(raw){
+    document.getElementById('app').style.display='none';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='none';
+    buildSearchPanel(q,re,activeU);
+    srPanel.style.display='block';
+    var cnt=srPanel.querySelectorAll('.sr-card').length;
+    document.getElementById('cnt').textContent=String(cnt);
+    if(!cnt){srPanel.style.display='none';document.getElementById('nores').style.display='block';}
+  } else {
+    document.getElementById('app').style.display='';
+    srPanel.style.display='none';
+    srPanel.innerHTML='';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='';
+    var shown=0;
+    document.querySelectorAll('.ug').forEach(function(ug){
+      var badge=ug.querySelector('.ubadge');
+      var uNum=badge?badge.textContent.replace(/[^0-9]/g,''):'';
+      var ok=(activeU==='all'||activeU===('u'+uNum)||activeU===uNum);
+      ug.classList.toggle('hid',!ok);
+      if(ok){ug.querySelectorAll('.card').forEach(function(c){c.classList.remove('hid');shown++;});}
+    });
+    document.getElementById('cnt').textContent=String(shown);
+  }
+}
+
+var activeU='all',expanded=false;
+
+const app=document.getElementById('app');
+const frow=document.getElementById('frow');
+const TOTAL=D.reduce((a,u)=>a+u.ex.length,0);
+
+D.forEach(u=>{
+  app.insertAdjacentHTML('beforeend',unit(u));
+  const b=document.createElement('button');
+  b.className='fb';
+  b.dataset.u=`u${u.unit}`;
+  b.textContent=`U${u.unit}: ${u.title.length>22?u.title.slice(0,22)+'…':u.title}`;
+  frow.appendChild(b);
+});
+
+document.getElementById('frow').addEventListener('click',function(e){
+  var b=e.target.closest('.fb');
+  if(!b)return;
+  activeU=b.dataset.u;
+  document.querySelectorAll('.fb').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+  run();
+});
+
+document.getElementById('search').addEventListener('input',run);
+document.getElementById('search').addEventListener('keydown',function(e){
+  if(e.key==='Escape')clearSearch();
+});
+document.getElementById('clr').addEventListener('click',clearSearch);
+
+document.getElementById('xpb').addEventListener('click',function(){
+  expanded=!expanded;
+  document.querySelectorAll('.card:not(.hid)').forEach(function(c){
+    c.classList.toggle('open',expanded);
+    c.querySelectorAll('.task').forEach(function(t){t.classList.toggle('open',expanded);});
+  });
+  document.getElementById('xpb').textContent=expanded?'Tümünü Kapat':'Tümünü Aç';
+  document.getElementById('xpb').classList.toggle('active',expanded);
+});
+
+document.querySelector('.fb[data-u="all"]').classList.add('on');
+
+run();
+</script>
+</body>
+</html>
