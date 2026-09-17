@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C_TS470 · SAP S/4HANA Service Sertifikasyon — Çözüm Ağacı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--bg2:#1e293b;--bg3:#263145;--border:#334155;--bh:#475569;--text:#e2e8f0;--tm:#94a3b8;--td:#64748b;--blue:#3b82f6;--bl:#60a5fa;--bbg:rgba(59,130,246,.10);--bbd:rgba(59,130,246,.30);--green:#22c55e;--gbg:rgba(34,197,94,.10);--gbd:rgba(34,197,94,.30);--yellow:#f59e0b;--ybg:rgba(245,158,11,.10);--ybd:rgba(245,158,11,.35);--red:#ef4444;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+header{background:linear-gradient(135deg,#0f1f3d 0%,#0f172a 60%);border-bottom:1px solid var(--border);padding:18px 32px 14px;position:relative;}
+.meta{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
+.cid{font-family:var(--mono);font-size:11px;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:2px 8px;border-radius:4px;letter-spacing:.06em;}
+.sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:.04em;margin-top:2px;}
+.sr{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.st{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--tm);}
+.n{color:var(--bl);font-weight:600;}
+#homebtn{position:absolute;top:18px;right:32px;font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:5px;padding:5px 12px;cursor:pointer;transition:border-color .15s,color .15s;}
+#homebtn:hover{border-color:var(--bbd);color:var(--bl);}
+html{scroll-padding-top:120px;}
+#toolbar{position:sticky;top:0;z-index:100;background:rgba(15,23,42,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:8px 32px 10px;}
+#search-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;margin-bottom:7px;}
+#search-wrap{position:relative;}
+#search{width:100%;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 30px 6px 29px;outline:none;transition:border-color .18s;}
+#search:focus{border-color:var(--bbd);background:#1a2744;}
+#search::placeholder{color:var(--td);}
+.sicon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--td);pointer-events:none;}
+#clr{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;border-radius:3px;transition:color .15s;}
+#clr:hover{color:var(--text);}
+#sctr{font-family:var(--mono);font-size:11px;color:var(--tm);white-space:nowrap;}
+#sctr b{color:var(--bl);font-weight:600;}
+#xpb{font-family:var(--mono);font-size:11px;background:var(--bg2);color:var(--tm);border:1px solid var(--border);border-radius:4px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;}
+#xpb:hover{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#xpb.active{border-color:var(--bbd);color:var(--bl);background:var(--bbg);}
+#frow{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:3px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--td);transition:all .15s;white-space:nowrap;}
+.fb:hover{color:var(--text);border-color:var(--bh);}
+.fb[data-u="all"]{border-color:var(--bh);color:var(--tm);}
+.fb[data-u="all"].on{background:var(--bg2);border-color:var(--bh);color:var(--text);}
+.fb[data-u="u1"].on{background:rgba(6,182,212,.15);color:#06b6d4;border-color:rgba(6,182,212,.4);}
+.fb[data-u="u2"].on{background:rgba(168,85,247,.15);color:#a855f7;border-color:rgba(168,85,247,.4);}
+.fb[data-u="u3"].on{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.4);}
+.fb[data-u="u4"].on{background:rgba(245,158,11,.15);color:#f59e0b;border-color:rgba(245,158,11,.4);}
+.fb[data-u="u5"].on{background:rgba(34,197,94,.15);color:#22c55e;border-color:rgba(34,197,94,.4);}
+mark{background:rgba(245,158,11,.32);color:#fef08a;border-radius:2px;padding:0 2px;font-style:normal;}
+#nores{display:none;max-width:1100px;margin:0 auto;text-align:center;padding:80px 20px;font-family:var(--mono);font-size:13px;color:var(--td);}
+.ico{display:block;font-size:34px;margin-bottom:12px;opacity:.3;}
+.hint{display:block;margin-top:8px;font-size:11px;color:var(--td);opacity:.7;}
+.hid{display:none;}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px;}
+.ug{margin-bottom:34px;}
+.uh{display:flex;align-items:center;gap:12px;margin-bottom:13px;padding-bottom:9px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:opacity .15s;}
+.uh:hover{opacity:.85;}
+.ubadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.utitle{font-size:15px;font-weight:600;}
+.uc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--td);}
+.uchev{font-size:13px;color:var(--td);transition:transform .25s;flex-shrink:0;margin-left:8px;}
+.ug.collapsed .uchev{transform:rotate(-90deg);}
+.ug.collapsed .ug-body{display:none;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:9px;overflow:hidden;transition:border-color .18s;}
+.card:hover{border-color:var(--bh);}
+.card.open{border-color:var(--bbd);}
+.ch{display:flex;align-items:center;gap:13px;padding:13px 17px;cursor:pointer;user-select:none;}
+.ch:hover{background:rgba(255,255,255,.02);}
+.exn{font-family:var(--mono);font-size:10px;color:var(--td);min-width:28px;flex-shrink:0;}
+.cl{flex:1;min-width:0;}
+.ct{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca{font-family:var(--mono);font-size:10.5px;color:var(--td);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cr{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.sb{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--td);border:1px solid var(--border);white-space:nowrap;}
+.chev{color:var(--td);font-size:12px;transition:transform .2s;flex-shrink:0;}
+.card.open .chev{transform:rotate(90deg);}
+.cb{display:none;padding:0 17px 17px;border-top:1px solid var(--border);}
+.card.open .cb{display:block;}
+.scenario{font-style:italic;color:var(--tm);font-size:13px;border-left:3px solid var(--bbd);padding:9px 13px;margin:13px 0;background:var(--bbg);border-radius:0 6px 6px 0;line-height:1.7;}
+.task{margin-bottom:6px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.task.open{border-color:var(--bbd);}
+.thdiv{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;user-select:none;background:var(--bg3);transition:background .15s;}
+.thdiv:hover{background:rgba(255,255,255,.04);}
+.task-body{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);}
+.task.open .task-body{display:block;}
+.task-chev{font-size:12px;color:var(--td);transition:transform .2s;flex-shrink:0;margin-left:auto;}
+.task.open .task-chev{transform:rotate(90deg);}
+.tn{font-family:var(--mono);font-size:11px;color:var(--bl);font-weight:600;flex-shrink:0;}
+.tt{font-size:13px;font-weight:500;flex:1;}
+.ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;flex-shrink:0;}
+.pr{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:7px 0 9px;}
+.pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.pc:first-child{border-radius:4px 0 0 4px;}
+.pc:last-child{border-radius:0 4px 4px 0;}
+.pc:only-child{border-radius:4px;}
+.pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+.fvt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:7px 0 11px;scrollbar-width:thin;scrollbar-color:var(--bh) transparent;}
+.fvt-wrap::-webkit-scrollbar{height:7px;}
+.fvt-wrap::-webkit-scrollbar-thumb{background:var(--bh);border-radius:4px;}
+.fvt-wrap::-webkit-scrollbar-track{background:transparent;}
+.fvt-wrap .fvt{margin:0;min-width:max-content;}
+.sl li .stx{min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--bh) transparent;padding-bottom:1px;}
+.sl li .stx::-webkit-scrollbar{height:6px;}
+.sl li .stx::-webkit-scrollbar-thumb{background:var(--bh);border-radius:4px;}
+.sl li .stx::-webkit-scrollbar-track{background:transparent;}
+.cptok.path,.cptok.nowrap,b.nowrap{white-space:nowrap;}
+.cpy{cursor:pointer;position:relative;transition:background .12s,color .12s;}
+.cpy:hover{background:rgba(96,165,250,.14)!important;color:var(--bl)!important;}
+.cpy:active{background:rgba(96,165,250,.28)!important;}
+td.cpy::after{content:"⧉";font-size:10px;color:var(--td);margin-left:7px;opacity:0;transition:opacity .12s;vertical-align:middle;}
+td.cpy:hover::after{opacity:.75;}
+.ab.cpy:hover{border-color:var(--bl);}
+.cptok{cursor:pointer;color:var(--bl);border-radius:2px;padding:0 1px;transition:background .12s;}
+.cptok:hover{background:rgba(96,165,250,.16);}
+.cptok:active{background:rgba(96,165,250,.3);}
+#cpy-toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:#04220f;font-family:var(--mono);font-size:12px;font-weight:600;padding:8px 16px;border-radius:6px;opacity:0;pointer-events:none;z-index:9999;transition:opacity .18s,transform .18s;box-shadow:0 4px 18px rgba(0,0,0,.4);white-space:nowrap;}
+#cpy-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.fvt{width:100%;border-collapse:collapse;margin:7px 0 11px;font-size:12.5px;}
+.fvt th{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--td);background:var(--bg3);padding:5px 9px;border:1px solid var(--border);text-align:left;}
+.fvt td{padding:5px 9px;border:1px solid var(--border);vertical-align:top;}
+.fvt td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--tm);background:rgba(30,41,59,.6);white-space:nowrap;}
+.fvt td:last-child{color:var(--text);}
+.fvt tr:hover td{background:rgba(255,255,255,.02);}
+.fvt-sec td{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);background:rgba(59,130,246,.08);padding:4px 9px;border:1px solid var(--border);}
+.sl{list-style:none;margin:7px 0;}
+.sl li.sgrp{display:block;margin:12px 0 6px;padding:0;}
+.sl li.sgrp:first-child{margin-top:2px;}
+.sl li.sgrp .stx{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--bl);border-left:2px solid var(--bbd);padding-left:8px;display:block;}
+.sl li{display:flex;gap:9px;margin-bottom:5px;font-size:13px;color:var(--tm);line-height:1.6;}
+.sl li .snum{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);border-radius:3px;padding:1px 5px;min-width:22px;text-align:center;flex-shrink:0;line-height:17px;margin-top:2px;height:fit-content;}
+.box{display:flex;gap:9px;padding:9px 12px;border-radius:6px;margin:9px 0;font-size:12.5px;line-height:1.6;}
+.bi{font-size:14px;flex-shrink:0;margin-top:1px;}
+.warn{background:var(--ybg);border:1px solid var(--ybd);color:#fde68a;}
+.info{background:var(--bbg);border:1px solid var(--bbd);color:#bfdbfe;}
+.result{background:var(--gbg);border:1px solid var(--gbd);color:#bbf7d0;}
+b{color:var(--text);font-weight:500;}
+#sr-panel{max-width:1100px;margin:0 auto;padding:18px 22px 60px;display:none;}
+.sr-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin-bottom:14px;font-family:var(--mono);font-size:11px;}
+.sr-count{color:var(--tm);}
+.sr-count b{color:var(--bl);}
+.sr-close{background:none;border:none;color:var(--td);cursor:pointer;font-family:var(--mono);font-size:11px;padding:2px 6px;border-radius:3px;transition:color .15s;}
+.sr-close:hover{color:var(--text);}
+.sr-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;padding:14px 17px;transition:border-color .18s;}
+.sr-card:hover{border-color:var(--bh);}
+.sr-bc{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.sr-unit{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;padding:2px 8px;border-radius:3px;border:1px solid;text-transform:uppercase;}
+.sr-sep{color:var(--td);font-size:11px;}
+.sr-exn{font-family:var(--mono);font-size:11px;color:var(--tm);}
+.sr-tn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--bl);background:var(--bbg);border:1px solid var(--bbd);padding:1px 6px;border-radius:3px;}
+.sr-th{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.sr-tt{font-size:14px;font-weight:600;flex:1;}
+.sr-ab{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:4px;background:var(--bbg);color:var(--bl);border:1px solid var(--bbd);white-space:nowrap;}
+.sr-sc{font-style:italic;color:var(--tm);font-size:12.5px;border-left:3px solid var(--bbd);padding:7px 11px;margin-bottom:10px;background:var(--bbg);border-radius:0 5px 5px 0;}
+.sr-path{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:0 0 9px;}
+.sr-pc{font-family:var(--mono);font-size:10.5px;background:var(--bg3);color:var(--tm);padding:3px 9px;border:1px solid var(--border);}
+.sr-pc:first-child{border-radius:4px 0 0 4px;}
+.sr-pc:last-child{border-radius:0 4px 4px 0;}
+.sr-pc:only-child{border-radius:4px;}
+.sr-pa{font-size:10px;color:var(--td);padding:0 1px;background:var(--bg3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:25px;display:flex;align-items:center;}
+@media(max-width:600px){#toolbar{padding:8px 14px 9px;}#search-row{grid-template-columns:1fr auto;}#sctr{display:none;}main{padding:18px 12px 60px;}header{padding:14px 16px 12px;}#homebtn{top:14px;right:16px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="meta">
+    <span class="cid">C_TS470 · VER 5.6</span>
+    <h1>SAP S/4HANA Service — Sertifikasyon Sınavı</h1>
+  </div>
+  <div class="sub">CERTIFICATION TASKS · Türkçe Çözüm Ağacı</div>
+  <div class="sr">
+    <div class="st">Toplam Görev: <span class="n">39</span></div>
+    <div class="st">Ünite: <span class="n">5</span></div>
+    <div class="st">Sistem: <span class="n">T41 · Client 400</span></div>
+  </div>
+  <button id="homebtn" onclick="location.href='../../index.html'">🏠 Home</button>
+</header>
+<div id="toolbar">
+  <div id="search-row">
+    <div id="search-wrap">
+      <svg class="sicon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input id="search" type="text" placeholder="Görev, app, adım ara…">
+      <button id="clr">✕</button>
+    </div>
+    <span id="sctr"><b id="cnt">39</b> / 39 soru</span>
+    <button id="xpb">Tümünü Aç</button>
+  </div>
+  <div id="frow"><button class="fb on" data-u="all">Tümü</button></div>
+</div>
+<div id="cpy-toast">✓ kopyalandı</div>
+<main id="app"></main>
+<div id="nores">
+  <span class="ico">🔍</span>
+  Aramanızla eşleşen görev bulunamadı.
+  <span class="hint">ESC ile aramayı temizleyebilirsiniz</span>
+</div>
+<script>
+function cpyAttr(s){var t=String(s==null?'':s).replace(/<[^>]+>/g,'');return t.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+var _cpyTimer=null;
+function _toast(msg){var el=document.getElementById('cpy-toast');if(!el)return;el.textContent='✓ kopyalandı: '+msg;el.classList.add('show');if(_cpyTimer)clearTimeout(_cpyTimer);_cpyTimer=setTimeout(function(){el.classList.remove('show');},1400);}
+function copyVal(el){var raw=el.getAttribute('data-cpy')||el.textContent||'';var ta=document.createElement('textarea');ta.innerHTML=raw;var txt=ta.value;function done(){var short=txt.length>32?txt.slice(0,32)+'…':txt;_toast(short);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(function(){_fallbackCopy(txt);done();});}else{_fallbackCopy(txt);done();}}
+function _fallbackCopy(txt){var t=document.createElement('textarea');t.value=txt;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.focus();t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);}
+const D=[{"unit":1,"title":"Task 1 · Org Structure & SRVO Order","sc":"Mevcut organizasyon yapısı genişletilir: Alman servis organizasyonu, servis ekibi ve master data center; pozisyon, kullanıcı ve çalışan oluşturulup atanır; sonunda bir SRVO servis siparişi açılır.","tasks":[{"num":"1","title":"Log On to the System","app":"SAP GUI + Fiori Launchpad","path":["Windows Start","Search: T41","S4HANA T41 Fiori Launchpad"],"fields":[["── Logon ──",""],["User","S47500-##"],["Password","Welcome1"],["System / Client","T41 / 400"],["Access","SAP GUI + Fiori Launchpad (both)"]],"steps":["Windows <b>Start</b> düğmesine basıp <b>T41</b> arayın → <b>S4HANA T41 Fiori Launchpad</b> bağlantısını seçin.","Giriş: User <b>S47500-##</b> (## = grup numaranız), Password <b>Welcome1</b>, Language <b>EN</b> → <b>Log On</b>.","Hem <b>SAP GUI</b> hem <b>Fiori Launchpad</b> ile giriş yapın — bazı görevler GUI, bazıları Fiori ile yapılır.","<b>Manage Organizations</b> açılmıyorsa çıkış yapıp <b>S47000-##</b> / <b>Welcome1</b> ile tekrar girin.","İlk girişte düzeni ayarlayın: sağ üstte <b>Profile</b> → <b>Settings</b> → <b>Spaces and Pages</b>; <b>Use Spaces</b> ve <b>Show my Home</b> işaretli olsun → <b>Save</b>."],"warn":"<b>Task 1 adım 7</b>'de <b>CERT_SRV-##</b> kullanıcısını oluşturduktan sonra kalan tüm işlemler o kullanıcıyla yapılır.","result":"Sisteme <b>S47500-##</b> ile giriş yapıldı (GUI + Fiori)."},{"num":"2","title":"Create Service Organization","app":"Manage Organizations","path":["Fiori Launchpad","Organization → Organizational Management","Manage Organizations"],"fields":[["── Organizational Unit Details ──",""],["Description","Service Organization DE GR##"],["Code","SRV_ORG_DE##"],["Allow Org. Unit to be Determined: Service","x (set flag)"],["Functions: Service Organization","x (set flag)"],["── Attribute (Scenario: Service) ──",""],["R/3 maintenance planning plant","1040"]],"steps":["Launchpad'de <b>Organization → Organizational Management</b> grubundan <b>Manage Organizations</b> uygulamasını açın.","<b>Description</b> alanına <b>Sales & Service 1010</b> yazıp <b>Search</b>; sonuç listesinden <b>Sales & Service 1010</b> satırını seçin.","<b>Sales & Service 1010</b> seçiliyken üstte <b>Create → Organizational Unit</b>.","Ekranı aşağı kaydırıp <b>Organizational Unit Details</b> bölümüne gelin ve girin: Description <b>Service Organization DE GR##</b>, Code <b>SRV_ORG_DE##</b>.","<b>Allow Org. Unit to be Determined: Service</b> ve <b>Functions: Service Organization</b> kutularını işaretleyin → <b>Save</b>.","Öznitelik ataması: yeni oluşturulan birimi solundaki boş kutucuktan seçin → aşağıda <b>Attributes</b> bölümünde <b>Edit List</b>.","<b>R/3 maintenance planning plant</b> = <b>1040</b> girin → <b>Save</b>. (Cert yalnızca bu özniteliği ister.)"],"warn":"Açıklamayı (Description) birebir girin — en ufak yazım hatası bu görevi geçersiz kılar.","info":"<b>Sales & Service 1010</b> altında oluşturulur. Açıklamayı birebir girin — en ufak yazım hatası puan kaybettirir. Cert yalnızca <b>R/3 maintenance planning plant</b> özniteliğini ister.","result":"Servis organizasyonu <b>SRV_ORG_DE##</b> oluşturuldu."},{"num":"3","title":"Assign Master Cost Center","app":"PPOME","path":["SAP GUI","Transaction: PPOME"],"fields":[["── Account Assignment ──",""],["Master cost center","4100"]],"steps":["SAP GUI oturumunuz zaten <b>S47500-##</b> ile açık (master cost center yalnızca GUI'den atanır; <b>S47000-##</b> fallback'i yalnızca Fiori'deki <b>Manage Organizations</b> içindir).","Komut alanına <b>PPOME</b> yazıp <b>Enter</b>.","Sol üstte <b>Structure Search</b>'e basın; sol altta ağacı açın: <b>Company → Company Code 1010 → Sales & Service → Service Organization DE GR##</b>.","<b>Service Organization DE GR##</b>'a çift tıklayın → sağ tarafta <b>Account Assignment</b> sekmesine geçin.","<b>Master cost center</b> = <b>4100</b> girin → <b>Save</b>. (Alt organizasyon birimleri ve pozisyonlar bu atamayı devralır.)","Pozisyon ID'sini şimdi not edebilirsiniz: yapıyı açıp <b>Service Master Data Center GR##</b>'a çift tıklayın; <b>Staff assignments (structure)</b> alanında <b>Column Configuration → ID</b> → pozisyon <b>ID</b> görünür. <b>Exit</b> (oturumu kapatmayın)."],"info":"Alt organizasyon birimleri ve pozisyonlar bu <b>Master Cost Center</b> atamasını devralır.","result":"Master cost center <b>4100</b>, <b>SRV_ORG_DE##</b>'a atandı."},{"num":"4","title":"Create Service Team and Master Data Center","app":"Manage Organizations","path":["Fiori Launchpad","Organizational Management","Manage Organizations"],"fields":[["── Service Team ──",""],["Description","Service Management GR##"],["Code","SRV_DE_MA_##"],["Allow Org. Unit to be Determined: Service","x (set flag)"],["Functions: Service Team","x (set flag)"],["── Master Data Center ──",""],["Description","Service Master Data Center GR##"],["Code","SRV_DE_MC_##"]],"steps":["§A) Service Team · SRV_DE_MA_##","<b>Manage Organizations</b>'ta yapınızı açın (Sales & Service 1010 → alt birimler); <b>Service Organization DE GR##</b> satırını seçin → <b>Create → Organizational Unit</b>.","Aşağıda <b>Organizational Unit Details</b>: Description <b>Service Management GR##</b>, Code <b>SRV_DE_MA_##</b>.","<b>Allow Org. Unit to be Determined: Service</b> ve <b>Functions: Service Team</b> kutularını işaretleyin → <b>Save</b>.","§B) Master Data Center · SRV_DE_MC_##","Yeni oluşan <b>Service Management GR##</b> satırını seçin → <b>Create → Organizational Unit</b>.","<b>Organizational Unit Details</b>: Description <b>Service Master Data Center GR##</b>, Code <b>SRV_DE_MC_##</b> → <b>Save</b>."],"result":"Servis ekibi <b>SRV_DE_MA_##</b> ve altında <b>SRV_DE_MC_##</b> oluşturuldu."},{"num":"5","title":"Create Business Partner (HRALXSYNC)","app":"SA38","path":["SAP GUI","Transaction: SA38","Report: HRALXSYNC"],"fields":[["── Selection ──",""],["Report","HRALXSYNC"],["Org unit","SRV_DE_MC_##"]],"steps":["<b>SAP GUI</b>'de komut alanına <b>SA38</b> yazıp <b>Enter</b>.","<b>Program</b> alanına <b>HRALXSYNC</b> yazın → <b>Execute</b> (F8).","Seçim ekranında org birimini belirtin: oluşturduğunuz <b>Service Master Data Center GR##</b> (org unit numarası) için çalıştırın — Organizational Unit alanına ilgili numarayı girin.","<b>Execute</b> (F8) ile raporu çalıştırın; org birimi için eksik <b>Business Partner</b> kaydı oluşturulur/senkronize edilir.","Sonuç ekranında oluşturulan/eşleşen <b>Business Partner</b>'ı kontrol edin."],"info":"<b>HRALXSYNC</b>, org birimi için eksik <b>Business Partner</b> kaydını oluşturur/senkronize eder.","result":"<b>SRV_DE_MC_##</b> için Business Partner kaydı mevcut/oluşturuldu."},{"num":"6","title":"Create Position: Service Master Data Specialist","app":"Manage Organizations","path":["Fiori Launchpad","Organizational Management","Manage Organizations"],"fields":[["── Position Details ──",""],["Description","Service Master Data Specialist GR##"],["Code","SRVS_DE_##"],["Role Assignment (Business Role)","Service Professional"]],"steps":["<b>Manage Organizations</b>'ta <b>Service Master Data Center GR##</b> satırını seçin → <b>Create → Position</b>.","Aşağıda <b>Position Details</b>: Description <b>Service Master Data Specialist GR##</b>, Code <b>SRVS_DE_##</b>, Business Role <b>Service Professional</b>.","<b>Save</b> → <b>Navigate to Home</b>.","Pozisyonun sayısal <b>ID</b>'sini not edin (PA40 adımında gerekli): <b>PPOME</b>'de <b>Column Configuration → ID</b> ile ya da <b>Manage Organizations</b> detayında görünür."],"info":"Oluşan pozisyonun sayısal <b>ID</b> değerini not edin — <b>PA40</b> adımında gereklidir. Bu ID, <b>PPOME</b> içinde <b>Column Configuration → ID</b> ile veya <b>Manage Organizations</b> içinde görünür.","result":"Pozisyon <b>SRVS_DE_##</b> oluşturuldu, <b>Service Professional</b> rolü atandı."},{"num":"7","title":"Create User CERT_SRV-##","app":"SU01","path":["SAP GUI","Transaction: SU01"],"fields":[["── User ──",""],["User (new)","CERT_SRV-##"],["Copy from","S47100-999"],["User Type (Logon Data)","S Service"],["New / Repeat Password","Welcome1"],["Role (assign)","Z_S47500_2023"]],"steps":["<b>SAP GUI</b>'de komut alanına <b>SU01</b> yazıp <b>Enter</b>.","<b>User</b> alanına kopyalanacak şablon kullanıcıyı yazın: <b>S47100-999</b> → üstte <b>Copy</b> düğmesine basın.","<b>Copy Users</b> penceresinde <b>To</b> alanına yeni kullanıcıyı yazın: <b>CERT_SRV-##</b> → <b>Copy</b>.","<b>Logon Data</b> sekmesinde <b>User Type</b> = <b>S Service</b> seçin.","<b>New Password</b> ve <b>Repeat Password</b> alanlarına <b>Welcome1</b> girin.","<b>Roles</b> sekmesinde <b>Z_S47500_2023</b> rolünün atandığından emin olun (yoksa ekleyin) → <b>Save</b>.","Doğrulama: bundan sonra artık <b>CERT_SRV-##</b> ile çalışın — sınavın kalan tüm adımları bu kullanıcıyla yapılır."],"warn":"Sınavın kalan tüm adımları <b>CERT_SRV-##</b> ile yapılır — yanlış kullanıcıyla devam ederseniz sonraki görevler geçersiz olur.","result":"Kullanıcı <b>CERT_SRV-##</b> oluşturuldu (rol <b>Z_S47500_2023</b> atandı)."},{"num":"8","title":"Create Employee Master (PA40 Hiring)","app":"PA40","path":["SAP GUI","Transaction: PA40","Action: Hiring"],"fields":[["── Actions ──",""],["Personnel no.","1000##"],["Action Type","Hiring"],["Start","Today"],["Reason for Action","01"],["Position","SRVS_DE_## (numerical ID)"],["Personnel area","1010"],["Employee group","1"],["Employee subgroup","Y1"],["── Personal Data ──",""],["Last Name","CERT_SRV-##"],["First Name","Master Data Specialist GR##"],["── Organizational Assignment ──",""],["Org. key","10100000004100"],["── Communication ──",""],["System ID","CERT_SRV-##"]],"steps":["<b>SAP GUI</b>'de komut alanına <b>PA40</b> yazıp <b>Enter</b>.","<b>Personnel no.</b> alanına örn. <b>1000##</b> yazın, <b>Hiring</b> aksiyon satırını seçin → <b>Execute</b>.","<b>Create Actions</b> ekranı: Start <b>bugün</b>, Reason for Action <b>01</b>, Position = <b>SRVS_DE_##</b>'ın sayısal <b>ID</b>'si, Personnel area <b>1010</b>, Employee group <b>1</b>, Employee subgroup <b>Y1</b> → <b>Save</b>.","<b>Create Personal data</b>: Last Name <b>CERT_SRV-##</b>, First Name <b>Master Data Specialist GR##</b> (Title / Gender / Birth date / Nationality serbest) → <b>Save</b>.","<b>Create Organizational assignment</b>: Org. key <b>10100000004100</b> → <b>Save</b>. (<b>Delimit Vacancy</b> penceresi çıkarsa <b>Cancel</b>.)","<b>Create Addresses</b>: bir adres girin — <b>City</b> alanını mutlaka doldurun → <b>Save</b>.","<b>Create Communication</b>: System ID <b>CERT_SRV-##</b> girin (çalışanı yeni SAP kullanıcısına bağlar) → <b>Save</b>."],"warn":"<b>Position</b> alanına kodu değil, <b>SRVS_DE_##</b>'ın sayısal <b>ID</b>'sini girin (PPOME/Manage Organizations'ta görünür).","info":"<b>System ID = CERT_SRV-##</b>, çalışanı yeni oluşturduğunuz SAP kullanıcısına bağlar.","result":"Çalışan ana kaydı <b>1000##</b> (+ Business Partner) oluşturuldu."},{"num":"9","title":"Assign Employee to Position","app":"Manage Organizations","path":["Fiori Launchpad","Organizational Management","Manage Organizations"],"steps":["<b>SAP Fiori Launchpad</b>'de <b>Manage Organizations</b>'ı açın ve yapınızı genişletin (Sales & Service 1010 → alt birimler).","<b>Service Master Data Specialist GR##</b> pozisyonunu seçin → <b>Employee</b> düğmesine basın.","<b>Assign Employee</b> penceresinde Last Name <b>CERT_SRV-##</b> yazıp <b>Search</b>.","Sonuç listesinden çalışanı seçin → <b>Save</b>."],"result":"Çalışan <b>Master Data Specialist GR## CERT_SRV-##</b>, pozisyon <b>SRVS_DE_##</b>'a atandı."},{"num":"10","title":"Create SRVO Service Order","app":"Manage Service Orders","path":["Fiori Launchpad","Service Order Management → Service Orders & Confirmations","Manage Service Orders"],"fields":[["── Header ──",""],["Transaction Type","SRVO"],["Description","GR## Task 1"],["Sold-To Party","C700-C##"],["── Organizational Data ──",""],["Service Organization","SRV_ORG_DE##"],["Service Org. Unit","SRV_DE_MA_##"],["── Parties Involved (header) ──",""],["Service Employee Group","SRV_DE_MC_##"],["Employee Responsible","CERT_SRV-##"],["── Item ──",""],["Service Product","P700_SERV_ONS"],["Quantity","1 HR"]],"steps":["<b>Manage Service Orders</b> uygulamasını açın (<b>Service Order Management → Service Orders & Confirmations</b>) → <b>Create</b>.","<b>Transaction Type</b> = <b>SRVO</b> seçin.","<b>Header</b>: Description <b>GR## Task 1</b>, Sold-To Party <b>C700-C##</b> (sınav değeri).","<b>Organizational Data</b>: Service Organization <b>SRV_ORG_DE##</b>, Service Org. Unit <b>SRV_DE_MA_##</b>.","<b>Parties Involved</b> (başlık): Service Employee Group <b>SRV_DE_MC_##</b>, Employee Responsible <b>CERT_SRV-##</b>.","<b>Item</b> bölümünde satır ekleyin: Service Product <b>P700_SERV_ONS</b>, Quantity <b>1 HR</b>.","Uyarıları <b>Enter</b> ile onaylayıp <b>Save</b>. Sipariş numarasını not edin."],"warn":"Sold-to <b>C700-C##</b> (sınav değeri), eğitimdeki <b>C7100-C##</b> değil.","result":"SRVO servis siparişi oluşturuldu. → <b>Not al:</b> Sipariş numarası."}]},{"unit":2,"title":"Task 2 · Master Data & Service Quotation","sc":"Service with Advanced Execution için maintenance work center, bundle ürünü, ekipman + sayaç oluşturulur ve bir SRVQ servis teklifi hazırlanır.","tasks":[{"num":"1","title":"Ensure You Are Logged In as CERT_SRV-##","app":"SAP GUI + Fiori Launchpad","path":[],"fields":[["── User ──",""],["User","CERT_SRV-##"],["Password","Welcome1"]],"steps":["Task 1 adım 7'de oluşturduğunuz <b>CERT_SRV-##</b> (şifre <b>Welcome1</b>) kullanıcısıyla çalıştığınızı doğrulayın.","Farklı bir kullanıcıdaysanız çıkış yapıp <b>CERT_SRV-##</b> ile tekrar giriş yapın (hem GUI hem Fiori)."],"info":"Task 2–5 arasındaki tüm işlemler <b>CERT_SRV-##</b> ile yapılır; yanlış kullanıcıyla devam ederseniz görevler geçersiz sayılır.","result":"<b>CERT_SRV-##</b> kullanıcısıyla oturum doğrulandı."},{"num":"2","title":"Create Maintenance Work Center","app":"IR01","path":["SAP GUI","Transaction: IR01"],"fields":[["── Initial ──",""],["Plant","1040"],["Work Center","S-ADEX##"],["Work Center Category","0005 Plant maintenance"],["── Basic Data ──",""],["Object description","Advanced Execution GR##"],["Person responsible","001"],["Usage","004 Only maintenance task lists"],["Standard value key","SAP0 No standard values"],["── Costing ──",""],["Cost Center","4300"],["ActType Int. Proc.","1410"],["Formula (Act Type)","SAP008 Proj:RqmtsNetwkMaint"],["── Capacities (Labor) ──",""],["Capacity category","002 (labor)"],["Capacity Base Unit","H Hour"],["Planner group","0##"],["No. of indiv. cap.","4"],["Capacity utilization","80"],["Start / End","7:00:00 / 17:00:00"],["Factory Calendar","01 Germany (Standard)"],["Active Version","01 Normal available capacity"]],"steps":["<b>SAP GUI</b>'de komut alanına <b>IR01</b> yazıp <b>Enter</b> (menü: SAP Menu → Logistics → Plant Maintenance → Maintenance Processing → Environment → Work Centers → Work Center → Create).","<b>Initial Screen</b>: Plant <b>1040</b>, Work Center <b>S-ADEX##</b>, Work Center Category <b>0005</b> (Plant maintenance) → <b>Enter</b>.","<b>Basic Data</b> sekmesi: Object description <b>Advanced Execution GR##</b>, Person responsible <b>001</b>, Usage <b>004</b> (Only maintenance task lists), Standard value key <b>SAP0</b>.","<b>Default Values</b> sekmesi: <b>Control key</b> = <b>PM01</b> (work center'ın kaydedilebilmesi için gerekli).","<b>Costing</b> sekmesi: Cost Center <b>4300</b>, Activity Type (ActType Int. Proc.) <b>1410</b>, Formula <b>SAP008</b>.","<b>Capacities</b> sekmesi: Capacity category <b>002</b> (labor), Capacity Base Unit <b>H</b>, sorumlu <b>Planner group</b> = <b>0##</b>.","<b>Capacity</b> düğmesine basın; <b>Header</b>: Factory Calendar <b>01</b> (Germany Standard), Active Version <b>01</b>, Start <b>07:00:00</b>, End <b>17:00:00</b>, Length of breaks <b>01:00:00</b>, Capacity utilization <b>80</b>, No. of indiv. cap. <b>4</b> → <b>Back</b>.","<b>Scheduling</b> sekmesi: Capacity category <b>002</b>.","<b>Save</b>. Work center numarasını not edin."],"warn":"Cert doğrudan <b>IR01</b> ile başlar; kapasite <b>utilization 80</b> (eğitimdeki 60 değil).","result":"Maintenance work center <b>S-ADEX##</b> oluşturuldu."},{"num":"3","title":"Create Bundle Product","app":"MM01","path":["SAP GUI","Transaction: MM01"],"fields":[["── Initial ──",""],["Material","INST_BUNDLE_##"],["Industry sector","M Mechanical Engineering"],["Material Type","BUND Bundle Product"],["Copy from … Material","P700_INST_BUNDLE"],["── Org. Levels ──",""],["Plant","1040"],["Sales Organization","1010"],["Distribution Channel","10"],["── Data ──",""],["Views to copy","Basic Data 1 + 3 Sales views"],["Material Group (Basic Data 1)","007"],["PPR0 price (Sales org. 1 → Conditions)","750 EUR"]],"steps":["<b>SAP GUI</b>'de komut alanına <b>MM01</b> yazıp <b>Enter</b>.","Başlangıç: Material <b>INST_BUNDLE_##</b>, Industry <b>M Mechanical Engineering</b>, Material Type <b>BUND Bundle Product</b>, <b>Copy from … Material</b> <b>P700_INST_BUNDLE</b> → <b>Continue</b>.","<b>Select View(s)</b>: <b>Basic Data 1</b> ve üç <b>Sales</b> görünümünü seçin (Sales Text görünümünü almayın) → <b>Org. Levels</b>: hem <b>Organizational Levels</b> hem <b>Copy From</b> kolonlarına Plant <b>1040</b>, Sales Organization <b>1010</b>, Distribution Channel <b>10</b> → <b>Continue</b>.","<b>Basic Data 1</b>: Material Group <b>007</b>. <b>Sales: sales org. 2</b>: Item Category Group <b>SRVP</b> dolu olmalı.","<b>Sales: sales org. 1</b> görünümünde <b>Conditions</b> düğmesine basın; <b>PPR0</b> fiyatını <b>750 EUR</b> olarak girin → geri dönün.","<b>Save</b>. (Fiyat MM01 içinde girildiği için ayrı fiyat uygulamasına gerek yoktur.)"],"result":"Bundle ürünü <b>INST_BUNDLE_##</b> oluşturuldu (PPR0 750 EUR)."},{"num":"4","title":"Create Product Bundle Structure","app":"Manage Product Bundles","path":["Fiori Launchpad","Service Master Data → Products","Manage Product Bundles"],"fields":[["── Bundle ──",""],["Product Bundle ID","INST_BUNDLE_##"],["Group","Service"],["Products in group","P700_SERV_INH, P700_SERV_ONS"]],"steps":["<b>Manage Product Bundles</b> uygulamasını açın (<b>Service Master Data → Products</b>) → <b>New</b>.","<b>Product Bundle ID</b> = <b>INST_BUNDLE_##</b> → <b>Enter</b>.","<b>Add Group</b> → <b>Service</b> grubunu oluşturun.","<b>Add Products to Group</b> ile servis ürünlerini ekleyin: <b>P700_SERV_INH</b> ve <b>P700_SERV_ONS</b>.","<b>Save</b>."],"result":"Product bundle <b>INST_BUNDLE_##</b> (Service grubu) oluşturuldu."},{"num":"5","title":"Create and Install Equipment","app":"IE01","path":["SAP GUI","Transaction: IE01"],"fields":[["── Equipment ──",""],["Equipment","EL-7##"],["Equipment category","E (Energy system units)"],["Description","Electrolyzer Cert GR##"],["── Location ──",""],["MaintPlant","1040"],["── Organization ──",""],["Main WorkCtr","T-PMSV00 / 1040"],["── Structure (Install) ──",""],["Functional loc.","H2POWC##"]],"steps":["<b>SAP GUI</b>'de komut alanına <b>IE01</b> yazıp <b>Enter</b>.","<b>Equipment</b> <b>EL-7##</b>, <b>Equipment category</b> <b>E</b> (Energy system units) → <b>Enter</b>.","Description: <b>Electrolyzer Cert GR##</b>. <b>Location</b> sekmesi: MaintPlant <b>1040</b>.","<b>Organization</b> sekmesi: Main WorkCtr <b>T-PMSV00</b> (plant <b>1040</b>).","<b>Structure</b> sekmesi → <b>Change InstLoc</b> düğmesi; <b>Functional loc.</b> = <b>H2POWC##</b> girin → <b>Inst. w. DataTransfer</b>.","<b>Data Transfer: Install Equipment</b> ekranında <b>InstallLoc. (whole)</b> seçin (tüm veri functional location'dan kopyalanır) → <b>F3</b> → <b>Confirm</b>.","<b>Status</b> alanında <b>INST</b> göründüğünü doğrulayın → <b>Save</b>. Ekipman numarasını not edin."],"warn":"Ekipman <b>EL-7##</b> ve functional location <b>H2POWC##</b> sınav değerleridir (eğitimdeki EL-5## / C7100C## değil).","result":"Ekipman <b>EL-7##</b> oluşturuldu ve <b>H2POWC##</b>'e kuruldu."},{"num":"6","title":"Create Counter and Measurement Document","app":"Create Measuring Point","path":["Fiori Launchpad","Service Master Data → Measuring Points","Create Measuring Point"],"fields":[["── Counter ──",""],["Measuring Point/Counter","Counter"],["Reference Object Type","Technical Object"],["Technical Object","EL-7##"],["Description","Operating hours Cert GR##"],["Measuring point category","B HourMeter"],["Characteristic","T_PM01"],["Code group","MSR-01"],["Overflow Reading","999999"],["── Measurement Document ──",""],["Reading","50 hrs"]],"steps":["§A) Create Counter · Create Measuring Point","<b>Create Measuring Point</b> uygulamasını açın (<b>Service Master Data → Measuring Points</b>).","<b>Measuring Point/Counter</b> = <b>Counter</b>; <b>Reference Object Type</b> = <b>Technical Object</b>; <b>Technical Object</b> = <b>EL-7##</b> → <b>Continue</b>.","Description <b>Operating hours Cert GR##</b>; <b>Measuring point category</b> = <b>B</b> (HourMeter).","<b>Characteristic</b>: F4 yardımıyla Characteristic Group <b>T_PM</b> → <b>Go</b> → <b>T_PM01</b> (Operating Hours). Code group <b>MSR-01</b>. Overflow Reading <b>999999</b>.","<b>Save</b>.","§B) Measurement Document · Create Measurement Document for Technical Object","<b>Create Measurement Document for Technical Object</b> uygulamasını açın; Basis <b>Reference Object</b>, Type <b>Technical Object</b>, Technical Object <b>EL-7##</b> → <b>Continue</b>.","Reading <b>50</b> hrs girin → <b>Save</b> → <b>Navigate to Home</b>."],"result":"Sayaç ve <b>50 hrs</b>'lik ölçüm belgesi oluşturuldu."},{"num":"7","title":"Create SRVQ Service Quotation","app":"Manage Service Quotations","path":["Fiori Launchpad","Service Processing → Service Order Quotations","Manage Service Quotations"],"fields":[["── Header ──",""],["Transaction Type","SRVQ"],["Description","Service Quotation Cert GR##"],["Sold-To Party","C700-C##"],["Equipment ID","EL-7##"],["── Item ──",""],["Product (Bundle)","INST_BUNDLE_##"],["Quantity","1 AU"],["── Parties / Profit Center ──",""],["Employee Responsible (item)","CERT_SRV-##"],["Profit Center (if needed)","T-PCA##"]],"steps":["<b>Manage Service Quotations</b> uygulamasını açın → <b>Create</b>.","<b>Transaction Type</b> = <b>SRVQ</b>; <b>Header</b>: Description <b>Service Quotation Cert GR##</b>, Sold-To Party <b>C700-C##</b>.","Ekipmanı referanslayın: <b>Equipment ID</b> = <b>EL-7##</b> (2.5'te oluşturduğunuz).","<b>Item</b> bölümüne satır ekleyin: Product (Bundle) <b>INST_BUNDLE_##</b>, Quantity <b>1 AU</b>.","Kalem detayında <b>Parties Involved</b> (Personalize ile açın): Employee Responsible <b>CERT_SRV-##</b>; gerekirse Profit Center <b>T-PCA##</b>.","<b>Save</b>. Teklif numarasını not edin."],"info":"Bundle ürünü normalde çözüm tekliflerinde kullanılır; burada test amacıyla SRVQ içinde kullanılıyor.","result":"SRVQ servis teklifi oluşturuldu."}]},{"unit":3,"title":"Task 3 · Quotation, Order, Confirmation, Invoice","sc":"Standart on-site servis süreci uçtan uca: teklif → sipariş → konfirmasyon → fatura.","tasks":[{"num":"1","title":"Create Quotation, Send and Accept","app":"Manage Service Quotations","path":["Fiori Launchpad","Service Processing → Service Order Quotations","Manage Service Quotations"],"fields":[["── Header ──",""],["Transaction Type","SRVQ"],["Description","Task 3 GR##"],["Sold-To Party","C700-C##"],["── Items ──",""],["P700_SERV_ONS","3 HR"],["P700-SC-100","1 PC"],["P700-OS-100","1 PC"],["── Parties / Profit Center ──",""],["Employee Responsible","CERT_SRV-##"],["Profit Center (all items)","T-PCA##"]],"steps":["<b>Manage Service Quotations</b> → <b>Create</b>; Transaction Type <b>SRVQ</b>, Description <b>Task 3 GR##</b>, Sold-To Party <b>C700-C##</b>.","<b>Items</b> bölümüne kalemleri girin: <b>P700_SERV_ONS</b> = <b>3 HR</b>, <b>P700-SC-100</b> = <b>1 PC</b>, <b>P700-OS-100</b> = <b>1 PC</b>.","<b>Parties Involved</b> (gerekirse <b>Personalize</b> ile sekmeyi açın): Employee Responsible = <b>CERT_SRV-##</b>.","<b>Select Profit Center</b> seçeneğiyle tüm kalemlere profit center <b>T-PCA##</b> atayın.","<b>Save</b>.","Üstte <b>Send To Customer</b> → ardından <b>Accept</b>. Kabul otomatik olarak bir <b>servis siparişi</b> oluşturur.","<b>Transaction History</b>'den oluşan servis siparişine gidip numarasını not edin."],"result":"Servis siparişi oluşturuldu. → <b>Not al:</b> Sipariş numarası."},{"num":"2","title":"Update Order and Release Items","app":"Manage Service Orders","path":["Fiori Launchpad","Service Orders","Manage Service Orders"],"fields":[["── Header ──",""],["Description","Task 3 SO GR##"]],"steps":["<b>Manage Service Orders</b> açın; 3.1'de oluşan siparişi bulup açın (<b>Posting Date</b> = <b>This week</b> → <b>Search</b>).","<b>Edit</b>; Description'ı <b>Task 3 SO GR##</b> olarak değiştirin.","<b>Items → Edit List</b> → <b>Release All Items</b> (siparişin tüm kalemlerini serbest bırakın).","<b>Save</b>."],"result":"Sipariş güncellendi ve tüm kalemler release edildi."},{"num":"3","title":"Create Service Confirmation","app":"Manage Service Orders","path":["Fiori Launchpad","Service Orders","Manage Service Orders"],"fields":[["── Confirmation ──",""],["Exec. Service Employee","CERT_SRV-##"],["Items","3 kalem (hepsi)"],["Final Service Confirmation","x"],["Status","Completed"]],"steps":["<b>Manage Service Orders</b>'ta siparişi açın → <b>Create Follow-Up</b> → <b>Service Confirmation / Confirmation</b> seçin.","Servis siparişindeki <b>3 kalemin hepsini</b> dahil edin.","<b>Parties Involved</b>: <b>Exec. Service Employee</b> = <b>CERT_SRV-##</b>.","Bu konfirmasyonun <b>final confirmation</b> olduğunu belirtin (<b>Final Service Confirmation</b>).","<b>Service Confirmation Details</b> → Status = <b>Completed</b> → <b>Save</b>. Konfirmasyon numarasını not edin."],"result":"Servis onayı (final) tamamlandı."},{"num":"4","title":"Release for Billing and Create Invoice","app":"Release for Billing","path":["Fiori Launchpad","Service Orders","Release for Billing"],"fields":[["── Billing ──",""],["Billing app","Create Billing Documents - VF04"],["Sold-To Party","C700-C##"]],"steps":["§A) Servis siparişini kapat + Release for Billing","Önce siparişi kapatın: <b>Manage Service Orders</b>'ta siparişi açıp <b>Status</b> = <b>Completed</b> → <b>Save</b>.","<b>Release for Billing</b> uygulamasını açın; <b>Created On</b> = <b>Today</b> (veya Sold-To Party <b>C700-C##</b>) → <b>Search</b>.","Servis konfirmasyonunuzun <b>tüm kalemlerini</b> seçin → <b>Release for Billing</b> (billing document request oluşturur).","§B) Create & Post Invoice · VF04","<b>Create Billing Documents - VF04</b> uygulamasını açın; <b>Billing Date to</b> = ayın son günü, <b>Sold-To Party</b> = <b>C700-C##</b>, <b>Billing Document Requests</b> kutusunu işaretleyin → <b>Display Billing List</b>.","Billing document request satırınızı seçip fatura belgesini oluşturup <b>kaydedin (post)</b>. Fatura numarasını not edin."],"result":"Fatura belgesi oluşturuldu ve kaydedildi (post)."}]},{"unit":4,"title":"Task 4 · Transaction Type & Item Category Config","sc":"SPRO'da yeni transaction type, item category, grup, determinasyon, copying control ve billing eşlemesi; ardından test teklifi YT## siparişe çevrilip doğrulanır.","tasks":[{"num":"1","title":"Create Transaction Type YT##","app":"SPRO","path":["SAP GUI","SPRO","Service → Transactions → Basic Settings → Define Transaction Types"],"fields":[["── Transaction Type ──",""],["Copy from","SRVO (Service Order)"],["Transaction Type (new)","YT##"],["Description","CERT Order ##"]],"steps":["<b>SAP GUI</b>'de komut alanına <b>SPRO</b> yazıp <b>Enter</b> → <b>SAP Reference IMG</b>.","Yolu izleyin: <b>Service → Transactions → Basic Settings → Define Transaction Types</b> → satırın solundaki <b>IMG - Activity</b> ikonuna basın.","<b>Position…</b> → <b>SRVO</b> yazıp <b>Enter</b>; <b>SRVO (Service Order)</b> satırını seçip <b>Copy As…</b>.","<b>Transaction Type</b> = <b>YT##</b>, yanındaki Description = <b>CERT Order ##</b> → <b>Enter</b> → <b>Continue</b> (pop-up).","<b>Save</b>. (Taşıma isteği sorulursa önerilen numarayı <b>Continue</b>, yoksa <b>Create Request</b> → Short Description <b>Group ##</b> → Save.)"],"info":"Leading transaction category alanı <b>Service Order/Quot.</b> değerini alır.","result":"Transaction type <b>YT##</b> oluşturuldu."},{"num":"2","title":"Create Item Category YI##","app":"SPRO","path":["SAP GUI","SPRO","Service → Transactions → Basic Settings → Define Item Categories"],"fields":[["── Item Category ──",""],["Copy from","SRVP (Service Item)"],["Item Category (new)","YI##"],["Description","CERT Item ##"]],"steps":["<b>SPRO → SAP Reference IMG → Service → Transactions → Basic Settings → Define Item Categories</b> → <b>IMG - Activity</b>.","<b>Position…</b> → <b>SRVP</b>; <b>SRVP (Service Item)</b> satırını seçip <b>Copy As…</b>.","<b>Item Category</b> = <b>YI##</b>, Description = <b>CERT Item ##</b> → <b>Enter</b> → <b>Continue</b> → <b>Save</b>.","İsterseniz <b>YI##</b> → <b>Details</b> ile kontrol edin (Object Type = Service Product Item BUS2000140)."],"result":"Item category <b>YI##</b> oluşturuldu."},{"num":"3","title":"Item Category Group and Determination","app":"SPRO","path":["SAP GUI","SPRO","Service → Transactions → Basic Settings"],"fields":[["── Item Category Group ──",""],["Item Category Group (new)","YS##"],["Description","CERT GR##"],["── Determination ──",""],["Transaction Type","YT##"],["Item Cat. Group","YS##"],["Item Category (determined)","YI##"],["Manual alternative","SRVP (Service Item)"]],"steps":["§A) Define Item Category Group","<b>SPRO → SAP Reference IMG → Service → Transactions → Basic Settings → Define Item Category Group</b> → <b>IMG - Activity</b>.","<b>New Entries</b> → Item Category Group <b>YS##</b>, açıklama <b>CERT GR##</b> → <b>Save</b>.","§B) Define Item Category Determination","<b>Define Item Category Determination</b> → <b>New Entry</b>: Transaction Type <b>YT##</b>, Item Cat. Group <b>YS##</b>, Item Category <b>YI##</b>, AltrntveItemCty (manuel) <b>SRVP</b> → <b>Enter</b> → <b>Save</b>.","Teklif/istek/konfirmasyonda da belirleme çalışsın diye: <b>Position → SRVR/SRVP</b> (ve <b>SRVQ</b>, <b>SRVC</b>) satırlarını seçip <b>Copy As…</b> ile Item Cat. Group'u <b>YS##</b> yapın → <b>Save</b>.","YT## siparişinde diğer kalem tipleri de (ör. yedek parça) belirlensin diye: <b>Position → SRVO</b> → <b>SRVO'nun tüm determination satırlarını seçin</b> → <b>Copy As…</b> → Transaction Type <b>YT##</b> → <b>Save</b>."],"info":"<b>SRVP</b> item category group ayarlarını şablon olarak kullanabilirsiniz.","result":"<b>YS##</b> grubu ve <b>YT##</b>+<b>YS##</b>→<b>YI##</b> determinasyonu tanımlandı."},{"num":"4","title":"Configure Copying Control","app":"SPRO","path":["SAP GUI","SPRO","Service → Transactions → Basic Settings → Copying Control for Business Transactions"],"fields":[["── Transaction Types ──",""],["Source","SRVQ"],["Target","YT##"],["── Item Categories ──",""],["Source item cat.","SRQP (Service Item)"],["Target item cat.","YI## (CERT Item ##)"],["Copy pricing","conditions copied, scales redetermined"]],"steps":["<b>Copying Control for Business Transactions → Define Copying Control for Transaction Types</b>: <b>New Entries</b> → Source trans. <b>SRVQ</b>, Tgt Trans. Type <b>YT##</b> (SRVQ teklifinin YT## siparişine dönüşmesi için).","Takip belgesi kopyalamanın tam çalışması için mevcut <b>SRVO</b> kaynak satırlarını da <b>Position → SRVO → tümünü seç → Copy As…</b> ile <b>YT##</b>'ye kopyalayın.","<b>Define Copying Control for Item Categories</b>: <b>New Entries</b> → Source Item Cat. <b>SRQP</b>, Target item cat. <b>YI##</b>; <b>Copy conditions = A</b> (fiyat koşulları kopyalanır, kopyalanmayanlar/skalalar yeniden belirlenir) → <b>Save</b>."],"result":"SRVQ → YT## dönüşümü için copying control tanımlandı."},{"num":"5","title":"Assign Transaction Type to Billing Doc Request","app":"SPRO","path":["SAP GUI","SPRO","Service → Basic Functions → Billing → Assign Service Transaction Types to Billing Document Request Types"],"fields":[["── Billing Mapping ──",""],["Template","SRVO"],["Process type mapping","maintain for YT##"],["Item category mapping","maintain for YI##"]],"steps":["<b>SPRO → SAP Reference IMG → Service → Basic Functions → Billing → Assign Service Transaction Types to Billing Document Request Types</b> → <b>IMG - Activity</b>.","<b>Process Type Mapping</b> klasöründe <b>SRVO</b> girişini seçin → <b>Copy As…</b> → Transaction Type = <b>YT##</b> → <b>Enter</b>.","<b>YT##</b> girişini seçip <b>Item Category Mapping</b> klasörüne çift tıklayın → yeni satır: item category <b>YI##</b> → sales item category <b>CS01</b> (Service Item eBDR; SVCM → CS01 gibi) → <b>Save</b>."],"result":"<b>YT##</b>/<b>YI##</b> için billing eşlemesi tanımlandı."},{"num":"6","title":"Copy Service Product and Assign Group","app":"Manage Product Master Data","path":["Fiori Launchpad","Service Master Data → Products","Manage Product Master Data"],"fields":[["── Service Product ──",""],["Copy from","P700_SERV_ONS"],["New Product","P700_SERV_ONS_##"],["Description","Service Onsite - Standard ##"],["Item Category Group","YS##"]],"steps":["<b>Manage Product Master Data</b> açın; Product <b>P700_SERV_ONS</b> → <b>Go</b> → satırı seçip <b>Copy</b> → <b>OK</b>.","<b>Product Number</b> = <b>P700_SERV_ONS_##</b>, product type <b>Services (SERV)</b>, Description <b>Service Onsite - Standard ##</b>.","<b>Distribution Chains</b> → <b>1010, 10</b> (delivering plant 1040) satırının detayına girin (sağdaki <b>></b> ikonu).","<b>Grouping Terms</b> altında <b>Item Category Group</b> = <b>YS##</b> → <b>Apply</b> → <b>Create</b> (kaydet)."],"result":"Servis ürünü <b>P700_SERV_ONS_##</b> oluşturuldu (<b>YS##</b> atandı)."},{"num":"7","title":"Create Test SRVQ Quotation","app":"Manage Service Quotations","path":["Fiori Launchpad","Service Order Quotations","Manage Service Quotations"],"fields":[["── Header ──",""],["Transaction Type","SRVQ"],["Description","Task 4 GR##"],["Sold-To Party","C700-C##"],["Service Employee Group","ICNT_1SUP-DE"],["Contact Person","Mr. Michael Fischer ##"],["Employee Responsible","CERT_SRV-##"],["── Item ──",""],["Product","P700_SERV_ONS_##"],["Quantity","1 HR"],["Manual price","100 EUR"]],"steps":["<b>Manage Service Quotations</b> → <b>Create</b>; Transaction Type <b>SRVQ</b>, Description <b>Task 4 GR##</b>, Sold-To Party <b>C700-C##</b>.","Başlık tarafları: Service Employee Group <b>ICNT_1SUP-DE</b>, Contact Person <b>Mr. Michael Fischer ##</b>, Employee Responsible <b>CERT_SRV-##</b>.","<b>Item</b>: Product <b>P700_SERV_ONS_##</b>, Quantity <b>1 HR</b>.","Kalem 10 → <b>Edit</b> → <b>Price Details</b> → <b>Insert</b> → Price Element = <b>Manual Price</b>, değer <b>100</b> (EUR) — sınav bunu açıkça ister.","<b>Save</b>. Teklif numarasını not edin."],"result":"Test SRVQ teklifi oluşturuldu."},{"num":"8","title":"Convert Quotation to YT## Order","app":"Manage Service Quotations","path":["Fiori Launchpad","Service Order Quotations","Manage Service Quotations"],"steps":["Test teklifinizi (4.7) açın; <b>Create Follow-Up</b> (takip belgesi oluştur) düğmesine basın.","Açılan pencerede hedef işlem tipi olarak <b>YT##</b> (CERT Order ##) siparişini seçin.","Önerilen kalemleri seçip onaylayın → sipariş oluşur.","<b>Save</b>. Sipariş numarasını not edin."],"warn":"Yeni transaction type görünmüyorsa rol <b>Z_S47500_2023</b>'ün kullanıcınıza atandığını kontrol edip tekrar deneyin.","result":"SRVQ teklifi <b>YT##</b> siparişe çevrildi."},{"num":"9","title":"Verify Item Category and Price","app":"Manage Service Orders","path":["Fiori Launchpad","Service Orders","Manage Service Orders"],"fields":[["── Verify ──",""],["Item Category","YI##"],["Price","100 EUR"]],"steps":["<b>Manage Service Orders</b>'ta 4.8'de oluşan siparişi açın.","Kalemde <b>Item Category</b> = <b>YI##</b> olduğunu doğrulayın (belirleme doğru çalışmış demektir).","Fiyatın <b>100 EUR</b> geldiğini <b>Item Detail → Conditions</b> sekmesinden doğrulayın."],"result":"Sipariş <b>YI##</b> ve <b>100 EUR</b> ile doğrulandı."}]},{"unit":5,"title":"Task 5 · In-House Repair","sc":"In-house repair süreci uçtan uca: talep, precheck/returns order, muayene, servis siparişi, konfirmasyon, fatura ve iade teslimatı.","tasks":[{"num":"1","title":"Request In-House Repair","app":"Manage In-House Repairs","path":["Fiori Launchpad","In-House Repair","Manage In-House Repairs"],"fields":[["── Repair Request ──",""],["Equipment","EL-1##"],["Customer","C700-C##"],["Sales organizational unit","50001454"]],"steps":["<b>Manage In-House Repairs</b> uygulamasını açın → <b>Create</b>.","<b>Customer / Sold-To Party</b> = <b>C700-C##</b> (çıkan ilk/en üst öneriyi seçin); <b>Sales Org. Unit</b> = <b>50001454</b>'ü mutlaka değer listesinden (F4) seçin.","<b>Create</b> → oluşan in-house repair numarasını not edin.","<b>Service Objects → Add</b> → açılan menüden <b>Equipment</b> seçin; <b>Current Customer</b> alanı doluysa temizleyin.","Arama alanına <b>EL-1##</b> yazıp <b>Enter</b>; öneriyi seçip <b>Add</b>.","<b>Confirm</b>. Nesnenin statüsü <b>Precheck: Decision Pending</b> olur."],"warn":"<b>Sales organizational unit 50001454</b>'ü mutlaka değer yardımından seçin (elle yazmayın).","result":"Repair talebi oluşturuldu (status <b>Precheck: Decision Pending</b>)."},{"num":"2","title":"Precheck and Create Returns Order","app":"Manage In-House Repairs","path":["Fiori Launchpad","In-House Repair","Manage In-House Repairs"],"steps":["In-house repair'da <b>Service Objects</b> altında onarım nesnenizi (<b>EL-1##</b>, item 10) seçin → <b>Decide</b>.","<b>Decide</b> penceresinde <b>Create Returns Order</b> seçin.","Oluşan <b>returns order</b> belge numarasını not edin (satırda <b>Customer RMA Number</b> kolonundan da görülebilir)."],"result":"Returns order oluşturuldu. → <b>Not al:</b> Returns order numarası."},{"num":"3","title":"Process Returns Delivery (Picking + GR)","app":"VA03","path":["SAP GUI","Transaction: VA03"],"fields":[["── Returns Delivery ──",""],["Picked Qty","1"]],"steps":["<b>SAP GUI</b>'de <b>VA03</b> (Display Sales Order) ile başlayın; returns order'ı (ör. Sold-To Party <b>C700-C##</b> ile) bulun.","Returns order içinde <b>Returns Overview</b> ile otomatik oluşan <b>returns delivery</b> numarasını bulun.","Returns delivery'ye gidip <b>Display ↔ Change</b>; <b>Picking</b> sekmesinde <b>Picked Qty</b> = <b>1</b> (bu senaryoda putaway yerine geçer); gerekirse <b>SLoc</b> = <b>101A</b>.","<b>Post Goods Receipt</b> → <b>Refresh</b>. Inspection statüsü <b>Document Not Yet Created</b> olur."],"info":"Bu senaryoda picking, putaway (depoya alma) anlamına gelir.","result":"Returns delivery işlendi, goods receipt kaydedildi."},{"num":"4","title":"Enter Inspection Results","app":"Enter Inspection Results - From Warehouse","path":["Fiori Launchpad","In-House Repair","Enter Inspection Results - From Warehouse"],"fields":[["── Inspection ──",""],["Inspection Code","003 Damaged"]],"steps":["<b>Enter Inspection Results - From Warehouse</b> uygulamasını açın.","<b>Delivery</b> alanına returns delivery numarasını girin → <b>Execute</b>.","<b>Inspection Code</b> = <b>003</b> (Damaged) girin.","<b>Follow-Up Activity</b> alanının <b>0027</b> (Continue In-House Repair) olduğundan emin olun.","<b>Save</b> ve <b>Confirm</b>."],"result":"İnceleme sonucu (<b>003 Damaged</b>) girildi ve onaylandı."},{"num":"5","title":"Create Service Order for Repair","app":"Manage In-House Repairs","path":["Fiori Launchpad","In-House Repair","Manage In-House Repairs"],"steps":["<b>Manage In-House Repairs</b>'i tekrar açın; onarım nesnenizin (<b>EL-1##</b>) detayına gidin (<b>Service Objects</b>).","Nesneyi seçip tekrar <b>Decide</b>.","<b>Create Service Order</b> seçin. Nesne artık <b>Repair</b> (onarımda) statüsüne geçer."],"result":"Repair için servis siparişi oluşturuldu."},{"num":"6","title":"Plan Rework and Release Repair Order","app":"Manage Service Orders","path":["Fiori Launchpad","Service Orders","Manage Service Orders"],"fields":[["── Item ──",""],["Service","P700_SERV_INH"],["Quantity","3 HR"],["── Organizational / Parties ──",""],["Service Organization","SRV_ORG_DE"],["Service Org. Unit","SRV_TECH_DE"],["Service Employee Group","SRV_TECH_DE"],["Bill-to party / Payer","C700-C##"],["Employee Responsible","CERT_SRV-##"]],"steps":["<b>Manage Service Orders</b>'ta siparişi bulun (ör. arama satırını <b>Equipment is</b> yapıp <b>EL-1##</b> ile en güncel siparişi) → açın → <b>Edit</b>.","<b>Status</b> = <b>In Process</b> yapın.","<b>Items</b>: onarım için <b>3 HR</b> servis <b>P700_SERV_INH</b> ekleyin (Edit List gerekebilir).","Org. veriler: Service Organization <b>SRV_ORG_DE</b>, Service Org. Unit <b>SRV_TECH_DE</b>, Service Employee Group <b>SRV_TECH_DE</b>.","<b>Parties Involved</b>: <b>Bill-To Party</b> ve <b>Payer</b> = <b>C700-C##</b>; Employee Responsible = <b>CERT_SRV-##</b>.","<b>Release All Items</b> → <b>Save</b>."],"result":"Rework planlandı, repair siparişi release edildi."},{"num":"7","title":"Create Repair Confirmation","app":"Manage Service Orders","path":["Fiori Launchpad","Service Orders","Manage Service Orders"],"fields":[["── Confirmation ──",""],["Exec. Service Employee","CERT_SRV-##"],["Final Service Confirmation","x"],["Status","Completed"]],"steps":["Servis siparişinde <b>Create Follow-Up</b> → repair (service) confirmation oluşturun.","<b>Exec. Service Employee</b> = <b>CERT_SRV-##</b>.","<b>Final Service Confirmation</b> kutusunu işaretleyin (onarım siparişinin son konfirmasyonu).","Status = <b>Completed</b> → <b>Save</b>. Konfirmasyon numarasını not edin."],"result":"Repair confirmation (final) tamamlandı."},{"num":"8","title":"Release for Billing and Create Invoice","app":"Release for Billing","path":["Fiori Launchpad","Service Orders","Release for Billing"],"fields":[["── Billing ──",""],["Billing app","Create Billing Documents - VF04"]],"steps":["§A) Release for Billing","<b>Release for Billing</b> uygulamasını açın; Sold-To Party <b>C700-C##</b> → <b>Go</b>.","Onarım konfirmasyonunuza ait satırı seçin → <b>Release for Billing</b> (billing document request oluşur).","§B) Create & Post Invoice · VF04","<b>Create Billing Documents - VF04</b> açın; Sold-To-Party <b>C700-C##</b>, <b>Delivery-Related</b> kutusunu kaldırın, <b>Billing Document Requests</b> kutusunu işaretleyin → <b>Display Billing List</b>.","BDR satırınızı seçip <b>Individual Billing Document</b> → <b>Save</b> (post). Fatura numarasını not edin."],"result":"Fatura belgesi oluşturuldu ve post edildi."},{"num":"9","title":"Send Object Back and Complete Repair","app":"Manage In-House Repairs","path":["Fiori Launchpad","In-House Repair","Manage In-House Repairs"],"steps":["<b>Manage In-House Repairs</b> uygulamasını açın; onarım nesnesini (service object) seçip <b>Decide</b>.","<b>Create Outbound Delivery</b> seçin (onarılan nesneyi müşteriye geri gönderecek çıkış teslimatı oluşur).","Tekrar <b>Decide</b>'a girin → <b>Set Service Object to Completed</b>.","<b>Transaction History</b>'den in-house repair'ın <b>Completed</b> olduğunu doğrulayın."],"result":"Onarılan obje gönderildi ve repair objesi <b>Completed</b> yapıldı."}]}];
+/* PATH */
+/* PATH */
+function path(a){
+  if(!a||!a.length)return'';
+  return'<div class="pr">'+a.map((p,i)=>`<span class="pc">${p}</span>${i<a.length-1?'<span class="pa">›</span>':''}`).join('')+'</div>';
+}
+/* TABLO */
+function tbl(f){
+  if(!f||!f.length)return'';
+  const rows=f.map(([a,b])=>{if(a.startsWith('──'))return`<tr class="fvt-sec"><td colspan="2">${a}</td></tr>`;return`<tr><td>${a}</td><td class="cpy" onclick="copyVal(this)" data-cpy="${cpyAttr(b)}">${b}</td></tr>`;}).join('');
+  return`<div class="fvt-wrap"><table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+/* ADIMLAR (§ grup + JS numaralandırma) */
+function steps(s){
+  if(!s||!s.length)return'';
+  var n=0;
+  return'<ol class="sl">'+s.map(x=>{if(typeof x==='string'&&x.charAt(0)==='§'){n=0;return`<li class="sgrp"><span class="stx">${x.slice(1)}</span></li>`;}n++;return`<li><span class="snum">${n}</span><span class="stx">${x}</span></li>`;}).join('')+'</ol>';
+}
+/* TASK accordion (alt-görev) */
+function task(t){
+  const body=path(t.path)+
+    (t.warn?`<div class="box warn"><span class="bi">⚠</span><div>${t.warn}</div></div>`:'')+
+    (t.info?`<div class="box info"><span class="bi">ℹ</span><div>${t.info}</div></div>`:'')+
+    tbl(t.fields)+steps(t.steps)+
+    (t.result?`<div class="box result"><span class="bi">✓</span><div>${t.result}</div></div>`:'');
+  return`<div class="task"><div class="thdiv" onclick="togTask(this)"><span class="tn">${t.num}</span><span class="tt">${t.title}</span>${t.app?`<span class="ab cpy" onclick="event.stopPropagation();copyVal(this)" data-cpy="${cpyAttr(t.app)}">${t.app}</span>`:''}<span class="task-chev">›</span></div><div class="task-body">${body}</div></div>`;
+}
+/* TASK üst grup */
+function unit(u){
+  const uid=`u${u.unit}`;
+  const colors={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8'};
+  const c=colors[u.unit]||'#60a5fa';
+  let h=`<div class="ug collapsed ${uid}" id="${uid}"><div class="uh" onclick="togUnit(this)"><span class="ubadge" style="border-color:${c}30;color:${c};background:${c}18">Task ${u.unit}</span><span class="utitle">${u.title}</span><span class="uc">${u.tasks.length} soru</span><span class="uchev">›</span></div><div class="ug-body">`;
+  if(u.sc)h+=`<div class="scenario">${u.sc}</div>`;
+  u.tasks.forEach(t=>h+=task(t));
+  return h+'</div></div>';
+}
+function togUnit(uh){uh.closest('.ug').classList.toggle('collapsed');}
+function togTask(hd){hd.parentElement.classList.toggle('open');}
+
+/* ARAMA PANELİ (flat) */
+var srPanel=document.createElement('div');
+srPanel.id='sr-panel';
+document.getElementById('app').parentNode.insertBefore(srPanel,document.getElementById('app'));
+function escRe(s){return s.replace(/[.+?^${}()|[\]\\]/g,'\\$&');}
+function hlStr(s,re){if(!s||!re)return s||'';re.lastIndex=0;return String(s).replace(re,function(m){return'<mark>'+m+'</mark>';});}
+function clearSearch(){document.getElementById('search').value='';run();document.getElementById('search').focus();}
+function buildSearchPanel(q,re,unitFilter){
+  srPanel.innerHTML='';
+  if(!q)return;
+  var results=[];
+  D.forEach(function(unit){
+    var uid='u'+unit.unit;
+    if(unitFilter!=='all'&&unitFilter!==uid)return;
+    unit.tasks.forEach(function(t){
+      var fieldsTxt=(t.fields||[]).map(function(f){return f[0]+' '+f[1];}).join(' ');
+      var stepsTxt=(t.steps||[]).join(' ').replace(/<[^>]+>/g,' ');
+      var txt=[unit.title,unit.sc||'',t.title,t.app||'',fieldsTxt,stepsTxt,t.warn||'',t.info||'',t.result||''].join(' ');
+      if(txt.toLowerCase().indexOf(q)>=0)results.push({unit:unit,task:t,uid:uid});
+    });
+  });
+  if(!results.length)return;
+  var bar=document.createElement('div');bar.className='sr-bar';
+  bar.innerHTML='<span class="sr-count"><b>'+results.length+'</b> soru bulundu</span><button class="sr-close" onclick="clearSearch()">✕ Aramayı Temizle</button>';
+  srPanel.appendChild(bar);
+  var COLORS={1:'#06b6d4',2:'#a855f7',3:'#60a5fa',4:'#f59e0b',5:'#22c55e',6:'#ef4444',7:'#fbbf24',8:'#34d399',9:'#818cf8'};
+  results.forEach(function(r){
+    var t=r.task,u=r.unit;var c=COLORS[u.unit]||'#60a5fa';
+    var div=document.createElement('div');div.className='sr-card';
+    var bc='<div class="sr-bc"><span class="sr-unit" style="color:'+c+';border-color:'+c+'40;background:'+c+'12">'+hlStr(u.title,re)+'</span><span class="sr-sep">›</span><span class="sr-tn">'+t.num+'</span></div>';
+    var th='<div class="sr-th"><span class="sr-tt">'+hlStr(t.title,re)+'</span>'+(t.app?'<span class="sr-ab cpy" onclick="copyVal(this)" data-cpy="'+cpyAttr(t.app)+'">'+hlStr(t.app,re)+'</span>':'')+'</div>';
+    var ph='';
+    if(t.path&&t.path.length){ph='<div class="sr-path">'+t.path.map(function(p,i){return'<span class="sr-pc">'+hlStr(p,re)+'</span>'+(i<t.path.length-1?'<span class="sr-pa">›</span>':'');}).join('')+'</div>';}
+    var fh='';
+    if(t.fields&&t.fields.length){var rows=t.fields.map(function(f){if(f[0].startsWith('──'))return'<tr class="fvt-sec"><td colspan="2">'+f[0]+'</td></tr>';return'<tr><td>'+hlStr(f[0],re)+'</td><td class="cpy" onclick="copyVal(this)" data-cpy="'+cpyAttr(f[1])+'">'+hlStr(f[1],re)+'</td></tr>';}).join('');fh='<div class="fvt-wrap"><table class="fvt"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>'+rows+'</tbody></table></div>';}
+    var sh='';
+    if(t.steps&&t.steps.length){var sn=0;sh='<ol class="sl">'+t.steps.map(function(s){if(typeof s==='string'&&s.charAt(0)==='§'){sn=0;return'<li class="sgrp"><span class="stx">'+hlStr(s.slice(1),re)+'</span></li>';}sn++;return'<li><span class="snum">'+sn+'</span><span class="stx">'+hlStr(s,re)+'</span></li>';}).join('')+'</ol>';}
+    div.innerHTML=bc+th+ph+(t.warn?'<div class="box warn"><span class="bi">⚠</span><div>'+hlStr(t.warn,re)+'</div></div>':'')+(t.info?'<div class="box info"><span class="bi">ℹ</span><div>'+hlStr(t.info,re)+'</div></div>':'')+fh+sh+(t.result?'<div class="box result"><span class="bi">✓</span><div>'+hlStr(t.result,re)+'</div></div>':'');
+    srPanel.appendChild(div);
+  });
+}
+var NOCPY_TOKENS=new Set([
+"Create","Save","Log On","Continue","Enter","Execute","OK","Submit","Accept","Approve","Confirm","Add","Edit","Adopt","Copy","Copy As","Copy As…","Copy Users","New Entries","Back","Cancel","Yes","Go","Search","Item OK","Employee","Column Configuration","Send To Customer","Release","Release All Items","Release for Billing","Create Returns Order","Create Service Order","Create Follow-Up","Create Outbound Delivery","Set Service Object to Completed","Decide","Change InstLoc","Structure Search","Assign Employee","Navigate to Home","Select View(s)","Select All","Post Goods Receipt","Individual Billing Document","Display Billing List","Refresh","Inst. w. DataTransfer","IMG - Activity","InstallLoc. (whole)","Position…","Capacity","Conditions","Send",
+"Basic Data","Basic Data 1","Location","Organization","Structure","Costing","Capacities","Default Values","Logon Data","Roles","Account Assignment","Purchasing","MRP","MRP 1","MRP 2","MRP 3","Accounting 1","General","General Plant/Storage 1","General Plant Data / Storage 1","Picking","Returns","Returns Overview","Parties Involved","Items","Item","Item Detail","Header","Org. Data","Service Objects","Repair Objects","Grouping Terms","Address","Additional Data","Descriptions","Communication","Personal data","Addresses","Organizational assignment","Create Actions","Hiring","Spaces and Pages","Settings","Profile","Status","Transaction History","Scheduling","Item Overview","Delivery Address","Components","Material Data","Follow-Up Activity","Inspection Code","Damaged","Completed","Released","In Process","Final Service Confirmation","Service Confirmation","Service Objects → Add"
+]);
+var NAMED_VALUES=new Set([]);
+function enrichSteps(root){
+  if(!root)return;
+  root.querySelectorAll('.stx b:not(.cptok):not(.enr)').forEach(function(b){
+    b.classList.add('enr');
+    var term=b.textContent.trim();
+    if(term.indexOf('→')>=0){b.classList.add('nowrap');return;}
+    if(NOCPY_TOKENS.has(term))return;
+    if(/\b(gün|yıl|ay|hafta)\b/i.test(term))return;
+    var isNamed=NAMED_VALUES.has(term);
+    var isCode=/^[A-Z0-9][A-Z0-9_\-\/\.# ]*$/.test(term) && /[0-9#]/.test(term);
+    var isNum=/^[\d.,]+/.test(term) || /\bEUR\b/.test(term) || /\b(PC|HR|AU|H)$/.test(term);
+    var isShort=/^[A-Z]$/.test(term) || /^[A-Z]{2,5}$/.test(term);
+    var isApp=/^(Create|Manage|Post|Display|Monitor|Process|Print|Supplier|My|Enter) /.test(term);
+    if(isNamed||isCode||isNum||isShort||isApp){
+      b.classList.add('cptok');
+      b.setAttribute('data-cpy',b.textContent);
+      b.setAttribute('onclick','copyVal(this)');
+    }
+  });
+}
+
+function run(){
+  var raw=document.getElementById('search').value.trim();
+  var q=raw.toLowerCase();
+  var re=raw?new RegExp(escRe(raw),'gi'):null;
+  document.getElementById('clr').style.display=raw?'block':'none';
+  if(raw){
+    document.getElementById('app').style.display='none';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='none';
+    buildSearchPanel(q,re,activeU);
+    srPanel.style.display='block';enrichSteps(srPanel);
+    var cnt=srPanel.querySelectorAll('.sr-card').length;
+    document.getElementById('cnt').textContent=String(cnt);
+    if(!cnt){srPanel.style.display='none';document.getElementById('nores').style.display='block';}
+  }else{
+    document.getElementById('app').style.display='';
+    srPanel.style.display='none';srPanel.innerHTML='';
+    document.getElementById('nores').style.display='none';
+    document.getElementById('xpb').style.display='';
+    var shown=0;
+    document.querySelectorAll('.ug').forEach(function(ug){
+      var badge=ug.querySelector('.ubadge');
+      var uNum=badge?badge.textContent.replace(/[^0-9]/g,''):'';
+      var ok=(activeU==='all'||activeU===('u'+uNum)||activeU===uNum);
+      ug.classList.toggle('hid',!ok);
+      if(ok){shown+=ug.querySelectorAll('.task').length;}
+    });
+    document.getElementById('cnt').textContent=String(shown);
+  }
+}
+var activeU='all',expanded=false;
+var app=document.getElementById('app');
+var frow=document.getElementById('frow');
+D.forEach(function(u){
+  app.insertAdjacentHTML('beforeend',unit(u));
+  var b=document.createElement('button');b.className='fb';b.dataset.u='u'+u.unit;
+  var name=(u.title.split(' · ')[1]||u.title);name=name.length>22?name.slice(0,22)+'…':name;
+  b.textContent='T'+u.unit+': '+name;
+  frow.appendChild(b);
+});
+frow.addEventListener('click',function(e){var b=e.target.closest('.fb');if(!b)return;activeU=b.dataset.u;document.querySelectorAll('.fb').forEach(function(x){x.classList.remove('on');});b.classList.add('on');run();});
+document.getElementById('search').addEventListener('input',run);
+document.getElementById('search').addEventListener('keydown',function(e){if(e.key==='Escape')clearSearch();});
+document.getElementById('clr').addEventListener('click',clearSearch);
+document.getElementById('xpb').addEventListener('click',function(){
+  expanded=!expanded;
+  document.querySelectorAll('.ug:not(.hid)').forEach(function(u){u.classList.toggle('collapsed',!expanded);});
+  document.querySelectorAll('.ug:not(.hid) .task').forEach(function(t){t.classList.toggle('open',expanded);});
+  document.getElementById('xpb').textContent=expanded?'Tümünü Kapat':'Tümünü Aç';
+  document.getElementById('xpb').classList.toggle('active',expanded);
+});
+run();
+enrichSteps(document.getElementById('app'));
+</script>
+</body>
+</html>
